@@ -1,0 +1,20 @@
+{
+  "name": "K9World - PawConnect",
+  "short_name": "K9World",
+  "description": "Loving pet care in your neighbourhood. Book trusted sitters, walkers and trainers for your dog.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#059669",
+  "categories": ["lifestyle", "business", "social"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
