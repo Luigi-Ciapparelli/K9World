@@ -47,7 +47,7 @@ export function SearchPage() {
       let q = supabase
         .from('professionals')
         .select(
-          'id, professional_type, bio, zone_text, latitude, longitude, coverage_radius_km, starting_price, rating, review_count, profiles:id(full_name, avatar_url)'
+          'id, professional_type, bio, zone_text, latitude, longitude, coverage_radius_km, starting_price, rating, review_count, profiles!professionals_id_fkey(full_name, avatar_url)'
         )
         .eq('approved', true);
 
