@@ -18,7 +18,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
   useEffect(() => {
     (async () => {
       const [p, s, r] = await Promise.all([
-        supabase.from('professionals').select('*, profiles:id(*)').eq('id', id).maybeSingle(),
+        supabase.from('professionals').select('*, profiles!professionals_id_fkey(*)').eq('id', id).maybeSingle(),
         supabase.from('services').select('*').eq('professional_id', id).eq('active', true),
         supabase.from('reviews').select('*, profiles:owner_id(full_name, avatar_url)').eq('professional_id', id).order('created_at', { ascending: false }).limit(10),
       ]);
