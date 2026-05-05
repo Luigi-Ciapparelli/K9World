@@ -12,27 +12,92 @@ export function ProfessionalProfile({ id }: { id: string }) {
   const [dogs, setDogs] = useState<any[]>([]);
   const [showBook, setShowBook] = useState(false);
   const [verifying, setVerifying] = useState<'email' | 'phone' | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [profileError, setProfileError] = useState('');
   const { user, profile } = useAuth();
   const { navigate } = useRouter();
 
   useEffect(() => {
     (async () => {
+      setLoadingProfile(true);
+      setProfileError('');
+
       const [p, s, r] = await Promise.all([
         supabase.from('professionals').select('*, profiles!professionals_id_fkey(*)').eq('id', id).maybeSingle(),
         supabase.from('services').select('*').eq('professional_id', id).eq('active', true),
         supabase.from('reviews').select('*, profiles:owner_id(full_name, avatar_url)').eq('professional_id', id).order('created_at', { ascending: false }).limit(10),
       ]);
+
+      if (p.error) {
+        console.error('Professional profile load error:', p.error);
+        setProfileError(p.error.message);
+        setPro(null);
+        setLoadingProfile(false);
+        return;
+      }
+
+      if (s.error) {
+        console.error('Professional services load error:', s.error);
+        setProfileError(s.error.message);
+        setPro(null);
+        setLoadingProfile(false);
+        return;
+      }
+
+      if (r.error) {
+        console.error('Professional reviews load error:', r.error);
+      }
+
       setPro(p.data);
       setServices(s.data || []);
       setReviews(r.data || []);
+
       if (user) {
-        const { data: d } = await supabase.from('dogs').select('*').eq('owner_id', user.id);
-        setDogs(d || []);
+        const { data: d, error: dogsError } = await supabase.from('dogs').select('*').eq('owner_id', user.id);
+
+        if (dogsError) {
+          console.error('Client dogs load error:', dogsError);
+          setDogs([]);
+        } else {
+          setDogs(d || []);
+        }
+      } else {
+        setDogs([]);
       }
+
+      setLoadingProfile(false);
     })();
   }, [id, user]);
 
-  if (!pro) return <div className="p-10 text-stone-500">Loading...</div>;
+  if (loadingProfile) return <div className="p-10 text-stone-500">Loading...</div>;
+
+  if (profileError) {
+    return (
+      <div className="p-10">
+        <div className="max-w-xl bg-white border border-rose-200 rounded-2xl p-6">
+          <h1 className="text-xl font-bold text-rose-700">Could not load professional</h1>
+          <p className="text-stone-700 mt-2">{profileError}</p>
+          <button onClick={() => navigate('/search')} className="mt-4 px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">
+            Back to search
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!pro) {
+    return (
+      <div className="p-10">
+        <div className="max-w-xl bg-white border border-stone-200 rounded-2xl p-6">
+          <h1 className="text-xl font-bold text-stone-900">Professional not found</h1>
+          <p className="text-stone-600 mt-2">This professional is not available or has not been approved yet.</p>
+          <button onClick={() => navigate('/search')} className="mt-4 px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">
+            Back to search
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const isVerified = !!(profile?.email_verified && profile?.phone_verified);
   const onBookClick = () => {
@@ -189,7 +254,21 @@ function BookingModal({ professional_id, services, dogs, isVerified, emailVerifi
       setSubmitting(false);
       return;
     }
-    if (b) await supabase.from('booking_dogs').insert({ booking_id: b.id, dog_id: dogId });
+    if (!b) {
+      setError('Booking was not created. Please try again.');
+      setSubmitting(false);
+      return;
+    }
+
+    const { error: bookingDogError } = await supabase.from('booking_dogs').insert({ booking_id: b.id, dog_id: dogId });
+
+    if (bookingDogError) {
+      console.error('Booking dog link error:', bookingDogError);
+      setError(bookingDogError.message);
+      setSubmitting(false);
+      return;
+    }
+
     setSubmitting(false);
     onClose();
     navigate('/owner/bookings');

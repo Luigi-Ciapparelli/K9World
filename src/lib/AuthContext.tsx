@@ -29,8 +29,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const loadProfile = async (userId: string) => {
-    const { data } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
-    if (data) setProfile(data as Profile);
+    const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
+
+    if (error) {
+      console.error('Profile load error:', error);
+      setProfile(null);
+      return;
+    }
+
+    setProfile(data ? (data as Profile) : null);
   };
 
   useEffect(() => {
@@ -68,6 +75,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) return { error: error.message };
     if (!data.user) return { error: 'Signup failed' };
 
+    if (!data.session) {
+      return { error: 'Account created. Please confirm your email, then log in.' };
+    }
+
     const { error: profileError } = await supabase.from('profiles').insert({
       id: data.user.id,
       email,
@@ -80,10 +91,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (profileError) return { error: profileError.message };
 
     if (role === 'professional') {
-      await supabase.from('professionals').insert({
+      const { error: professionalError } = await supabase.from('professionals').insert({
         id: data.user.id,
         professional_type: professionalType || 'walker',
       });
+
+      if (professionalError) return { error: professionalError.message };
     }
 
     await loadProfile(data.user.id);

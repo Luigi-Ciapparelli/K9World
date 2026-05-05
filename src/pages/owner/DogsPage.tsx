@@ -11,7 +11,14 @@ export function DogsPage() {
 
   const load = async () => {
     if (!user) return;
-    const { data } = await supabase.from('dogs').select('*').eq('owner_id', user.id).order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('dogs').select('*').eq('owner_id', user.id).order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Dogs load error:', error);
+      alert(error.message);
+      return;
+    }
+
     setDogs((data as Dog[]) || []);
   };
 
@@ -30,18 +37,30 @@ export function DogsPage() {
       aggressive: editing.aggressive || false,
       medical_notes: editing.medical_notes || '',
     };
-    if (editing.id) {
-      await supabase.from('dogs').update(payload).eq('id', editing.id);
-    } else {
-      await supabase.from('dogs').insert(payload);
+    const result = editing.id
+      ? await supabase.from('dogs').update(payload).eq('id', editing.id)
+      : await supabase.from('dogs').insert(payload);
+
+    if (result.error) {
+      console.error('Dog save error:', result.error);
+      alert(result.error.message);
+      return;
     }
+
     setEditing(null);
     load();
   };
 
   const remove = async (id: string) => {
     if (!confirm('Remove this dog?')) return;
-    await supabase.from('dogs').delete().eq('id', id);
+    const { error } = await supabase.from('dogs').delete().eq('id', id);
+
+    if (error) {
+      console.error('Dog remove error:', error);
+      alert(error.message);
+      return;
+    }
+
     load();
   };
 
