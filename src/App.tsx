@@ -19,6 +19,7 @@ import { ProSubscriptions } from './pages/pro/ProSubscriptions';
 import { ProCampaigns } from './pages/pro/ProCampaigns';
 import { ProSettings } from './pages/pro/ProSettings';
 
+import { AdminDashboard } from './pages/admin/AdminDashboard';
 function AppShell() {
   const { path, navigate } = useRouter();
   const { user, loading } = useAuth();
@@ -42,6 +43,7 @@ function AppShell() {
     content = <ProfessionalProfile id={id} />;
   }
   else if (!user) { navigate('/signin'); return null; }
+  else if (basePath === '/admin') content = <AdminDashboard />;
   else if (basePath === '/owner') content = <OwnerDashboard />;
   else if (basePath === '/owner/bookings') content = <OwnerBookings />;
   else if (basePath === '/owner/dogs') content = <DogsPage />;
