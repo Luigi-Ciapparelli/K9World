@@ -94,7 +94,7 @@ export function BecomeProPage() {
             <div className="flex flex-col sm:flex-row gap-3 mt-8">
               <button
                 type="button"
-                onClick={() => navigate('/signup')}
+                onClick={() => navigate('/signup?role=professional')}
                 className="px-6 py-3 rounded-full bg-white text-emerald-900 font-bold hover:bg-emerald-50 flex items-center justify-center gap-2"
               >
                 Candidati come professionista
@@ -238,7 +238,7 @@ export function BecomeProPage() {
 
           <button
             type="button"
-            onClick={() => navigate('/signup')}
+            onClick={() => navigate('/signup?role=professional')}
             className="px-6 py-3 rounded-full bg-emerald-600 text-white font-bold hover:bg-emerald-700 flex items-center justify-center gap-2 shrink-0"
           >
             Candidati ora

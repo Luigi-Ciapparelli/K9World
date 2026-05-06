@@ -31,8 +31,8 @@ export function Navbar() {
 
         <div className="hidden md:flex items-center gap-6 text-sm text-stone-700">
           <button onClick={() => go('/search')} className="hover:text-emerald-600 transition">Find a Pro</button>
-          <button onClick={() => go('/become-pro')} className="hover:text-emerald-600 transition">Become a Pro</button>
-          <button onClick={() => go('/services')} className="hover:text-emerald-600 transition">Services</button>
+          <button onClick={() => go('/become-a-pro')} className="hover:text-emerald-600 transition">Become a Pro</button>
+          <button onClick={() => go('/?section=services')} className="hover:text-emerald-600 transition">Services</button>
         </div>
 
         <div className="hidden md:flex items-center gap-3">
@@ -66,8 +66,8 @@ export function Navbar() {
         <div className="md:hidden border-t border-stone-200 bg-white">
           <div className="px-4 py-3 flex flex-col gap-1 text-sm">
             <button onClick={() => go('/search')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Find a Pro</button>
-            <button onClick={() => go('/become-pro')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Become a Pro</button>
-            <button onClick={() => go('/services')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Services</button>
+            <button onClick={() => go('/become-a-pro')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Become a Pro</button>
+            <button onClick={() => go('/?section=services')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Services</button>
             <div className="h-px bg-stone-200 my-2" />
             {user ? (
               <>

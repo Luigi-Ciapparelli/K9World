@@ -26,6 +26,11 @@ function AppShell() {
   const { user, loading } = useAuth();
 
   const basePath = path.split('?')[0];
+  const queryParams = path.includes('?')
+    ? new URLSearchParams(path.split('?')[1])
+    : new URLSearchParams();
+
+  const signupRole = queryParams.get('role') === 'professional' ? 'professional' : undefined;
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center bg-stone-50"><div className="text-stone-500">Loading...</div></div>;
@@ -35,16 +40,16 @@ function AppShell() {
 
   if (basePath === '/' || basePath === '') content = <HomePage />;
   else if (basePath === '/signin') content = <SignInPage />;
-  else if (basePath === '/signup') content = <SignUpPage />;
-  else if (basePath === '/become-pro') content = <SignUpPage defaultRole="professional" />;
+  else if (basePath === '/signup') content = <SignUpPage defaultRole={signupRole} />;
+  else if (basePath === '/become-pro') content = <BecomeProPage />;
   else if (basePath === '/search') content = <SearchPage />;
-  else if (basePath === '/services') content = <SearchPage />;
+  else if (basePath === '/services') content = <HomePage />;
   else if (basePath.startsWith('/p/')) {
     const id = basePath.slice(3);
     content = <ProfessionalProfile id={id} />;
   }
-  else if (!user) { navigate('/signin'); return null; }
   else if (basePath === '/become-a-pro') content = <BecomeProPage />;
+  else if (!user) { navigate('/signin'); return null; }
   else if (basePath === '/admin') content = <AdminDashboard />;
   else if (basePath === '/owner') content = <OwnerDashboard />;
   else if (basePath === '/owner/bookings') content = <OwnerBookings />;

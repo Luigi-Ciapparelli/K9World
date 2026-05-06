@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Star, Shield, Heart, Search, CreditCard, Smile, ChevronDown } from 'lucide-react';
 import { SearchCard } from '../components/SearchCard';
 import { useRouter } from '../lib/RouterContext';
@@ -56,6 +56,20 @@ const faqs = [
 ];
 
 export function HomePage() {
+  useEffect(() => {
+    const queryParams = window.location.hash.includes('?')
+      ? new URLSearchParams(window.location.hash.split('?')[1])
+      : new URLSearchParams();
+
+    if (queryParams.get('section') === 'services') {
+      setTimeout(() => {
+        document.getElementById('services')?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }, 50);
+    }
+  }, []);
   const [tab, setTab] = useState<'overnight' | 'daytime' | 'all'>('overnight');
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const { navigate } = useRouter();
@@ -85,7 +99,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 py-20">
+      <section id="services" className="max-w-7xl mx-auto px-6 py-20">
         <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2">Get to know services on PawConnect</h2>
         <p className="text-stone-600 mb-8">Get the care your dog needs, anytime and anywhere.</p>
         <div className="flex gap-2 mb-10 flex-wrap">

@@ -40,7 +40,7 @@ export function SignInPage() {
 }
 
 export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2>(defaultRole ? 2 : 1);
   const [role, setRole] = useState<Role>(defaultRole || 'owner');
   const [professionalType, setProfessionalType] = useState<ProfessionalType>('walker');
   const [fullName, setFullName] = useState('');
