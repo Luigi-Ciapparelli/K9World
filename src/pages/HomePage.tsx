@@ -6,8 +6,8 @@ import { LocalExcellenceShowcase } from '../components/home/LocalExcellenceShowc
 
 const faqs = [
   {
-    q: `Che cos'è K9World?`,
-    a: `K9World è una piattaforma locale che collega proprietari di cani con professionisti verificati per passeggiate, pensione, pet sitting, addestramento e toelettatura.`,
+    q: `Che cos'è PawConnect?`,
+    a: `PawConnect è una rete locale che rende trovabile online il passaparola cinofilo: proprietari di cani e professionisti selezionati, approvati manualmente prima di apparire nella ricerca.`,
   },
   {
     q: `Come vengono verificati i professionisti?`,
@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     q: `È sicuro?`,
-    a: `K9World usa profili verificati manualmente, richieste tracciate, recensioni e informazioni chiare sui servizi per aiutare i proprietari a scegliere meglio.`,
+    a: `PawConnect usa professionisti approvati manualmente, richieste tracciate, recensioni e informazioni chiare sui servizi per aiutare i proprietari a scegliere meglio.`,
   },
   {
     q: `Come funzionano i pagamenti?`,
@@ -50,8 +50,8 @@ export function HomePage() {
         </div>
         <div className="relative max-w-7xl mx-auto px-6 pt-20 pb-28">
           <div className="text-center text-white mb-8">
-            <h1 className="text-4xl md:text-6xl font-bold mb-3 tracking-tight">Servizi cinofili affidabili vicino a te</h1>
-            <p className="text-lg md:text-xl text-white/90">Trova educatori, addestratori, pensioni, dog sitter e dog walker nella tua zona.</p>
+            <h1 className="text-4xl md:text-6xl font-bold mb-3 tracking-tight">Il passaparola cinofilo, finalmente online</h1>
+            <p className="text-lg md:text-xl text-white/90">Trova educatori, addestratori, pensioni e servizi per cani selezionati manualmente nella tua zona.</p>
           </div>
           <div className="max-w-4xl mx-auto">
             <SearchCard />
@@ -61,7 +61,7 @@ export function HomePage() {
               {[1,2,3,4,5].map((i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
             </div>
             <span className="font-semibold">Beta locale Rimini</span>
-            <span className="text-white/70">profili verificati manualmente</span>
+            <span className="text-white/70">professionisti approvati manualmente</span>
           </div>
         </div>
       </section>
@@ -95,7 +95,7 @@ export function HomePage() {
       <section className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-16 items-start">
         <div>
           <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-3">Domande frequenti</h2>
-          <p className="text-stone-600 mb-8">Domande frequenti su K9World</p>
+          <p className="text-stone-600 mb-8">Domande frequenti su PawConnect</p>
           <div className="space-y-3">
             {faqs.map((f, i) => (
               <div key={i} className="border border-stone-200 rounded-xl overflow-hidden">
@@ -113,20 +113,20 @@ export function HomePage() {
         </div>
         <div className="bg-stone-50 rounded-3xl p-10 flex flex-col items-center text-center border border-stone-100">
           <Heart className="w-14 h-14 text-rose-500 mb-4" />
-          <h3 className="text-2xl font-bold text-stone-900 mb-2">Diventa professionista su K9World</h3>
-          <p className="text-stone-600 mb-6">Porta online i tuoi servizi cinofili. Gestisci profilo, servizi, richieste, clienti e prenotazioni da un unico pannello.</p>
+          <h3 className="text-2xl font-bold text-stone-900 mb-2">Diventa professionista su PawConnect</h3>
+          <p className="text-stone-600 mb-6">Entra in una rete selezionata di professionisti cinofili. Gestisci profilo, servizi, richieste, clienti e prenotazioni da un unico pannello.</p>
           <button onClick={() => navigate('/become-pro')} className="px-6 py-3 bg-stone-900 text-white rounded-full font-semibold hover:bg-stone-800 transition">
             Inizia ora
           </button>
           <div className="flex items-center gap-2 mt-6 text-sm text-stone-500">
-            <Shield className="w-4 h-4" /> Beta locale con profili verificati manualmente
+            <Shield className="w-4 h-4" /> Beta locale con professionisti approvati manualmente
           </div>
         </div>
       </section>
 
       <footer className="bg-stone-900 text-stone-400 py-10">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm">&copy; 2026 K9World. Servizi cinofili locali, costruiti con professionisti verificati.</p>
+          <p className="text-sm">&copy; 2026 PawConnect. Servizi cinofili locali, costruiti con professionisti verificati.</p>
           <div className="flex gap-6 text-sm">
             <a className="hover:text-white">Privacy</a>
             <a className="hover:text-white">Termini</a>

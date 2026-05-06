@@ -23,7 +23,7 @@ export function SignInPage() {
   };
 
   return (
-    <AuthFrame title="Bentornato" subtitle="Accedi al tuo account K9World">
+    <AuthFrame title="Bentornato" subtitle="Accedi al tuo account PawConnect">
       <form onSubmit={submit} className="space-y-4">
         <Field icon={<Mail className="w-4 h-4" />} type="email" placeholder="Email" value={email} onChange={setEmail} />
         <Field icon={<Lock className="w-4 h-4" />} type="password" placeholder="Password" value={password} onChange={setPassword} />
@@ -68,7 +68,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
 
   if (step === 1) {
     return (
-      <AuthFrame title="Entra in K9World" subtitle="Come vuoi usare la piattaforma?">
+      <AuthFrame title="Entra in PawConnect" subtitle="Come vuoi usare la piattaforma?">
         <div className="space-y-3">
           <RoleCard active={role === 'owner'} onClick={() => setRole('owner')} title="Sono proprietario di un cane" subtitle="Voglio trovare servizi affidabili per il mio cane" />
           <RoleCard active={role === 'professional'} onClick={() => setRole('professional')} title="Sono un professionista" subtitle="Voglio offrire servizi e ricevere richieste" />

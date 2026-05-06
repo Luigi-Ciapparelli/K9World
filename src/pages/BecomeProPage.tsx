@@ -65,7 +65,7 @@ const faqs = [
   },
   {
     q: 'Serve partita IVA?',
-    a: 'Dipende dal servizio e dalla tua situazione. K9World può raccogliere le informazioni, ma non sostituisce consulenza fiscale o legale.',
+    a: 'Dipende dal servizio e dalla tua situazione. PawConnect può raccogliere le informazioni, ma non sostituisce consulenza fiscale o legale.',
   },
 ];
 
@@ -87,7 +87,7 @@ export function BecomeProPage() {
             </h1>
 
             <p className="text-emerald-50 text-lg mt-6 max-w-xl">
-              K9World aiuta educatori, addestratori, pensioni, dog sitter e dog walker
+              PawConnect aiuta educatori, addestratori, pensioni, dog sitter e dog walker
               a ricevere richieste da proprietari di cani nella propria zona.
             </p>
 
@@ -142,7 +142,7 @@ export function BecomeProPage() {
       <section className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1">
-            <h2 className="text-3xl font-bold text-stone-900">Per chi è K9World?</h2>
+            <h2 className="text-3xl font-bold text-stone-900">Per chi è PawConnect?</h2>
             <p className="text-stone-600 mt-3">
               Per professionisti e strutture che vogliono ricevere richieste più chiare,
               apparire in una ricerca locale e costruire fiducia con i clienti.
