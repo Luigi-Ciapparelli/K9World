@@ -18,6 +18,19 @@ interface ProResult {
   review_count: number | null;
   profiles: { full_name: string; avatar_url: string | null } | null;
   distance_km?: number;
+  matching_services?: ServiceResult[];
+}
+
+interface ServiceResult {
+  id: string;
+  professional_id: string;
+  service_type: string;
+  name: string;
+  description: string | null;
+  price: number;
+  duration_kind: string;
+  duration_minutes: number;
+  active: boolean;
 }
 
 export function SearchPage() {
@@ -26,6 +39,7 @@ export function SearchPage() {
   const [loading, setLoading] = useState(true);
   const [maxPrice, setMaxPrice] = useState(200);
   const [minRating, setMinRating] = useState(0);
+  const [loadError, setLoadError] = useState('');
 
   const hash = window.location.hash;
   const qs = hash.includes('?')
@@ -41,70 +55,118 @@ export function SearchPage() {
   );
 
   useEffect(() => {
-    (async () => {
+    const load = async () => {
       setLoading(true);
+      setLoadError('');
 
-      let q = supabase
-        .from('professionals')
-        .select(
-          'id, professional_type, bio, zone_text, latitude, longitude, coverage_radius_km, starting_price, rating, review_count, profiles!professionals_id_fkey(full_name, avatar_url)'
-        )
-        .eq('approved', true);
+      let servicesQuery = supabase
+        .from('services')
+        .select('id, professional_id, service_type, name, description, price, duration_kind, duration_minutes, active')
+        .eq('active', true);
 
       if (typeFilter) {
-        q = q.eq('professional_type', typeFilter);
+        servicesQuery = servicesQuery.eq('service_type', typeFilter);
       }
 
-      const { data, error } = await q;
+      const servicesRes = await servicesQuery;
 
-      if (error) {
-        console.error('Search error:', error);
+      if (servicesRes.error) {
+        console.error('Services search error:', servicesRes.error);
+        setPros([]);
+        setLoadError(servicesRes.error.message);
+        setLoading(false);
+        return;
+      }
+
+      const activeServices = (servicesRes.data || []) as ServiceResult[];
+      const professionalIds = Array.from(
+        new Set(activeServices.map((service) => service.professional_id))
+      );
+
+      if (professionalIds.length === 0) {
         setPros([]);
         setLoading(false);
         return;
       }
 
-      const rows = ((data as unknown as ProResult[]) || []).map((p) => {
+      const prosRes = await supabase
+        .from('professionals')
+        .select(
+          'id, professional_type, bio, zone_text, latitude, longitude, coverage_radius_km, starting_price, rating, review_count, profiles!professionals_id_fkey(full_name, avatar_url)'
+        )
+        .eq('approved', true)
+        .eq('approval_status', 'approved')
+        .in('id', professionalIds);
+
+      if (prosRes.error) {
+        console.error('Professionals search error:', prosRes.error);
+        setPros([]);
+        setLoadError(prosRes.error.message);
+        setLoading(false);
+        return;
+      }
+
+      const rows = ((prosRes.data as unknown as ProResult[]) || []).map((pro) => {
+        const matchingServices = activeServices.filter(
+          (service) => service.professional_id === pro.id
+        );
+
+        const lowestMatchingPrice = matchingServices.reduce<number | null>(
+          (lowest, service) => {
+            if (lowest === null) return service.price;
+            return Math.min(lowest, service.price);
+          },
+          null
+        );
+
+        const basePro = {
+          ...pro,
+          matching_services: matchingServices,
+          starting_price: lowestMatchingPrice ?? pro.starting_price,
+        };
+
         if (
           selectedCity &&
-          typeof p.latitude === 'number' &&
-          typeof p.longitude === 'number'
+          typeof pro.latitude === 'number' &&
+          typeof pro.longitude === 'number'
         ) {
           return {
-            ...p,
+            ...basePro,
             distance_km: distanceKm(
               selectedCity.lat,
               selectedCity.lng,
-              p.latitude,
-              p.longitude
+              pro.latitude,
+              pro.longitude
             ),
           };
         }
 
-        return p;
+        return basePro;
       });
 
       setPros(rows);
       setLoading(false);
-    })();
+    };
+
+    load();
   }, [typeFilter, selectedCity]);
 
   const filtered = pros
-    .filter((p) => {
-      const price = p.starting_price ?? 0;
-      const rating = p.rating ?? 0;
+    .filter((pro) => {
+      const price = pro.starting_price ?? 0;
+      const rating = pro.rating ?? 0;
 
       if (price > maxPrice) return false;
       if (rating < minRating) return false;
 
       if (selectedCity) {
-        const zoneMatches = (p.zone_text || '')
+        const zoneMatches = (pro.zone_text || '')
           .toLowerCase()
           .includes(selectedCity.name.toLowerCase());
 
         const distanceMatches =
-          typeof p.distance_km === 'number' &&
-          p.distance_km <= (p.coverage_radius_km || 30);
+          typeof pro.distance_km === 'number' &&
+          pro.distance_km <= (pro.coverage_radius_km || 30);
 
         return zoneMatches || distanceMatches;
       }
@@ -119,7 +181,7 @@ export function SearchPage() {
       return (b.rating || 0) - (a.rating || 0);
     });
 
-  const titleLocation = selectedCity ? `near ${selectedCity.name}` : 'near you';
+  const titleLocation = selectedCity ? 'near ' + selectedCity.name : 'near you';
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -145,7 +207,7 @@ export function SearchPage() {
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
                 className="w-full accent-emerald-600 mt-3"
               />
-              <p className="text-sm text-stone-500 mt-1">Up to ${maxPrice}</p>
+              <p className="text-sm text-stone-500 mt-1">Up to €{maxPrice}</p>
             </div>
 
             <div>
@@ -153,18 +215,19 @@ export function SearchPage() {
                 Minimum rating
               </label>
               <div className="grid grid-cols-4 gap-2 mt-3">
-                {[0, 3, 4, 4.5].map((r) => (
+                {[0, 3, 4, 4.5].map((rating) => (
                   <button
-                    key={r}
+                    key={rating}
                     type="button"
-                    onClick={() => setMinRating(r)}
-                    className={`py-2 rounded-lg text-xs font-semibold border ${
-                      minRating === r
+                    onClick={() => setMinRating(rating)}
+                    className={
+                      'py-2 rounded-lg text-xs font-semibold border ' +
+                      (minRating === rating
                         ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
-                        : 'border-stone-200 text-stone-600'
-                    }`}
+                        : 'border-stone-200 text-stone-600')
+                    }
                   >
-                    {r === 0 ? 'Any' : `${r}+`}
+                    {rating === 0 ? 'Any' : String(rating) + '+'}
                   </button>
                 ))}
               </div>
@@ -177,7 +240,7 @@ export function SearchPage() {
                 {filtered.length} pros {titleLocation}
               </h1>
               <p className="text-stone-600 mt-1">
-                All our pros are identity-verified.
+                Search is now based on active services, so professionals can appear in multiple categories.
               </p>
             </div>
 
@@ -185,60 +248,82 @@ export function SearchPage() {
               <div className="bg-white rounded-2xl border border-stone-200 p-8">
                 Loading...
               </div>
+            ) : loadError ? (
+              <div className="bg-rose-50 rounded-2xl border border-rose-200 p-8 text-rose-700">
+                {loadError}
+              </div>
             ) : filtered.length === 0 ? (
               <div className="bg-white rounded-2xl border border-stone-200 p-8">
-                No pros match your filters yet. Try another city, service or
-                filter.
+                No pros match your filters yet. Try another city, service or filter.
               </div>
             ) : (
               <div className="grid gap-4">
-                {filtered.map((p) => (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => navigate(`/p/${p.id}`)}
-                    className="text-left bg-white rounded-2xl border border-stone-200 p-5 hover:shadow-md hover:border-emerald-200 transition"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <h3 className="text-xl font-bold text-stone-900">
-                          {p.profiles?.full_name || 'Professional'}
-                        </h3>
+                {filtered.map((pro) => {
+                  const firstService = pro.matching_services?.[0];
 
-                        <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-stone-600">
-                          <span className="flex items-center gap-1">
-                            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                            {(p.rating || 0).toFixed(1)}
-                          </span>
+                  return (
+                    <button
+                      key={pro.id}
+                      type="button"
+                      onClick={() => navigate('/p/' + pro.id)}
+                      className="text-left bg-white rounded-2xl border border-stone-200 p-5 hover:shadow-md hover:border-emerald-200 transition"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <h3 className="text-xl font-bold text-stone-900">
+                            {pro.profiles?.full_name || 'Professional'}
+                          </h3>
 
-                          <span>{p.professional_type}</span>
+                          <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-stone-600">
+                            <span className="flex items-center gap-1">
+                              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                              <b>{(pro.rating || 0).toFixed(1)}</b>
+                            </span>
 
-                          <span className="flex items-center gap-1">
-                            <MapPin className="w-4 h-4" />
-                            {p.zone_text || 'Nearby'}
-                          </span>
+                            <span className="capitalize">
+                              {firstService?.service_type || pro.professional_type}
+                            </span>
 
-                          {typeof p.distance_km === 'number' && (
-                            <span>{p.distance_km.toFixed(1)} km away</span>
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-4 h-4" />
+                              {pro.zone_text || 'Nearby'}
+                            </span>
+
+                            {typeof pro.distance_km === 'number' && (
+                              <span>{pro.distance_km.toFixed(1)} km away</span>
+                            )}
+                          </div>
+
+                          <p className="mt-3 text-stone-700">
+                            {pro.bio || 'Dedicated to making every dog feel at home.'}
+                          </p>
+
+                          {pro.matching_services && pro.matching_services.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-4">
+                              {pro.matching_services.slice(0, 3).map((service) => (
+                                <span
+                                  key={service.id}
+                                  className="text-xs bg-stone-100 text-stone-700 px-2 py-1 rounded-full"
+                                >
+                                  {service.name} · €{service.price}
+                                </span>
+                              ))}
+                            </div>
                           )}
                         </div>
 
-                        <p className="mt-3 text-stone-700">
-                          {p.bio || 'Dedicated to making every dog feel at home.'}
-                        </p>
+                        <div className="text-right shrink-0">
+                          <p className="text-sm text-stone-500">
+                            {pro.review_count || 0} reviews
+                          </p>
+                          <p className="font-bold text-stone-900 mt-2">
+                            From €{pro.starting_price || 0}
+                          </p>
+                        </div>
                       </div>
-
-                      <div className="text-right shrink-0">
-                        <p className="text-sm text-stone-500">
-                          {p.review_count || 0} reviews
-                        </p>
-                        <p className="font-bold text-stone-900 mt-2">
-                          From ${p.starting_price || 0}
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </main>
