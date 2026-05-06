@@ -165,10 +165,31 @@ export function ProSettings() {
       return;
     }
 
-    const { error: professionalError } = await supabase
+    const { data: existingProfessional, error: existingProfessionalError } = await supabase
       .from('professionals')
-      .update(professionalPayload)
-      .eq('id', user.id);
+      .select('id')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (existingProfessionalError) {
+      setSaving(false);
+      alert(existingProfessionalError.message);
+      return;
+    }
+
+    const professionalResult = existingProfessional
+      ? await supabase
+          .from('professionals')
+          .update(professionalPayload)
+          .eq('id', user.id)
+      : await supabase
+          .from('professionals')
+          .insert({
+            id: user.id,
+            ...professionalPayload,
+          });
+
+    const professionalError = professionalResult.error;
 
     if (professionalError) {
       setSaving(false);
