@@ -18,10 +18,10 @@ interface ProResult {
   review_count: number | null;
   profiles: { full_name: string; avatar_url: string | null } | null;
   distance_km?: number;
-  matching_services?: ServiceResult[];
+  matching_services?: ServizioResult[];
 }
 
-interface ServiceResult {
+interface ServizioResult {
   id: string;
   professional_id: string;
   service_type: string;
@@ -71,16 +71,16 @@ export function SearchPage() {
       const servicesRes = await servicesQuery;
 
       if (servicesRes.error) {
-        console.error('Services search error:', servicesRes.error);
+        console.error('Servizi search error:', servicesRes.error);
         setPros([]);
         setLoadError(servicesRes.error.message);
         setLoading(false);
         return;
       }
 
-      const activeServices = (servicesRes.data || []) as ServiceResult[];
+      const activeServizi = (servicesRes.data || []) as ServizioResult[];
       const professionalIds = Array.from(
-        new Set(activeServices.map((service) => service.professional_id))
+        new Set(activeServizi.map((service) => service.professional_id))
       );
 
       if (professionalIds.length === 0) {
@@ -99,7 +99,7 @@ export function SearchPage() {
         .in('id', professionalIds);
 
       if (prosRes.error) {
-        console.error('Professionals search error:', prosRes.error);
+        console.error('Professionistas search error:', prosRes.error);
         setPros([]);
         setLoadError(prosRes.error.message);
         setLoading(false);
@@ -107,11 +107,11 @@ export function SearchPage() {
       }
 
       const rows = ((prosRes.data as unknown as ProResult[]) || []).map((pro) => {
-        const matchingServices = activeServices.filter(
+        const matchingServizi = activeServizi.filter(
           (service) => service.professional_id === pro.id
         );
 
-        const lowestMatchingPrice = matchingServices.reduce<number | null>(
+        const lowestMatchingPrice = matchingServizi.reduce<number | null>(
           (lowest, service) => {
             if (lowest === null) return service.price;
             return Math.min(lowest, service.price);
@@ -121,7 +121,7 @@ export function SearchPage() {
 
         const basePro = {
           ...pro,
-          matching_services: matchingServices,
+          matching_services: matchingServizi,
           starting_price: lowestMatchingPrice ?? pro.starting_price,
         };
 
@@ -192,12 +192,12 @@ export function SearchPage() {
           <aside className="bg-white rounded-2xl border border-stone-200 p-5 h-fit">
             <div className="flex items-center gap-2 mb-5">
               <Filter className="w-4 h-4 text-stone-500" />
-              <h3 className="font-bold text-stone-900">Filters</h3>
+              <h3 className="font-bold text-stone-900">Filtri</h3>
             </div>
 
             <div className="mb-6">
               <label className="text-sm font-semibold text-stone-700">
-                Max price per service
+                Prezzo massimo per servizio
               </label>
               <input
                 type="range"
@@ -212,7 +212,7 @@ export function SearchPage() {
 
             <div>
               <label className="text-sm font-semibold text-stone-700">
-                Minimum rating
+                Valutazione minima
               </label>
               <div className="grid grid-cols-4 gap-2 mt-3">
                 {[0, 3, 4, 4.5].map((rating) => (
@@ -227,7 +227,7 @@ export function SearchPage() {
                         : 'border-stone-200 text-stone-600')
                     }
                   >
-                    {rating === 0 ? 'Any' : String(rating) + '+'}
+                    {rating === 0 ? 'Qualsiasi' : String(rating) + '+'}
                   </button>
                 ))}
               </div>
@@ -240,7 +240,7 @@ export function SearchPage() {
                 {filtered.length} pros {titleLocation}
               </h1>
               <p className="text-stone-600 mt-1">
-                Search is now based on active services, so professionals can appear in multiple categories.
+                La ricerca si basa sui servizi attivi: un professionista può comparire in più categorie.
               </p>
             </div>
 
@@ -254,12 +254,12 @@ export function SearchPage() {
               </div>
             ) : filtered.length === 0 ? (
               <div className="bg-white rounded-2xl border border-stone-200 p-8">
-                No pros match your filters yet. Try another city, service or filter.
+                Nessun professionista corrisponde ai filtri. Prova un'altra città, servizio o filtro.
               </div>
             ) : (
               <div className="grid gap-4">
                 {filtered.map((pro) => {
-                  const firstService = pro.matching_services?.[0];
+                  const firstServizio = pro.matching_services?.[0];
 
                   return (
                     <button
@@ -271,7 +271,7 @@ export function SearchPage() {
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <h3 className="text-xl font-bold text-stone-900">
-                            {pro.profiles?.full_name || 'Professional'}
+                            {pro.profiles?.full_name || 'Professionista'}
                           </h3>
 
                           <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-stone-600">
@@ -281,7 +281,7 @@ export function SearchPage() {
                             </span>
 
                             <span className="capitalize">
-                              {firstService?.service_type || pro.professional_type}
+                              {firstServizio?.service_type || pro.professional_type}
                             </span>
 
                             <span className="flex items-center gap-1">
@@ -295,7 +295,7 @@ export function SearchPage() {
                           </div>
 
                           <p className="mt-3 text-stone-700">
-                            {pro.bio || 'Dedicated to making every dog feel at home.'}
+                            {pro.bio || 'Dedicato al benessere e alla cura dei cani.'}
                           </p>
 
                           {pro.matching_services && pro.matching_services.length > 0 && (
@@ -314,10 +314,10 @@ export function SearchPage() {
 
                         <div className="text-right shrink-0">
                           <p className="text-sm text-stone-500">
-                            {pro.review_count || 0} reviews
+                            {pro.review_count || 0} recensioni
                           </p>
                           <p className="font-bold text-stone-900 mt-2">
-                            From €{pro.starting_price || 0}
+                            Da €{pro.starting_price || 0}
                           </p>
                         </div>
                       </div>

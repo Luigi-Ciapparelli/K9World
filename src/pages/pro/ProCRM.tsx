@@ -4,7 +4,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
 import { ProLayout } from './ProLayout';
 
-interface ClientRow {
+interface ClienteRow {
   id: string;
   full_name: string;
   email: string;
@@ -19,9 +19,9 @@ interface ClientRow {
 
 export function ProCRM() {
   const { user } = useAuth();
-  const [clients, setClients] = useState<ClientRow[]>([]);
+  const [clients, setClientes] = useState<ClienteRow[]>([]);
   const [q, setQ] = useState('');
-  const [selected, setSelected] = useState<ClientRow | null>(null);
+  const [selected, setSelected] = useState<ClienteRow | null>(null);
 
   const load = async () => {
     if (!user) return;
@@ -35,12 +35,12 @@ export function ProCRM() {
       grouped.set(b.owner_id, g);
     });
     const ids = [...grouped.keys()];
-    if (ids.length === 0) { setClients([]); return; }
+    if (ids.length === 0) { setClientes([]); return; }
     const { data: profiles } = await supabase.from('profiles').select('id, full_name, email, phone, avatar_url').in('id', ids);
     const { data: dogs } = await supabase.from('dogs').select('*').in('owner_id', ids);
     const { data: tags } = await supabase.from('client_tags').select('*').eq('professional_id', user.id);
 
-    const rows: ClientRow[] = (profiles || []).map((p: any) => {
+    const rows: ClienteRow[] = (profiles || []).map((p: any) => {
       const g = grouped.get(p.id)!;
       return {
         id: p.id,
@@ -56,7 +56,7 @@ export function ProCRM() {
       };
     });
     rows.sort((a, b) => b.totalSpend - a.totalSpend);
-    setClients(rows);
+    setClientes(rows);
   };
 
   useEffect(() => { load(); }, [user]);
@@ -66,7 +66,7 @@ export function ProCRM() {
   return (
     <ProLayout active="crm">
       <div className="p-8 max-w-7xl">
-        <h1 className="text-3xl font-bold text-stone-900 mb-1">Client Management</h1>
+        <h1 className="text-3xl font-bold text-stone-900 mb-1">Cliente Management</h1>
         <p className="text-stone-600 mb-6">Your real-time client database. Consolidated, searchable, always current.</p>
 
         <div className="relative mb-5 max-w-md">
@@ -84,7 +84,7 @@ export function ProCRM() {
             <table className="w-full text-sm">
               <thead className="bg-stone-50 text-xs uppercase text-stone-500">
                 <tr>
-                  <th className="text-left p-4">Client</th>
+                  <th className="text-left p-4">Cliente</th>
                   <th className="text-left p-4">Dogs</th>
                   <th className="text-right p-4">Bookings</th>
                   <th className="text-right p-4">Total spend</th>
@@ -115,12 +115,12 @@ export function ProCRM() {
           </div>
         )}
       </div>
-      {selected && <ClientDrawer client={selected} onClose={() => { setSelected(null); load(); }} />}
+      {selected && <ClienteDrawer client={selected} onClose={() => { setSelected(null); load(); }} />}
     </ProLayout>
   );
 }
 
-function ClientDrawer({ client, onClose }: { client: ClientRow; onClose: () => void }) {
+function ClienteDrawer({ client, onClose }: { client: ClienteRow; onClose: () => void }) {
   const { user } = useAuth();
   const [notes, setNotes] = useState<any[]>([]);
   const [newNote, setNewNote] = useState('');

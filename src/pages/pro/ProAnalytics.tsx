@@ -26,12 +26,12 @@ export function ProAnalytics() {
   const clientMap = new Map<string, { name: string; count: number; spend: number }>();
   completed.forEach((b) => {
     const key = b.owner_id;
-    const entry = clientMap.get(key) || { name: b.profiles?.full_name || 'Client', count: 0, spend: 0 };
+    const entry = clientMap.get(key) || { name: b.profiles?.full_name || 'Cliente', count: 0, spend: 0 };
     entry.count++;
     entry.spend += Number(b.price);
     clientMap.set(key, entry);
   });
-  const topClients = [...clientMap.values()].sort((a, b) => b.spend - a.spend).slice(0, 5);
+  const topClientes = [...clientMap.values()].sort((a, b) => b.spend - a.spend).slice(0, 5);
 
   const serviceMap = new Map<string, number>();
   completed.forEach((b) => {
@@ -54,15 +54,15 @@ export function ProAnalytics() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Metric icon={<DollarSign className="w-5 h-5" />} label="Total revenue" value={`$${revenue.toFixed(0)}`} />
           <Metric icon={<TrendingUp className="w-5 h-5" />} label="Completed" value={completed.length} />
-          <Metric icon={<Star className="w-5 h-5" />} label="Repeat rate" value={`${topClients.filter(c => c.count > 1).length * 20}%`} />
+          <Metric icon={<Star className="w-5 h-5" />} label="Repeat rate" value={`${topClientes.filter(c => c.count > 1).length * 20}%`} />
           <Metric icon={<Clock className="w-5 h-5" />} label="Utilization" value={`${utilization}%`} />
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
           <Panel title="Top customers">
-            {topClients.length === 0 ? <Empty /> : (
+            {topClientes.length === 0 ? <Empty /> : (
               <div className="space-y-2">
-                {topClients.map((c, i) => (
+                {topClientes.map((c, i) => (
                   <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-stone-50">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">#{i + 1}</div>
@@ -102,7 +102,7 @@ export function ProAnalytics() {
         <div className="mt-6 bg-gradient-to-r from-emerald-50 to-amber-50 rounded-2xl p-6 border border-emerald-100">
           <div className="font-bold text-stone-900 mb-1">Personalized pricing suggestion</div>
           <p className="text-sm text-stone-700">
-            Your top clients represent {topClients.length > 0 ? Math.round((topClients.reduce((s, c) => s + c.spend, 0) / Math.max(1, revenue)) * 100) : 0}% of your revenue.
+            Your top clients represent {topClientes.length > 0 ? Math.round((topClientes.reduce((s, c) => s + c.spend, 0) / Math.max(1, revenue)) * 100) : 0}% of your revenue.
             Consider offering them a 10% loyalty discount to retain them - a 5% increase in client retention can raise profit by 25-95%.
           </p>
         </div>

@@ -9,7 +9,7 @@ export function ProDashboard() {
   const { user } = useAuth();
   const { navigate } = useRouter();
   const [bookings, setBookings] = useState<any[]>([]);
-  const [clients, setClients] = useState<any[]>([]);
+  const [clients, setClientes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const load = async () => {
@@ -20,7 +20,7 @@ export function ProDashboard() {
     ]);
     setBookings(b.data || []);
     const unique = new Set((c.data || []).map((x: any) => x.owner_id));
-    setClients([...unique]);
+    setClientes([...unique]);
     setLoading(false);
   };
 
@@ -48,7 +48,7 @@ export function ProDashboard() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Stat icon={<Calendar />} label="Today" value={todays.length} color="emerald" />
           <Stat icon={<Bell />} label="Pending" value={pending.length} color="amber" />
-          <Stat icon={<Users />} label="Clients" value={clients.length} color="sky" />
+          <Stat icon={<Users />} label="Clientes" value={clients.length} color="sky" />
           <Stat icon={<DollarSign />} label="Revenue" value={`$${revenue.toFixed(0)}`} color="stone" />
         </div>
 

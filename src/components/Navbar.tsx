@@ -26,13 +26,13 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <button onClick={() => go('/')} className="flex items-center gap-2 group">
           <PawPrint className="w-7 h-7 text-emerald-600 group-hover:rotate-12 transition" />
-          <span className="text-xl font-bold text-stone-900">PawConnect</span>
+          <span className="text-xl font-bold text-stone-900">K9World</span>
         </button>
 
         <div className="hidden md:flex items-center gap-6 text-sm text-stone-700">
-          <button onClick={() => go('/search')} className="hover:text-emerald-600 transition">Find a Pro</button>
-          <button onClick={() => go('/become-a-pro')} className="hover:text-emerald-600 transition">Become a Pro</button>
-          <button onClick={() => go('/?section=services')} className="hover:text-emerald-600 transition">Services</button>
+          <button onClick={() => go('/search')} className="hover:text-emerald-600 transition">Trova un professionista</button>
+          <button onClick={() => go('/become-a-pro')} className="hover:text-emerald-600 transition">Diventa professionista</button>
+          <button onClick={() => go('/?section=services')} className="hover:text-emerald-600 transition">Servizi</button>
         </div>
 
         <div className="hidden md:flex items-center gap-3">
@@ -41,14 +41,14 @@ export function Navbar() {
               <button onClick={handleDashboard} className="text-sm text-stone-700 hover:text-emerald-600 flex items-center gap-1.5">
                 <User className="w-4 h-4" /> {profile?.full_name || 'Dashboard'}
               </button>
-              <button onClick={async () => { await signOut(); go('/'); }} className="text-stone-500 hover:text-stone-900" title="Sign out">
+              <button onClick={async () => { await signOut(); go('/'); }} className="text-stone-500 hover:text-stone-900" title="Esci">
                 <LogOut className="w-4 h-4" />
               </button>
             </>
           ) : (
             <>
-              <button onClick={() => go('/signin')} className="text-sm text-stone-700 hover:text-emerald-600 transition">Sign In</button>
-              <button onClick={() => go('/signup')} className="text-sm bg-emerald-600 text-white px-4 py-2 rounded-full hover:bg-emerald-700 transition">Sign Up</button>
+              <button onClick={() => go('/signin')} className="text-sm text-stone-700 hover:text-emerald-600 transition">Accedi</button>
+              <button onClick={() => go('/signup')} className="text-sm bg-emerald-600 text-white px-4 py-2 rounded-full hover:bg-emerald-700 transition">Registrati</button>
             </>
           )}
         </div>
@@ -65,9 +65,9 @@ export function Navbar() {
       {mobileOpen && (
         <div className="md:hidden border-t border-stone-200 bg-white">
           <div className="px-4 py-3 flex flex-col gap-1 text-sm">
-            <button onClick={() => go('/search')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Find a Pro</button>
-            <button onClick={() => go('/become-a-pro')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Become a Pro</button>
-            <button onClick={() => go('/?section=services')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Services</button>
+            <button onClick={() => go('/search')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Trova un professionista</button>
+            <button onClick={() => go('/become-a-pro')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Diventa professionista</button>
+            <button onClick={() => go('/?section=services')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Servizi</button>
             <div className="h-px bg-stone-200 my-2" />
             {user ? (
               <>
@@ -75,13 +75,13 @@ export function Navbar() {
                   <User className="w-4 h-4" /> {profile?.full_name || 'Dashboard'}
                 </button>
                 <button onClick={async () => { await signOut(); go('/'); }} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700 flex items-center gap-2">
-                  <LogOut className="w-4 h-4" /> Sign out
+                  <LogOut className="w-4 h-4" /> Esci
                 </button>
               </>
             ) : (
               <>
-                <button onClick={() => go('/signin')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Sign In</button>
-                <button onClick={() => go('/signup')} className="text-left px-3 py-2.5 rounded-lg bg-emerald-600 text-white font-semibold text-center hover:bg-emerald-700">Sign Up</button>
+                <button onClick={() => go('/signin')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Accedi</button>
+                <button onClick={() => go('/signup')} className="text-left px-3 py-2.5 rounded-lg bg-emerald-600 text-white font-semibold text-center hover:bg-emerald-700">Registrati</button>
               </>
             )}
           </div>

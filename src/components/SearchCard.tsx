@@ -13,21 +13,21 @@ import { useRouter } from '../lib/RouterContext';
 import { findNearestCity, SUPPORTED_CITIES } from '../lib/locations';
 
 const services = [
-  { id: 'boarding', label: 'Boarding', icon: Home },
-  { id: 'sitter', label: 'House Sitting', icon: Building2 },
-  { id: 'walker', label: 'Dog Walking', icon: Bone },
-  { id: 'trainer', label: 'Training', icon: GraduationCap },
-  { id: 'groomer', label: 'Grooming', icon: Scissors },
+  { id: 'boarding', label: 'Pensione', icon: Home },
+  { id: 'sitter', label: 'Pet sitting', icon: Building2 },
+  { id: 'walker', label: 'Passeggiate', icon: Bone },
+  { id: 'trainer', label: 'Addestramento', icon: GraduationCap },
+  { id: 'groomer', label: 'Toelettatura', icon: Scissors },
 ];
 
 export function SearchCard({ compact = false }: { compact?: boolean }) {
-  const [service, setService] = useState('walker');
+  const [service, setServizio] = useState('walker');
   const [address, setAddress] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setData] = useState('');
   const [locationLoading, setLocationLoading] = useState(false);
   const { navigate } = useRouter();
 
-  const handleSearch = () => {
+  const handleCerca = () => {
     const q = new URLSearchParams({
       type: service,
       address,
@@ -73,7 +73,7 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
       }`}
     >
       <p className="text-xs font-bold tracking-wider text-stone-500 mb-3">
-        CHOOSE A SERVICE
+        SCEGLI UN SERVIZIO
       </p>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4">
@@ -85,7 +85,7 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
             <button
               key={s.id}
               type="button"
-              onClick={() => setService(s.id)}
+              onClick={() => setServizio(s.id)}
               className={`flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border-2 transition ${
                 active
                   ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
@@ -107,7 +107,7 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
             name="address"
             type="text"
             list="supported-cities"
-            placeholder="Add your city, e.g. Rimini"
+            placeholder="Inserisci città, es. Rimini"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             className="w-full pl-10 pr-28 py-3 border border-stone-300 rounded-xl text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100"
@@ -125,7 +125,7 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
             className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1"
           >
             <Navigation className="w-3 h-3" />
-            {locationLoading ? 'Finding...' : 'Use mine'}
+            {locationLoading ? 'Ricerca...' : 'Usa posizione'}
           </button>
         </div>
 
@@ -134,17 +134,17 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
           name="date"
           type="date"
           value={date}
-          onChange={(e) => setDate(e.target.value)}
+          onChange={(e) => setData(e.target.value)}
           className="px-4 py-3 border border-stone-300 rounded-xl text-sm focus:border-emerald-500 focus:outline-none"
         />
 
         <button
           type="button"
-          onClick={handleSearch}
+          onClick={handleCerca}
           className="px-6 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 flex items-center justify-center gap-2"
         >
           <Search className="w-4 h-4" />
-          Search
+          Cerca
         </button>
       </div>
     </div>

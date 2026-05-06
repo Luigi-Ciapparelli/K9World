@@ -7,9 +7,9 @@ import { VerificationModal } from '../components/VerificationModal';
 
 export function ProfessionalProfile({ id }: { id: string }) {
   const [pro, setPro] = useState<any>(null);
-  const [services, setServices] = useState<any[]>([]);
-  const [reviews, setReviews] = useState<any[]>([]);
-  const [dogs, setDogs] = useState<any[]>([]);
+  const [services, setServizi] = useState<any[]>([]);
+  const [recensioni, setRecensioni] = useState<any[]>([]);
+  const [dogs, setCanes] = useState<any[]>([]);
   const [showBook, setShowBook] = useState(false);
   const [verifying, setVerifying] = useState<'email' | 'phone' | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
@@ -25,11 +25,11 @@ export function ProfessionalProfile({ id }: { id: string }) {
       const [p, s, r] = await Promise.all([
         supabase.from('professionals').select('*, profiles!professionals_id_fkey(*)').eq('id', id).maybeSingle(),
         supabase.from('services').select('*').eq('professional_id', id).eq('active', true),
-        supabase.from('reviews').select('*, profiles:owner_id(full_name, avatar_url)').eq('professional_id', id).order('created_at', { ascending: false }).limit(10),
+        supabase.from('recensioni').select('*, profiles:owner_id(full_name, avatar_url)').eq('professional_id', id).order('created_at', { ascending: false }).limit(10),
       ]);
 
       if (p.error) {
-        console.error('Professional profile load error:', p.error);
+        console.error('Professionista profile load error:', p.error);
         setProfileError(p.error.message);
         setPro(null);
         setLoadingProfile(false);
@@ -37,7 +37,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
       }
 
       if (s.error) {
-        console.error('Professional services load error:', s.error);
+        console.error('Professionista services load error:', s.error);
         setProfileError(s.error.message);
         setPro(null);
         setLoadingProfile(false);
@@ -45,24 +45,24 @@ export function ProfessionalProfile({ id }: { id: string }) {
       }
 
       if (r.error) {
-        console.error('Professional reviews load error:', r.error);
+        console.error('Professionista recensioni load error:', r.error);
       }
 
       setPro(p.data);
-      setServices(s.data || []);
-      setReviews(r.data || []);
+      setServizi(s.data || []);
+      setRecensioni(r.data || []);
 
       if (user) {
         const { data: d, error: dogsError } = await supabase.from('dogs').select('*').eq('owner_id', user.id);
 
         if (dogsError) {
-          console.error('Client dogs load error:', dogsError);
-          setDogs([]);
+          console.error('Cliente dogs load error:', dogsError);
+          setCanes([]);
         } else {
-          setDogs(d || []);
+          setCanes(d || []);
         }
       } else {
-        setDogs([]);
+        setCanes([]);
       }
 
       setLoadingProfile(false);
@@ -78,7 +78,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
           <h1 className="text-xl font-bold text-rose-700">Could not load professional</h1>
           <p className="text-stone-700 mt-2">{profileError}</p>
           <button onClick={() => navigate('/search')} className="mt-4 px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">
-            Back to search
+            Indietro to search
           </button>
         </div>
       </div>
@@ -89,10 +89,10 @@ export function ProfessionalProfile({ id }: { id: string }) {
     return (
       <div className="p-10">
         <div className="max-w-xl bg-white border border-stone-200 rounded-2xl p-6">
-          <h1 className="text-xl font-bold text-stone-900">Professional not found</h1>
+          <h1 className="text-xl font-bold text-stone-900">Professionista not found</h1>
           <p className="text-stone-600 mt-2">This professional is not available or has not been approved yet.</p>
           <button onClick={() => navigate('/search')} className="mt-4 px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold">
-            Back to search
+            Indietro to search
           </button>
         </div>
       </div>
@@ -120,7 +120,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm text-stone-600 mt-1">
               <span className="capitalize font-semibold text-emerald-700">{pro.professional_type}</span>
-              <span className="flex items-center gap-1"><Star className="w-4 h-4 fill-amber-400 text-amber-400" /><b>{pro.rating.toFixed(1)}</b> ({pro.review_count} reviews)</span>
+              <span className="flex items-center gap-1"><Star className="w-4 h-4 fill-amber-400 text-amber-400" /><b>{pro.rating.toFixed(1)}</b> ({pro.review_count} recensioni)</span>
               <span className="flex items-center gap-1"><MapPin className="w-4 h-4" />{pro.zone_text || 'Local area'}</span>
             </div>
             <p className="text-stone-700 mt-3">{pro.bio || 'Passionate about dogs and dedicated to providing the best care.'}</p>
@@ -130,16 +130,16 @@ export function ProfessionalProfile({ id }: { id: string }) {
               onClick={onBookClick}
               className="px-6 py-3 bg-emerald-600 text-white rounded-full font-semibold hover:bg-emerald-700 transition flex items-center gap-2"
             >
-              <Calendar className="w-4 h-4" /> Request booking
+              <Calendar className="w-4 h-4" /> Richiedi prenotazione
             </button>
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mt-6">
           <div className="bg-white rounded-2xl border border-stone-200 p-6">
-            <h2 className="text-xl font-bold text-stone-900 mb-4">Services</h2>
+            <h2 className="text-xl font-bold text-stone-900 mb-4">Servizi</h2>
             {services.length === 0 ? (
-              <p className="text-stone-500 text-sm">No services listed.</p>
+              <p className="text-stone-500 text-sm">Nessun servizio inserito.</p>
             ) : (
               <div className="space-y-3">
                 {services.map((s) => (
@@ -155,15 +155,15 @@ export function ProfessionalProfile({ id }: { id: string }) {
             )}
           </div>
           <div className="bg-white rounded-2xl border border-stone-200 p-6">
-            <h2 className="text-xl font-bold text-stone-900 mb-4">Reviews</h2>
-            {reviews.length === 0 ? (
-              <p className="text-stone-500 text-sm">No reviews yet.</p>
+            <h2 className="text-xl font-bold text-stone-900 mb-4">Recensioni</h2>
+            {recensioni.length === 0 ? (
+              <p className="text-stone-500 text-sm">No recensioni yet.</p>
             ) : (
               <div className="space-y-4">
-                {reviews.map((r) => (
+                {recensioni.map((r) => (
                   <div key={r.id} className="border-b border-stone-100 pb-4 last:border-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <div className="font-semibold text-stone-900 text-sm">{r.profiles?.full_name || 'Client'}</div>
+                      <div className="font-semibold text-stone-900 text-sm">{r.profiles?.full_name || 'Cliente'}</div>
                       <div className="flex">{Array.from({ length: r.rating }).map((_, i) => <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />)}</div>
                     </div>
                     <p className="text-sm text-stone-700">{r.comment}</p>
@@ -216,11 +216,11 @@ interface BookingModalProps {
 function BookingModal({ professional_id, services, dogs, isVerified, emailVerified, phoneVerified, onVerify, onClose }: BookingModalProps) {
   const { user } = useAuth();
   const { navigate } = useRouter();
-  const [serviceId, setServiceId] = useState(services[0]?.id || '');
-  const [dogId, setDogId] = useState(dogs[0]?.id || '');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [notes, setNotes] = useState('');
+  const [serviceId, setServizioId] = useState(services[0]?.id || '');
+  const [dogId, setCaneId] = useState(dogs[0]?.id || '');
+  const [date, setData] = useState('');
+  const [time, setOra] = useState('');
+  const [notes, setNote] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -260,11 +260,11 @@ function BookingModal({ professional_id, services, dogs, isVerified, emailVerifi
       return;
     }
 
-    const { error: bookingDogError } = await supabase.from('booking_dogs').insert({ booking_id: b.id, dog_id: dogId });
+    const { error: bookingCaneError } = await supabase.from('booking_dogs').insert({ booking_id: b.id, dog_id: dogId });
 
-    if (bookingDogError) {
-      console.error('Booking dog link error:', bookingDogError);
-      setError(bookingDogError.message);
+    if (bookingCaneError) {
+      console.error('Booking dog link error:', bookingCaneError);
+      setError(bookingCaneError.message);
       setSubmitting(false);
       return;
     }
@@ -277,16 +277,16 @@ function BookingModal({ professional_id, services, dogs, isVerified, emailVerifi
   return (
     <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl max-w-lg w-full p-6">
-        <h2 className="text-xl font-bold text-stone-900 mb-4">Request booking</h2>
+        <h2 className="text-xl font-bold text-stone-900 mb-4">Richiedi prenotazione</h2>
 
         {!isVerified && (
           <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl">
             <div className="flex items-start gap-3">
               <ShieldAlert className="w-5 h-5 text-amber-700 mt-0.5 shrink-0" />
               <div className="flex-1">
-                <div className="font-semibold text-amber-900 text-sm">Verification required</div>
+                <div className="font-semibold text-amber-900 text-sm">Verifica richiesta</div>
                 <p className="text-sm text-amber-800 mt-1">
-                  For everyone's safety, please verify your email and phone number before requesting a booking.
+                  Per maggiore sicurezza, verifica email e telefono prima di richiedere una prenotazione.
                 </p>
                 <div className="flex flex-wrap gap-2 mt-3">
                   {!emailVerified && (
@@ -294,7 +294,7 @@ function BookingModal({ professional_id, services, dogs, isVerified, emailVerifi
                       onClick={() => onVerify('email')}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-amber-300 rounded-full text-xs font-semibold text-amber-900 hover:bg-amber-100 transition"
                     >
-                      <Mail className="w-3.5 h-3.5" /> Verify email
+                      <Mail className="w-3.5 h-3.5" /> Verifica email
                     </button>
                   )}
                   {!phoneVerified && (
@@ -302,7 +302,7 @@ function BookingModal({ professional_id, services, dogs, isVerified, emailVerifi
                       onClick={() => onVerify('phone')}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-amber-300 rounded-full text-xs font-semibold text-amber-900 hover:bg-amber-100 transition"
                     >
-                      <Phone className="w-3.5 h-3.5" /> Verify phone
+                      <Phone className="w-3.5 h-3.5" /> Verifica telefono
                     </button>
                   )}
                 </div>
@@ -313,43 +313,43 @@ function BookingModal({ professional_id, services, dogs, isVerified, emailVerifi
 
         {dogs.length === 0 ? (
           <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800 mb-4">
-            Add a dog to your profile first.
+            Aggiungi prima un cane al tuo profilo.
           </div>
         ) : (
           <div className="space-y-3">
             <div>
-              <label className="text-sm font-semibold text-stone-700">Service</label>
-              <select value={serviceId} onChange={(e) => setServiceId(e.target.value)} disabled={!isVerified} className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm disabled:bg-stone-50 disabled:text-stone-400">
+              <label className="text-sm font-semibold text-stone-700">Servizio</label>
+              <select value={serviceId} onChange={(e) => setServizioId(e.target.value)} disabled={!isVerified} className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm disabled:bg-stone-50 disabled:text-stone-400">
                 {services.map((s) => <option key={s.id} value={s.id}>{s.name} \u2014 ${s.price}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-sm font-semibold text-stone-700">Dog</label>
-              <select value={dogId} onChange={(e) => setDogId(e.target.value)} disabled={!isVerified} className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm disabled:bg-stone-50 disabled:text-stone-400">
+              <label className="text-sm font-semibold text-stone-700">Cane</label>
+              <select value={dogId} onChange={(e) => setCaneId(e.target.value)} disabled={!isVerified} className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm disabled:bg-stone-50 disabled:text-stone-400">
                 {dogs.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
               </select>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-semibold text-stone-700">Date</label>
-                <input type="date" value={date} onChange={(e) => setDate(e.target.value)} disabled={!isVerified} className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm disabled:bg-stone-50 disabled:text-stone-400" />
+                <label className="text-sm font-semibold text-stone-700">Data</label>
+                <input type="date" value={date} onChange={(e) => setData(e.target.value)} disabled={!isVerified} className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm disabled:bg-stone-50 disabled:text-stone-400" />
               </div>
               <div>
-                <label className="text-sm font-semibold text-stone-700">Time</label>
-                <input type="time" value={time} onChange={(e) => setTime(e.target.value)} disabled={!isVerified} className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm disabled:bg-stone-50 disabled:text-stone-400" />
+                <label className="text-sm font-semibold text-stone-700">Ora</label>
+                <input type="time" value={time} onChange={(e) => setOra(e.target.value)} disabled={!isVerified} className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm disabled:bg-stone-50 disabled:text-stone-400" />
               </div>
             </div>
             <div>
-              <label className="text-sm font-semibold text-stone-700">Notes</label>
-              <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} disabled={!isVerified} className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm disabled:bg-stone-50 disabled:text-stone-400" />
+              <label className="text-sm font-semibold text-stone-700">Note</label>
+              <textarea value={notes} onChange={(e) => setNote(e.target.value)} rows={2} disabled={!isVerified} className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm disabled:bg-stone-50 disabled:text-stone-400" />
             </div>
             {error && <p className="text-sm text-rose-600">{error}</p>}
           </div>
         )}
         <div className="flex gap-3 mt-5">
-          <button onClick={onClose} className="flex-1 py-2.5 border border-stone-300 rounded-lg font-semibold">Cancel</button>
+          <button onClick={onClose} className="flex-1 py-2.5 border border-stone-300 rounded-lg font-semibold">Annulla</button>
           <button disabled={submitting || dogs.length === 0 || !isVerified} onClick={submit} className="flex-1 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed">
-            {submitting ? 'Sending...' : !isVerified ? 'Verify to book' : 'Send request'}
+            {submitting ? 'Sending...' : !isVerified ? 'Verify to book' : 'Invia richiesta'}
           </button>
         </div>
       </div>

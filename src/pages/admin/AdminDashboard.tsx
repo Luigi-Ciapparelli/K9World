@@ -12,7 +12,7 @@ type ProfileRow = {
   phone_verified: boolean | null;
 };
 
-type ProfessionalRow = {
+type ProfessionistaRow = {
   id: string;
   professional_type: string | null;
   bio: string | null;
@@ -61,7 +61,7 @@ export function AdminDashboard() {
   const { profile, loading } = useAuth();
 
   const [profiles, setProfiles] = useState<ProfileRow[]>([]);
-  const [professionals, setProfessionals] = useState<ProfessionalRow[]>([]);
+  const [professionals, setProfessionistas] = useState<ProfessionistaRow[]>([]);
   const [dogs, setDogs] = useState<DogRow[]>([]);
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [services, setServices] = useState<ServiceRow[]>([]);
@@ -116,7 +116,7 @@ export function AdminDashboard() {
     }
 
     setProfiles((profilesRes.data || []) as ProfileRow[]);
-    setProfessionals((professionalsRes.data || []) as ProfessionalRow[]);
+    setProfessionistas((professionalsRes.data || []) as ProfessionistaRow[]);
     setDogs((dogsRes.data || []) as DogRow[]);
     setBookings((bookingsRes.data || []) as BookingRow[]);
     setServices((servicesRes.data || []) as ServiceRow[]);
@@ -211,13 +211,13 @@ export function AdminDashboard() {
 
         <div className="grid md:grid-cols-5 gap-4 mb-8">
           <Stat title="Users" value={profiles.length} />
-          <Stat title="Professionals" value={professionals.length} />
+          <Stat title="Professionistas" value={professionals.length} />
           <Stat title="Pending" value={pendingCount} />
           <Stat title="Dogs" value={dogs.length} />
           <Stat title="Bookings" value={bookings.length} />
         </div>
 
-        <Section title="Professional approval">
+        <Section title="Professionista approval">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -311,7 +311,7 @@ export function AdminDashboard() {
               return (
                 <div key={booking.id} className="border border-stone-200 rounded-xl p-4">
                   <div className="font-semibold text-stone-900">
-                    {owner?.full_name || 'Client'} → {pro?.full_name || 'Professional'}
+                    {owner?.full_name || 'Cliente'} → {pro?.full_name || 'Professionista'}
                   </div>
                   <div className="text-sm text-stone-600 mt-1">
                     {service?.name || 'Service'} · status: {booking.status} · price: {booking.price || 0}

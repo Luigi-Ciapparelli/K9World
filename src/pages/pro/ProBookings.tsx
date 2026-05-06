@@ -54,7 +54,7 @@ export function ProBookings() {
           ) : (
             <table className="w-full text-sm">
               <thead className="bg-stone-50 text-xs uppercase text-stone-500">
-                <tr><th className="text-left p-4">Client</th><th className="text-left p-4">When</th><th className="text-left p-4">Status</th><th className="text-right p-4">Price</th><th className="p-4"></th></tr>
+                <tr><th className="text-left p-4">Cliente</th><th className="text-left p-4">When</th><th className="text-left p-4">Status</th><th className="text-right p-4">Price</th><th className="p-4"></th></tr>
               </thead>
               <tbody>
                 {filtered.map((b) => (

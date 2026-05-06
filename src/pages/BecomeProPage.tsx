@@ -16,7 +16,7 @@ import { useRouter } from '../lib/RouterContext';
 const services = [
   'Educazione e addestramento',
   'Pensione cani',
-  'Dog walking',
+  'Cane walking',
   'Pet sitting',
   'Visite a domicilio',
   'Toelettatura',

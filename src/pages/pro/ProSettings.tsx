@@ -73,7 +73,7 @@ export function ProSettings() {
     ]);
 
     if (p.error) {
-      console.error('Professional settings load error:', p.error);
+      console.error('Professionista settings load error:', p.error);
       alert(p.error.message);
     }
 
@@ -165,19 +165,19 @@ export function ProSettings() {
       return;
     }
 
-    const { data: existingProfessional, error: existingProfessionalError } = await supabase
+    const { data: existingProfessionista, error: existingProfessionistaError } = await supabase
       .from('professionals')
       .select('id')
       .eq('id', user.id)
       .maybeSingle();
 
-    if (existingProfessionalError) {
+    if (existingProfessionistaError) {
       setSaving(false);
-      alert(existingProfessionalError.message);
+      alert(existingProfessionistaError.message);
       return;
     }
 
-    const professionalResult = existingProfessional
+    const professionalResult = existingProfessionista
       ? await supabase
           .from('professionals')
           .update(professionalPayload)
@@ -284,7 +284,7 @@ export function ProSettings() {
     <ProLayout active="settings">
       <div className="p-8 max-w-5xl">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-stone-900">Professional profile</h1>
+          <h1 className="text-3xl font-bold text-stone-900">Professionista profile</h1>
           <p className="text-stone-600 mt-1">
             Complete your profile so admins can verify you and clients can trust your services.
           </p>
@@ -342,11 +342,22 @@ export function ProSettings() {
               onChange={(v) => setPro({ ...pro, instagram_url: v })}
             />
           </div>
+
+          <div>
+            <Field
+              label="URL foto copertina attività"
+              value={pro.cover_photo_url || ''}
+              onChange={(v) => setPro({ ...pro, cover_photo_url: v })}
+            />
+            <p className="text-xs text-stone-500 mt-1">
+              Usa una foto orizzontale del centro, campo, attività o ambiente di lavoro. Più avanti aggiungeremo upload diretto.
+            </p>
+          </div>
         </Section>
 
         <Section title="Public profile">
           <div>
-            <label className="text-sm font-semibold text-stone-700">Professional type</label>
+            <label className="text-sm font-semibold text-stone-700">Professionista type</label>
             <select
               value={pro.professional_type || 'walker'}
               onChange={(e) => setPro({ ...pro, professional_type: e.target.value })}
