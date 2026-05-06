@@ -133,8 +133,6 @@ export function AdminDashboard() {
     professionalId: string,
     approvalStatus: 'pending' | 'approved' | 'rejected'
   ) => {
-    const approved = approvalStatus === 'approved';
-
     const rejectionReason =
       approvalStatus === 'rejected'
         ? window.prompt('Reason for rejection?') || 'Rejected by admin'
@@ -142,15 +140,12 @@ export function AdminDashboard() {
 
     const adminNotes = window.prompt('Admin notes, optional:') || null;
 
-    const { error: updateError } = await supabase
-      .from('professionals')
-      .update({
-        approved,
-        approval_status: approvalStatus,
-        rejection_reason: rejectionReason,
-        admin_notes: adminNotes,
-      })
-      .eq('id', professionalId);
+    const { error: updateError } = await supabase.rpc('admin_set_professional_approval', {
+      target_professional_id: professionalId,
+      new_approval_status: approvalStatus,
+      new_admin_notes: adminNotes,
+      new_rejection_reason: rejectionReason,
+    });
 
     if (updateError) {
       alert(updateError.message);
