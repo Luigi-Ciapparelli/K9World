@@ -105,6 +105,11 @@ export function ProSettings() {
         insurance_summary: '',
         approval_status: 'pending',
         approved: false,
+        listing_type: 'individual',
+        main_contact_name: '',
+        has_facility: false,
+        facility_description: '',
+        team_size: 1,
       }
     );
 
@@ -151,6 +156,11 @@ export function ProSettings() {
       years_experience: Number(pro.years_experience) || 0,
       qualification_summary: pro.qualification_summary || null,
       insurance_summary: pro.insurance_summary || null,
+      listing_type: pro.listing_type || 'individual',
+      main_contact_name: pro.main_contact_name || null,
+      has_facility: !!pro.has_facility,
+      facility_description: pro.facility_description || null,
+      team_size: Number(pro.team_size) || 1,
       updated_at: new Date().toISOString(),
     };
 
@@ -316,6 +326,59 @@ export function ProSettings() {
 
         <Section title="Business details">
           <Field label="Full name" value={name} onChange={setName} />
+
+          <div>
+            <label className="text-sm font-semibold text-stone-700">Tipo profilo</label>
+            <select
+              value={pro.listing_type || 'individual'}
+              onChange={(e) => setPro({ ...pro, listing_type: e.target.value })}
+              className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
+            >
+              <option value="individual">Professionista individuale</option>
+              <option value="business">Attività professionale</option>
+              <option value="center">Centro cinofilo</option>
+              <option value="boarding_facility">Pensione / struttura</option>
+            </select>
+            <p className="text-xs text-stone-500 mt-1">
+              Usa Centro cinofilo o Pensione / struttura quando il profilo rappresenta un’attività con sede, campi, pensione o più persone.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-3">
+            <Field
+              label="Referente principale"
+              value={pro.main_contact_name || ''}
+              onChange={(v) => setPro({ ...pro, main_contact_name: v })}
+            />
+            <Field
+              label="Numero persone nel team"
+              type="number"
+              value={String(pro.team_size ?? 1)}
+              onChange={(v) => setPro({ ...pro, team_size: Number(v) })}
+            />
+          </div>
+
+          <label className="flex items-center gap-2 text-sm text-stone-700">
+            <input
+              type="checkbox"
+              checked={!!pro.has_facility}
+              onChange={(e) => setPro({ ...pro, has_facility: e.target.checked })}
+            />
+            Ha una struttura, campo cinofilo, pensione o sede operativa
+          </label>
+
+          <div>
+            <label className="text-sm font-semibold text-stone-700">
+              Descrizione struttura / attività
+            </label>
+            <textarea
+              value={pro.facility_description || ''}
+              onChange={(e) => setPro({ ...pro, facility_description: e.target.value })}
+              rows={3}
+              className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
+              placeholder="Esempio: centro cinofilo con campi recintati, pensione, area lavoro, obedience, educazione e percorsi personalizzati."
+            />
+          </div>
 
           <div className="grid md:grid-cols-2 gap-3">
             <Field
