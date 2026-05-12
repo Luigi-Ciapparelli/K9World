@@ -2,6 +2,7 @@ import { AuthProvider, useAuth } from './lib/AuthContext';
 import { RouterProvider, useRouter } from './lib/RouterContext';
 import { Navbar } from './components/Navbar';
 import { Chatbot } from './components/Chatbot';
+import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
 import { SignInPage, SignUpPage } from './pages/AuthPages';
 import { SearchPage } from './pages/SearchPage';
@@ -21,6 +22,7 @@ import { ProSettings } from './pages/pro/ProSettings';
 
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { BecomeProPage } from './pages/BecomeProPage';
+import { PrivacyPage, TermsPage, ContactPage } from './pages/LegalPages';
 function AppShell() {
   const { path, navigate } = useRouter();
   const { user, loading } = useAuth();
@@ -49,6 +51,9 @@ function AppShell() {
     content = <ProfessionalProfile id={id} />;
   }
   else if (basePath === '/become-a-pro') content = <BecomeProPage />;
+  else if (basePath === '/privacy') content = <PrivacyPage />;
+  else if (basePath === '/terms') content = <TermsPage />;
+  else if (basePath === '/contact') content = <ContactPage />;
   else if (!user) { navigate('/signin'); return null; }
   else if (basePath === '/admin') content = <AdminDashboard />;
   else if (basePath === '/owner') content = <OwnerDashboard />;
@@ -65,10 +70,16 @@ function AppShell() {
   else if (basePath === '/pro/settings') content = <ProSettings />;
   else content = <HomePage />;
 
+  const showFooter =
+    !basePath.startsWith('/owner') &&
+    !basePath.startsWith('/pro') &&
+    basePath !== '/admin';
+
   return (
     <>
       <Navbar />
       {content}
+      {showFooter && <Footer />}
       {user && <Chatbot />}
     </>
   );

@@ -123,17 +123,6 @@ export function HomePage() {
           </div>
         </div>
       </section>
-
-      <footer className="bg-stone-900 text-stone-400 py-10">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm">&copy; 2026 PawConnect. Servizi cinofili locali, costruiti con professionisti verificati.</p>
-          <div className="flex gap-6 text-sm">
-            <a className="hover:text-white">Privacy</a>
-            <a className="hover:text-white">Termini</a>
-            <a className="hover:text-white">Aiuto</a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
