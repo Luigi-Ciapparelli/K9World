@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { PawPrint, LogOut, User, AlertCircle, Menu, X } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Navbar() {
   const { user, profile, signOut } = useAuth();
@@ -36,6 +37,7 @@ export function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
           {user ? (
             <>
               <button onClick={handleDashboard} className="text-sm text-stone-700 hover:text-emerald-600 flex items-center gap-1.5">
@@ -68,6 +70,9 @@ export function Navbar() {
             <button onClick={() => go('/search')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Trova un professionista</button>
             <button onClick={() => go('/become-a-pro')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Diventa professionista</button>
             <button onClick={() => go('/?section=services')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Servizi</button>
+            <div className="px-3 py-2">
+              <ThemeToggle />
+            </div>
             <div className="h-px bg-stone-200 my-2" />
             {user ? (
               <>

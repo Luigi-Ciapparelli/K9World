@@ -19,6 +19,7 @@ import { ProPasses } from './pages/pro/ProPasses';
 import { ProSubscriptions } from './pages/pro/ProSubscriptions';
 import { ProCampaigns } from './pages/pro/ProCampaigns';
 import { ProSettings } from './pages/pro/ProSettings';
+import { ThemeProvider } from './lib/ThemeContext';
 
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { BecomeProPage } from './pages/BecomeProPage';
@@ -88,10 +89,12 @@ function AppShell() {
 function App() {
   return (
     <AuthProvider>
-      <RouterProvider>
-        <AppShell />
-      </RouterProvider>
-    </AuthProvider>
+  <ThemeProvider>
+    <RouterProvider>
+      <AppShell />
+    </RouterProvider>
+  </ThemeProvider>
+</AuthProvider>
   );
 }
 

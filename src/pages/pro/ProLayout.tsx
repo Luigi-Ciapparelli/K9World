@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import { LayoutDashboard, Calendar, Users, BarChart3, Award, Ticket, RefreshCcw, Mail, Settings, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Calendar, Users, BarChart3, Settings, Menu, X } from 'lucide-react';
 import { useRouter } from '../../lib/RouterContext';
 import { useAuth } from '../../lib/AuthContext';
 
@@ -9,18 +9,14 @@ export function ProLayout({ children, active }: { children: ReactNode; active: s
   const [open, setOpen] = useState(false);
 
   const nav = [
-    { id: 'dashboard', label: 'Mission Control', icon: LayoutDashboard, path: '/pro' },
-    { id: 'bookings', label: 'Bookings', icon: Calendar, path: '/pro/bookings' },
-    { id: 'crm', label: 'CRM', icon: Users, path: '/pro/crm' },
-    { id: 'analytics', label: 'Loyalty Analytics', icon: BarChart3, path: '/pro/analytics' },
-    { id: 'memberships', label: 'Memberships', icon: Award, path: '/pro/memberships' },
-    { id: 'passes', label: 'Passes & Tickets', icon: Ticket, path: '/pro/passes' },
-    { id: 'subscriptions', label: 'Subscriptions', icon: RefreshCcw, path: '/pro/subscriptions' },
-    { id: 'campaigns', label: 'Email Campaigns', icon: Mail, path: '/pro/campaigns' },
-    { id: 'settings', label: 'Settings', icon: Settings, path: '/pro/settings' },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/pro' },
+    { id: 'bookings', label: 'Richieste', icon: Calendar, path: '/pro/bookings' },
+    { id: 'crm', label: 'Clienti', icon: Users, path: '/pro/crm' },
+    { id: 'analytics', label: 'Statistiche', icon: BarChart3, path: '/pro/analytics' },
+    { id: 'settings', label: 'Profilo e servizi', icon: Settings, path: '/pro/settings' },
   ];
 
-  const activeLabel = nav.find((n) => n.id === active)?.label || 'Pro Suite';
+  const activeLabel = nav.find((n) => n.id === active)?.label || 'Area professionista';
 
   const handleNav = (path: string) => {
     navigate(path);
@@ -31,7 +27,7 @@ export function ProLayout({ children, active }: { children: ReactNode; active: s
     <div className="bg-stone-50 min-h-[calc(100vh-4rem)] md:grid md:grid-cols-[240px_1fr]">
       <div className="md:hidden sticky top-16 z-30 bg-white border-b border-stone-200 px-4 py-3 flex items-center justify-between">
         <div>
-          <div className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">Pro Suite</div>
+          <div className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">Area professionista</div>
           <div className="text-sm font-semibold text-stone-900">{activeLabel}</div>
         </div>
         <button
@@ -63,7 +59,7 @@ export function ProLayout({ children, active }: { children: ReactNode; active: s
       >
         <div className="px-3 mb-6 flex items-center justify-between md:block">
           <div>
-            <div className="text-xs font-bold text-stone-500 uppercase tracking-wider">Pro Suite</div>
+            <div className="text-xs font-bold text-stone-500 uppercase tracking-wider">Area professionista</div>
             <div className="text-sm font-semibold text-stone-900 mt-1">{profile?.full_name}</div>
           </div>
           <button
