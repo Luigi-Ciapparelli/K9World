@@ -234,7 +234,7 @@ export function LocalExcellenceShowcase() {
   }, [selectedCity]);
 
   return (
-    <section id="services" className="relative overflow-hidden bg-stone-950 text-white">
+    <section id="services" className="local-excellence-section relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.25),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(245,158,11,0.18),transparent_30%)]" />
 
       <div className="relative max-w-7xl mx-auto px-6 py-20">
@@ -249,20 +249,20 @@ export function LocalExcellenceShowcase() {
               Eccellenze locali
             </h2>
 
-            <p className="text-stone-300 text-lg mt-4">
+            <p className="local-excellence-subtitle text-lg mt-4">
               Una selezione visuale dei professionisti approvati più rilevanti nella tua zona,
               basata su servizi attivi, distanza e recensioni recenti.
             </p>
           </div>
 
-          <div className="bg-white/10 border border-white/15 rounded-2xl p-3">
-            <label className="block text-xs text-stone-300 font-semibold mb-1">
+          <div className="local-excellence-zone-card rounded-2xl p-3">
+            <label className="local-excellence-zone-label block text-xs font-semibold mb-1">
               Zona
             </label>
             <select
               value={selectedCityName}
               onChange={(event) => setSelectedCityName(event.target.value)}
-              className="bg-stone-900 border border-white/20 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-emerald-400"
+              className="local-excellence-select border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-500"
             >
               {SUPPORTED_CITIES.map((city) => (
                 <option key={city.name} value={city.name}>
@@ -289,7 +289,7 @@ export function LocalExcellenceShowcase() {
             return (
               <article
                 key={category.type}
-                className="relative min-h-[360px] rounded-[2rem] overflow-hidden border border-white/10 bg-stone-900 shadow-2xl group"
+                className="relative min-h-[360px] rounded-[2rem] overflow-hidden border border-white/10 bg-stone-900 shadow-2xl group text-white"
               >
                 {featured?.imageUrl ? (
                   <img
@@ -335,7 +335,7 @@ export function LocalExcellenceShowcase() {
                       Caricamento profili in evidenza...
                     </div>
                   ) : featured ? (
-                    <div className="rounded-3xl bg-white/95 text-stone-900 p-5 shadow-xl">
+                    <div className="local-excellence-result-card rounded-3xl p-5 shadow-xl">
                       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                         <div>
                           <div className="flex items-center gap-2 text-sm text-stone-500">
@@ -381,7 +381,7 @@ export function LocalExcellenceShowcase() {
                       </div>
                     </div>
                   ) : (
-                    <div className="rounded-3xl bg-white/95 text-stone-900 p-5">
+                    <div className="local-excellence-result-card rounded-3xl p-5">
                       <h4 className="text-xl font-bold">Stiamo selezionando profili</h4>
                       <p className="text-stone-600 mt-2">
                         Nessun professionista approvato per questa categoria nella zona di {selectedCity.name}.
@@ -394,7 +394,7 @@ export function LocalExcellenceShowcase() {
           })}
         </div>
 
-        <div className="mt-8 text-sm text-stone-400">
+        <div className="local-excellence-note mt-8 text-sm">
           La vetrina non sostituisce la ricerca completa: per vedere tutti i profili usa “Trova un professionista”.
         </div>
       </div>
