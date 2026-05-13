@@ -108,7 +108,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
           <button
             type="button"
             onClick={() => navigate('/search')}
-            className="mt-5 px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold"
+            className="mt-5 px-4 py-2 bg-[#0f5f46] text-white rounded-xl font-semibold"
           >
             Torna alla ricerca
           </button>
@@ -128,7 +128,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
           <button
             type="button"
             onClick={() => navigate('/search')}
-            className="mt-5 px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold"
+            className="mt-5 px-4 py-2 bg-[#0f5f46] text-white rounded-xl font-semibold"
           >
             Torna alla ricerca
           </button>
@@ -155,14 +155,14 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-stone-50">
-      <section className="relative overflow-hidden bg-stone-950 text-white">
+      <section className="relative overflow-hidden bg-[#15110b] text-white">
         <img
           src={coverUrl}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-50"
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-stone-950 via-stone-950/75 to-stone-950/30" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.28),transparent_35%)]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#15110b]/70 via-[#15110b]/45 to-[#15110b]/15" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.24),transparent_35%)]" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-28">
           <button
@@ -175,7 +175,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
           </button>
 
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/15 px-4 py-2 text-sm font-semibold text-emerald-100 mb-5">
+            <div className="inline-flex items-center gap-2 rounded-full bg-amber-400/10 border border-amber-300/20 px-4 py-2 text-sm font-semibold text-amber-100 mb-5">
               <BadgeCheck className="w-4 h-4" />
               Profilo approvato PawConnect
             </div>
@@ -185,7 +185,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
             </h1>
 
             <div className="flex flex-wrap items-center gap-4 text-sm text-stone-200 mt-5">
-              <span className="capitalize rounded-full bg-emerald-500/15 border border-emerald-400/20 px-3 py-1 font-semibold text-emerald-100">
+              <span className="capitalize rounded-full bg-amber-400/15 border border-amber-300/25 px-3 py-1 font-semibold text-amber-100">
                 {pro.professional_type || 'professionista'}
               </span>
 
@@ -212,7 +212,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 -mt-20 relative z-10 pb-14">
         <div className="grid lg:grid-cols-[1fr_380px] gap-6 items-start">
           <div className="space-y-6">
-            <section className="bg-white rounded-[2rem] border border-stone-200 shadow-sm p-6 md:p-8">
+            <section className="bg-[#fffdf8] rounded-[2rem] border border-amber-100 shadow-sm p-6 md:p-8">
               <div className="flex flex-col sm:flex-row gap-5 items-start">
                 {avatarUrl ? (
                   <img
@@ -221,7 +221,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
                     className="w-24 h-24 rounded-2xl object-cover border border-stone-200 shadow-sm"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-3xl font-bold text-emerald-700 shadow-sm">
+                  <div className="w-24 h-24 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-3xl font-bold text-[#0f5f46] shadow-sm">
                     {displayName.slice(0, 1)}
                   </div>
                 )}
@@ -231,7 +231,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
                     <h2 className="text-2xl md:text-3xl font-bold text-stone-900">
                       {displayName}
                     </h2>
-                    <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full font-semibold flex items-center gap-1">
+                    <span className="text-xs bg-amber-50 text-[#0f5f46] px-2 py-1 rounded-full font-semibold flex items-center gap-1">
                       <BadgeCheck className="w-3 h-3" />
                       Verificato
                     </span>
@@ -251,7 +251,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
               </div>
             </section>
 
-            <section className="bg-white rounded-[2rem] border border-stone-200 shadow-sm p-6 md:p-8">
+            <section className="bg-[#fffdf8] rounded-[2rem] border border-amber-100 shadow-sm p-6 md:p-8">
               <div className="mb-5">
                 <h2 className="text-2xl font-bold text-stone-900">Servizi</h2>
                 <p className="text-sm text-stone-500 mt-1">
@@ -272,7 +272,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
               )}
             </section>
 
-            <section className="bg-white rounded-[2rem] border border-stone-200 shadow-sm p-6 md:p-8">
+            <section className="bg-[#fffdf8] rounded-[2rem] border border-amber-100 shadow-sm p-6 md:p-8">
               <h2 className="text-2xl font-bold text-stone-900 mb-5">Recensioni</h2>
 
               {reviews.length === 0 ? (
@@ -307,7 +307,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
           </div>
 
           <aside className="lg:sticky lg:top-24">
-            <div className="bg-white rounded-[2rem] border border-stone-200 shadow-xl p-6">
+            <div className="bg-[#fffdf8] rounded-[2rem] border border-amber-100 shadow-xl p-6">
               <div className="text-sm text-stone-500">A partire da</div>
               <div className="text-4xl font-bold text-stone-900 mt-1">
                 €{startingPrice}
@@ -318,7 +318,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
               <div className="space-y-3 text-sm text-stone-700">
                 <div className="flex items-center justify-between">
                   <span>Profilo</span>
-                  <span className="font-semibold text-emerald-700">Approvato</span>
+                  <span className="font-semibold text-[#0f5f46]">Approvato</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Zona</span>
@@ -333,7 +333,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
               <button
                 type="button"
                 onClick={onBookClick}
-                className="w-full justify-center mt-6 px-6 py-3 bg-emerald-600 text-white rounded-full font-semibold hover:bg-emerald-700 transition inline-flex items-center gap-2"
+                className="w-full justify-center mt-6 px-6 py-3 bg-[#0f5f46] text-white rounded-full font-semibold hover:bg-[#0b4a37] transition inline-flex items-center gap-2"
               >
                 <Calendar className="w-4 h-4" />
                 Richiedi prenotazione
@@ -391,7 +391,7 @@ function ServiceCard({ service }: { service: any }) {
         : 'variabile';
 
   return (
-    <div className="rounded-2xl border border-stone-200 bg-stone-50 p-5 hover:border-emerald-200 hover:bg-emerald-50/30 transition">
+    <div className="rounded-2xl border border-stone-200 bg-stone-50 p-5 hover:border-amber-200 hover:bg-amber-50/50 transition">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="font-bold text-stone-900">{service.name}</h3>
@@ -660,7 +660,7 @@ function BookingModal({
               services.length === 0 ||
               dogs.length === 0
             }
-            className="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 disabled:opacity-50"
+            className="flex-1 py-2.5 bg-[#0f5f46] text-white rounded-xl font-semibold hover:bg-[#0b4a37] disabled:opacity-50"
           >
             {submitting ? 'Invio...' : 'Invia richiesta'}
           </button>
