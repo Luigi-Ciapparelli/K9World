@@ -10,7 +10,7 @@ import {
   Navigation,
 } from 'lucide-react';
 import { useRouter } from '../lib/RouterContext';
-import { findNearestCity, SUPPORTED_CITIES } from '../lib/locations';
+import { SUPPORTED_CITIES } from '../lib/locations';
 
 const services = [
   { id: 'boarding', label: 'Pensione', icon: Home },
@@ -25,16 +25,22 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
   const [address, setAddress] = useState('');
   const [date, setData] = useState('');
   const [locationLoading, setLocationLoading] = useState(false);
+  const [gpsCoords, setGpsCoords] = useState<{ lat: number; lng: number } | null>(null);
   const { navigate } = useRouter();
 
   const handleCerca = () => {
-    const q = new URLSearchParams({
+    const params = new URLSearchParams({
       type: service,
       address,
       date,
-    }).toString();
+    });
 
-    navigate(`/search?${q}`);
+    if (gpsCoords) {
+      params.set('lat', String(gpsCoords.lat));
+      params.set('lng', String(gpsCoords.lng));
+    }
+
+    navigate(`/search?${params.toString()}`);
   };
 
   const handleUseLocation = () => {
@@ -47,12 +53,11 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        const nearest = findNearestCity(
-          pos.coords.latitude,
-          pos.coords.longitude
-        );
-
-        setAddress(nearest.name);
+        setGpsCoords({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
+        setAddress('Posizione attuale');
         setLocationLoading(false);
       },
       () => {
@@ -109,7 +114,10 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
             list="supported-cities"
             placeholder="Inserisci città, es. Rimini"
             value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={(e) => {
+              setAddress(e.target.value);
+              setGpsCoords(null);
+            }}
             className="w-full pl-10 pr-28 py-3 border border-stone-300 rounded-xl text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100"
           />
 
