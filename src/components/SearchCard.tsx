@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Home,
   Building2,
@@ -10,7 +10,7 @@ import {
   Navigation,
 } from 'lucide-react';
 import { useRouter } from '../lib/RouterContext';
-import { findNearestCity, SUPPORTED_CITIES } from '../lib/locations';
+import { cityLabel, loadItalianCities, normalizeCitySearch, type ItalianCity } from '../lib/italianCities';
 
 const services = [
   { id: 'boarding', label: 'Pensione', icon: Home },
@@ -25,42 +25,166 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
   const [address, setAddress] = useState('');
   const [date, setData] = useState('');
   const [locationLoading, setLocationLoading] = useState(false);
+  const [locationAccuracy, setLocationAccuracy] = useState<number | null>(null);
+  const [cities, setCities] = useState<ItalianCity[]>([]);
+  const [selectedCity, setSelectedCity] = useState<ItalianCity | null>(null);
+  const [gpsCoords, setGpsCoords] = useState<{ lat: number; lng: number } | null>(null);
   const { navigate } = useRouter();
 
+  useEffect(() => {
+    let active = true;
+
+    loadItalianCities()
+      .then((data) => {
+        if (active) setCities(data);
+      })
+      .catch((error) => {
+        console.error('Errore caricamento comuni italiani:', error);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const suggestions = useMemo(() => {
+    const needle = normalizeCitySearch(address);
+
+    if (needle.length < 2 || selectedCity || gpsCoords) return [];
+
+    return cities
+      .filter((city) =>
+        normalizeCitySearch(
+          `${city.name} ${city.province} ${city.region}`
+        ).includes(needle)
+      )
+      .sort((a, b) => {
+        const aStarts = normalizeCitySearch(a.name).startsWith(needle);
+        const bStarts = normalizeCitySearch(b.name).startsWith(needle);
+
+        if (aStarts !== bStarts) return aStarts ? -1 : 1;
+        return a.name.localeCompare(b.name, 'it');
+      })
+      .slice(0, 8);
+  }, [address, cities, selectedCity, gpsCoords]);
+
   const handleCerca = () => {
-    const q = new URLSearchParams({
+    let city = selectedCity;
+
+    if (!city && address.trim()) {
+      const needle = normalizeCitySearch(address);
+
+      city =
+        cities.find(
+          (candidate) =>
+            normalizeCitySearch(cityLabel(candidate)) === needle ||
+            normalizeCitySearch(candidate.name) === needle
+        ) || null;
+    }
+
+    const coords =
+      gpsCoords ||
+      (city ? { lat: city.lat, lng: city.lng } : null);
+
+    const params = new URLSearchParams({
       type: service,
       address,
       date,
-    }).toString();
+    });
 
-    navigate(`/search?${q}`);
+    if (coords) {
+      params.set('lat', String(coords.lat));
+      params.set('lng', String(coords.lng));
+    }
+
+    navigate(`/search?${params.toString()}`);
   };
 
   const handleUseLocation = () => {
     if (!navigator.geolocation) {
-      alert('Geolocation is not supported by this browser.');
+      alert('La geolocalizzazione non è supportata da questo browser.');
       return;
     }
 
     setLocationLoading(true);
+    setLocationAccuracy(null);
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const nearest = findNearestCity(
-          pos.coords.latitude,
-          pos.coords.longitude
-        );
+    let bestPosition: GeolocationPosition | null = null;
+    let watchId: number | null = null;
 
-        setAddress(nearest.name);
+    const applyPosition = (pos: GeolocationPosition) => {
+      const nearestCity = cities.length
+        ? cities.reduce((nearest, city) => {
+            const nearestDistance =
+              (nearest.lat - pos.coords.latitude) ** 2 +
+              (nearest.lng - pos.coords.longitude) ** 2;
+
+            const cityDistance =
+              (city.lat - pos.coords.latitude) ** 2 +
+              (city.lng - pos.coords.longitude) ** 2;
+
+            return cityDistance < nearestDistance ? city : nearest;
+          })
+        : null;
+
+      setGpsCoords({
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+      });
+
+      setLocationAccuracy(pos.coords.accuracy);
+      setSelectedCity(null);
+      setAddress(
+        nearestCity ? cityLabel(nearestCity) : 'Posizione attuale'
+      );
+      setLocationLoading(false);
+
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+    };
+
+    const timeoutId = window.setTimeout(() => {
+      if (bestPosition) {
+        applyPosition(bestPosition);
+      } else {
         setLocationLoading(false);
+        if (watchId !== null) {
+          navigator.geolocation.clearWatch(watchId);
+        }
+        alert('Impossibile rilevare la posizione. Inserisci la città manualmente.');
+      }
+    }, 6000);
+
+    watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        if (
+          !bestPosition ||
+          pos.coords.accuracy < bestPosition.coords.accuracy
+        ) {
+          bestPosition = pos;
+        }
+
+        if (pos.coords.accuracy <= 100) {
+          window.clearTimeout(timeoutId);
+          applyPosition(pos);
+        }
       },
       () => {
-        alert('Could not detect your location. Please type your city manually.');
-        setLocationLoading(false);
+        if (!bestPosition) {
+          window.clearTimeout(timeoutId);
+          setLocationLoading(false);
+
+          if (watchId !== null) {
+            navigator.geolocation.clearWatch(watchId);
+          }
+
+          alert('Impossibile rilevare la posizione. Inserisci la città manualmente.');
+        }
       },
       {
         enableHighAccuracy: true,
+        maximumAge: 0,
         timeout: 10000,
       }
     );
@@ -106,18 +230,38 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
             id="search-address"
             name="address"
             type="text"
-            list="supported-cities"
-            placeholder="Inserisci città, es. Rimini"
+            placeholder="Inserisci città, es. Polignano a Mare"
             value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={(e) => {
+              setAddress(e.target.value);
+              setSelectedCity(null);
+              setGpsCoords(null);
+              setLocationAccuracy(null);
+            }}
             className="w-full pl-10 pr-28 py-3 border border-stone-300 rounded-xl text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100"
           />
 
-          <datalist id="supported-cities">
-            {SUPPORTED_CITIES.map((city) => (
-              <option key={city.name} value={city.name} />
-            ))}
-          </datalist>
+          {suggestions.length > 0 && (
+            <div className="absolute left-0 right-0 top-full mt-1 z-30 bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
+              {suggestions.map((city) => (
+                <button
+                  key={city.code}
+                  type="button"
+                  onClick={() => {
+                    setAddress(cityLabel(city));
+                    setSelectedCity(city);
+                    setGpsCoords(null);
+                  }}
+                  className="w-full text-left px-4 py-2.5 text-sm hover:bg-stone-50 border-b border-stone-100 last:border-b-0"
+                >
+                  <span className="font-semibold">{city.name}</span>
+                  <span className="text-stone-500">
+                    {' '}({city.province}) · {city.region}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
 
           <button
             type="button"
@@ -125,7 +269,13 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
             className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1"
           >
             <Navigation className="w-3 h-3" />
-            {locationLoading ? 'Ricerca...' : 'Usa posizione'}
+            {locationLoading
+              ? 'Ricerca GPS...'
+              : locationAccuracy !== null
+                ? locationAccuracy < 1000
+                  ? `±${Math.round(locationAccuracy)} m`
+                  : `±${(locationAccuracy / 1000).toFixed(1)} km`
+                : 'Usa posizione'}
           </button>
         </div>
 

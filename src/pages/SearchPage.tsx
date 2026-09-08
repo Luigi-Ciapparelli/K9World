@@ -48,11 +48,34 @@ export function SearchPage() {
 
   const typeFilter = qs.get('type');
   const addressFilter = qs.get('address');
+  const latParam = qs.get('lat');
+  const lngParam = qs.get('lng');
 
   const selectedCity = useMemo(
     () => findSupportedCity(addressFilter),
     [addressFilter]
   );
+
+  const selectedCoordinates = useMemo(() => {
+    if (latParam !== null && lngParam !== null) {
+      const lat = Number(latParam);
+      const lng = Number(lngParam);
+
+      if (Number.isFinite(lat) && Number.isFinite(lng)) {
+        return { lat, lng, explicit: true };
+      }
+    }
+
+    if (selectedCity) {
+      return {
+        lat: selectedCity.lat,
+        lng: selectedCity.lng,
+        explicit: false,
+      };
+    }
+
+    return null;
+  }, [latParam, lngParam, selectedCity]);
 
   useEffect(() => {
     const load = async () => {
@@ -126,15 +149,15 @@ export function SearchPage() {
         };
 
         if (
-          selectedCity &&
+          selectedCoordinates &&
           typeof pro.latitude === 'number' &&
           typeof pro.longitude === 'number'
         ) {
           return {
             ...basePro,
             distance_km: distanceKm(
-              selectedCity.lat,
-              selectedCity.lng,
+              selectedCoordinates.lat,
+              selectedCoordinates.lng,
               pro.latitude,
               pro.longitude
             ),
@@ -149,7 +172,7 @@ export function SearchPage() {
     };
 
     load();
-  }, [typeFilter, selectedCity]);
+  }, [typeFilter, selectedCity, selectedCoordinates]);
 
   const filtered = pros
     .filter((pro) => {
@@ -159,14 +182,20 @@ export function SearchPage() {
       if (price > maxPrice) return false;
       if (rating < minRating) return false;
 
-      if (selectedCity) {
-        const zoneMatches = (pro.zone_text || '')
-          .toLowerCase()
-          .includes(selectedCity.name.toLowerCase());
-
+      if (selectedCoordinates) {
         const distanceMatches =
           typeof pro.distance_km === 'number' &&
           pro.distance_km <= (pro.coverage_radius_km || 30);
+
+        if (selectedCoordinates.explicit) {
+          return distanceMatches;
+        }
+
+        const zoneMatches =
+          !!selectedCity &&
+          (pro.zone_text || '')
+            .toLowerCase()
+            .includes(selectedCity.name.toLowerCase());
 
         return zoneMatches || distanceMatches;
       }
