@@ -7,7 +7,7 @@ interface AuthContextType {
   profile: Profile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
-  signUp: (args: SignUpArgs) => Promise<{ error: string | null }>;
+  signUp: (args: SignUpArgs) => Promise<{ error: string | null; needsEmailConfirmation?: boolean }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -19,6 +19,15 @@ interface SignUpArgs {
   phone: string;
   role: Role;
   professionalType?: ProfessionalType;
+  dogName?: string;
+  dogBreed?: string;
+  dogAge?: string;
+  dogWeight?: string;
+  dogBreedSlug?: string;
+  dogFciGroup?: number;
+  dogVaccinated?: boolean;
+  dogReactive?: boolean;
+  dogNotes?: string;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -70,37 +79,57 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error?.message || null };
   };
 
-  const signUp = async ({ email, password, fullName, phone, role, professionalType }: SignUpArgs) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+  const signUp = async ({
+    email,
+    password,
+    fullName,
+    phone,
+    role,
+    professionalType,
+    dogName,
+    dogBreed,
+    dogAge,
+    dogWeight,
+    dogBreedSlug,
+    dogFciGroup,
+    dogVaccinated,
+    dogReactive,
+    dogNotes,
+  }: SignUpArgs) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          pawconnect_onboarding_version: '1',
+          full_name: fullName,
+          phone,
+          role,
+          professional_type: role === 'professional' ? professionalType || 'walker' : null,
+          dog_name: role === 'owner' ? dogName?.trim() || '' : '',
+          dog_breed: role === 'owner' ? dogBreed?.trim() || '' : '',
+          dog_age: role === 'owner' ? dogAge || '' : '',
+          dog_weight: role === 'owner' ? dogWeight || '' : '',
+          dog_breed_slug: role === 'owner' ? dogBreedSlug || '' : '',
+          dog_fci_group: role === 'owner' ? dogFciGroup ?? null : null,
+          dog_vaccinated: role === 'owner' ? Boolean(dogVaccinated) : false,
+          dog_reactive: role === 'owner' ? Boolean(dogReactive) : false,
+          dog_notes: role === 'owner' ? dogNotes?.trim() || '' : '',
+        },
+      },
+    });
+
     if (error) return { error: error.message };
     if (!data.user) return { error: 'Signup failed' };
 
+    // Il trigger DB crea profile, eventuale professional pending e primo cane.
+    // Se la conferma email è attiva non esiste ancora una sessione browser.
     if (!data.session) {
-      return { error: 'Account created. Please confirm your email, then log in.' };
-    }
-
-    const { error: profileError } = await supabase.from('profiles').insert({
-      id: data.user.id,
-      email,
-      full_name: fullName,
-      phone,
-      role,
-      email_verified: false,
-      phone_verified: false,
-    });
-    if (profileError) return { error: profileError.message };
-
-    if (role === 'professional') {
-      const { error: professionalError } = await supabase.from('professionals').insert({
-        id: data.user.id,
-        professional_type: professionalType || 'walker',
-      });
-
-      if (professionalError) return { error: professionalError.message };
+      return { error: null, needsEmailConfirmation: true };
     }
 
     await loadProfile(data.user.id);
-    return { error: null };
+    return { error: null, needsEmailConfirmation: false };
   };
 
   const signOut = async () => {

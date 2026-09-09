@@ -7,6 +7,7 @@ import { HomePage } from './pages/HomePage';
 import { SignInPage, SignUpPage } from './pages/AuthPages';
 import { SearchPage } from './pages/SearchPage';
 import { ProfessionalProfile } from './pages/ProfessionalProfile';
+import { FciGroupPage } from './pages/FciGroupPage';
 import { OwnerDashboard } from './pages/owner/OwnerDashboard';
 import { OwnerBookings } from './pages/owner/OwnerBookings';
 import { DogsPage } from './pages/owner/DogsPage';
@@ -50,6 +51,10 @@ function AppShell() {
   else if (basePath.startsWith('/p/')) {
     const id = basePath.slice(3);
     content = <ProfessionalProfile id={id} />;
+  }
+  else if (basePath.startsWith('/gruppi-fci/')) {
+    const group = Number(basePath.slice('/gruppi-fci/'.length));
+    content = <FciGroupPage group={group} />;
   }
   else if (basePath === '/become-a-pro') content = <BecomeProPage />;
   else if (basePath === '/privacy') content = <PrivacyPage />;

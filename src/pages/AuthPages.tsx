@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PawPrint, Mail, Lock, User, Phone, Check } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
 import type { ProfessionalType, Role } from '../lib/types';
+import { loadFciBreeds, normalizeBreedSearch, type FciBreed } from '../lib/fciBreeds';
 
 export function SignInPage() {
   const [email, setEmail] = useState('');
@@ -40,30 +41,114 @@ export function SignInPage() {
 }
 
 export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
-  const [step, setStep] = useState<1 | 2>(defaultRole ? 2 : 1);
+  const [step, setStep] = useState<1 | 2 | 3>(defaultRole ? 2 : 1);
   const [role, setRole] = useState<Role>(defaultRole || 'owner');
   const [professionalType, setProfessionalType] = useState<ProfessionalType>('walker');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [dogName, setDogName] = useState('');
+  const [dogBreed, setDogBreed] = useState('');
+  const [breeds, setBreeds] = useState<FciBreed[]>([]);
+  const [selectedBreed, setSelectedBreed] = useState<FciBreed | null>(null);
+  const [breedMenuOpen, setBreedMenuOpen] = useState(false);
+  const [dogAge, setDogAge] = useState('');
+  const [dogWeight, setDogWeight] = useState('');
+  const [dogVaccinated, setDogVaccinated] = useState(false);
+  const [dogReactive, setDogReactive] = useState(false);
+  const [dogNotes, setDogNotes] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signUp } = useAuth();
   const { navigate } = useRouter();
 
+  useEffect(() => {
+    loadFciBreeds()
+      .then(setBreeds)
+      .catch((err) => console.error('FCI breeds load error:', err));
+  }, []);
+
+  const normalizedBreed = normalizeBreedSearch(dogBreed);
+
+  const breedSuggestions =
+    normalizedBreed.length >= 2
+      ? breeds
+          .filter((breed) =>
+            normalizeBreedSearch(breed.name).includes(normalizedBreed)
+          )
+          .sort((a, b) => {
+            const aStarts = normalizeBreedSearch(a.name).startsWith(normalizedBreed);
+            const bStarts = normalizeBreedSearch(b.name).startsWith(normalizedBreed);
+
+            if (aStarts !== bStarts) return aStarts ? -1 : 1;
+            return a.name.localeCompare(b.name, 'it');
+          })
+          .slice(0, 8)
+      : [];
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
     if (!email || !password || !fullName || !phone) {
       setError('Tutti i campi sono obbligatori');
       return;
     }
+
+    if (role === 'owner' && step === 2) {
+      setStep(3);
+      return;
+    }
+
+    if (role === 'owner' && (!dogName.trim() || !dogBreed.trim())) {
+      setError('Inserisci almeno nome e razza del cane');
+      return;
+    }
+
+    if (
+      role === 'owner' &&
+      dogBreed !== 'Meticcio / altra razza' &&
+      !selectedBreed
+    ) {
+      setError('Seleziona la razza dai suggerimenti oppure scegli Meticcio / altra razza');
+      return;
+    }
+
     setLoading(true);
-    const { error } = await signUp({ email, password, fullName, phone, role, professionalType });
+
+    const { error, needsEmailConfirmation } = await signUp({
+      email,
+      password,
+      fullName,
+      phone,
+      role,
+      professionalType,
+      dogName,
+      dogBreed,
+      dogAge,
+      dogWeight,
+      dogBreedSlug: selectedBreed?.slug,
+      dogFciGroup: selectedBreed?.fciGroup,
+      dogVaccinated,
+      dogReactive,
+      dogNotes,
+    });
+
     setLoading(false);
-    if (error) setError(error);
-    else navigate(role === 'professional' ? '/pro' : '/owner');
+
+    if (error) {
+      setError(error);
+      return;
+    }
+
+    if (needsEmailConfirmation) {
+      alert('Account creato. Controlla la tua email per confermare l’indirizzo, poi accedi a PawConnect.');
+      navigate('/signin');
+      return;
+    }
+
+    navigate(role === 'professional' ? '/pro' : '/owner');
   };
 
   if (step === 1) {
@@ -88,6 +173,183 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
             Hai già un account? <button type="button" onClick={() => navigate('/signin')} className="text-emerald-700 font-semibold">Accedi</button>
           </p>
         </div>
+      </AuthFrame>
+    );
+  }
+
+  if (step === 3 && role === 'owner') {
+    return (
+      <AuthFrame
+        title="Presentaci il tuo cane"
+        subtitle="Un ultimo passo per personalizzare PawConnect"
+      >
+        <form onSubmit={submit} className="space-y-4">
+          <Field
+            icon={<PawPrint className="w-4 h-4" />}
+            placeholder="Nome del cane"
+            value={dogName}
+            onChange={setDogName}
+          />
+
+          <div className="relative">
+            <div className="flex items-center border border-stone-300 rounded-xl px-3 focus-within:ring-2 focus-within:ring-emerald-500">
+              <PawPrint className="w-4 h-4 text-stone-400 shrink-0" />
+              <input
+                type="text"
+                value={dogBreed}
+                onFocus={() => {
+                  if (dogBreed.trim().length >= 2) setBreedMenuOpen(true);
+                }}
+                onChange={(e) => {
+                  setDogBreed(e.target.value);
+                  setSelectedBreed(null);
+                  setBreedMenuOpen(true);
+                }}
+                placeholder="Razza, es. Rottweiler"
+                autoComplete="off"
+                className="w-full px-3 py-3 outline-none bg-transparent"
+              />
+            </div>
+
+            {breedMenuOpen && dogBreed.trim().length >= 2 && (
+              <div className="absolute z-30 left-0 right-0 mt-2 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden max-h-72 overflow-y-auto">
+                {breedSuggestions.map((breed) => (
+                  <button
+                    key={breed.slug}
+                    type="button"
+                    onClick={() => {
+                      setDogBreed(breed.name);
+                      setSelectedBreed(breed);
+                      setBreedMenuOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-3 hover:bg-emerald-50 border-b border-stone-100 last:border-0"
+                  >
+                    <span className="block font-semibold text-stone-900">
+                      {breed.name}
+                    </span>
+                    <span className="block text-xs text-stone-500 mt-0.5">
+                      Gruppo FCI {breed.fciGroup} · {breed.fciGroupName}
+                    </span>
+                  </button>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDogBreed('Meticcio / altra razza');
+                    setSelectedBreed(null);
+                    setBreedMenuOpen(false);
+                  }}
+                  className="w-full text-left px-4 py-3 hover:bg-stone-50"
+                >
+                  <span className="block font-semibold text-stone-800">
+                    Meticcio / altra razza
+                  </span>
+                  <span className="block text-xs text-stone-500">
+                    Nessun gruppo FCI
+                  </span>
+                </button>
+              </div>
+            )}
+
+            {selectedBreed && (
+              <div className="mt-2 rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-3">
+                <p className="text-sm font-semibold text-emerald-800">
+                  Gruppo FCI {selectedBreed.fciGroup}
+                </p>
+                <p className="text-xs text-stone-600 mt-0.5">
+                  {selectedBreed.fciGroupName}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Field
+              icon={<PawPrint className="w-4 h-4" />}
+              type="number"
+              placeholder="Età"
+              value={dogAge}
+              onChange={setDogAge}
+            />
+
+            <Field
+              icon={<PawPrint className="w-4 h-4" />}
+              type="number"
+              placeholder="Peso (kg)"
+              value={dogWeight}
+              onChange={setDogWeight}
+            />
+          </div>
+
+          <div className="space-y-3">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={dogVaccinated}
+                onChange={(e) => setDogVaccinated(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                <span className="block text-sm font-semibold text-stone-800">
+                  Vaccinazioni in regola
+                </span>
+                <span className="text-xs text-stone-500">
+                  Puoi aggiornare questa informazione in qualsiasi momento.
+                </span>
+              </span>
+            </label>
+
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={dogReactive}
+                onChange={(e) => setDogReactive(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                <span className="block text-sm font-semibold text-stone-800">
+                  Può essere reattivo con altri cani
+                </span>
+                <span className="text-xs text-stone-500">
+                  Serve ad aiutare il professionista a prepararsi correttamente.
+                </span>
+              </span>
+            </label>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-stone-700 mb-2">
+              Cosa dovremmo sapere di lui?
+            </label>
+            <textarea
+              value={dogNotes}
+              onChange={(e) => setDogNotes(e.target.value)}
+              rows={4}
+              placeholder="Carattere, esigenze particolari o altre informazioni utili..."
+              className="w-full border border-stone-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          {error && <p className="text-sm text-rose-600">{error}</p>}
+
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setStep(2)}
+              className="flex-1 py-3 rounded-xl border border-stone-300 font-semibold"
+            >
+              Indietro
+            </button>
+
+            <button
+              disabled={loading}
+              className="flex-1 bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition disabled:opacity-50"
+            >
+              {loading ? 'Creazione...' : 'Crea account'}
+            </button>
+          </div>
+        </form>
       </AuthFrame>
     );
   }

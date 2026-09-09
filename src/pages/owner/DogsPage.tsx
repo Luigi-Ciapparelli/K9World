@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
+import { useRouter } from '../../lib/RouterContext';
 import type { Dog } from '../../lib/types';
 
 export function DogsPage() {
   const { user } = useAuth();
+  const { navigate } = useRouter();
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [editing, setEditing] = useState<Partial<Dog> | null>(null);
 
@@ -91,6 +93,22 @@ export function DogsPage() {
                     <div>
                       <h3 className="text-lg font-bold text-stone-900">{d.name}</h3>
                       <p className="text-sm text-stone-500">{d.breed}</p>
+
+                      {d.fci_group && (
+                        <span className="inline-flex mt-2 text-xs font-semibold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full">
+                          Gruppo FCI {d.fci_group}
+                        </span>
+                      )}
+
+                      {d.fci_group && (
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/gruppi-fci/${d.fci_group}`)}
+                          className="mt-2 text-xs text-emerald-700 font-semibold hover:text-emerald-800"
+                        >
+                          Scopri il Gruppo FCI {d.fci_group} →
+                        </button>
+                      )}
                     </div>
                     <div className="flex gap-1">
                       <button onClick={() => setEditing(d)} className="p-1.5 text-stone-500 hover:text-emerald-700"><Pencil className="w-4 h-4" /></button>

@@ -1,0 +1,2550 @@
+[
+  {
+    "name": "Affenpinscher",
+    "slug": "affenpinscher",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/affenpinscher"
+  },
+  {
+    "name": "Airedale Terrier",
+    "slug": "airedale-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/airedale-terrier"
+  },
+  {
+    "name": "Akita",
+    "slug": "akita",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/akita"
+  },
+  {
+    "name": "Akita Americano",
+    "slug": "akita-americano",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/akita-americano"
+  },
+  {
+    "name": "Alano",
+    "slug": "alano",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/alano"
+  },
+  {
+    "name": "Alaskan Malamute",
+    "slug": "alaskan-malamute",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/alaskan-malamute"
+  },
+  {
+    "name": "Alpenlaendische Dachsbracke",
+    "slug": "alpenlaendische-dachsbracke",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/alpenlaendische-dachsbracke"
+  },
+  {
+    "name": "American Staffordshire Terrier",
+    "slug": "american-staffordshire-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/american-staffordshire-terrier"
+  },
+  {
+    "name": "American Water Spaniel",
+    "slug": "american-water-spaniel",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/american-water-spaniel"
+  },
+  {
+    "name": "Anglo Francais De Petite Venerie",
+    "slug": "anglo-francais-de-petite-venerie",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/anglo-francais-de-petite-venerie"
+  },
+  {
+    "name": "Anjing Kintamani-Bali",
+    "slug": "anjing-kintamani-bali",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/anjing-kintamani-bali"
+  },
+  {
+    "name": "Ariegeois",
+    "slug": "ariegeois",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/ariegeois"
+  },
+  {
+    "name": "Australian Cattledog",
+    "slug": "australian-cattledog",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/australian-cattledog"
+  },
+  {
+    "name": "Australian Shepherd",
+    "slug": "australian-shepherd",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/australian-shepherd"
+  },
+  {
+    "name": "Australian Silky Terrier",
+    "slug": "australian-silky-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/australian-silky-terrier"
+  },
+  {
+    "name": "Australian Stumpy Tail Cattle Dog",
+    "slug": "australian-stumpy-tail-cattle-dog",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/australian-stumpy-tail-cattle-dog"
+  },
+  {
+    "name": "Australian Terrier",
+    "slug": "australian-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/australian-terrier"
+  },
+  {
+    "name": "Azawakh",
+    "slug": "azawakh",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/azawakh"
+  },
+  {
+    "name": "Barbet",
+    "slug": "barbet",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/barbet"
+  },
+  {
+    "name": "Barboni",
+    "slug": "barboni",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/barboni"
+  },
+  {
+    "name": "Barzoi",
+    "slug": "barzoi",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/barzoi"
+  },
+  {
+    "name": "Basenji",
+    "slug": "basenji",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/basenji"
+  },
+  {
+    "name": "Basset Artesian Normand",
+    "slug": "bassett-artesian-normand",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bassett-artesian-normand"
+  },
+  {
+    "name": "Basset Blue De Gascogne",
+    "slug": "basset-blue-de-gascogne",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/basset-blue-de-gascogne"
+  },
+  {
+    "name": "Basset Fauve De Bretagne",
+    "slug": "bassett-fauve-de-bretagne",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bassett-fauve-de-bretagne"
+  },
+  {
+    "name": "Bassethound",
+    "slug": "bassethound",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bassethound"
+  },
+  {
+    "name": "Bassotti Tedeschi",
+    "slug": "bassotti-tedeschi",
+    "fciGroup": 4,
+    "fciGroupName": "BASSOTTI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bassotti-tedeschi"
+  },
+  {
+    "name": "Bayerischer Gebirgsschweisshund",
+    "slug": "bayerischer-gebirgsschweisshund",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bayerischer-gebirgsschweisshund"
+  },
+  {
+    "name": "Beagle",
+    "slug": "beagle",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/beagle"
+  },
+  {
+    "name": "Beagle Harrier",
+    "slug": "beagle-harrier",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/beagle-harrier"
+  },
+  {
+    "name": "Bearded Collie",
+    "slug": "bearded-collie",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bearded-collie"
+  },
+  {
+    "name": "Bedlington Terrier",
+    "slug": "bedlington-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bedlington-terrier"
+  },
+  {
+    "name": "Bichon A Poil Frise",
+    "slug": "bichon-a-poil-frise",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bichon-a-poil-frise"
+  },
+  {
+    "name": "Bichon Havanais",
+    "slug": "bichon-havanais",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bichon-havanais"
+  },
+  {
+    "name": "Billy",
+    "slug": "billy",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/billy"
+  },
+  {
+    "name": "Black And Tan Coonhound",
+    "slug": "black-and-tan-coonhound",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/black-and-tan-coonhound"
+  },
+  {
+    "name": "Bloodhound Chien De Saint-Ubert",
+    "slug": "bloodhound-chien-de-saint-ubert",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bloodhound-chien-de-saint-ubert"
+  },
+  {
+    "name": "Bolognese",
+    "slug": "bolognese",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bolognese"
+  },
+  {
+    "name": "Border Collie",
+    "slug": "border-collie",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/border-collie"
+  },
+  {
+    "name": "Border Terrier",
+    "slug": "border-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/border-terrier"
+  },
+  {
+    "name": "Boston Terrier",
+    "slug": "boston-terrier",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/boston-terrier"
+  },
+  {
+    "name": "Bouledogue  Francese",
+    "slug": "bouledogue-francese",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bouledogue-francese"
+  },
+  {
+    "name": "Bovaro Del Bernese",
+    "slug": "bovaro-del-bernese",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bovaro-del-bernese"
+  },
+  {
+    "name": "Bovaro Dell'Appenzell",
+    "slug": "bovaro-dell-appenzell",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bovaro-dell-appenzell"
+  },
+  {
+    "name": "Bovaro Dell'Entlebuch",
+    "slug": "bovaro-dell-entlebuch",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bovaro-dell-entlebuch"
+  },
+  {
+    "name": "Bovaro Delle Ardenne",
+    "slug": "bovaro-delle-ardenne",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bovaro-delle-ardenne"
+  },
+  {
+    "name": "Bovaro Delle Fiandre",
+    "slug": "bovaro-delle-fiandre",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bovaro-delle-fiandre"
+  },
+  {
+    "name": "Boxer",
+    "slug": "boxer",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/boxer"
+  },
+  {
+    "name": "Bracco D'Ariege",
+    "slug": "bracco-d-ariege",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-d-ariege"
+  },
+  {
+    "name": "Bracco D'Auvergne",
+    "slug": "bracco-d-auvergne",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-d-auvergne"
+  },
+  {
+    "name": "Bracco Del Bourbonnais",
+    "slug": "bracco-del-bourbonnais",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-del-bourbonnais"
+  },
+  {
+    "name": "Bracco Di Burgos",
+    "slug": "bracco-di-burgos",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-di-burgos"
+  },
+  {
+    "name": "Bracco Francese Tipo Gascogne",
+    "slug": "bracco-francese-tipo-gascogne",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-francese-tipo-gascogne"
+  },
+  {
+    "name": "Bracco Francese Tipo Pirenei",
+    "slug": "bracco-francese-tipo-pirenei",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-francese-tipo-pirenei"
+  },
+  {
+    "name": "Bracco Italiano",
+    "slug": "bracco-italiano",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-italiano"
+  },
+  {
+    "name": "Bracco Portoghese",
+    "slug": "bracco-portoghese",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-portoghese"
+  },
+  {
+    "name": "Bracco Saint Germain",
+    "slug": "bracco-saint-germain",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-saint-germain"
+  },
+  {
+    "name": "Bracco Slovacco A Pelo Duro",
+    "slug": "bracco-slovacco-a-pelo-duro",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-slovacco-a-pelo-duro"
+  },
+  {
+    "name": "Bracco Ungherese A Pelo Corto",
+    "slug": "bracco-ungherese-a-pelo-corto",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-ungherese-a-pelo-corto"
+  },
+  {
+    "name": "Bracco Ungherese A Pelo Duro",
+    "slug": "bracco-ungherese-a-pelo-duro",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bracco-ungherese-a-pelo-duro"
+  },
+  {
+    "name": "Briquet Griffon Vendeen",
+    "slug": "briquet-griffon-vendeen",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/briquet-griffon-vendeen"
+  },
+  {
+    "name": "Broholmer",
+    "slug": "broholmer",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/broholmer"
+  },
+  {
+    "name": "Bull Terrier Inglese Miniatura",
+    "slug": "bull-terrier-inglese-miniatura",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bull-terrier-inglese-miniatura"
+  },
+  {
+    "name": "Bull Terrier Inglese Taglia Normale",
+    "slug": "bull-terrier-inglese-taglia-normale",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bull-terrier-inglese-taglia-normale"
+  },
+  {
+    "name": "Bulldog",
+    "slug": "bulldog",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bulldog"
+  },
+  {
+    "name": "Bullmastiff",
+    "slug": "bullmastiff",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/bullmastiff"
+  },
+  {
+    "name": "Cairn Terrier",
+    "slug": "cairn-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cairn-terrier"
+  },
+  {
+    "name": "Canaan Dog",
+    "slug": "canaan-dog",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/canaan-dog"
+  },
+  {
+    "name": "Canadian Eskimo Dog (Chien Esquimau Canadien)",
+    "slug": "canadian-eskimo-dog",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/canadian-eskimo-dog"
+  },
+  {
+    "name": "Cane Corso",
+    "slug": "cane-corso",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-corso"
+  },
+  {
+    "name": "Cane Da Ferma Boemo A Pelo Ruvido",
+    "slug": "cane-da-ferma-boemo-a-pelo-ruvido",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-ferma-boemo-a-pelo-ruvido"
+  },
+  {
+    "name": "Cane Da Ferma Tedesco A Pelo Corto",
+    "slug": "cane-da-ferma-tedesco-a-pelo-corto",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-ferma-tedesco-a-pelo-corto"
+  },
+  {
+    "name": "Cane Da Ferma Tedesco A Pelo Duro",
+    "slug": "cane-da-ferma-tedesco-a-pelo-duro",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-ferma-tedesco-a-pelo-duro"
+  },
+  {
+    "name": "Cane Da Ferma Tedesco A Pelo Lungo",
+    "slug": "cane-da-ferma-tedesco-a-pelo-lungo",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-ferma-tedesco-a-pelo-lungo"
+  },
+  {
+    "name": "Cane Da Ferma Tedesco A Pelo Ruvido",
+    "slug": "cane-da-ferma-tedesco-a-pelo-ruvido",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-ferma-tedesco-a-pelo-ruvido"
+  },
+  {
+    "name": "Cane Da Montagna Dei Pirenei",
+    "slug": "cane-da-montagna-dei-pirenei",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-montagna-dei-pirenei"
+  },
+  {
+    "name": "Cane Da Orso Della Carelia",
+    "slug": "cane-da-orso-della-carelia",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-orso-della-carelia"
+  },
+  {
+    "name": "Cane Da Pastore Abruzzese Maremmano",
+    "slug": "cane-da-pastore-abruzzese-maremmano",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-abruzzese-maremmano"
+  },
+  {
+    "name": "Cane Da Pastore Australiano Kelpie",
+    "slug": "cane-da-pastore-australiano-kelpie",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-australiano-kelpie"
+  },
+  {
+    "name": "Cane Da Pastore Belga",
+    "slug": "cane-da-pastore-belga",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-belga"
+  },
+  {
+    "name": "Cane Da Pastore Bergamasco",
+    "slug": "cane-da-pastore-bergamasco",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-bergamasco"
+  },
+  {
+    "name": "Cane Da Pastore Catalano",
+    "slug": "cane-da-pastore-catalano",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-catalano"
+  },
+  {
+    "name": "Cane Da Pastore Croato",
+    "slug": "cane-da-pastore-croato",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-croato"
+  },
+  {
+    "name": "Cane Da Pastore D'Oropa",
+    "slug": "cane-da-pastore-di-oropa",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-di-oropa"
+  },
+  {
+    "name": "Cane Da Pastore Dei Pirenei A Faccia Rasa",
+    "slug": "cane-da-pastore-dei-pirenei-a-faccia-rasa",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-dei-pirenei-a-faccia-rasa"
+  },
+  {
+    "name": "Cane Da Pastore Dei Pirenei A Pelo Lungo",
+    "slug": "cane-da-pastore-dei-pirenei-a-pelo-lungo",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-dei-pirenei-a-pelo-lungo"
+  },
+  {
+    "name": "Cane Da Pastore Del Caucaso",
+    "slug": "cane-da-pastore-del-caucaso",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-del-caucaso"
+  },
+  {
+    "name": "Cane Da Pastore Dell'Asia Centrale",
+    "slug": "cane-da-pastore-dell-asia-centrale",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-dell-asia-centrale"
+  },
+  {
+    "name": "Cane Da Pastore Della Russia Meridionale",
+    "slug": "cane-da-pastore-della-russia-meridionale",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-della-russia-meridionale"
+  },
+  {
+    "name": "Cane Da Pastore Della Sila",
+    "slug": "cane-da-pastore-della-sila",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-della-sila"
+  },
+  {
+    "name": "Cane Da Pastore Di Beauce",
+    "slug": "cane-da-pastore-di-beauce",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-di-beauce"
+  },
+  {
+    "name": "Cane Da Pastore Di Brie",
+    "slug": "cane-da-pastore-di-brie",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-di-brie"
+  },
+  {
+    "name": "Cane Da Pastore Di Ciarplanina",
+    "slug": "cane-da-pastore-di-ciarplanina",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-di-ciarplanina"
+  },
+  {
+    "name": "Cane Da Pastore Di Karst",
+    "slug": "cane-da-pastore-di-karst",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-di-karst"
+  },
+  {
+    "name": "Cane Da Pastore Di Picardia",
+    "slug": "cane-da-pastore-di-picardia",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-di-picardia"
+  },
+  {
+    "name": "Cane Da Pastore Di Tatra",
+    "slug": "cane-da-pastore-di-tatra",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-di-tatra"
+  },
+  {
+    "name": "Cane Da Pastore Mallorquin",
+    "slug": "cane-da-pastore-mallorquin",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-mallorquin"
+  },
+  {
+    "name": "Cane Da Pastore Olandese",
+    "slug": "cane-da-pastore-olandese",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-olandese"
+  },
+  {
+    "name": "Cane Da Pastore Polacco Di Vallee",
+    "slug": "cane-da-pastore-polacco-di-vallee",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-polacco-di-vallee"
+  },
+  {
+    "name": "Cane Da Pastore Scozzese A Pelo Corto",
+    "slug": "cane-da-pastore-scozzese-a-pelo-corto",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-scozzese-a-pelo-corto"
+  },
+  {
+    "name": "Cane Da Pastore Scozzese A Pelo Lungo",
+    "slug": "cane-da-pastore-scozzese-a-pelo-lungo",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-scozzese-a-pelo-lungo"
+  },
+  {
+    "name": "Cane Da Pastore Scozzese Shetland",
+    "slug": "cane-da-pastore-scozzese-shetland",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-pastore-scozzese-shetland"
+  },
+  {
+    "name": "Cane Da Sierra Di Estrela",
+    "slug": "cane-da-sierra-di-estrela",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-da-sierra-di-estrela"
+  },
+  {
+    "name": "Cane De Castro Laboreiro",
+    "slug": "cane-de-castro-laboreiro",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-de-castro-laboreiro"
+  },
+  {
+    "name": "Cane Dell'Atlas",
+    "slug": "cane-dell-atlas",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-dell-atlas"
+  },
+  {
+    "name": "Cane Delle Alpi Apuane",
+    "slug": "cane-delle-alpi-apuane",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-delle-alpi-apuane"
+  },
+  {
+    "name": "Cane Di San Bernardo",
+    "slug": "cane-di-san-bernardo",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-di-san-bernardo"
+  },
+  {
+    "name": "Cane Fonnese",
+    "slug": "cane-fonnese",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-fonnese"
+  },
+  {
+    "name": "Cane Lupo Cecoslovacco",
+    "slug": "cane-lupo-cecoslovacco",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-lupo-cecoslovacco"
+  },
+  {
+    "name": "Cane Lupo Di Saarloos",
+    "slug": "cane-lupo-di-saarloos",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cane-lupo-di-saarloos"
+  },
+  {
+    "name": "Cao Da Sierra De Aires",
+    "slug": "cao-da-sierra-de-aires",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cao-da-sierra-de-aires"
+  },
+  {
+    "name": "Cao De Agua",
+    "slug": "cao-de-agua",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cao-de-agua"
+  },
+  {
+    "name": "Cao De Gado Transmontano",
+    "slug": "cao-de-gado-transmontano",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cao-de-gado-transmontano"
+  },
+  {
+    "name": "Cao Fila De Sao Miguel",
+    "slug": "cao-fila-de-sao-miguel",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cao-fila-de-sao-miguel"
+  },
+  {
+    "name": "Carlino",
+    "slug": "carlino",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/carlino"
+  },
+  {
+    "name": "Cavalier King Charles Spaniel",
+    "slug": "cavalier-king-charles-spaniel",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cavalier-king-charles-spaniel"
+  },
+  {
+    "name": "Chesapeake Bay Retriever",
+    "slug": "chesapeake-bay-retriever",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/chesapeake-bay-retriever"
+  },
+  {
+    "name": "Chien D'Artois",
+    "slug": "chien-d-artois",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/chien-d-artois"
+  },
+  {
+    "name": "Chihuahua",
+    "slug": "chihuahua",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/chihuahua"
+  },
+  {
+    "name": "Chin",
+    "slug": "chin",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/chin"
+  },
+  {
+    "name": "Chinese Crested Dog",
+    "slug": "chinese-crested-dog",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/chinese-crested-dog"
+  },
+  {
+    "name": "Chodský Pes",
+    "slug": "chodsky-pes-cz",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/chodsky-pes-cz"
+  },
+  {
+    "name": "Chow-Chow",
+    "slug": "chow-chow",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/chow-chow"
+  },
+  {
+    "name": "Cimarron Uruguayo",
+    "slug": "cimarron-uruguayo",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cimarron-uruguayo"
+  },
+  {
+    "name": "Ciobanesc Romanesc De Bucovina",
+    "slug": "ciobanesc-romanesc-de-bucovina",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/ciobanesc-romanesc-de-bucovina"
+  },
+  {
+    "name": "Cirneco Dell'Etna",
+    "slug": "cirneco-dell-etna",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cirneco-dell-etna"
+  },
+  {
+    "name": "Clumber Spaniel",
+    "slug": "clumber-spaniel",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/clumber-spaniel"
+  },
+  {
+    "name": "Cocker Americano",
+    "slug": "cocker-americano",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cocker-americano"
+  },
+  {
+    "name": "Cocker Spaniel Inglese",
+    "slug": "cocker-spaniel-inglese",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/cocker-spaniel-inglese"
+  },
+  {
+    "name": "Continental Bulldog",
+    "slug": "continental-bulldog",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/continental-bulldog"
+  },
+  {
+    "name": "Coton De Tulear",
+    "slug": "coton-de-tulear",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/coton-de-tulear"
+  },
+  {
+    "name": "Curly-Coated Retriever",
+    "slug": "curly-coated-retriever",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/curly-coated-retriever"
+  },
+  {
+    "name": "Dalmata",
+    "slug": "dalmata",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/dalmata"
+  },
+  {
+    "name": "Dandie Dinmont Terrier",
+    "slug": "dandie-dinmont-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/dandie-dinmont-terrier"
+  },
+  {
+    "name": "Dansk-Svensk Gardshund",
+    "slug": "dansk-svensk-gardshund",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/dansk-svensk-gardshund"
+  },
+  {
+    "name": "Deerhound",
+    "slug": "deerhound",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/deerhound"
+  },
+  {
+    "name": "Deutscher Jagdterrier",
+    "slug": "deutscher-jagdterrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/deutscher-jagdterrier"
+  },
+  {
+    "name": "Dobermann",
+    "slug": "dobermann",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/dobermann"
+  },
+  {
+    "name": "Dogo Argentino",
+    "slug": "dogo-argentino",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/dogo-argentino"
+  },
+  {
+    "name": "Dogue De Bordeaux",
+    "slug": "dogue-de-bordeaux",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/dogue-de-bordeaux"
+  },
+  {
+    "name": "Drever",
+    "slug": "drever",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/drever"
+  },
+  {
+    "name": "Dunker",
+    "slug": "dunker",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/dunker"
+  },
+  {
+    "name": "Eesti Hagijas",
+    "slug": "eesti-hagijas",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/eesti-hagijas"
+  },
+  {
+    "name": "English Toy Terrier Black And Tan",
+    "slug": "english-toy-terrier-black-and-tan",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/english-toy-terrier-black-and-tan"
+  },
+  {
+    "name": "Epagneul Blue De Picardie",
+    "slug": "epagneul-blue-de-picardie",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/epagneul-blue-de-picardie"
+  },
+  {
+    "name": "Epagneul Breton",
+    "slug": "epagneul-breton",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/epagneul-breton"
+  },
+  {
+    "name": "Epagneul De Pont - Audemer",
+    "slug": "epagneul-de-pont-audemer",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/epagneul-de-pont-audemer"
+  },
+  {
+    "name": "Epagneul Francais",
+    "slug": "epagneul-francais",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/epagneul-francais"
+  },
+  {
+    "name": "Epagneul Nano Continentale",
+    "slug": "epagneul-nano-continentale",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/epagneul-nano-continentale"
+  },
+  {
+    "name": "Epagneul Olandese Di Drent",
+    "slug": "epagneul-olandese-di-drent",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/epagneul-olandese-di-drent"
+  },
+  {
+    "name": "Epagneul Picard",
+    "slug": "epagneul-picard",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/epagneul-picard"
+  },
+  {
+    "name": "Eurasier",
+    "slug": "eurasier",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/eurasier"
+  },
+  {
+    "name": "Field Spaniel",
+    "slug": "field-spaniel",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/field-spaniel"
+  },
+  {
+    "name": "Fila Brasileiro",
+    "slug": "fila-brasileiro",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/fila-brasileiro"
+  },
+  {
+    "name": "Flat Coated Retriever",
+    "slug": "flat-coated-retriever",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/flat-coated-retriever"
+  },
+  {
+    "name": "Fox Terrier A Pelo Liscio",
+    "slug": "fox-terrier-a-pelo-liscio",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/fox-terrier-a-pelo-liscio"
+  },
+  {
+    "name": "Fox Terrier A Pelo Ruvido",
+    "slug": "fox-terrier-a-pelo-ruvido",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/fox-terrier-a-pelo-ruvido"
+  },
+  {
+    "name": "Foxhound",
+    "slug": "foxhound",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/foxhound"
+  },
+  {
+    "name": "Foxhound Americano",
+    "slug": "foxhound-americano",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/foxhound-americano"
+  },
+  {
+    "name": "Francais Blanc E Noir",
+    "slug": "francais-blanc-e-noir",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/francais-blanc-e-noir"
+  },
+  {
+    "name": "Francais Blanc E Orange",
+    "slug": "francais-blanc-e-orange",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/francais-blanc-e-orange"
+  },
+  {
+    "name": "Francais Tricolore",
+    "slug": "francais-tricolore",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/francais-tricolore"
+  },
+  {
+    "name": "Galgo Espanol",
+    "slug": "galgo-espanol",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/galgo-espanol"
+  },
+  {
+    "name": "Gammel Dansk Honsenhund",
+    "slug": "gammel-dansk-honsenhund",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/gammel-dansk-honsenhund"
+  },
+  {
+    "name": "Gascon Saintongeois",
+    "slug": "gascon-saintongeois",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/gascon-saintongeois"
+  },
+  {
+    "name": "Golden Retriever",
+    "slug": "golden-retriever",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/golden-retriever"
+  },
+  {
+    "name": "Gonczy Polski",
+    "slug": "gonczy-polski",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/gonczy-polski"
+  },
+  {
+    "name": "Gos Rater Valencia",
+    "slug": "gos-rater-valencia",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/gos-rater-valencia"
+  },
+  {
+    "name": "Grand Anglo Francais Blanc Et Noir",
+    "slug": "grand-anglo-francais-blanc-et-noir",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/grand-anglo-francais-blanc-et-noir"
+  },
+  {
+    "name": "Grand Anglo Francais Blanc Et Orange",
+    "slug": "grand-anglo-francais-blanc-et-orange",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/grand-anglo-francais-blanc-et-orange"
+  },
+  {
+    "name": "Grand Anglo Francais Tricolore",
+    "slug": "grand-anglo-francais-tricolore",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/grand-anglo-francais-tricolore"
+  },
+  {
+    "name": "Grand Basset Griffon Vendeen",
+    "slug": "grand-basset-griffon-vendeen",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/grand-basset-griffon-vendeen"
+  },
+  {
+    "name": "Grand Bleu De Gascogne",
+    "slug": "grand-bleu-de-gascogne",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/grand-bleu-de-gascogne"
+  },
+  {
+    "name": "Grand Griffon Vendeen",
+    "slug": "grand-griffon-vendeen",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/grand-griffon-vendeen"
+  },
+  {
+    "name": "Grande Bovaro Svizzero",
+    "slug": "grande-bovaro-svizzero",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/grande-bovaro-svizzero"
+  },
+  {
+    "name": "Grande Muensterlander",
+    "slug": "grande-muensterlander",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/grande-muensterlander"
+  },
+  {
+    "name": "Greyhound",
+    "slug": "greyhound",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/greyhound"
+  },
+  {
+    "name": "Griffon Bleu De Gascogne",
+    "slug": "griffon-bleu-de-gascogne",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/griffon-bleu-de-gascogne"
+  },
+  {
+    "name": "Griffon Fauve De Bretagne",
+    "slug": "griffon-fauve-de-bretagne",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/griffon-fauve-de-bretagne"
+  },
+  {
+    "name": "Griffon Nivernais",
+    "slug": "griffon-nivernais",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/griffon-nivernais"
+  },
+  {
+    "name": "Griffone A Pelo Duro (Korthals)",
+    "slug": "griffone-a-pelo-duro-korthals",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/griffone-a-pelo-duro-korthals"
+  },
+  {
+    "name": "Griffone Belga",
+    "slug": "griffone-belga",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/griffone-belga"
+  },
+  {
+    "name": "Griffone Di Bruxelles",
+    "slug": "griffone-di-bruxelles",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/griffone-di-bruxelles"
+  },
+  {
+    "name": "Groenlandese",
+    "slug": "groenlandese",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/groenlandese"
+  },
+  {
+    "name": "Haldenstovare",
+    "slug": "haldenstovare",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/haldenstovare"
+  },
+  {
+    "name": "Hamilton Stovare",
+    "slug": "hamilton-stovare",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/hamilton-stovare"
+  },
+  {
+    "name": "Hannoverischer Schweisshund",
+    "slug": "hannoverischer-schweisshund",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/hannoverischer-schweisshund"
+  },
+  {
+    "name": "Harrier",
+    "slug": "harrier",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/harrier"
+  },
+  {
+    "name": "Hokkaido",
+    "slug": "hokkaido",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/hokkaido"
+  },
+  {
+    "name": "Hovawart",
+    "slug": "hovawart",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/hovawart"
+  },
+  {
+    "name": "Hyghenhund",
+    "slug": "hyghenhund",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/hyghenhund"
+  },
+  {
+    "name": "Iceland Dog- Cane Da Pastore Di Islanda",
+    "slug": "iceland-dog-cane-da-pastore-di-islanda",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/iceland-dog-cane-da-pastore-di-islanda"
+  },
+  {
+    "name": "Irish  Water Spaniel",
+    "slug": "irish-water-spaniel",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/irish-water-spaniel"
+  },
+  {
+    "name": "Irish Glen Of Imaal Terrier",
+    "slug": "irish-glen-of-imaal-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/irish-glen-of-imaal-terrier"
+  },
+  {
+    "name": "Irish Soft-Coated Wheaten Terrier",
+    "slug": "irish-soft-coated-wheaten-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/irish-soft-coated-wheaten-terrier"
+  },
+  {
+    "name": "Irish Terrier",
+    "slug": "irish-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/irish-terrier"
+  },
+  {
+    "name": "Irish Wolfhound",
+    "slug": "irish-wolfhound",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/irish-wolfhound"
+  },
+  {
+    "name": "Jack Russell Terrier",
+    "slug": "jack-russell-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/jack-russell-terrier"
+  },
+  {
+    "name": "Jamthund",
+    "slug": "jamthund",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/jamthund"
+  },
+  {
+    "name": "Kai",
+    "slug": "kai",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/kai"
+  },
+  {
+    "name": "Kangal Coban Kopegi (Ex Cane Da Pastore Dell'Anatolia)",
+    "slug": "kangal-coban-kopegi",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/kangal-coban-kopegi"
+  },
+  {
+    "name": "Kerry Blue Terrier",
+    "slug": "kerry-blue-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/kerry-blue-terrier"
+  },
+  {
+    "name": "King Charles Spaniel",
+    "slug": "king-charles-spaniel",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/king-charles-spaniel"
+  },
+  {
+    "name": "Kishu",
+    "slug": "kishu",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/kishu"
+  },
+  {
+    "name": "Komondor",
+    "slug": "komondor",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/komondor"
+  },
+  {
+    "name": "Kooikerhondje",
+    "slug": "kooikerhondje",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/kooikerhondje"
+  },
+  {
+    "name": "Korea Jindo Dog",
+    "slug": "korea-jindo-dog",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/korea-jindo-dog"
+  },
+  {
+    "name": "Kromforhlander",
+    "slug": "kromforhlander",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/kromforhlander"
+  },
+  {
+    "name": "Kuvasz",
+    "slug": "kuvasz",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/kuvasz"
+  },
+  {
+    "name": "Labrador Retriever",
+    "slug": "labrador-retriever",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/labrador-retriever"
+  },
+  {
+    "name": "Lagotto Romagnolo",
+    "slug": "lagotto-romagnolo",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/lagotto-romagnolo"
+  },
+  {
+    "name": "Laika Della Siberia Occidentale",
+    "slug": "laika-della-siberia-occidentale",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/laika-della-siberia-occidentale"
+  },
+  {
+    "name": "Laika Della Siberia Orientale",
+    "slug": "laika-della-siberia-orientale",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/laika-della-siberia-orientale"
+  },
+  {
+    "name": "Laika Russo-Europeo",
+    "slug": "laika-russo-europeo",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/laika-russo-europeo"
+  },
+  {
+    "name": "Lakeland Terrier",
+    "slug": "lakeland-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/lakeland-terrier"
+  },
+  {
+    "name": "Lancashire Heeler",
+    "slug": "lancashire-heeler",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/lancashire-heeler"
+  },
+  {
+    "name": "Landseer",
+    "slug": "landseer",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/landseer"
+  },
+  {
+    "name": "Lapinkoira",
+    "slug": "lapinkoira",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/lapinkoira"
+  },
+  {
+    "name": "Lapinporokoira - Pastore Finlandese Della Lapponia",
+    "slug": "lapinporokoira-pastore-finlandese-della-lapponia",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/lapinporokoira-pastore-finlandese-della-lapponia"
+  },
+  {
+    "name": "Leonberger",
+    "slug": "leonberger",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/leonberger"
+  },
+  {
+    "name": "Levriero Afgano",
+    "slug": "levriero-afgano",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/levriero-afgano"
+  },
+  {
+    "name": "Levriero Polacco",
+    "slug": "levriero-polacco",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/levriero-polacco"
+  },
+  {
+    "name": "Lhasa Apso",
+    "slug": "lhasa-apso",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/lhasa-apso"
+  },
+  {
+    "name": "Magyar Agar",
+    "slug": "magyar-agar",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/magyar-agar"
+  },
+  {
+    "name": "Maltese",
+    "slug": "maltese",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/maltese"
+  },
+  {
+    "name": "Manchester Terrier",
+    "slug": "manchester-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/manchester-terrier"
+  },
+  {
+    "name": "Mastiff",
+    "slug": "mastiff",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/mastiff"
+  },
+  {
+    "name": "Mastino Dei Pirenei",
+    "slug": "mastino-dei-pirenei",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/mastino-dei-pirenei"
+  },
+  {
+    "name": "Mastino Napoletano",
+    "slug": "mastino-napoletano",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/mastino-napoletano"
+  },
+  {
+    "name": "Mastino Siciliano/Cane Di Mannara",
+    "slug": "mastino-siciliano-cane-di-mannara",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/mastino-siciliano-cane-di-mannara"
+  },
+  {
+    "name": "Mastino Spagnolo",
+    "slug": "mastino-spagnolo",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/mastino-spagnolo"
+  },
+  {
+    "name": "Miniature American Shepherd",
+    "slug": "miniature-american-shepherd",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/miniature-american-shepherd"
+  },
+  {
+    "name": "Mudi",
+    "slug": "mudi",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/mudi"
+  },
+  {
+    "name": "Norbottenspets",
+    "slug": "norbottenspets",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/norbottenspets"
+  },
+  {
+    "name": "Norfolk Terrier",
+    "slug": "norfolk-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/norfolk-terrier"
+  },
+  {
+    "name": "Norsk Buhund",
+    "slug": "norsk-buhund",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/norsk-buhund"
+  },
+  {
+    "name": "Norsk Elghund Grigio",
+    "slug": "norsk-elghund-grigio",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/norsk-elghund-grigio"
+  },
+  {
+    "name": "Norsk Elghund Nero",
+    "slug": "norsk-elghund-nero",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/norsk-elghund-nero"
+  },
+  {
+    "name": "Norsk Lundehund",
+    "slug": "norsk-lundehund",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/norsk-lundehund"
+  },
+  {
+    "name": "Norwich Terrier",
+    "slug": "norwich-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/norwich-terrier"
+  },
+  {
+    "name": "Nova Scotia Duck Tolling Retriever",
+    "slug": "nova-scotia-duck-tolling-retriever",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/nova-scotia-duck-tolling-retriever"
+  },
+  {
+    "name": "Old English Sheepdog",
+    "slug": "old-english-sheepdog",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/old-english-sheepdog"
+  },
+  {
+    "name": "Otterhound",
+    "slug": "otterhound",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/otterhound"
+  },
+  {
+    "name": "Parson  Russell Terrier",
+    "slug": "parson-russell-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/parson-russell-terrier"
+  },
+  {
+    "name": "Pastore Della Lessinia E Del Lagorai",
+    "slug": "pastore-della-lessinia-e-del-lagorai",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/pastore-della-lessinia-e-del-lagorai"
+  },
+  {
+    "name": "Pastore Svizzero Bianco",
+    "slug": "pastore-svizzero-bianco",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/pastore-svizzero-bianco"
+  },
+  {
+    "name": "Pastore Tedesco",
+    "slug": "pastore-tedesco",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/pastore-tedesco"
+  },
+  {
+    "name": "Pechinese",
+    "slug": "pechinese",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/pechinese"
+  },
+  {
+    "name": "Perro De Agua Espanol",
+    "slug": "perro-de-agua-espanol",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/perro-de-agua-espanol"
+  },
+  {
+    "name": "Perro Dogo Mallorquin",
+    "slug": "perro-dogo-mallorquin",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/perro-dogo-mallorquin"
+  },
+  {
+    "name": "Perro Sin Pelo Del Peru'",
+    "slug": "perro-sin-pelo-del-peru",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/perro-sin-pelo-del-peru"
+  },
+  {
+    "name": "Petit Basset Griffon Vendeen",
+    "slug": "petit-basset-griffon-vendeen",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/petit-basset-griffon-vendeen"
+  },
+  {
+    "name": "Petit Bleu De Gascogne",
+    "slug": "petit-bleu-de-gascogne",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/petit-bleu-de-gascogne"
+  },
+  {
+    "name": "Pharaon Hound",
+    "slug": "pharaon-hound",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/pharaon-hound"
+  },
+  {
+    "name": "Piccolo Brabantino",
+    "slug": "piccolo-brabantino",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/piccolo-brabantino"
+  },
+  {
+    "name": "Piccolo Cane Leone",
+    "slug": "piccolo-cane-leone",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/piccolo-cane-leone"
+  },
+  {
+    "name": "Piccolo Levriero Italiano",
+    "slug": "piccolo-levriero-italiano",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/piccolo-levriero-italiano"
+  },
+  {
+    "name": "Piccolo Muensterlander",
+    "slug": "piccolo-muensterlander",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/piccolo-muensterlander"
+  },
+  {
+    "name": "Piccolo Segugio Della Svizzera",
+    "slug": "piccolo-segugio-della-svizzera",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/piccolo-segugio-della-svizzera"
+  },
+  {
+    "name": "Pinscher",
+    "slug": "pinscher",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/pinscher"
+  },
+  {
+    "name": "Pinscher Austriaco A Pelo Corto",
+    "slug": "pinscher-austriaco-a-pelo-corto",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/pinscher-austriaco-a-pelo-corto"
+  },
+  {
+    "name": "Podenco Canario",
+    "slug": "podenco-canario",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/podenco-canario"
+  },
+  {
+    "name": "Podenco Ibicenco",
+    "slug": "podenco-ibicenco",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/podenco-ibicenco"
+  },
+  {
+    "name": "Podengo Portugues",
+    "slug": "podengo-portugues",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/podengo-portugues"
+  },
+  {
+    "name": "Pointer Inglese",
+    "slug": "pointer-inglese",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/pointer-inglese"
+  },
+  {
+    "name": "Poitevin",
+    "slug": "poitevin",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/poitevin"
+  },
+  {
+    "name": "Porcelaine",
+    "slug": "porcelaine",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/porcelaine"
+  },
+  {
+    "name": "Prazsky Krysarik",
+    "slug": "prazsky-krysarik",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/prazsky-krysarik"
+  },
+  {
+    "name": "Presa Canario (Ex Dogo Canario)",
+    "slug": "presa-canario",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/presa-canario"
+  },
+  {
+    "name": "Pudel Pointer",
+    "slug": "pudel-pointer",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/pudel-pointer"
+  },
+  {
+    "name": "Puli",
+    "slug": "puli",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/puli"
+  },
+  {
+    "name": "Pumi",
+    "slug": "pumi",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/pumi"
+  },
+  {
+    "name": "Rafeiro Do Alentejo",
+    "slug": "rafeiro-do-alentejo",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/rafeiro-do-alentejo"
+  },
+  {
+    "name": "Rastreador Brasileiro",
+    "slug": "rastreador-brasileiro",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/rastreador-brasileiro"
+  },
+  {
+    "name": "Rhodesian Ridgeback",
+    "slug": "rhodesian-ridgeback",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/rhodesian-ridgeback"
+  },
+  {
+    "name": "Riesenschnauzer",
+    "slug": "riesenschnauzer",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/riesenschnauzer"
+  },
+  {
+    "name": "Romanian Carpathian Sheperd Dog",
+    "slug": "romanian-carpathian-sheperd-dog",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/romanian-carpathian-sheperd-dog"
+  },
+  {
+    "name": "Romanian Mioritic Sheperd Dog",
+    "slug": "romanian-mioritic-sheperd-dog",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/romanian-mioritic-sheperd-dog"
+  },
+  {
+    "name": "Rottweiler",
+    "slug": "rottweiler",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/rottweiler"
+  },
+  {
+    "name": "Russian Toy",
+    "slug": "russian-toy",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/russian-toy"
+  },
+  {
+    "name": "Sabueso Espagnol",
+    "slug": "sabueso-espagnol",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/sabueso-espagnol"
+  },
+  {
+    "name": "Saluki",
+    "slug": "saluki",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/saluki"
+  },
+  {
+    "name": "Samoiedo",
+    "slug": "samoiedo",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/samoiedo"
+  },
+  {
+    "name": "Schapendoes",
+    "slug": "schapendoes",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/schapendoes"
+  },
+  {
+    "name": "Schiller Stovare",
+    "slug": "schiller-stovare",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/schiller-stovare"
+  },
+  {
+    "name": "Schipperkee",
+    "slug": "schipperke",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/schipperke"
+  },
+  {
+    "name": "Schnauzer Medio",
+    "slug": "schnauzer-medio",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/schnauzer-medio"
+  },
+  {
+    "name": "Scottish Terrier",
+    "slug": "scottish-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/scottish-terrier"
+  },
+  {
+    "name": "Sealyham Terrier",
+    "slug": "sealyham-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/sealyham-terrier"
+  },
+  {
+    "name": "Segugi Svizzeri",
+    "slug": "segugi-svizzeri",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugi-svizzeri"
+  },
+  {
+    "name": "Segugio Austriaco Nero Focato",
+    "slug": "segugio-austriaco-nero-focato",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-austriaco-nero-focato"
+  },
+  {
+    "name": "Segugio Dell'Appennino",
+    "slug": "segugio-dell-appennino",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-dell-appennino"
+  },
+  {
+    "name": "Segugio Dell'Istria A Pelo Duro",
+    "slug": "segugio-dell-istria-a-pelo-duro",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-dell-istria-a-pelo-duro"
+  },
+  {
+    "name": "Segugio Dell'Istria A Pelo Raso",
+    "slug": "segugio-dell-istria-a-pelo-raso",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-dell-istria-a-pelo-raso"
+  },
+  {
+    "name": "Segugio Della Bosnia A Pelo Duro",
+    "slug": "segugio-della-bosnia-a-pelo-duro",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-della-bosnia-a-pelo-duro"
+  },
+  {
+    "name": "Segugio Della Stiria A Pelo Ruvido",
+    "slug": "segugio-della-stiria-a-pelo-ruvido",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-della-stiria-a-pelo-ruvido"
+  },
+  {
+    "name": "Segugio Della Transilvania",
+    "slug": "segugio-della-transilvania",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-della-transilvania"
+  },
+  {
+    "name": "Segugio Della Westfalia",
+    "slug": "segugio-della-westfalia",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-della-westfalia"
+  },
+  {
+    "name": "Segugio Ellenico",
+    "slug": "segugio-ellenico",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-ellenico"
+  },
+  {
+    "name": "Segugio Finlandese",
+    "slug": "segugio-finlandese",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-finlandese"
+  },
+  {
+    "name": "Segugio Italiano A Pelo Forte",
+    "slug": "segugio-italiano-a-pelo-forte",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-italiano-a-pelo-forte"
+  },
+  {
+    "name": "Segugio Italiano A Pelo Raso",
+    "slug": "segugio-italiano-a-pelo-raso",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-italiano-a-pelo-raso"
+  },
+  {
+    "name": "Segugio Maremmano",
+    "slug": "segugio-maremmano",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-maremmano"
+  },
+  {
+    "name": "Segugio Montenegrino Da Montagna (Ex Segugio Yugoslavo Da Montagna)",
+    "slug": "segugio-yugoslavo-da-montagna",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-yugoslavo-da-montagna"
+  },
+  {
+    "name": "Segugio Polacco",
+    "slug": "segugio-polacco",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-polacco"
+  },
+  {
+    "name": "Segugio Posavatz",
+    "slug": "segugio-posavatz",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-posavatz"
+  },
+  {
+    "name": "Segugio Serbo",
+    "slug": "segugio-serbo",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-serbo"
+  },
+  {
+    "name": "Segugio Serbo Tricolore (Ex Segugio Tricolore Jugoslavo)",
+    "slug": "segugio-tricolore-jugoslavo",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-tricolore-jugoslavo"
+  },
+  {
+    "name": "Segugio Tedesco",
+    "slug": "segugio-tedesco",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-tedesco"
+  },
+  {
+    "name": "Segugio Tirolese",
+    "slug": "segugio-tirolese",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/segugio-tirolese"
+  },
+  {
+    "name": "Setter Gordon",
+    "slug": "setter-gordon",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/setter-gordon"
+  },
+  {
+    "name": "Setter Inglese",
+    "slug": "setter-inglese",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/setter-inglese"
+  },
+  {
+    "name": "Setter Irlandese Rosso",
+    "slug": "setter-irlandese-rosso",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/setter-irlandese-rosso"
+  },
+  {
+    "name": "Setter Irlandese Rosso-Bianco",
+    "slug": "setter-irlandese-rosso-bianco",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/setter-irlandese-rosso-bianco"
+  },
+  {
+    "name": "Shar Pei",
+    "slug": "shar-pei",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/shar-pei"
+  },
+  {
+    "name": "Shiba",
+    "slug": "shiba",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/shiba"
+  },
+  {
+    "name": "Shih Tzu",
+    "slug": "shih-tzu",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/shih-tzu"
+  },
+  {
+    "name": "Shikoku",
+    "slug": "shikoku",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/shikoku"
+  },
+  {
+    "name": "Siberian Husky",
+    "slug": "siberian-husky",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/siberian-husky"
+  },
+  {
+    "name": "Skye Terrier",
+    "slug": "skye-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/skye-terrier"
+  },
+  {
+    "name": "Sloughi",
+    "slug": "sloughi",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/sloughi"
+  },
+  {
+    "name": "Slovensky Cuvac",
+    "slug": "slovensky-cuvac",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/slovensky-cuvac"
+  },
+  {
+    "name": "Slovensky Kopov",
+    "slug": "slovensky-kopov",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/slovensky-kopov"
+  },
+  {
+    "name": "Smaalandsstovare",
+    "slug": "smaalandsstovare",
+    "fciGroup": 6,
+    "fciGroupName": "SEGUGI E CANI PER PISTA DI SANGUE",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/smaalandsstovare"
+  },
+  {
+    "name": "Smoushound Olandese",
+    "slug": "smoushound-olandese",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/smoushound-olandese"
+  },
+  {
+    "name": "Spaniel Olandese",
+    "slug": "spaniel-olandese",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/spaniel-olandese"
+  },
+  {
+    "name": "Spaniel Tedesco",
+    "slug": "spaniel-tedesco",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/spaniel-tedesco"
+  },
+  {
+    "name": "Spino Degli Iblei",
+    "slug": "spino-degli-iblei",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/spino-degli-iblei"
+  },
+  {
+    "name": "Spinone Italiano",
+    "slug": "spinone-italiano",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/spinone-italiano"
+  },
+  {
+    "name": "Spitz Finnico",
+    "slug": "spitz-finnico",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/spitz-finnico"
+  },
+  {
+    "name": "Spitz Giapponese",
+    "slug": "spitz-giapponese",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/spitz-giapponese"
+  },
+  {
+    "name": "Spitz Tedeschi",
+    "slug": "spitz-tedeschi",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/spitz-tedeschi"
+  },
+  {
+    "name": "Springer Spaniel Inglese",
+    "slug": "springer-spaniel-inglese",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/springer-spaniel-inglese"
+  },
+  {
+    "name": "Stabyhound",
+    "slug": "stabyhound",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/stabyhound"
+  },
+  {
+    "name": "Staffordshire Bull Terrier",
+    "slug": "staffordshire-bull-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/staffordshire-bull-terrier"
+  },
+  {
+    "name": "Sussex Spaniel",
+    "slug": "sussex-spaniel",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/sussex-spaniel"
+  },
+  {
+    "name": "Svensk Lapphund",
+    "slug": "svensk-lapphund",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/svensk-lapphund"
+  },
+  {
+    "name": "Taiwan Dog",
+    "slug": "taiwan-dog",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/taiwan-dog"
+  },
+  {
+    "name": "Terranova",
+    "slug": "terranova",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/terranova"
+  },
+  {
+    "name": "Terrier Boemo",
+    "slug": "terrier-boemo",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/terrier-boemo"
+  },
+  {
+    "name": "Terrier Brazileiro",
+    "slug": "terrier-brazileiro",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/terrier-brazileiro"
+  },
+  {
+    "name": "Terrier Giapponese",
+    "slug": "terrier-giapponese",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/terrier-giapponese"
+  },
+  {
+    "name": "Terrier Nero Russo",
+    "slug": "terrier-nero-russo",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/terrier-nero-russo"
+  },
+  {
+    "name": "Thai Bangkaew Dog",
+    "slug": "thai-bangkaew-dog",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/thai-bangkaew-dog"
+  },
+  {
+    "name": "Thai Ridgeback Dog",
+    "slug": "thai-ridgeback-dog",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/thai-ridgeback-dog"
+  },
+  {
+    "name": "Tibetan Mastiff",
+    "slug": "tibetan-mastiff",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/tibetan-mastiff"
+  },
+  {
+    "name": "Tibetan Spaniel",
+    "slug": "tibetan-spaniel",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/tibetan-spaniel"
+  },
+  {
+    "name": "Tibetan Terrier",
+    "slug": "tibetan-terrier",
+    "fciGroup": 9,
+    "fciGroupName": "CANI DA COMPAGNIA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/tibetan-terrier"
+  },
+  {
+    "name": "Tornjak",
+    "slug": "tornjak",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/tornjak"
+  },
+  {
+    "name": "Tosa",
+    "slug": "tosa",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/tosa"
+  },
+  {
+    "name": "Volpino Italiano",
+    "slug": "volpino-italiano",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/volpino-italiano"
+  },
+  {
+    "name": "Västgötaspets",
+    "slug": "vastgotaspets",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/vastgotaspets"
+  },
+  {
+    "name": "Weimaraner",
+    "slug": "weimaraner",
+    "fciGroup": 7,
+    "fciGroupName": "CANI DA FERMA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/weimaraner"
+  },
+  {
+    "name": "Welsh Corgi Cardigan",
+    "slug": "welsh-corgi-cardigan",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/welsh-corgi-cardigan"
+  },
+  {
+    "name": "Welsh Corgi Pembroke",
+    "slug": "welsh-corgi-pembroke",
+    "fciGroup": 1,
+    "fciGroupName": "CANI DA PASTORE E BOVARI (ESCLUSI BOVARI SVIZZERI)",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/welsh-corgi-pembroke"
+  },
+  {
+    "name": "Welsh Springer Spaniel",
+    "slug": "welsh-springer-spaniel",
+    "fciGroup": 8,
+    "fciGroupName": "CANI DA RIPORTO CANI DA CERCA CANI DA ACQUA",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/welsh-springer-spaniel"
+  },
+  {
+    "name": "Welsh Terrier",
+    "slug": "welsh-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/welsh-terrier"
+  },
+  {
+    "name": "West Highland White Terrier",
+    "slug": "west-highland-white-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/west-highland-white-terrier"
+  },
+  {
+    "name": "Whippet",
+    "slug": "whippet",
+    "fciGroup": 10,
+    "fciGroupName": "LEVRIERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/whippet"
+  },
+  {
+    "name": "Xoloitzcuintle",
+    "slug": "xoloitzcuintle",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/xoloitzcuintle"
+  },
+  {
+    "name": "Yakutskaya Laika",
+    "slug": "yakutskaya-laika",
+    "fciGroup": 5,
+    "fciGroupName": "CANI TIPO SPITZ E TIPO PRIMITIVO",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/yakutskaya-laika"
+  },
+  {
+    "name": "Yorkshire Terrier",
+    "slug": "yorkshire-terrier",
+    "fciGroup": 3,
+    "fciGroupName": "TERRIER",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/yorkshire-terrier"
+  },
+  {
+    "name": "Zwergpinscher",
+    "slug": "zwergpinscher",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/zwergpinscher"
+  },
+  {
+    "name": "Zwergschnauzer",
+    "slug": "zwergschnauzer",
+    "fciGroup": 2,
+    "fciGroupName": "CANI DI TIPO PINSCHER E SCHNAUZER- MOLOSSOIDI E CANI BOVARI SVIZZERI",
+    "enciUrl": "https://www.enci.it/libro-genealogico/razze/zwergschnauzer"
+  }
+]
