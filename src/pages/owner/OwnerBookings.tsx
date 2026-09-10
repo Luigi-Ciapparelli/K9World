@@ -63,18 +63,21 @@ export function OwnerBookings() {
 }
 
 function ReviewModal({ booking, onClose }: { booking: any; onClose: () => void }) {
-  const { user } = useAuth();
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
 
   const submit = async () => {
-    if (!user) return;
-    await supabase.from('reviews').insert({ booking_id: booking.id, owner_id: user.id, professional_id: booking.professional_id, rating, comment });
-    const { data } = await supabase.from('reviews').select('rating').eq('professional_id', booking.professional_id);
-    if (data && data.length) {
-      const avg = data.reduce((s: number, r: any) => s + r.rating, 0) / data.length;
-      await supabase.from('professionals').update({ rating: avg, review_count: data.length }).eq('id', booking.professional_id);
+    const { error } = await supabase.rpc('submit_review', {
+      p_booking_id: booking.id,
+      p_rating: rating,
+      p_comment: comment,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
     }
+
     onClose();
   };
 

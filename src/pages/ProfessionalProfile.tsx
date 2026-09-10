@@ -46,8 +46,8 @@ export function ProfessionalProfile({ id }: { id: string }) {
           .eq('active', true)
           .order('created_at', { ascending: false }),
         supabase
-          .from('reviews')
-          .select('*, profiles:owner_id(full_name, avatar_url)')
+          .from('public_reviews')
+          .select('id, professional_id, rating, comment, reviewer_name, created_at')
           .eq('professional_id', id)
           .order('created_at', { ascending: false })
           .limit(10),
@@ -287,7 +287,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
                     <div key={review.id} className="rounded-2xl border border-stone-200 p-5">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="font-semibold text-stone-900 text-sm">
-                          {review.profiles?.full_name || 'Cliente'}
+                          {review.reviewer_name || 'Cliente'}
                         </div>
                         <div className="flex">
                           {Array.from({ length: Number(review.rating || 0) }).map((_, index) => (

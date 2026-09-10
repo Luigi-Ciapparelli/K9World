@@ -112,7 +112,7 @@ export function LocalExcellenceShowcase() {
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
       const reviewsRes = await supabase
-        .from('reviews')
+        .from('public_reviews')
         .select('professional_id, rating, created_at')
         .in('professional_id', professionalIds)
         .gte('created_at', thirtyDaysAgo.toISOString());
