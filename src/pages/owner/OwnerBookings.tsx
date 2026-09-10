@@ -18,7 +18,16 @@ export function OwnerBookings() {
 
   const cancel = async (id: string) => {
     if (!confirm('Cancel this booking?')) return;
-    await supabase.from('bookings').update({ status: 'cancelled' }).eq('id', id);
+    const { error } = await supabase.rpc('change_booking_status', {
+      p_booking_id: id,
+      p_new_status: 'cancelled',
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
     load();
   };
 

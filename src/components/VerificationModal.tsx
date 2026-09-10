@@ -39,7 +39,7 @@ export function VerificationModal({ type, target, onClose, onVerified }: Props) 
       const res = await fetch(`${apiBase}/send-verification-code`, {
         method: 'POST',
         headers: await authHeaders(),
-        body: JSON.stringify({ type, target }),
+        body: JSON.stringify({ type }),
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error || 'Failed to send');

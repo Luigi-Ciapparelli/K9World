@@ -21,7 +21,7 @@ interface SignUpArgs {
   professionalType?: ProfessionalType;
   dogName?: string;
   dogBreed?: string;
-  dogAge?: string;
+  dogBirthDate?: string;
   dogWeight?: string;
   dogBreedSlug?: string;
   dogFciGroup?: number;
@@ -88,7 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     professionalType,
     dogName,
     dogBreed,
-    dogAge,
+    dogBirthDate,
     dogWeight,
     dogBreedSlug,
     dogFciGroup,
@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           professional_type: role === 'professional' ? professionalType || 'walker' : null,
           dog_name: role === 'owner' ? dogName?.trim() || '' : '',
           dog_breed: role === 'owner' ? dogBreed?.trim() || '' : '',
-          dog_age: role === 'owner' ? dogAge || '' : '',
+          dog_birth_date: role === 'owner' ? dogBirthDate || '' : '',
           dog_weight: role === 'owner' ? dogWeight || '' : '',
           dog_breed_slug: role === 'owner' ? dogBreedSlug || '' : '',
           dog_fci_group: role === 'owner' ? dogFciGroup ?? null : null,

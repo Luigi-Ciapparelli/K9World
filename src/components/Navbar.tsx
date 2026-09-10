@@ -20,7 +20,7 @@ export function Navbar() {
     setMobileOpen(false);
   };
 
-  const needsVerification = user && profile && (!profile.email_verified || !profile.phone_verified);
+  const needsVerification = user && profile && !profile.email_verified;
 
   return (
     <nav className="sticky top-0 z-40 bg-white border-b border-stone-200">
@@ -100,11 +100,9 @@ export function Navbar() {
         >
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>
-            Please verify your {!profile?.email_verified && !profile?.phone_verified
-              ? 'email and phone'
-              : !profile?.email_verified ? 'email' : 'phone'} to activate your account.
+            Conferma la tua email per attivare le prenotazioni.
           </span>
-          <span className="font-semibold underline hidden sm:inline">Verify now</span>
+          <span className="font-semibold underline hidden sm:inline">Apri dashboard</span>
         </button>
       )}
     </nav>

@@ -22,6 +22,7 @@ export interface Dog {
   breed: string;
   breed_slug: string | null;
   fci_group: number | null;
+  birth_date: string | null;
   age: number;
   weight: number;
   photo_url: string;

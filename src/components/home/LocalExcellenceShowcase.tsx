@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, MapPin, Sparkles, Star, Trophy } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useRouter } from '../../lib/RouterContext';
-import { SUPPORTED_CITIES, distanceKm } from '../../lib/locations';
+import { SUPPORTED_CITIES } from '../../lib/locations';
 import { SERVICE_CATEGORIES, ServiceCategoryType } from '../../lib/serviceCategories';
 
 type ServiceRow = {
@@ -15,24 +15,20 @@ type ServiceRow = {
   active: boolean;
 };
 
-type ProfileRef = {
-  full_name: string | null;
-  avatar_url: string | null;
-};
-
 type ProfessionalRow = {
   id: string;
-  business_name: string | null;
+  display_name: string;
+  avatar_url: string | null;
   professional_type: string | null;
   bio: string | null;
   zone_text: string | null;
-  latitude: number | null;
-  longitude: number | null;
   coverage_radius_km: number | null;
+  starting_price: number | null;
   cover_photo_url: string | null;
   rating: number | null;
   review_count: number | null;
-  profiles: ProfileRef | ProfileRef[] | null;
+  distance_km: number | null;
+  matching_services: ServiceRow[];
 };
 
 type ReviewRow = {
@@ -44,7 +40,6 @@ type ReviewRow = {
 type FeaturedItem = {
   service: ServiceRow;
   professional: ProfessionalRow;
-  profile: ProfileRef | null;
   distanceKm: number | null;
   recentAverageRating: number | null;
   recentReviewCount: number;
@@ -52,28 +47,6 @@ type FeaturedItem = {
   imageUrl: string | null;
 };
 
-function getProfile(professional: ProfessionalRow): ProfileRef | null {
-  if (Array.isArray(professional.profiles)) {
-    return professional.profiles[0] || null;
-  }
-
-  return professional.profiles || null;
-}
-
-function getDisplayName(professional: ProfessionalRow, profile: ProfileRef | null) {
-  return professional.business_name || profile?.full_name || 'Professionista verificato';
-}
-
-function isInCityArea(professional: ProfessionalRow, cityName: string, distance: number | null) {
-  const zoneMatches = (professional.zone_text || '')
-    .toLowerCase()
-    .includes(cityName.toLowerCase());
-
-  const radius = professional.coverage_radius_km || 30;
-  const distanceMatches = typeof distance === 'number' && distance <= radius;
-
-  return zoneMatches || distanceMatches;
-}
 
 export function LocalExcellenceShowcase() {
   const { navigate } = useRouter();
@@ -94,52 +67,46 @@ export function LocalExcellenceShowcase() {
       setLoading(true);
       setError('');
 
-      const categoryTypes = SERVICE_CATEGORIES.map((category) => category.type);
+      const publicProsRes = await supabase.rpc('search_public_professionals', {
+        p_lat: selectedCity.lat,
+        p_lng: selectedCity.lng,
+        p_zone_text: selectedCity.name,
+        p_service_type: null,
+        p_max_price: null,
+        p_min_rating: null,
+      });
 
-      const servicesRes = await supabase
-        .from('services')
-        .select('id, professional_id, service_type, name, description, price, active')
-        .eq('active', true)
-        .in('service_type', categoryTypes);
-
-      if (servicesRes.error) {
-        console.error('Featured services error:', servicesRes.error);
-        setError(servicesRes.error.message);
+      if (publicProsRes.error) {
+        console.error('Featured public professionals error:', publicProsRes.error);
+        setError(publicProsRes.error.message);
         setLoading(false);
         return;
       }
 
-      const services = (servicesRes.data || []) as ServiceRow[];
-      const professionalIds = Array.from(
-        new Set(services.map((service) => service.professional_id))
+      const professionals = ((publicProsRes.data || []) as unknown as ProfessionalRow[]).map(
+        (professional) => ({
+          ...professional,
+          matching_services: Array.isArray(professional.matching_services)
+            ? professional.matching_services
+            : [],
+        })
       );
+
+      const professionalById = new Map(
+        professionals.map((professional) => [professional.id, professional])
+      );
+
+      const services = professionals.flatMap(
+        (professional) => professional.matching_services
+      );
+
+      const professionalIds = professionals.map((professional) => professional.id);
 
       if (professionalIds.length === 0) {
         setFeaturedByType({});
         setLoading(false);
         return;
       }
-
-      const professionalsRes = await supabase
-        .from('professionals')
-        .select(
-          'id, business_name, professional_type, bio, zone_text, latitude, longitude, coverage_radius_km, cover_photo_url, rating, review_count, profiles!professionals_id_fkey(full_name, avatar_url)'
-        )
-        .eq('approved', true)
-        .eq('approval_status', 'approved')
-        .in('id', professionalIds);
-
-      if (professionalsRes.error) {
-        console.error('Featured professionals error:', professionalsRes.error);
-        setError(professionalsRes.error.message);
-        setLoading(false);
-        return;
-      }
-
-      const professionals = (professionalsRes.data || []) as unknown as ProfessionalRow[];
-      const professionalById = new Map(
-        professionals.map((professional) => [professional.id, professional])
-      );
 
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -180,20 +147,10 @@ export function LocalExcellenceShowcase() {
 
           if (!professional) continue;
 
-          const profile = getProfile(professional);
-
           const dist =
-            typeof professional.latitude === 'number' &&
-            typeof professional.longitude === 'number'
-              ? distanceKm(
-                  selectedCity.lat,
-                  selectedCity.lng,
-                  professional.latitude,
-                  professional.longitude
-                )
+            typeof professional.distance_km === 'number'
+              ? professional.distance_km
               : null;
-
-          if (!isInCityArea(professional, selectedCity.name, dist)) continue;
 
           const stats = reviewStats.get(professional.id);
           const recentReviewCount = stats?.count || 0;
@@ -208,12 +165,11 @@ export function LocalExcellenceShowcase() {
                 Math.min(professional.review_count || 0, 100) * 0.5 -
                 distancePenalty;
 
-          const imageUrl = professional.cover_photo_url || profile?.avatar_url || null;
+          const imageUrl = professional.cover_photo_url || professional.avatar_url || null;
 
           candidates.push({
             service,
             professional,
-            profile,
             distanceKm: dist,
             recentAverageRating,
             recentReviewCount,
@@ -349,7 +305,7 @@ export function LocalExcellenceShowcase() {
                           </div>
 
                           <h4 className="text-2xl font-bold mt-1">
-                            {getDisplayName(featured.professional, featured.profile)}
+                            {featured.professional.display_name || 'Professionista verificato'}
                           </h4>
 
                           <p className="text-sm text-stone-600 mt-1">

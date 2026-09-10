@@ -11,14 +11,11 @@ import { FciGroupPage } from './pages/FciGroupPage';
 import { OwnerDashboard } from './pages/owner/OwnerDashboard';
 import { OwnerBookings } from './pages/owner/OwnerBookings';
 import { DogsPage } from './pages/owner/DogsPage';
+import { DogDetailPage } from './pages/owner/DogDetailPage';
 import { ProDashboard } from './pages/pro/ProDashboard';
 import { ProBookings } from './pages/pro/ProBookings';
 import { ProCRM } from './pages/pro/ProCRM';
 import { ProAnalytics } from './pages/pro/ProAnalytics';
-import { ProMemberships } from './pages/pro/ProMemberships';
-import { ProPasses } from './pages/pro/ProPasses';
-import { ProSubscriptions } from './pages/pro/ProSubscriptions';
-import { ProCampaigns } from './pages/pro/ProCampaigns';
 import { ProSettings } from './pages/pro/ProSettings';
 import { ThemeProvider } from './lib/ThemeContext';
 
@@ -65,14 +62,14 @@ function AppShell() {
   else if (basePath === '/owner') content = <OwnerDashboard />;
   else if (basePath === '/owner/bookings') content = <OwnerBookings />;
   else if (basePath === '/owner/dogs') content = <DogsPage />;
+  else if (basePath.startsWith('/owner/dogs/')) {
+    const id = basePath.slice('/owner/dogs/'.length);
+    content = <DogDetailPage id={id} />;
+  }
   else if (basePath === '/pro') content = <ProDashboard />;
   else if (basePath === '/pro/bookings') content = <ProBookings />;
   else if (basePath === '/pro/crm') content = <ProCRM />;
   else if (basePath === '/pro/analytics') content = <ProAnalytics />;
-  else if (basePath === '/pro/memberships') content = <ProMemberships />;
-  else if (basePath === '/pro/passes') content = <ProPasses />;
-  else if (basePath === '/pro/subscriptions') content = <ProSubscriptions />;
-  else if (basePath === '/pro/campaigns') content = <ProCampaigns />;
   else if (basePath === '/pro/settings') content = <ProSettings />;
   else content = <HomePage />;
 

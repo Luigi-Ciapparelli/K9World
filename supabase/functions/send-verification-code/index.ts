@@ -92,17 +92,33 @@ Deno.serve(async (req: Request) => {
     if (userErr || !userData.user) throw new Error("Not authenticated");
     const userId = userData.user.id;
 
-    const { type, target } = await req.json();
+    const { type } = await req.json();
     if (type !== "email" && type !== "phone") throw new Error("Invalid type");
-    if (!target || typeof target !== "string" || target.trim().length === 0) {
+
+    const admin = createClient(supabaseUrl, serviceKey);
+
+    let target = "";
+
+    if (type === "email") {
+      target = userData.user.email?.trim() || "";
+    } else {
+      const { data: profile, error: profileErr } = await admin
+        .from("profiles")
+        .select("phone")
+        .eq("id", userId)
+        .single();
+
+      if (profileErr) throw new Error(profileErr.message);
+      target = profile?.phone?.trim() || "";
+    }
+
+    if (!target) {
       throw new Error(
         type === "email"
-          ? "No email on file. Update your profile first."
+          ? "No email on file."
           : "No phone on file. Add a phone number to your profile first."
       );
     }
-
-    const admin = createClient(supabaseUrl, serviceKey);
 
     const since = new Date(Date.now() - 60 * 1000).toISOString();
     const { data: recent } = await admin
@@ -128,26 +144,54 @@ Deno.serve(async (req: Request) => {
       throw new Error("Too many code requests. Please try again later.");
     }
 
-    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const random = crypto.getRandomValues(new Uint32Array(1))[0];
+    const code = String(100000 + (random % 900000));
     const codeHash = await sha256(code);
 
-    const { error: insertErr } = await admin.from("verification_codes").insert({
-      user_id: userId,
-      type,
-      target,
-      code_hash: codeHash,
-      expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-    });
-    if (insertErr) throw new Error(insertErr.message);
+    const { data: verificationRecord, error: insertErr } = await admin
+      .from("verification_codes")
+      .insert({
+        user_id: userId,
+        type,
+        target,
+        code_hash: codeHash,
+        expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+      })
+      .select("id")
+      .single();
+
+    if (insertErr || !verificationRecord) {
+      throw new Error(insertErr?.message || "Could not create verification code");
+    }
 
     const result = type === "email" ? await sendEmail(target, code) : await sendSms(target, code);
+
+    if (!result.ok) {
+      const allowDevCode =
+        Deno.env.get("ALLOW_VERIFICATION_DEV_CODE") === "true";
+
+      if (!allowDevCode) {
+        await admin
+          .from("verification_codes")
+          .delete()
+          .eq("id", verificationRecord.id);
+
+        console.error("Verification delivery failed:", result.note);
+        throw new Error(
+          "Could not deliver verification code. Please try again later."
+        );
+      }
+    }
 
     const body: Record<string, unknown> = {
       success: true,
       delivered: result.ok,
-      note: result.note,
+      note: result.ok ? "" : result.note,
     };
-    if (!result.ok) body.dev_code = code;
+
+    if (!result.ok) {
+      body.dev_code = code;
+    }
 
     return new Response(JSON.stringify(body), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

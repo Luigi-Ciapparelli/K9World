@@ -3,22 +3,22 @@ import { Star, MapPin, Filter } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useRouter } from '../lib/RouterContext';
 import { SearchCard } from '../components/SearchCard';
-import { distanceKm, findSupportedCity } from '../lib/locations';
+import { findSupportedCity } from '../lib/locations';
 
 interface ProResult {
   id: string;
-  professional_type: string;
+  display_name: string;
+  avatar_url: string | null;
+  professional_type: string | null;
   bio: string | null;
   zone_text: string | null;
-  latitude: number | null;
-  longitude: number | null;
   coverage_radius_km: number | null;
   starting_price: number | null;
+  cover_photo_url: string | null;
   rating: number | null;
   review_count: number | null;
-  profiles: { full_name: string; avatar_url: string | null } | null;
-  distance_km?: number;
-  matching_services?: ServizioResult[];
+  distance_km: number | null;
+  matching_services: ServizioResult[];
 }
 
 interface ServizioResult {
@@ -82,133 +82,38 @@ export function SearchPage() {
       setLoading(true);
       setLoadError('');
 
-      let servicesQuery = supabase
-        .from('services')
-        .select('id, professional_id, service_type, name, description, price, duration_kind, duration_minutes, active')
-        .eq('active', true);
-
-      if (typeFilter) {
-        servicesQuery = servicesQuery.eq('service_type', typeFilter);
-      }
-
-      const servicesRes = await servicesQuery;
-
-      if (servicesRes.error) {
-        console.error('Servizi search error:', servicesRes.error);
-        setPros([]);
-        setLoadError(servicesRes.error.message);
-        setLoading(false);
-        return;
-      }
-
-      const activeServizi = (servicesRes.data || []) as ServizioResult[];
-      const professionalIds = Array.from(
-        new Set(activeServizi.map((service) => service.professional_id))
-      );
-
-      if (professionalIds.length === 0) {
-        setPros([]);
-        setLoading(false);
-        return;
-      }
-
-      const prosRes = await supabase
-        .from('professionals')
-        .select(
-          'id, professional_type, bio, zone_text, latitude, longitude, coverage_radius_km, starting_price, rating, review_count, profiles!professionals_id_fkey(full_name, avatar_url)'
-        )
-        .eq('approved', true)
-        .eq('approval_status', 'approved')
-        .in('id', professionalIds);
-
-      if (prosRes.error) {
-        console.error('Professionistas search error:', prosRes.error);
-        setPros([]);
-        setLoadError(prosRes.error.message);
-        setLoading(false);
-        return;
-      }
-
-      const rows = ((prosRes.data as unknown as ProResult[]) || []).map((pro) => {
-        const matchingServizi = activeServizi.filter(
-          (service) => service.professional_id === pro.id
-        );
-
-        const lowestMatchingPrice = matchingServizi.reduce<number | null>(
-          (lowest, service) => {
-            if (lowest === null) return service.price;
-            return Math.min(lowest, service.price);
-          },
-          null
-        );
-
-        const basePro = {
-          ...pro,
-          matching_services: matchingServizi,
-          starting_price: lowestMatchingPrice ?? pro.starting_price,
-        };
-
-        if (
-          selectedCoordinates &&
-          typeof pro.latitude === 'number' &&
-          typeof pro.longitude === 'number'
-        ) {
-          return {
-            ...basePro,
-            distance_km: distanceKm(
-              selectedCoordinates.lat,
-              selectedCoordinates.lng,
-              pro.latitude,
-              pro.longitude
-            ),
-          };
-        }
-
-        return basePro;
+      const { data, error } = await supabase.rpc('search_public_professionals', {
+        p_lat: selectedCoordinates?.lat ?? null,
+        p_lng: selectedCoordinates?.lng ?? null,
+        p_zone_text: selectedCoordinates?.explicit ? null : selectedCity?.name ?? null,
+        p_service_type: typeFilter || null,
+        p_max_price: maxPrice,
+        p_min_rating: minRating,
       });
+
+      if (error) {
+        console.error('Public professional search error:', error);
+        setPros([]);
+        setLoadError(error.message);
+        setLoading(false);
+        return;
+      }
+
+      const rows = ((data as unknown as ProResult[]) || []).map((pro) => ({
+        ...pro,
+        matching_services: Array.isArray(pro.matching_services)
+          ? pro.matching_services
+          : [],
+      }));
 
       setPros(rows);
       setLoading(false);
     };
 
     load();
-  }, [typeFilter, selectedCity, selectedCoordinates]);
+  }, [typeFilter, selectedCity, selectedCoordinates, maxPrice, minRating]);
 
-  const filtered = pros
-    .filter((pro) => {
-      const price = pro.starting_price ?? 0;
-      const rating = pro.rating ?? 0;
-
-      if (price > maxPrice) return false;
-      if (rating < minRating) return false;
-
-      if (selectedCoordinates) {
-        const distanceMatches =
-          typeof pro.distance_km === 'number' &&
-          pro.distance_km <= (pro.coverage_radius_km || 30);
-
-        if (selectedCoordinates.explicit) {
-          return distanceMatches;
-        }
-
-        const zoneMatches =
-          !!selectedCity &&
-          (pro.zone_text || '')
-            .toLowerCase()
-            .includes(selectedCity.name.toLowerCase());
-
-        return zoneMatches || distanceMatches;
-      }
-
-      return true;
-    })
-    .sort((a, b) => {
-      if (typeof a.distance_km === 'number' && typeof b.distance_km === 'number') {
-        return a.distance_km - b.distance_km;
-      }
-
-      return (b.rating || 0) - (a.rating || 0);
-    });
+  const filtered = pros;
 
   const titleLocation = selectedCity ? 'near ' + selectedCity.name : 'near you';
 
@@ -300,7 +205,7 @@ export function SearchPage() {
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <h3 className="text-xl font-bold text-stone-900">
-                            {pro.profiles?.full_name || 'Professionista'}
+                            {pro.display_name || 'Professionista'}
                           </h3>
 
                           <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-stone-600">

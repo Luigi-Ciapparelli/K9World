@@ -28,7 +28,16 @@ export function ProBookings() {
   const statuses = ['all', 'pending', 'accepted', 'completed', 'cancelled', 'declined'];
 
   const updateStatus = async (id: string, status: string) => {
-    await supabase.from('bookings').update({ status }).eq('id', id);
+    const { error } = await supabase.rpc('change_booking_status', {
+      p_booking_id: id,
+      p_new_status: status,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
     setBookings((bs) => bs.map((b) => b.id === id ? { ...b, status } : b));
   };
 
@@ -64,13 +73,28 @@ export function ProBookings() {
                     <td className="p-4"><StatusBadge status={b.status} /></td>
                     <td className="p-4 text-right font-bold">${b.price}</td>
                     <td className="p-4 text-right">
-                      <select value={b.status} onChange={(e) => updateStatus(b.id, e.target.value)} className="text-xs border border-stone-300 rounded-md px-2 py-1">
-                        <option value="pending">pending</option>
-                        <option value="accepted">accepted</option>
-                        <option value="completed">completed</option>
-                        <option value="cancelled">cancelled</option>
-                        <option value="declined">declined</option>
-                      </select>
+                      {b.status === 'pending' ? (
+                        <select
+                          defaultValue=""
+                          onChange={(e) => {
+                            if (e.target.value) updateStatus(b.id, e.target.value);
+                          }}
+                          className="text-xs border border-stone-300 rounded-md px-2 py-1"
+                        >
+                          <option value="" disabled>Azione...</option>
+                          <option value="accepted">Accetta</option>
+                          <option value="declined">Rifiuta</option>
+                        </select>
+                      ) : b.status === 'accepted' ? (
+                        <button
+                          onClick={() => updateStatus(b.id, 'completed')}
+                          className="text-xs border border-stone-300 rounded-md px-3 py-1 hover:bg-stone-50"
+                        >
+                          Segna completata
+                        </button>
+                      ) : (
+                        <span className="text-xs text-stone-400">—</span>
+                      )}
                     </td>
                   </tr>
                 ))}

@@ -61,7 +61,11 @@ export function OwnerDashboard() {
             ) : (
               <div className="grid sm:grid-cols-2 gap-4">
                 {dogs.slice(0, 4).map((d) => (
-                  <div key={d.id} className="flex items-center gap-4 p-3 rounded-xl border border-stone-100 hover:border-emerald-200 transition">
+                  <div
+                    key={d.id}
+                    onClick={() => navigate(`/owner/dogs/${d.id}`)}
+                    className="flex items-center gap-4 p-3 rounded-xl border border-stone-100 hover:border-emerald-200 hover:shadow-sm transition cursor-pointer"
+                  >
                     <img
                       src={d.photo_url || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=200'}
                       alt={d.name}
@@ -70,7 +74,9 @@ export function OwnerDashboard() {
                     <div>
                       <div className="font-semibold text-stone-900">{d.name}</div>
                       <div className="text-xs text-stone-500">{d.breed || 'Unknown breed'}</div>
-                      <div className="text-xs text-stone-500">{d.age} yrs • {d.weight} kg</div>
+                      <div className="text-xs text-stone-500">
+                        {formatDogAge(d.birth_date, d.age)} • {d.weight} kg
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -117,6 +123,35 @@ export function OwnerDashboard() {
       )}
     </div>
   );
+}
+
+
+function formatDogAge(birthDate: string | null | undefined, fallbackAge: number) {
+  if (!birthDate) {
+    return fallbackAge > 0
+      ? `${fallbackAge} ${fallbackAge === 1 ? 'anno' : 'anni'}`
+      : 'Età non indicata';
+  }
+
+  const [year, month, day] = birthDate.split('-').map(Number);
+  const today = new Date();
+
+  let totalMonths =
+    (today.getFullYear() - year) * 12 +
+    (today.getMonth() + 1 - month);
+
+  if (today.getDate() < day) totalMonths -= 1;
+  if (totalMonths < 0) return 'Data non valida';
+
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+
+  if (years === 0) return `${months} ${months === 1 ? 'mese' : 'mesi'}`;
+  if (months === 0) return `${years} ${years === 1 ? 'anno' : 'anni'}`;
+
+  return `${years} ${years === 1 ? 'anno' : 'anni'} e ${months} ${
+    months === 1 ? 'mese' : 'mesi'
+  }`;
 }
 
 function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {

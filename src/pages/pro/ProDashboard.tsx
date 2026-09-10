@@ -35,7 +35,16 @@ export function ProDashboard() {
   const revenue = completed.reduce((s, b) => s + Number(b.price), 0);
 
   const updateStatus = async (id: string, status: string) => {
-    await supabase.from('bookings').update({ status }).eq('id', id);
+    const { error } = await supabase.rpc('change_booking_status', {
+      p_booking_id: id,
+      p_new_status: status,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
     load();
   };
 

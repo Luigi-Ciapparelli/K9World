@@ -19,8 +19,9 @@ export function RouterProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const navigate = (to: string, p: Record<string, string> = {}) => {
-    window.location.hash = to;
+    setPath(to);
     setParams(p);
+    window.location.hash = to;
     window.scrollTo(0, 0);
   };
 

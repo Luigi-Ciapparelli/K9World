@@ -54,6 +54,25 @@ Deno.serve(async (req: Request) => {
 
     const record = rows[0];
 
+    let currentTarget = "";
+
+    if (type === "email") {
+      currentTarget = userData.user.email?.trim() || "";
+    } else {
+      const { data: profile, error: profileErr } = await admin
+        .from("profiles")
+        .select("phone")
+        .eq("id", userId)
+        .single();
+
+      if (profileErr) throw new Error(profileErr.message);
+      currentTarget = profile?.phone?.trim() || "";
+    }
+
+    if (!currentTarget || record.target !== currentTarget) {
+      throw new Error("Verification target has changed. Request a new code.");
+    }
+
     if ((record.attempt_count || 0) >= 5) {
       throw new Error("Too many attempts. Request a new code.");
     }

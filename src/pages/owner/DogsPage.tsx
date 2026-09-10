@@ -33,6 +33,7 @@ export function DogsPage() {
       name: editing.name || '',
       breed: editing.breed || '',
       age: Number(editing.age) || 0,
+      birth_date: editing.birth_date || null,
       weight: Number(editing.weight) || 0,
       photo_url: editing.photo_url || '',
       vaccinated: editing.vaccinated || false,
@@ -86,7 +87,11 @@ export function DogsPage() {
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {dogs.map((d) => (
-              <div key={d.id} className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
+              <div
+                key={d.id}
+                onClick={() => navigate(`/owner/dogs/${d.id}`)}
+                className="bg-white rounded-2xl border border-stone-200 overflow-hidden cursor-pointer hover:shadow-md transition"
+              >
                 <img src={d.photo_url || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=400'} className="w-full h-40 object-cover" alt={d.name} />
                 <div className="p-5">
                   <div className="flex justify-between items-start">
@@ -111,12 +116,12 @@ export function DogsPage() {
                       )}
                     </div>
                     <div className="flex gap-1">
-                      <button onClick={() => setEditing(d)} className="p-1.5 text-stone-500 hover:text-emerald-700"><Pencil className="w-4 h-4" /></button>
-                      <button onClick={() => remove(d.id)} className="p-1.5 text-stone-500 hover:text-rose-600"><Trash2 className="w-4 h-4" /></button>
+                      <button onClick={(e) => { e.stopPropagation(); setEditing(d); }} className="p-1.5 text-stone-500 hover:text-emerald-700"><Pencil className="w-4 h-4" /></button>
+                      <button onClick={(e) => { e.stopPropagation(); remove(d.id); }} className="p-1.5 text-stone-500 hover:text-rose-600"><Trash2 className="w-4 h-4" /></button>
                     </div>
                   </div>
                   <div className="flex gap-3 mt-3 text-sm text-stone-700">
-                    <span>{d.age} yrs</span>
+                    <span>{formatDogAge(d.birth_date, d.age)}</span>
                     <span className="text-stone-300">\u2022</span>
                     <span>{d.weight} kg</span>
                   </div>
@@ -136,6 +141,40 @@ export function DogsPage() {
   );
 }
 
+
+function formatDogAge(birthDate: string | null | undefined, fallbackAge: number) {
+  if (!birthDate) {
+    return fallbackAge > 0
+      ? `${fallbackAge} ${fallbackAge === 1 ? 'anno' : 'anni'}`
+      : 'Età non indicata';
+  }
+
+  const [year, month, day] = birthDate.split('-').map(Number);
+  const today = new Date();
+
+  let totalMonths =
+    (today.getFullYear() - year) * 12 +
+    (today.getMonth() + 1 - month);
+
+  if (today.getDate() < day) totalMonths -= 1;
+  if (totalMonths < 0) return 'Data non valida';
+
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+
+  if (years === 0) {
+    return `${months} ${months === 1 ? 'mese' : 'mesi'}`;
+  }
+
+  if (months === 0) {
+    return `${years} ${years === 1 ? 'anno' : 'anni'}`;
+  }
+
+  return `${years} ${years === 1 ? 'anno' : 'anni'} e ${months} ${
+    months === 1 ? 'mese' : 'mesi'
+  }`;
+}
+
 function DogModal({ dog, onChange, onSave, onClose }: { dog: Partial<Dog>; onChange: (d: Partial<Dog>) => void; onSave: () => void; onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center p-4 z-50">
@@ -148,7 +187,12 @@ function DogModal({ dog, onChange, onSave, onClose }: { dog: Partial<Dog>; onCha
           <Input label="Name" value={dog.name || ''} onChange={(v) => onChange({ ...dog, name: v })} />
           <Input label="Breed" value={dog.breed || ''} onChange={(v) => onChange({ ...dog, breed: v })} />
           <div className="grid grid-cols-2 gap-3">
-            <Input label="Age (yrs)" type="number" value={String(dog.age ?? '')} onChange={(v) => onChange({ ...dog, age: Number(v) })} />
+            <Input
+              label="Data di nascita"
+              type="date"
+              value={dog.birth_date || ''}
+              onChange={(v) => onChange({ ...dog, birth_date: v || null })}
+            />
             <Input label="Weight (kg)" type="number" value={String(dog.weight ?? '')} onChange={(v) => onChange({ ...dog, weight: Number(v) })} />
           </div>
           <Input label="Photo URL" value={dog.photo_url || ''} onChange={(v) => onChange({ ...dog, photo_url: v })} />

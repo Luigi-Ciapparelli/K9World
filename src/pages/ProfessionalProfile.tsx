@@ -5,7 +5,6 @@ import {
   Calendar,
   Mail,
   MapPin,
-  Phone,
   ShieldAlert,
   Star,
 } from 'lucide-react';
@@ -34,8 +33,10 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
       const [profileRes, servicesRes, reviewsRes] = await Promise.all([
         supabase
-          .from('professionals')
-          .select('*, profiles!professionals_id_fkey(*)')
+          .from('public_professional_profiles')
+          .select(
+            'id, display_name, avatar_url, professional_type, bio, zone_text, starting_price, cover_photo_url, rating, review_count'
+          )
           .eq('id', id)
           .maybeSingle(),
         supabase
@@ -137,16 +138,15 @@ export function ProfessionalProfile({ id }: { id: string }) {
     );
   }
 
-  const proProfile = Array.isArray(pro.profiles) ? pro.profiles[0] : pro.profiles;
-  const displayName = pro.business_name || proProfile?.full_name || 'Professionista PawConnect';
-  const avatarUrl = proProfile?.avatar_url || '';
+  const displayName = pro.display_name || 'Professionista PawConnect';
+  const avatarUrl = pro.avatar_url || '';
   const coverUrl =
     pro.cover_photo_url ||
     'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1800';
   const rating = Number(pro.rating || 0);
   const reviewCount = Number(pro.review_count || 0);
   const startingPrice = Number(pro.starting_price || services[0]?.price || 0);
-  const isVerified = !!(profile?.email_verified && profile?.phone_verified);
+  const isVerified = !!profile?.email_verified;
 
   const onBookClick = () => {
     if (!user) return navigate('/signin');
@@ -349,12 +349,10 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
         {showBook && (
           <BookingModal
-            professional_id={id}
             services={services}
             dogs={dogs}
             isVerified={isVerified}
             emailVerified={!!profile?.email_verified}
-            phoneVerified={!!profile?.phone_verified}
             onVerify={(kind) => setVerifying(kind)}
             onClose={() => setShowBook(false)}
           />
@@ -414,23 +412,19 @@ function ServiceCard({ service }: { service: any }) {
 }
 
 interface BookingModalProps {
-  professional_id: string;
   services: any[];
   dogs: any[];
   isVerified: boolean;
   emailVerified: boolean;
-  phoneVerified: boolean;
   onVerify: (kind: 'email' | 'phone') => void;
   onClose: () => void;
 }
 
 function BookingModal({
-  professional_id,
   services,
   dogs,
   isVerified,
   emailVerified,
-  phoneVerified,
   onVerify,
   onClose,
 }: BookingModalProps) {
@@ -449,7 +443,7 @@ function BookingModal({
     if (!user) return;
 
     if (!isVerified) {
-      setError('Verifica email e telefono prima di richiedere una prenotazione.');
+      setError('Conferma la tua email prima di richiedere una prenotazione.');
       return;
     }
 
@@ -462,48 +456,23 @@ function BookingModal({
     setError('');
 
     const start = new Date(`${date}T${time}`);
-    const selectedService = services.find((service) => service.id === serviceId);
-    const end = new Date(
-      start.getTime() + (selectedService?.duration_minutes || 60) * 60000
+
+    const { error: bookingError } = await supabase.rpc(
+      'create_booking_with_dog',
+      {
+        p_service_id: serviceId,
+        p_dog_id: dogId,
+        p_start_at: start.toISOString(),
+        p_notes: notes,
+      }
     );
 
-    const { data: booking, error: bookingError } = await supabase
-      .from('bookings')
-      .insert({
-        owner_id: user.id,
-        professional_id,
-        service_id: serviceId,
-        start_at: start.toISOString(),
-        end_at: end.toISOString(),
-        price: selectedService?.price || 0,
-        notes,
-        status: 'pending',
-      })
-      .select()
-      .maybeSingle();
-
     if (bookingError) {
-      const message = /row-level security|violates|policy/i.test(bookingError.message)
-        ? 'Il tuo account deve essere verificato prima di prenotare.'
+      const message = /email verification required/i.test(bookingError.message)
+        ? 'Conferma la tua email prima di prenotare.'
         : bookingError.message;
 
       setError(message);
-      setSubmitting(false);
-      return;
-    }
-
-    if (!booking) {
-      setError('La prenotazione non è stata creata. Riprova.');
-      setSubmitting(false);
-      return;
-    }
-
-    const { error: dogError } = await supabase
-      .from('booking_dogs')
-      .insert({ booking_id: booking.id, dog_id: dogId });
-
-    if (dogError) {
-      setError(dogError.message);
       setSubmitting(false);
       return;
     }
@@ -529,7 +498,7 @@ function BookingModal({
                   Verifica richiesta
                 </div>
                 <p className="text-sm text-amber-800 mt-1">
-                  Per maggiore sicurezza, verifica email e telefono prima di richiedere una prenotazione.
+                  Conferma la tua email prima di richiedere una prenotazione.
                 </p>
 
                 <div className="flex flex-wrap gap-2 mt-3">
@@ -544,16 +513,6 @@ function BookingModal({
                     </button>
                   )}
 
-                  {!phoneVerified && (
-                    <button
-                      type="button"
-                      onClick={() => onVerify('phone')}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-amber-300 rounded-full text-xs font-semibold text-amber-900 hover:bg-amber-100 transition"
-                    >
-                      <Phone className="w-3.5 h-3.5" />
-                      Verifica telefono
-                    </button>
-                  )}
                 </div>
               </div>
             </div>

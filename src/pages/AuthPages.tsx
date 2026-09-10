@@ -53,7 +53,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
   const [breeds, setBreeds] = useState<FciBreed[]>([]);
   const [selectedBreed, setSelectedBreed] = useState<FciBreed | null>(null);
   const [breedMenuOpen, setBreedMenuOpen] = useState(false);
-  const [dogAge, setDogAge] = useState('');
+  const [dogBirthDate, setDogBirthDate] = useState('');
   const [dogWeight, setDogWeight] = useState('');
   const [dogVaccinated, setDogVaccinated] = useState(false);
   const [dogReactive, setDogReactive] = useState(false);
@@ -126,7 +126,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
       professionalType,
       dogName,
       dogBreed,
-      dogAge,
+      dogBirthDate,
       dogWeight,
       dogBreedSlug: selectedBreed?.slug,
       dogFciGroup: selectedBreed?.fciGroup,
@@ -265,13 +265,18 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field
-              icon={<PawPrint className="w-4 h-4" />}
-              type="number"
-              placeholder="Età"
-              value={dogAge}
-              onChange={setDogAge}
-            />
+            <div>
+              <label className="block text-sm font-semibold text-stone-700 mb-2">
+                Data di nascita
+              </label>
+              <input
+                type="date"
+                value={dogBirthDate}
+                max={new Date().toISOString().split('T')[0]}
+                onChange={(e) => setDogBirthDate(e.target.value)}
+                className="w-full border border-stone-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
 
             <Field
               icon={<PawPrint className="w-4 h-4" />}
