@@ -5,6 +5,8 @@ import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
 import type { Dog } from '../../lib/types';
 import { loadFciBreeds, normalizeBreedSearch, type FciBreed } from '../../lib/fciBreeds';
+import { DogPhoto } from '../../components/DogPhoto';
+import { deleteDogPhoto, uploadDogPhoto, validateDogPhotoFile } from '../../lib/dogPhotos';
 
 export function DogsPage() {
   const { user } = useAuth();
@@ -27,57 +29,177 @@ export function DogsPage() {
 
   useEffect(() => { load(); }, [user]);
 
-  const save = async () => {
+  const save = async (photoFile: File | null, removePhoto: boolean) => {
     if (!editing || !user) return;
 
-    const breedName = (editing.breed || '').trim();
+    const typedBreedName = (editing.breed || '').trim();
 
-    if (!breedName) {
+    if (!typedBreedName) {
       alert('Inserisci la razza del cane');
       return;
     }
 
-    if (breedName !== 'Meticcio / altra razza' && !editing.breed_slug) {
-      alert('Seleziona la razza dai suggerimenti oppure scegli Meticcio / altra razza');
-      return;
+    const normalizedTypedBreed = normalizeBreedSearch(typedBreedName);
+    const isMixedBreed =
+      normalizedTypedBreed === normalizeBreedSearch('Meticcio / altra razza') ||
+      normalizedTypedBreed === 'meticcio';
+
+    let breedName = isMixedBreed ? 'Meticcio / altra razza' : typedBreedName;
+    let breedSlug = isMixedBreed ? null : editing.breed_slug || null;
+    let fciGroup = isMixedBreed ? null : editing.fci_group || null;
+
+    if (!isMixedBreed && !breedSlug) {
+      try {
+        const allBreeds = await loadFciBreeds();
+        const exactBreed = allBreeds.find(
+          (breed) => normalizeBreedSearch(breed.name) === normalizedTypedBreed
+        );
+
+        if (!exactBreed) {
+          alert('Seleziona la razza dai suggerimenti oppure scegli Meticcio / altra razza');
+          return;
+        }
+
+        breedName = exactBreed.name;
+        breedSlug = exactBreed.slug;
+        fciGroup = exactBreed.fciGroup;
+      } catch (error) {
+        console.error('FCI breeds load error:', error);
+        alert('Impossibile verificare la razza in questo momento. Riprova.');
+        return;
+      }
     }
 
     const payload = {
       owner_id: user.id,
       name: editing.name || '',
       breed: breedName,
-      breed_slug: breedName === 'Meticcio / altra razza' ? null : editing.breed_slug || null,
-      fci_group: breedName === 'Meticcio / altra razza' ? null : editing.fci_group || null,
+      breed_slug: breedSlug,
+      fci_group: fciGroup,
       age: Number(editing.age) || 0,
       birth_date: editing.birth_date || null,
       weight: Number(editing.weight) || 0,
-      photo_url: editing.photo_url || '',
       vaccinated: editing.vaccinated || false,
       aggressive: editing.aggressive || false,
       medical_notes: editing.medical_notes || '',
     };
-    const result = editing.id
-      ? await supabase.from('dogs').update(payload).eq('id', editing.id)
-      : await supabase.from('dogs').insert(payload);
 
-    if (result.error) {
-      console.error('Dog save error:', result.error);
-      alert(result.error.message);
+    let dogId = editing.id;
+
+    if (dogId) {
+      const { error } = await supabase
+        .from('dogs')
+        .update(payload)
+        .eq('id', dogId)
+        .eq('owner_id', user.id);
+
+      if (error) {
+        console.error('Dog save error:', error);
+        alert(error.message);
+        return;
+      }
+    } else {
+      const { data, error } = await supabase
+        .from('dogs')
+        .insert(payload)
+        .select('id')
+        .single();
+
+      if (error || !data) {
+        console.error('Dog create error:', error);
+        alert(error?.message || 'Impossibile creare il profilo del cane');
+        return;
+      }
+
+      dogId = data.id;
+    }
+
+    if (!dogId) {
+      alert('Impossibile determinare il profilo del cane salvato');
       return;
     }
 
+    let photoWarning = '';
+
+    if (photoFile) {
+      try {
+        const oldPhotoPath = editing.photo_url || '';
+        const photoPath = await uploadDogPhoto({
+          file: photoFile,
+          ownerId: user.id,
+          dogId,
+        });
+
+        const { error } = await supabase
+          .from('dogs')
+          .update({ photo_url: photoPath })
+          .eq('id', dogId)
+          .eq('owner_id', user.id);
+
+        if (error) throw error;
+
+        if (oldPhotoPath && oldPhotoPath !== photoPath) {
+          try {
+            await deleteDogPhoto(oldPhotoPath);
+          } catch (cleanupError) {
+            console.warn('Old dog photo cleanup error:', cleanupError);
+          }
+        }
+      } catch (error) {
+        console.error('Dog photo upload error:', error);
+        photoWarning =
+          error instanceof Error
+            ? `I dati del cane sono stati salvati, ma la foto non è stata caricata: ${error.message}`
+            : 'I dati del cane sono stati salvati, ma la foto non è stata caricata.';
+      }
+    } else if (removePhoto && editing.photo_url) {
+      const oldPhotoPath = editing.photo_url;
+
+      const { error } = await supabase
+        .from('dogs')
+        .update({ photo_url: '' })
+        .eq('id', dogId)
+        .eq('owner_id', user.id);
+
+      if (error) {
+        console.error('Dog photo remove error:', error);
+        photoWarning = `I dati del cane sono stati salvati, ma la foto non è stata rimossa: ${error.message}`;
+      } else {
+        try {
+          await deleteDogPhoto(oldPhotoPath);
+        } catch (cleanupError) {
+          console.warn('Dog photo storage cleanup error:', cleanupError);
+        }
+      }
+    }
+
     setEditing(null);
-    load();
+    await load();
+
+    if (photoWarning) {
+      alert(photoWarning);
+    }
   };
 
-  const remove = async (id: string) => {
+  const remove = async (dog: Dog) => {
     if (!confirm('Remove this dog?')) return;
-    const { error } = await supabase.from('dogs').delete().eq('id', id);
+
+    const { error } = await supabase
+      .from('dogs')
+      .delete()
+      .eq('id', dog.id)
+      .eq('owner_id', user?.id);
 
     if (error) {
       console.error('Dog remove error:', error);
       alert(error.message);
       return;
+    }
+
+    try {
+      await deleteDogPhoto(dog.photo_url);
+    } catch (cleanupError) {
+      console.warn('Dog photo cleanup after delete failed:', cleanupError);
     }
 
     load();
@@ -108,7 +230,11 @@ export function DogsPage() {
                 onClick={() => navigate(`/owner/dogs/${d.id}`)}
                 className="bg-white rounded-2xl border border-stone-200 overflow-hidden cursor-pointer hover:shadow-md transition"
               >
-                <img src={d.photo_url || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=400'} className="w-full h-40 object-cover" alt={d.name} />
+                <DogPhoto
+                  photoPath={d.photo_url}
+                  className="w-full h-40 object-cover"
+                  alt={d.name}
+                />
                 <div className="p-5">
                   <div className="flex justify-between items-start">
                     <div>
@@ -133,7 +259,7 @@ export function DogsPage() {
                     </div>
                     <div className="flex gap-1">
                       <button onClick={(e) => { e.stopPropagation(); setEditing(d); }} className="p-1.5 text-stone-500 hover:text-emerald-700"><Pencil className="w-4 h-4" /></button>
-                      <button onClick={(e) => { e.stopPropagation(); remove(d.id); }} className="p-1.5 text-stone-500 hover:text-rose-600"><Trash2 className="w-4 h-4" /></button>
+                      <button onClick={(e) => { e.stopPropagation(); remove(d); }} className="p-1.5 text-stone-500 hover:text-rose-600"><Trash2 className="w-4 h-4" /></button>
                     </div>
                   </div>
                   <div className="flex gap-3 mt-3 text-sm text-stone-700">
@@ -191,15 +317,91 @@ function formatDogAge(birthDate: string | null | undefined, fallbackAge: number)
   }`;
 }
 
-function DogModal({ dog, onChange, onSave, onClose }: { dog: Partial<Dog>; onChange: (d: Partial<Dog>) => void; onSave: () => void; onClose: () => void }) {
+function DogModal({
+  dog,
+  onChange,
+  onSave,
+  onClose,
+}: {
+  dog: Partial<Dog>;
+  onChange: (d: Partial<Dog>) => void;
+  onSave: (photoFile: File | null, removePhoto: boolean) => Promise<void>;
+  onClose: () => void;
+}) {
   const [breeds, setBreeds] = useState<FciBreed[]>([]);
   const [breedMenuOpen, setBreedMenuOpen] = useState(false);
+  const [breedsLoading, setBreedsLoading] = useState(true);
+  const [breedLoadError, setBreedLoadError] = useState('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [removePhoto, setRemovePhoto] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    let active = true;
+
+    setBreedsLoading(true);
+    setBreedLoadError('');
+
     loadFciBreeds()
-      .then(setBreeds)
-      .catch((error) => console.error('FCI breeds load error:', error));
+      .then((items) => {
+        if (active) setBreeds(items);
+      })
+      .catch((error) => {
+        console.error('FCI breeds load error:', error);
+        if (active) setBreedLoadError('Impossibile caricare l’elenco FCI');
+      })
+      .finally(() => {
+        if (active) setBreedsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
+
+
+  useEffect(() => {
+    if (!photoFile) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(photoFile);
+    setPreviewUrl(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [photoFile]);
+
+  const choosePhoto = (file: File | null) => {
+    if (!file) return;
+
+    try {
+      validateDogPhotoFile(file);
+      setPhotoFile(file);
+      setRemovePhoto(false);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Foto non valida');
+    }
+  };
+
+  const clearPhoto = () => {
+    setPhotoFile(null);
+    setRemovePhoto(Boolean(dog.photo_url));
+  };
+
+  const handleSave = async () => {
+    if (saving) return;
+
+    setSaving(true);
+    try {
+      await onSave(photoFile, removePhoto);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const normalizedBreed = normalizeBreedSearch(dog.breed || '');
 
@@ -223,6 +425,35 @@ function DogModal({ dog, onChange, onSave, onClose }: { dog: Partial<Dog>; onCha
       ? breeds.find((breed) => breed.slug === dog.breed_slug) || null
       : null;
 
+  const commitExactBreed = () => {
+    if (dog.breed_slug) return;
+
+    const normalized = normalizeBreedSearch(dog.breed || '');
+
+    if (normalized === 'meticcio') {
+      onChange({
+        ...dog,
+        breed: 'Meticcio / altra razza',
+        breed_slug: null,
+        fci_group: null,
+      });
+      return;
+    }
+
+    const exactBreed = breeds.find(
+      (breed) => normalizeBreedSearch(breed.name) === normalized
+    );
+
+    if (exactBreed) {
+      onChange({
+        ...dog,
+        breed: exactBreed.name,
+        breed_slug: exactBreed.slug,
+        fci_group: exactBreed.fciGroup,
+      });
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl max-w-lg w-full p-6">
@@ -237,8 +468,10 @@ function DogModal({ dog, onChange, onSave, onClose }: { dog: Partial<Dog>; onCha
             <input
               type="text"
               value={dog.breed || ''}
-              onFocus={() => {
-                if ((dog.breed || '').trim().length >= 2) setBreedMenuOpen(true);
+              onFocus={() => setBreedMenuOpen(true)}
+              onBlur={() => {
+                commitExactBreed();
+                window.setTimeout(() => setBreedMenuOpen(false), 150);
               }}
               onChange={(e) => {
                 onChange({
@@ -254,9 +487,37 @@ function DogModal({ dog, onChange, onSave, onClose }: { dog: Partial<Dog>; onCha
               className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm focus:border-emerald-500 focus:outline-none"
             />
 
-            {breedMenuOpen && (dog.breed || '').trim().length >= 2 && (
-              <div className="absolute z-30 left-0 right-0 mt-2 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden max-h-72 overflow-y-auto">
-                {breedSuggestions.map((breed) => (
+            {breedMenuOpen && (
+              <div className="absolute z-[80] left-0 right-0 mt-2 bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden max-h-72 overflow-y-auto">
+                {breedsLoading && (
+                  <div className="px-4 py-3 text-sm text-stone-500">
+                    Caricamento razze FCI...
+                  </div>
+                )}
+
+                {!breedsLoading && breedLoadError && (
+                  <div className="px-4 py-3 text-sm text-rose-600">
+                    {breedLoadError}
+                  </div>
+                )}
+
+                {!breedsLoading && !breedLoadError && normalizedBreed.length < 2 && (
+                  <div className="px-4 py-3 text-sm text-stone-500">
+                    Scrivi almeno 2 lettere per cercare una razza.
+                  </div>
+                )}
+
+                {!breedsLoading &&
+                  !breedLoadError &&
+                  normalizedBreed.length >= 2 &&
+                  breedSuggestions.length === 0 && (
+                    <div className="px-4 py-3 text-sm text-stone-500">
+                      Nessuna razza FCI trovata.
+                    </div>
+                  )}
+
+                {!breedsLoading && !breedLoadError && normalizedBreed.length >= 2 &&
+                  breedSuggestions.map((breed) => (
                   <button
                     key={breed.slug}
                     type="button"
@@ -279,6 +540,8 @@ function DogModal({ dog, onChange, onSave, onClose }: { dog: Partial<Dog>; onCha
                     </span>
                   </button>
                 ))}
+
+                <div className="border-t border-stone-100" />
 
                 <button
                   type="button"
@@ -323,7 +586,68 @@ function DogModal({ dog, onChange, onSave, onClose }: { dog: Partial<Dog>; onCha
             />
             <Input label="Weight (kg)" type="number" value={String(dog.weight ?? '')} onChange={(v) => onChange({ ...dog, weight: Number(v) })} />
           </div>
-          <Input label="Photo URL" value={dog.photo_url || ''} onChange={(v) => onChange({ ...dog, photo_url: v })} />
+          <div>
+            <label className="text-sm font-semibold text-stone-700">Foto</label>
+            <div className="mt-1 rounded-xl border border-stone-200 bg-stone-50 p-3 flex gap-4 items-center">
+              <div className="w-24 h-24 rounded-xl overflow-hidden bg-stone-200 shrink-0">
+                {previewUrl ? (
+                  <img
+                    src={previewUrl}
+                    alt={`Anteprima ${dog.name || 'cane'}`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : !removePhoto && dog.photo_url ? (
+                  <DogPhoto
+                    photoPath={dog.photo_url}
+                    alt={dog.name || 'Cane'}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-xs text-stone-500 text-center px-2">
+                    Nessuna foto
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1">
+                <div className="flex gap-2 flex-wrap">
+                  <label className="inline-flex cursor-pointer px-3 py-2 bg-stone-900 text-white rounded-lg text-sm font-semibold hover:bg-stone-800">
+                    {previewUrl || (!removePhoto && dog.photo_url) ? 'Cambia foto' : 'Scegli foto'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.currentTarget.files?.[0] || null;
+                        e.currentTarget.value = '';
+                        choosePhoto(file);
+                      }}
+                    />
+                  </label>
+
+                  {(previewUrl || (!removePhoto && dog.photo_url)) && (
+                    <button
+                      type="button"
+                      onClick={clearPhoto}
+                      className="px-3 py-2 border border-stone-300 text-stone-700 rounded-lg text-sm font-semibold hover:bg-white"
+                    >
+                      Rimuovi foto
+                    </button>
+                  )}
+                </div>
+
+                <p className="text-xs text-stone-500 mt-2">
+                  Immagine privata. Massimo 8 MB.
+                </p>
+
+                {removePhoto && !previewUrl && (
+                  <p className="text-xs text-rose-600 mt-1">
+                    La foto attuale verrà rimossa al salvataggio.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
           <label className="flex items-center gap-2 text-sm text-stone-700">
             <input type="checkbox" checked={dog.vaccinated || false} onChange={(e) => onChange({ ...dog, vaccinated: e.target.checked })} /> Vaccinated
           </label>
@@ -342,7 +666,13 @@ function DogModal({ dog, onChange, onSave, onClose }: { dog: Partial<Dog>; onCha
         </div>
         <div className="flex gap-3 mt-6">
           <button onClick={onClose} className="flex-1 py-2.5 border border-stone-300 rounded-lg font-semibold">Cancel</button>
-          <button onClick={onSave} className="flex-1 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700">Save</button>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex-1 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {saving ? 'Salvataggio...' : 'Save'}
+          </button>
         </div>
       </div>
     </div>

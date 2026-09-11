@@ -3,6 +3,7 @@ import { Search as SearchIcon, Tag, StickyNote, X, Users } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
 import { ProLayout } from './ProLayout';
+import { DogPhoto } from '../../components/DogPhoto';
 
 interface ClienteRow {
   id: string;
@@ -163,7 +164,12 @@ function ClienteDrawer({ client, onClose }: { client: ClienteRow; onClose: () =>
             <div className="space-y-2">
               {client.dogs.map((d: any) => (
                 <div key={d.id} className="flex items-center gap-3 p-3 rounded-lg border border-stone-100">
-                  <img src={d.photo_url || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=200'} className="w-10 h-10 rounded-full object-cover" alt="" />
+                  <DogPhoto
+                    photoPath={d.photo_url}
+                    fallbackUrl="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=200"
+                    className="w-10 h-10 rounded-full object-cover"
+                    alt={d.name || ''}
+                  />
                   <div className="flex-1 text-sm">
                     <div className="font-semibold">{d.name}</div>
                     <div className="text-stone-500 text-xs">{d.breed} • {d.age}y • {d.weight}kg</div>

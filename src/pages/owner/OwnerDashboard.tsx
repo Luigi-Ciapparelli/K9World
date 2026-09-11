@@ -6,6 +6,7 @@ import { useRouter } from '../../lib/RouterContext';
 import { SearchCard } from '../../components/SearchCard';
 import { VerificationModal } from '../../components/VerificationModal';
 import type { Dog, Booking } from '../../lib/types';
+import { DogPhoto } from '../../components/DogPhoto';
 
 export function OwnerDashboard() {
   const { profile, user } = useAuth();
@@ -66,8 +67,9 @@ export function OwnerDashboard() {
                     onClick={() => navigate(`/owner/dogs/${d.id}`)}
                     className="flex items-center gap-4 p-3 rounded-xl border border-stone-100 hover:border-emerald-200 hover:shadow-sm transition cursor-pointer"
                   >
-                    <img
-                      src={d.photo_url || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=200'}
+                    <DogPhoto
+                      photoPath={d.photo_url}
+                      fallbackUrl="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=200"
                       alt={d.name}
                       className="w-16 h-16 rounded-full object-cover"
                     />

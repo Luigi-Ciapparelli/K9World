@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowLeft, CalendarDays, Heart, PawPrint, Scale } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { DogPhoto } from '../../components/DogPhoto';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
 import type { Dog } from '../../lib/types';
@@ -64,13 +65,11 @@ export function DogDetailPage({ id }: { id: string }) {
 
         <div className="bg-white border border-stone-200 rounded-3xl overflow-hidden">
           <div className="h-64 md:h-80 bg-stone-100">
-            <img
-              src={
-                dog.photo_url ||
-                'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1000'
-              }
-              alt={dog.name}
+            <DogPhoto
+              photoPath={dog.photo_url}
+              fallbackUrl="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1000"
               className="w-full h-full object-cover"
+              alt={dog.name}
             />
           </div>
 
