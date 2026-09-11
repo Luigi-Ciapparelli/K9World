@@ -4,6 +4,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
 import type { Dog } from '../../lib/types';
+import { loadFciBreeds, normalizeBreedSearch, type FciBreed } from '../../lib/fciBreeds';
 
 export function DogsPage() {
   const { user } = useAuth();
@@ -28,10 +29,25 @@ export function DogsPage() {
 
   const save = async () => {
     if (!editing || !user) return;
+
+    const breedName = (editing.breed || '').trim();
+
+    if (!breedName) {
+      alert('Inserisci la razza del cane');
+      return;
+    }
+
+    if (breedName !== 'Meticcio / altra razza' && !editing.breed_slug) {
+      alert('Seleziona la razza dai suggerimenti oppure scegli Meticcio / altra razza');
+      return;
+    }
+
     const payload = {
       owner_id: user.id,
       name: editing.name || '',
-      breed: editing.breed || '',
+      breed: breedName,
+      breed_slug: breedName === 'Meticcio / altra razza' ? null : editing.breed_slug || null,
+      fci_group: breedName === 'Meticcio / altra razza' ? null : editing.fci_group || null,
       age: Number(editing.age) || 0,
       birth_date: editing.birth_date || null,
       weight: Number(editing.weight) || 0,
@@ -176,6 +192,37 @@ function formatDogAge(birthDate: string | null | undefined, fallbackAge: number)
 }
 
 function DogModal({ dog, onChange, onSave, onClose }: { dog: Partial<Dog>; onChange: (d: Partial<Dog>) => void; onSave: () => void; onClose: () => void }) {
+  const [breeds, setBreeds] = useState<FciBreed[]>([]);
+  const [breedMenuOpen, setBreedMenuOpen] = useState(false);
+
+  useEffect(() => {
+    loadFciBreeds()
+      .then(setBreeds)
+      .catch((error) => console.error('FCI breeds load error:', error));
+  }, []);
+
+  const normalizedBreed = normalizeBreedSearch(dog.breed || '');
+
+  const breedSuggestions =
+    normalizedBreed.length >= 2
+      ? breeds
+          .filter((breed) =>
+            normalizeBreedSearch(breed.name).includes(normalizedBreed)
+          )
+          .sort((a, b) => {
+            const aStarts = normalizeBreedSearch(a.name).startsWith(normalizedBreed);
+            const bStarts = normalizeBreedSearch(b.name).startsWith(normalizedBreed);
+            if (aStarts !== bStarts) return aStarts ? -1 : 1;
+            return a.name.localeCompare(b.name);
+          })
+          .slice(0, 12)
+      : [];
+
+  const selectedBreed =
+    dog.breed_slug
+      ? breeds.find((breed) => breed.slug === dog.breed_slug) || null
+      : null;
+
   return (
     <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl max-w-lg w-full p-6">
@@ -185,7 +232,88 @@ function DogModal({ dog, onChange, onSave, onClose }: { dog: Partial<Dog>; onCha
         </div>
         <div className="space-y-3">
           <Input label="Name" value={dog.name || ''} onChange={(v) => onChange({ ...dog, name: v })} />
-          <Input label="Breed" value={dog.breed || ''} onChange={(v) => onChange({ ...dog, breed: v })} />
+          <div className="relative">
+            <label className="text-sm font-semibold text-stone-700">Razza</label>
+            <input
+              type="text"
+              value={dog.breed || ''}
+              onFocus={() => {
+                if ((dog.breed || '').trim().length >= 2) setBreedMenuOpen(true);
+              }}
+              onChange={(e) => {
+                onChange({
+                  ...dog,
+                  breed: e.target.value,
+                  breed_slug: null,
+                  fci_group: null,
+                });
+                setBreedMenuOpen(true);
+              }}
+              placeholder="Razza, es. Rottweiler"
+              autoComplete="off"
+              className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm focus:border-emerald-500 focus:outline-none"
+            />
+
+            {breedMenuOpen && (dog.breed || '').trim().length >= 2 && (
+              <div className="absolute z-30 left-0 right-0 mt-2 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden max-h-72 overflow-y-auto">
+                {breedSuggestions.map((breed) => (
+                  <button
+                    key={breed.slug}
+                    type="button"
+                    onClick={() => {
+                      onChange({
+                        ...dog,
+                        breed: breed.name,
+                        breed_slug: breed.slug,
+                        fci_group: breed.fciGroup,
+                      });
+                      setBreedMenuOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-3 hover:bg-emerald-50 border-b border-stone-100 last:border-0"
+                  >
+                    <span className="block font-semibold text-stone-900">
+                      {breed.name}
+                    </span>
+                    <span className="block text-xs text-stone-500 mt-0.5">
+                      Gruppo FCI {breed.fciGroup} · {breed.fciGroupName}
+                    </span>
+                  </button>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    onChange({
+                      ...dog,
+                      breed: 'Meticcio / altra razza',
+                      breed_slug: null,
+                      fci_group: null,
+                    });
+                    setBreedMenuOpen(false);
+                  }}
+                  className="w-full text-left px-4 py-3 hover:bg-stone-50"
+                >
+                  <span className="block font-semibold text-stone-800">
+                    Meticcio / altra razza
+                  </span>
+                  <span className="block text-xs text-stone-500">
+                    Nessun gruppo FCI
+                  </span>
+                </button>
+              </div>
+            )}
+
+            {selectedBreed && (
+              <div className="mt-2 rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-3">
+                <p className="text-sm font-semibold text-emerald-800">
+                  Gruppo FCI {selectedBreed.fciGroup}
+                </p>
+                <p className="text-xs text-stone-600 mt-0.5">
+                  {selectedBreed.fciGroupName}
+                </p>
+              </div>
+            )}
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <Input
               label="Data di nascita"
