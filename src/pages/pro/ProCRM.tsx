@@ -25,37 +25,28 @@ export function ProCRM() {
 
   const load = async () => {
     if (!user) return;
-    const { data: bookings } = await supabase.from('bookings').select('owner_id, price, status, start_at').eq('professional_id', user.id);
-    const grouped = new Map<string, { count: number; spend: number; last: string | null }>();
-    (bookings || []).forEach((b: any) => {
-      const g = grouped.get(b.owner_id) || { count: 0, spend: 0, last: null };
-      g.count++;
-      if (b.status === 'completed') g.spend += Number(b.price);
-      if (!g.last || b.start_at > g.last) g.last = b.start_at;
-      grouped.set(b.owner_id, g);
-    });
-    const ids = [...grouped.keys()];
-    if (ids.length === 0) { setClientes([]); return; }
-    const { data: profiles } = await supabase.from('profiles').select('id, full_name, email, phone, avatar_url').in('id', ids);
-    const { data: dogs } = await supabase.from('dogs').select('*').in('owner_id', ids);
-    const { data: tags } = await supabase.from('client_tags').select('*').eq('professional_id', user.id);
 
-    const rows: ClienteRow[] = (profiles || []).map((p: any) => {
-      const g = grouped.get(p.id)!;
-      return {
-        id: p.id,
-        full_name: p.full_name,
-        email: p.email,
-        phone: p.phone,
-        avatar_url: p.avatar_url,
-        bookingCount: g.count,
-        totalSpend: g.spend,
-        lastVisit: g.last,
-        dogs: (dogs || []).filter((d: any) => d.owner_id === p.id),
-        tags: (tags || []).filter((t: any) => t.client_id === p.id).map((t: any) => t.tag),
-      };
-    });
-    rows.sort((a, b) => b.totalSpend - a.totalSpend);
+    const { data, error } = await supabase.rpc('get_professional_clients');
+
+    if (error) {
+      console.warn('Professional CRM unavailable:', error);
+      setClientes([]);
+      return;
+    }
+
+    const rows: ClienteRow[] = (data || []).map((client: any) => ({
+      id: client.id,
+      full_name: client.full_name || 'Cliente',
+      email: client.email || '',
+      phone: client.phone || '',
+      avatar_url: client.avatar_url || '',
+      bookingCount: Number(client.booking_count || 0),
+      totalSpend: Number(client.total_spend || 0),
+      lastVisit: client.last_visit || null,
+      dogs: Array.isArray(client.dogs) ? client.dogs : [],
+      tags: Array.isArray(client.tags) ? client.tags : [],
+    }));
+
     setClientes(rows);
   };
 
