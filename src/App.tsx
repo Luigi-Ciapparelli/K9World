@@ -8,6 +8,8 @@ import { SignInPage, SignUpPage } from './pages/AuthPages';
 import { SearchPage } from './pages/SearchPage';
 import { ProfessionalProfile } from './pages/ProfessionalProfile';
 import { FciGroupPage } from './pages/FciGroupPage';
+import { BreedPage } from './pages/BreedPage';
+import { BeforeDogPage } from './pages/BeforeDogPage';
 import { OwnerDashboard } from './pages/owner/OwnerDashboard';
 import { OwnerBookings } from './pages/owner/OwnerBookings';
 import { DogsPage } from './pages/owner/DogsPage';
@@ -91,6 +93,11 @@ function AppShell() {
     const group = Number(basePath.slice('/gruppi-fci/'.length));
     content = <FciGroupPage group={group} />;
   }
+  else if (basePath.startsWith('/razze/')) {
+    const slug = basePath.slice('/razze/'.length);
+    content = <BreedPage slug={slug} />;
+  }
+  else if (basePath === '/prima-del-cane') content = <BeforeDogPage />;
   else if (basePath === '/become-a-pro') content = <BecomeProPage />;
   else if (basePath === '/privacy') content = <PrivacyPage />;
   else if (basePath === '/terms') content = <TermsPage />;

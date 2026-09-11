@@ -7,6 +7,20 @@ export type FciGroupContent = {
   activities: string[];
 };
 
+
+export const FCI_GROUP_NAMES: Record<number, string> = {
+  1: 'Cani da pastore e bovari',
+  2: 'Pinscher, Schnauzer, Molossoidi e Bovari Svizzeri',
+  3: 'Terrier',
+  4: 'Bassotti',
+  5: 'Spitz e tipo primitivo',
+  6: 'Segugi e cani per pista di sangue',
+  7: 'Cani da ferma',
+  8: 'Retriever, cani da cerca e cani da acqua',
+  9: 'Cani da compagnia',
+  10: 'Levrieri',
+};
+
 export const FCI_GROUP_CONTENT: Record<number, FciGroupContent> = {
   1: {
     group: 1,

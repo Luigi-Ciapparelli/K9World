@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Star, Shield, Heart, Search, CreditCard, Smile, ChevronDown } from 'lucide-react';
+import { Star, Shield, Heart, Search, CreditCard, Smile, ChevronDown, Compass, PawPrint, ArrowRight } from 'lucide-react';
 import { SearchCard } from '../components/SearchCard';
 import { useRouter } from '../lib/RouterContext';
 import { LocalExcellenceShowcase } from '../components/home/LocalExcellenceShowcase';
@@ -50,8 +50,8 @@ export function HomePage() {
         </div>
         <div className="relative max-w-7xl mx-auto px-6 pt-20 pb-28">
           <div className="text-center text-white mb-8">
-            <h1 className="text-4xl md:text-6xl font-bold mb-3 tracking-tight">Il passaparola cinofilo, finalmente online</h1>
-            <p className="text-lg md:text-xl text-white/90">Trova educatori, addestratori, pensioni e servizi per cani selezionati manualmente nella tua zona.</p>
+            <h1 className="text-4xl md:text-6xl font-bold mb-3 tracking-tight">Vivere bene con un cane inizia prima della scelta</h1>
+            <p className="text-lg md:text-xl text-white/90 max-w-4xl mx-auto">PawConnect ti accompagna dalla scelta consapevole del cane alla sua gestione quotidiana, fino ai professionisti giusti quando servono.</p>
           </div>
           <div className="max-w-4xl mx-auto">
             <SearchCard />
@@ -60,8 +60,58 @@ export function HomePage() {
             <div className="flex -space-x-0.5">
               {[1,2,3,4,5].map((i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
             </div>
-            <span className="font-semibold">Beta locale Rimini</span>
-            <span className="text-white/70">professionisti approvati manualmente</span>
+            <span className="font-semibold">Beta PawConnect</span>
+            <span className="text-white/70">rete selezionata di professionisti</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-stone-100 bg-white">
+        <div className="max-w-7xl mx-auto px-6 py-14">
+          <div className="max-w-3xl mb-8">
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-700 mb-3">Da dove vuoi partire?</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">
+              PawConnect non inizia dalla prenotazione. Inizia dal cane.
+            </h2>
+            <p className="text-stone-600 mt-3 leading-relaxed">
+              Se hai già un cane puoi cercare servizi e professionisti. Se stai ancora pensando di prenderne uno, partiamo prima da te: tempo, esperienza, famiglia, obiettivi e gestione reale.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-5">
+            <button
+              type="button"
+              onClick={() => navigate('/prima-del-cane')}
+              className="group text-left rounded-3xl border border-emerald-200 bg-emerald-50/60 p-7 hover:bg-emerald-50 hover:border-emerald-300 transition"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center mb-5">
+                <Compass className="w-6 h-6 text-emerald-700" />
+              </div>
+              <h3 className="text-xl font-bold text-stone-900">Sto pensando di prendere un cane</h3>
+              <p className="text-stone-600 mt-2 leading-relaxed">
+                Costruisci il tuo profilo di compatibilità prima di parlare di razze. Nessuna “razza perfetta”: solo criteri più seri per scegliere consapevolmente.
+              </p>
+              <span className="inline-flex items-center gap-2 mt-5 text-sm font-bold text-emerald-800">
+                Inizia il percorso <ArrowRight className="w-4 h-4 transition group-hover:translate-x-1" />
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate('/services')}
+              className="group text-left rounded-3xl border border-stone-200 bg-stone-50 p-7 hover:bg-stone-100 transition"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-white border border-stone-200 flex items-center justify-center mb-5">
+                <PawPrint className="w-6 h-6 text-stone-700" />
+              </div>
+              <h3 className="text-xl font-bold text-stone-900">Ho già un cane</h3>
+              <p className="text-stone-600 mt-2 leading-relaxed">
+                Cerca professionisti, gestisci il profilo del tuo cane e usa PawConnect come punto di riferimento per la sua vita quotidiana.
+              </p>
+              <span className="inline-flex items-center gap-2 mt-5 text-sm font-bold text-stone-800">
+                Vai ai servizi <ArrowRight className="w-4 h-4 transition group-hover:translate-x-1" />
+              </span>
+            </button>
           </div>
         </div>
       </section>
