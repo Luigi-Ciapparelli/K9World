@@ -6,7 +6,7 @@ interface AuthContextType {
   user: { id: string; email: string } | null;
   profile: Profile | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: string | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: string | null; role: Role | null }>;
   signUp: (args: SignUpArgs) => Promise<{ error: string | null; needsEmailConfirmation?: boolean }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -37,16 +37,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const loadProfile = async (userId: string) => {
-    const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
+  const loadProfile = async (userId: string): Promise<Profile | null> => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .maybeSingle();
 
     if (error) {
       console.error('Profile load error:', error);
       setProfile(null);
-      return;
+      return null;
     }
 
-    setProfile(data ? (data as Profile) : null);
+    const nextProfile = data ? (data as Profile) : null;
+    setProfile(nextProfile);
+    return nextProfile;
   };
 
   useEffect(() => {
@@ -75,8 +81,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error?.message || null };
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      return { error: error.message, role: null };
+    }
+
+    if (!data.user) {
+      return { error: 'Impossibile completare l’accesso', role: null };
+    }
+
+    setUser({
+      id: data.user.id,
+      email: data.user.email || '',
+    });
+
+    const nextProfile = await loadProfile(data.user.id);
+
+    if (!nextProfile) {
+      await supabase.auth.signOut();
+      return {
+        error: 'Profilo account non trovato. Contatta l’assistenza.',
+        role: null,
+      };
+    }
+
+    return {
+      error: null,
+      role: nextProfile.role,
+    };
   };
 
   const signUp = async ({

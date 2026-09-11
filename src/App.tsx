@@ -24,7 +24,7 @@ import { BecomeProPage } from './pages/BecomeProPage';
 import { PrivacyPage, TermsPage, ContactPage } from './pages/LegalPages';
 function AppShell() {
   const { path, navigate } = useRouter();
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
 
   const basePath = path.split('?')[0];
   const queryParams = path.includes('?')
@@ -33,8 +33,46 @@ function AppShell() {
 
   const signupRole = queryParams.get('role') === 'professional' ? 'professional' : undefined;
 
+  const isAdminRoute = basePath === '/admin' || basePath.startsWith('/admin/');
+  const isProRoute = basePath === '/pro' || basePath.startsWith('/pro/');
+  const isOwnerRoute = basePath === '/owner' || basePath.startsWith('/owner/');
+  const isProtectedRoute = isAdminRoute || isProRoute || isOwnerRoute;
+
+  const roleHome =
+    profile?.role === 'admin'
+      ? '/admin'
+      : profile?.role === 'professional'
+        ? '/pro'
+        : '/owner';
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center bg-stone-50"><div className="text-stone-500">Loading...</div></div>;
+  }
+
+  if (isProtectedRoute) {
+    if (!user) {
+      navigate('/signin');
+      return null;
+    }
+
+    if (!profile) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-stone-50">
+          <div className="text-stone-600">Profilo account non disponibile.</div>
+        </div>
+      );
+    }
+
+    const canAccessAdmin = isAdminRoute && profile.role === 'admin';
+    const canAccessPro =
+      isProRoute && (profile.role === 'professional' || profile.role === 'admin');
+    const canAccessOwner =
+      isOwnerRoute && (profile.role === 'owner' || profile.role === 'admin');
+
+    if (!canAccessAdmin && !canAccessPro && !canAccessOwner) {
+      navigate(roleHome);
+      return null;
+    }
   }
 
   let content: React.ReactNode;
@@ -57,7 +95,6 @@ function AppShell() {
   else if (basePath === '/privacy') content = <PrivacyPage />;
   else if (basePath === '/terms') content = <TermsPage />;
   else if (basePath === '/contact') content = <ContactPage />;
-  else if (!user) { navigate('/signin'); return null; }
   else if (basePath === '/admin') content = <AdminDashboard />;
   else if (basePath === '/owner') content = <OwnerDashboard />;
   else if (basePath === '/owner/bookings') content = <OwnerBookings />;

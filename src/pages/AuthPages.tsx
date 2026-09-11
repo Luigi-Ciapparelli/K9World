@@ -17,10 +17,25 @@ export function SignInPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    const { error } = await signIn(email, password);
+    const { error, role } = await signIn(email, password);
     setLoading(false);
-    if (error) setError(error);
-    else navigate('/owner');
+
+    if (error) {
+      setError(error);
+      return;
+    }
+
+    if (role === 'admin') {
+      navigate('/admin');
+      return;
+    }
+
+    if (role === 'professional') {
+      navigate('/pro');
+      return;
+    }
+
+    navigate('/owner');
   };
 
   return (
