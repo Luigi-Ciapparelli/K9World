@@ -44,3 +44,13 @@ If this document and the code disagree:
 4. update the documentation after understanding the difference.
 
 Never assume a planned feature is already implemented merely because it appears in a blueprint.
+
+
+## Continuity
+
+For exact implemented state, read:
+
+- `docs/CURRENT_STATE.md`
+- `docs/AI_CONTINUITY_PROTOCOL.md`
+
+Then verify the repository directly.
