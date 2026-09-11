@@ -10,6 +10,8 @@ import { ProfessionalProfile } from './pages/ProfessionalProfile';
 import { FciGroupPage } from './pages/FciGroupPage';
 import { BreedPage } from './pages/BreedPage';
 import { BreederGuidePage } from './pages/BreederGuidePage';
+import { ImparaHomePage } from './pages/ImparaHomePage';
+import { ImparaLessonPage } from './pages/ImparaLessonPage';
 import { BeforeDogPage } from './pages/BeforeDogPage';
 import { OwnerDashboard } from './pages/owner/OwnerDashboard';
 import { OwnerBookings } from './pages/owner/OwnerBookings';
@@ -99,6 +101,11 @@ function AppShell() {
     content = <BreedPage slug={slug} />;
   }
   else if (basePath === '/scegliere-allevatore') content = <BreederGuidePage />;
+  else if (basePath === '/impara') content = <ImparaHomePage />;
+  else if (basePath.startsWith('/impara/stage-1/')) {
+    const slug = basePath.slice('/impara/stage-1/'.length);
+    content = <ImparaLessonPage slug={slug} />;
+  }
   else if (basePath === '/prima-del-cane') content = <BeforeDogPage />;
   else if (basePath === '/become-a-pro') content = <BecomeProPage />;
   else if (basePath === '/privacy') content = <PrivacyPage />;

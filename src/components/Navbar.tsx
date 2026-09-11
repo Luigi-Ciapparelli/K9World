@@ -10,7 +10,8 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDashboard = () => {
-    if (profile?.role === 'professional') navigate('/pro');
+    if (profile?.role === 'admin') navigate('/admin');
+    else if (profile?.role === 'professional') navigate('/pro');
     else navigate('/owner');
     setMobileOpen(false);
   };
@@ -31,6 +32,7 @@ export function Navbar() {
         </button>
 
         <div className="hidden md:flex items-center gap-6 text-sm text-stone-700">
+          <button onClick={() => go('/impara')} className="hover:text-emerald-600 transition">Impara</button>
           <button onClick={() => go('/search')} className="hover:text-emerald-600 transition">Trova un professionista</button>
           <button onClick={() => go('/become-a-pro')} className="hover:text-emerald-600 transition">Diventa professionista</button>
           <button onClick={() => go('/?section=services')} className="hover:text-emerald-600 transition">Servizi</button>
@@ -67,6 +69,7 @@ export function Navbar() {
       {mobileOpen && (
         <div className="md:hidden border-t border-stone-200 bg-white">
           <div className="px-4 py-3 flex flex-col gap-1 text-sm">
+            <button onClick={() => go('/impara')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Impara</button>
             <button onClick={() => go('/search')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Trova un professionista</button>
             <button onClick={() => go('/become-a-pro')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Diventa professionista</button>
             <button onClick={() => go('/?section=services')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Servizi</button>
