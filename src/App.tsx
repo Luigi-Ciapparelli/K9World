@@ -1,32 +1,112 @@
+import { lazy, Suspense, type ReactNode } from 'react';
 import { AuthProvider, useAuth } from './lib/AuthContext';
 import { RouterProvider, useRouter } from './lib/RouterContext';
 import { Navbar } from './components/Navbar';
 import { Chatbot } from './components/Chatbot';
 import { Footer } from './components/Footer';
-import { HomePage } from './pages/HomePage';
-import { SignInPage, SignUpPage } from './pages/AuthPages';
-import { SearchPage } from './pages/SearchPage';
-import { ProfessionalProfile } from './pages/ProfessionalProfile';
-import { FciGroupPage } from './pages/FciGroupPage';
-import { BreedPage } from './pages/BreedPage';
-import { BreederGuidePage } from './pages/BreederGuidePage';
-import { ImparaHomePage } from './pages/ImparaHomePage';
-import { ImparaLessonPage } from './pages/ImparaLessonPage';
-import { BeforeDogPage } from './pages/BeforeDogPage';
-import { OwnerDashboard } from './pages/owner/OwnerDashboard';
-import { OwnerBookings } from './pages/owner/OwnerBookings';
-import { DogsPage } from './pages/owner/DogsPage';
-import { DogDetailPage } from './pages/owner/DogDetailPage';
-import { ProDashboard } from './pages/pro/ProDashboard';
-import { ProBookings } from './pages/pro/ProBookings';
-import { ProCRM } from './pages/pro/ProCRM';
-import { ProAnalytics } from './pages/pro/ProAnalytics';
-import { ProSettings } from './pages/pro/ProSettings';
 import { ThemeProvider } from './lib/ThemeContext';
 
-import { AdminDashboard } from './pages/admin/AdminDashboard';
-import { BecomeProPage } from './pages/BecomeProPage';
-import { PrivacyPage, TermsPage, ContactPage } from './pages/LegalPages';
+const HomePage = lazy(() =>
+  import('./pages/HomePage').then((module) => ({ default: module.HomePage }))
+);
+const SignInPage = lazy(() =>
+  import('./pages/AuthPages').then((module) => ({ default: module.SignInPage }))
+);
+const SignUpPage = lazy(() =>
+  import('./pages/AuthPages').then((module) => ({ default: module.SignUpPage }))
+);
+const SearchPage = lazy(() =>
+  import('./pages/SearchPage').then((module) => ({ default: module.SearchPage }))
+);
+const ProfessionalProfile = lazy(() =>
+  import('./pages/ProfessionalProfile').then((module) => ({
+    default: module.ProfessionalProfile,
+  }))
+);
+const FciGroupPage = lazy(() =>
+  import('./pages/FciGroupPage').then((module) => ({ default: module.FciGroupPage }))
+);
+const BreedPage = lazy(() =>
+  import('./pages/BreedPage').then((module) => ({ default: module.BreedPage }))
+);
+const BreederGuidePage = lazy(() =>
+  import('./pages/BreederGuidePage').then((module) => ({
+    default: module.BreederGuidePage,
+  }))
+);
+const ImparaHomePage = lazy(() =>
+  import('./pages/ImparaHomePage').then((module) => ({
+    default: module.ImparaHomePage,
+  }))
+);
+const ImparaLessonPage = lazy(() =>
+  import('./pages/ImparaLessonPage').then((module) => ({
+    default: module.ImparaLessonPage,
+  }))
+);
+const BeforeDogPage = lazy(() =>
+  import('./pages/BeforeDogPage').then((module) => ({ default: module.BeforeDogPage }))
+);
+const OwnerDashboard = lazy(() =>
+  import('./pages/owner/OwnerDashboard').then((module) => ({
+    default: module.OwnerDashboard,
+  }))
+);
+const OwnerBookings = lazy(() =>
+  import('./pages/owner/OwnerBookings').then((module) => ({
+    default: module.OwnerBookings,
+  }))
+);
+const DogsPage = lazy(() =>
+  import('./pages/owner/DogsPage').then((module) => ({ default: module.DogsPage }))
+);
+const DogDetailPage = lazy(() =>
+  import('./pages/owner/DogDetailPage').then((module) => ({
+    default: module.DogDetailPage,
+  }))
+);
+const ProDashboard = lazy(() =>
+  import('./pages/pro/ProDashboard').then((module) => ({
+    default: module.ProDashboard,
+  }))
+);
+const ProBookings = lazy(() =>
+  import('./pages/pro/ProBookings').then((module) => ({
+    default: module.ProBookings,
+  }))
+);
+const ProCRM = lazy(() =>
+  import('./pages/pro/ProCRM').then((module) => ({ default: module.ProCRM }))
+);
+const ProAnalytics = lazy(() =>
+  import('./pages/pro/ProAnalytics').then((module) => ({
+    default: module.ProAnalytics,
+  }))
+);
+const ProSettings = lazy(() =>
+  import('./pages/pro/ProSettings').then((module) => ({
+    default: module.ProSettings,
+  }))
+);
+const AdminDashboard = lazy(() =>
+  import('./pages/admin/AdminDashboard').then((module) => ({
+    default: module.AdminDashboard,
+  }))
+);
+const BecomeProPage = lazy(() =>
+  import('./pages/BecomeProPage').then((module) => ({
+    default: module.BecomeProPage,
+  }))
+);
+const PrivacyPage = lazy(() =>
+  import('./pages/LegalPages').then((module) => ({ default: module.PrivacyPage }))
+);
+const TermsPage = lazy(() =>
+  import('./pages/LegalPages').then((module) => ({ default: module.TermsPage }))
+);
+const ContactPage = lazy(() =>
+  import('./pages/LegalPages').then((module) => ({ default: module.ContactPage }))
+);
 function AppShell() {
   const { path, navigate } = useRouter();
   const { user, profile, loading } = useAuth();
@@ -80,7 +160,7 @@ function AppShell() {
     }
   }
 
-  let content: React.ReactNode;
+  let content: ReactNode;
 
   if (basePath === '/' || basePath === '') content = <HomePage />;
   else if (basePath === '/signin') content = <SignInPage />;
@@ -134,7 +214,15 @@ function AppShell() {
   return (
     <>
       <Navbar />
-      {content}
+      <Suspense
+        fallback={
+          <div className="min-h-[50vh] flex items-center justify-center bg-stone-50">
+            <div className="text-stone-500">Caricamento...</div>
+          </div>
+        }
+      >
+        {content}
+      </Suspense>
       {showFooter && <Footer />}
       {user && <Chatbot />}
     </>
