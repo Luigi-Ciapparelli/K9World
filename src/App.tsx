@@ -9,6 +9,7 @@ import { SearchPage } from './pages/SearchPage';
 import { ProfessionalProfile } from './pages/ProfessionalProfile';
 import { FciGroupPage } from './pages/FciGroupPage';
 import { BreedPage } from './pages/BreedPage';
+import { BreederGuidePage } from './pages/BreederGuidePage';
 import { BeforeDogPage } from './pages/BeforeDogPage';
 import { OwnerDashboard } from './pages/owner/OwnerDashboard';
 import { OwnerBookings } from './pages/owner/OwnerBookings';
@@ -97,6 +98,7 @@ function AppShell() {
     const slug = basePath.slice('/razze/'.length);
     content = <BreedPage slug={slug} />;
   }
+  else if (basePath === '/scegliere-allevatore') content = <BreederGuidePage />;
   else if (basePath === '/prima-del-cane') content = <BeforeDogPage />;
   else if (basePath === '/become-a-pro') content = <BecomeProPage />;
   else if (basePath === '/privacy') content = <PrivacyPage />;

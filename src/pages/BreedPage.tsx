@@ -189,6 +189,15 @@ export function BreedPage({ slug }: { slug: string }) {
               non sostituirsi alla fonte ufficiale.
             </p>
           </div>
+
+          <button
+            type="button"
+            onClick={() => navigate(`/scegliere-allevatore?razza=${breed.slug}`)}
+            className="inline-flex items-center gap-2 mt-6 px-5 py-3 rounded-xl bg-emerald-700 text-white font-semibold hover:bg-emerald-800"
+          >
+            Come scegliere un allevamento
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </section>
       </div>
     </div>
