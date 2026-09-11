@@ -669,6 +669,47 @@ Do not assume the repository state from this document alone.
 
 ---
 
+## Continuity protocol for a new AI account
+
+A new AI assistant does not need access to the previous ChatGPT account if it can access this repository.
+
+It should read:
+
+```text
+START_HERE.md
+docs/PROJECT_HANDOFF.md
+docs/PAWCONNECT_CORE_BLUEPRINT.md
+docs/PAWCONNECT_CORE_DATA_MODEL.md
+docs/PERSON_DOG_RELATIONSHIPS.md
+docs/LEARNING_CREDENTIAL_CORE.md
+```
+
+Then it must verify the current repository state instead of trusting documentation blindly:
+
+```bash
+git status --short
+git branch --show-current
+git log --oneline -n 20
+npx supabase migration list
+npm run typecheck
+npm run build
+```
+
+The documents explain **why** the project exists and **where it is going**.
+
+Git, code and migrations explain **exactly what has actually been implemented**.
+
+This separation is intentional:
+- blueprint = future architecture;
+- handoff = current context and decisions;
+- code = implemented behavior;
+- migrations = implemented database state;
+- Git history = implementation chronology.
+
+If a future assistant has only these files but no access to the repository itself, it will understand the product and architecture but cannot know whether later code changes were made after the documents were written.
+
+---
+
 ## 21. The test for every future feature
 
 Before implementing anything, answer:
