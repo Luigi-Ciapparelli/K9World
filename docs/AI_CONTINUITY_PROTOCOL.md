@@ -83,3 +83,7 @@ Uncommitted work, local files outside the repository, secrets, unpublished notes
 Therefore:
 
 > If it matters to PawConnect's future, it must be committed to the repository.
+
+## Professional continuity and media
+
+Mandatory additional reading before work on professional notes, dog history or media: [Professional continuity and media](PROFESSIONAL_CONTINUITY_MEDIA.md). Preserve the distinction between approved direction, technical proposals and implemented behavior.

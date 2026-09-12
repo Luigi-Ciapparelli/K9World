@@ -54,3 +54,7 @@ For exact implemented state, read:
 - `docs/AI_CONTINUITY_PROTOCOL.md`
 
 Then verify the repository directly.
+
+## Professional continuity and media
+
+For professional notes, dog history, permissions and private media, also read [Professional continuity and media](docs/PROFESSIONAL_CONTINUITY_MEDIA.md). This is an approved product direction with a proposed technical design, not implemented schema.
