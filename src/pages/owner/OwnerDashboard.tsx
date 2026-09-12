@@ -1,5 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Dog as DogIcon, Plus, Calendar, MessageCircle, BadgeCheck, Phone, Mail } from 'lucide-react';
+import {
+  ArrowRight,
+  BadgeCheck,
+  BookOpen,
+  Calendar,
+  Dog as DogIcon,
+  Mail,
+  Phone,
+  Plus,
+  Search,
+} from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
@@ -12,113 +22,341 @@ export function OwnerDashboard() {
   const { profile, user } = useAuth();
   const { navigate } = useRouter();
   const [dogs, setDogs] = useState<Dog[]>([]);
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [recentBookings, setRecentBookings] = useState<Booking[]>([]);
+  const [nextBooking, setNextBooking] = useState<Booking | null>(null);
+  const [upcomingCount, setUpcomingCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [dogsError, setDogsError] = useState(false);
+  const [recentError, setRecentError] = useState(false);
+  const [upcomingError, setUpcomingError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const [verifying, setVerifying] = useState<'email' | 'phone' | null>(null);
+  const userId = user?.id;
 
   useEffect(() => {
-    if (!user) return;
-    (async () => {
-      const [dogsRes, bookingsRes] = await Promise.all([
-        supabase.from('dogs').select('*').eq('owner_id', user.id).order('created_at', { ascending: false }),
-        supabase.from('bookings').select('*').eq('owner_id', user.id).order('start_at', { ascending: false }).limit(4),
-      ]);
-      setDogs((dogsRes.data as Dog[]) || []);
-      setBookings((bookingsRes.data as Booking[]) || []);
-      setLoading(false);
-    })();
-  }, [user]);
+    let active = true;
+    setDogs([]);
+    setRecentBookings([]);
+    setNextBooking(null);
+    setUpcomingCount(0);
+    setDogsError(false);
+    setRecentError(false);
+    setUpcomingError(false);
+    setLoading(Boolean(userId));
+    if (!userId) return;
 
-  const upcoming = bookings.filter((b) => new Date(b.start_at) > new Date()).length;
+    (async () => {
+      const now = new Date().toISOString();
+      try {
+        const [dogsResult, recentResult, upcomingResult] = await Promise.allSettled([
+          supabase.from('dogs').select('*').eq('owner_id', userId)
+            .order('created_at', { ascending: false }),
+          supabase.from('bookings').select('*').eq('owner_id', userId)
+            .lte('start_at', now).order('start_at', { ascending: false }).limit(4),
+          supabase.from('bookings').select('*', { count: 'exact' })
+            .eq('owner_id', userId).eq('status', 'accepted')
+            .gt('start_at', now).order('start_at', { ascending: true }).limit(1),
+        ]);
+        if (!active) return;
+
+        if (dogsResult.status === 'fulfilled' && !dogsResult.value.error) {
+          setDogs((dogsResult.value.data as Dog[]) || []);
+        } else {
+          setDogsError(true);
+        }
+        if (recentResult.status === 'fulfilled' && !recentResult.value.error) {
+          setRecentBookings((recentResult.value.data as Booking[]) || []);
+        } else {
+          setRecentError(true);
+        }
+        if (upcomingResult.status === 'fulfilled' && !upcomingResult.value.error
+          && upcomingResult.value.count !== null) {
+          setNextBooking((upcomingResult.value.data as Booking[] | null)?.[0] ?? null);
+          setUpcomingCount(upcomingResult.value.count);
+        } else {
+          setUpcomingError(true);
+        }
+      } catch {
+        if (!active) return;
+        setDogsError(true);
+        setRecentError(true);
+        setUpcomingError(true);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+
+    return () => { active = false; };
+  }, [userId, reloadKey]);
+
+  const firstName = profile?.full_name?.trim().split(/\s+/)[0] || '';
+  const needsEmailVerification = !profile?.email_verified;
+  const needsPhoneVerification = !profile?.phone_verified;
+  const accountNeedsAttention =
+    needsEmailVerification || needsPhoneVerification;
 
   return (
-    <div className="bg-stone-50 min-h-[calc(100vh-4rem)]">
-      <div className="max-w-7xl mx-auto px-6 py-10">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-stone-900">Hi, {profile?.full_name?.split(' ')[0] || 'there'}.</h1>
-          <p className="text-stone-600">Find someone wonderful for your dog.</p>
-        </div>
+    <div className="min-h-[calc(100vh-4rem)] bg-[var(--pc-bone-50)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-10">
+        <header className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-7">
+          <div>
+            <p className="pc-kicker">La tua area</p>
+            <h1 className="pc-display text-4xl md:text-5xl font-semibold mt-2 text-[var(--pc-ink-950)]">
+              {firstName ? `Ciao, ${firstName}.` : 'Ciao.'}
+            </h1>
+            <p className="text-[var(--pc-muted-600)] text-lg mt-3 max-w-2xl">
+              Cerca un professionista, gestisci i tuoi cani e riprendi da dove
+              avevi lasciato.
+            </p>
+          </div>
 
-        <SearchCard />
+          {!loading && !upcomingError && nextBooking && (
+            <button
+              type="button"
+              onClick={() => navigate('/owner/bookings')}
+              className="pc-card px-5 py-4 text-left min-w-[250px] hover:border-[var(--pc-forest-700)] transition"
+            >
+              <div className="text-xs uppercase tracking-[0.12em] font-extrabold text-[var(--pc-muted-600)]">
+                Prossimo impegno
+              </div>
+              <div className="font-bold text-[var(--pc-ink-950)] mt-1">
+                {formatBookingDate(nextBooking.start_at)}
+              </div>
+              <div className="text-sm text-[var(--pc-forest-700)] font-semibold mt-1">
+                Vedi prenotazioni →
+              </div>
+            </button>
+          )}
+        </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 mb-10">
-          <StatCard icon={<DogIcon className="w-5 h-5" />} label="Your dogs" value={dogs.length} />
-          <StatCard icon={<Calendar className="w-5 h-5" />} label="Upcoming bookings" value={upcoming} />
-          <StatCard icon={<MessageCircle className="w-5 h-5" />} label="Messages" value={0} />
-        </div>
+        <section aria-labelledby="owner-search-title">
+          <div className="flex items-center gap-2 mb-3">
+            <Search className="w-5 h-5 text-[var(--pc-forest-700)]" />
+            <h2
+              id="owner-search-title"
+              className="font-bold text-[var(--pc-ink-950)]"
+            >
+              Trova subito ciò che ti serve
+            </h2>
+          </div>
+          <SearchCard />
+        </section>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 bg-white rounded-2xl border border-stone-200 p-6">
-            <div className="flex justify-between items-center mb-5">
-              <h2 className="text-xl font-bold text-stone-900">Your dogs</h2>
-              <button onClick={() => navigate('/owner/dogs')} className="text-sm text-emerald-700 font-semibold hover:text-emerald-800 flex items-center gap-1">
-                <Plus className="w-4 h-4" /> Add dog
+        <section
+          aria-label="Azioni rapide"
+          className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-6"
+        >
+          <QuickAction
+            icon={<Search className="w-5 h-5" />}
+            title="Cerca professionista"
+            description="Confronta profili e servizi approvati."
+            meta="Ricerca"
+            onClick={() => navigate('/search')}
+          />
+          <QuickAction
+            icon={<DogIcon className="w-5 h-5" />}
+            title="I miei cani"
+            description={
+              loading ? 'Caricamento…' : dogsError ? 'Profili non disponibili.' : dogs.length === 0
+                ? 'Aggiungi il primo profilo cane.'
+                : `${dogs.length} ${dogs.length === 1 ? 'cane' : 'cani'} nel tuo profilo.`
+            }
+            meta={!loading && !dogsError && dogs.length === 0 ? 'Da iniziare' : 'Gestisci'}
+            onClick={() => navigate('/owner/dogs')}
+          />
+          <QuickAction
+            icon={<Calendar className="w-5 h-5" />}
+            title="Prenotazioni"
+            description={
+              loading ? 'Caricamento…' : upcomingError ? 'Impegni non disponibili.' : upcomingCount === 0
+                ? 'Nessun impegno accettato in programma. Vedi anche le richieste.'
+                : `${upcomingCount} ${upcomingCount === 1 ? 'impegno accettato' : 'impegni accettati'} in programma.`
+            }
+            meta="Apri"
+            onClick={() => navigate('/owner/bookings')}
+          />
+          <QuickAction
+            icon={<BookOpen className="w-5 h-5" />}
+            title="Continua Impara"
+            description="Torna alle lezioni e alle attività pratiche."
+            meta="Riprendi"
+            onClick={() => navigate('/impara')}
+          />
+        </section>
+
+        {!loading && upcomingError && (
+          <div className="mt-4">
+            <LoadError text="Non siamo riusciti a caricare i prossimi impegni." onRetry={() => setReloadKey((key) => key + 1)} />
+          </div>
+        )}
+
+        <div className="grid lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] gap-6 mt-8">
+          <section className="pc-card p-5 md:p-6">
+            <div className="flex items-center justify-between gap-4 mb-5">
+              <div>
+                <p className="pc-kicker">I tuoi cani</p>
+                <h2 className="pc-display text-2xl font-semibold mt-1">
+                  Profili cane
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigate('/owner/dogs')}
+                className="inline-flex items-center gap-2 text-sm font-bold text-[var(--pc-forest-700)] hover:text-[var(--pc-forest-900)]"
+              >
+                <Plus className="w-4 h-4" />
+                {!loading && !dogsError && dogs.length === 0 ? 'Aggiungi cane' : 'Gestisci'}
               </button>
             </div>
+
             {loading ? (
-              <div className="text-stone-500 text-sm">Loading...</div>
+              <div className="text-[var(--pc-muted-600)] text-sm py-8">
+                Caricamento…
+              </div>
+            ) : dogsError ? (
+              <LoadError text="Non siamo riusciti a caricare i tuoi cani." onRetry={() => setReloadKey((key) => key + 1)} />
             ) : dogs.length === 0 ? (
-              <EmptyState text="No dogs added yet. Add your first dog to start booking services." action="Add a dog" onClick={() => navigate('/owner/dogs')} />
+              <EmptyState
+                text="Aggiungi il tuo cane per collegare richieste, prenotazioni e informazioni utili a un profilo stabile."
+                action="Aggiungi il primo cane"
+                onClick={() => navigate('/owner/dogs')}
+              />
             ) : (
-              <div className="grid sm:grid-cols-2 gap-4">
-                {dogs.slice(0, 4).map((d) => (
-                  <div
-                    key={d.id}
-                    onClick={() => navigate(`/owner/dogs/${d.id}`)}
-                    className="flex items-center gap-4 p-3 rounded-xl border border-stone-100 hover:border-emerald-200 hover:shadow-sm transition cursor-pointer"
+              <div className="grid sm:grid-cols-2 gap-3">
+                {dogs.slice(0, 4).map((dog) => (
+                  <button
+                    type="button"
+                    key={dog.id}
+                    onClick={() => navigate(`/owner/dogs/${dog.id}`)}
+                    className="text-left flex items-center gap-4 p-3 rounded-2xl border border-[var(--pc-line)] bg-[var(--pc-paper)] hover:border-[var(--pc-forest-700)] transition"
                   >
                     <DogPhoto
-                      photoPath={d.photo_url}
+                      photoPath={dog.photo_url}
                       fallbackUrl="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=200"
-                      alt={d.name}
-                      className="w-16 h-16 rounded-full object-cover"
+                      alt={dog.name}
+                      className="w-16 h-16 rounded-full object-cover shrink-0"
                     />
-                    <div>
-                      <div className="font-semibold text-stone-900">{d.name}</div>
-                      <div className="text-xs text-stone-500">{d.breed || 'Unknown breed'}</div>
-                      <div className="text-xs text-stone-500">
-                        {formatDogAge(d.birth_date, d.age)} • {d.weight} kg
+                    <div className="min-w-0">
+                      <div className="font-bold text-[var(--pc-ink-950)] truncate">
+                        {dog.name}
+                      </div>
+                      <div className="text-sm text-[var(--pc-muted-600)] truncate mt-0.5">
+                        {dog.breed || 'Razza non indicata'}
+                      </div>
+                      <div className="text-xs text-[var(--pc-muted-600)] mt-1">
+                        {formatDogAge(dog.birth_date, dog.age)}
+                        {typeof dog.weight === 'number' && dog.weight > 0
+                          ? ` · ${dog.weight} kg`
+                          : ''}
                       </div>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
-          </div>
+          </section>
 
-          <div className="bg-white rounded-2xl border border-stone-200 p-6">
-            <h3 className="font-bold text-stone-900 mb-4">Account verification</h3>
-            <VerifyRow icon={<Mail className="w-4 h-4" />} label="Email" verified={profile?.email_verified || false} value={profile?.email || ''} onVerify={() => setVerifying('email')} />
-            <VerifyRow icon={<Phone className="w-4 h-4" />} label="Phone" verified={profile?.phone_verified || false} value={profile?.phone || ''} onVerify={() => setVerifying('phone')} />
-          </div>
+          <aside className="pc-card p-5 md:p-6">
+            <p className="pc-kicker">
+              {accountNeedsAttention ? 'Da completare' : 'Account'}
+            </p>
+            <h2 className="pc-display text-2xl font-semibold mt-1">
+              {accountNeedsAttention ? 'Proteggi il tuo account' : 'Account verificato'}
+            </h2>
+
+            <div className="mt-5 divide-y divide-[var(--pc-line)]">
+              <VerifyRow
+                icon={<Mail className="w-4 h-4" />}
+                label="Email"
+                verified={profile?.email_verified || false}
+                value={profile?.email || ''}
+                onVerify={() => setVerifying('email')}
+              />
+              <VerifyRow
+                icon={<Phone className="w-4 h-4" />}
+                label="Telefono"
+                verified={profile?.phone_verified || false}
+                value={profile?.phone || ''}
+                onVerify={() => setVerifying('phone')}
+              />
+            </div>
+
+            <p className="text-sm leading-6 text-[var(--pc-muted-600)] mt-5">
+              Le verifiche servono per le azioni che coinvolgono altre persone,
+              come richieste e prenotazioni.
+            </p>
+          </aside>
         </div>
 
-        <div className="bg-white rounded-2xl border border-stone-200 p-6 mt-6">
-          <div className="flex justify-between items-center mb-5">
-            <h2 className="text-xl font-bold text-stone-900">Recent bookings</h2>
-            <button onClick={() => navigate('/owner/bookings')} className="text-sm text-emerald-700 font-semibold">View all</button>
+        <section className="pc-card p-5 md:p-6 mt-6">
+          <div className="flex items-center justify-between gap-4 mb-5">
+            <div>
+              <p className="pc-kicker">Attività</p>
+              <h2 className="pc-display text-2xl font-semibold mt-1">
+                Prenotazioni passate
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate('/owner/bookings')}
+              className="text-sm font-bold text-[var(--pc-forest-700)] hover:text-[var(--pc-forest-900)]"
+            >
+              Vedi tutte
+            </button>
           </div>
-          {bookings.length === 0 ? (
-            <EmptyState text="No bookings yet. Start by searching for a professional above." action="Find a pro" onClick={() => navigate('/search')} />
+
+          {loading ? (
+            <div className="text-[var(--pc-muted-600)] text-sm py-6">
+              Caricamento…
+            </div>
+          ) : recentError ? (
+            <LoadError text="Non siamo riusciti a caricare le prenotazioni passate." onRetry={() => setReloadKey((key) => key + 1)} />
+          ) : recentBookings.length === 0 ? (
+            <EmptyState
+              text="Non hai prenotazioni passate. Puoi consultare richieste e appuntamenti in programma in “Vedi tutte”."
+              action="Cerca professionista"
+              onClick={() => navigate('/search')}
+            />
           ) : (
-            <div className="space-y-2">
-              {bookings.map((b) => (
-                <div key={b.id} className="flex justify-between items-center p-3 rounded-lg border border-stone-100">
+            <div className="divide-y divide-[var(--pc-line)]">
+              {recentBookings.map((booking) => (
+                <button
+                  type="button"
+                  key={booking.id}
+                  onClick={() => navigate('/owner/bookings')}
+                  className="w-full text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-4 first:pt-0 last:pb-0"
+                >
                   <div>
-                    <div className="text-sm font-semibold text-stone-900">{new Date(b.start_at).toLocaleDateString()} • {new Date(b.start_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                    <div className="text-xs text-stone-500">${b.price} • {b.notes || 'No notes'}</div>
+                    <div className="font-bold text-[var(--pc-ink-950)]">
+                      {formatBookingDate(booking.start_at)}
+                    </div>
+                    <div className="text-sm text-[var(--pc-muted-600)] mt-1">
+                      {typeof booking.price === 'number' && booking.price > 0
+                        ? `${booking.price.toLocaleString('it-IT', {
+                            style: 'currency',
+                            currency: 'EUR',
+                          })}`
+                        : 'Prezzo da confermare'}
+                      {booking.notes ? ` · ${booking.notes}` : ''}
+                    </div>
                   </div>
-                  <StatusBadge status={b.status} />
-                </div>
+
+                  <StatusBadge status={booking.status} />
+                </button>
               ))}
             </div>
           )}
-        </div>
+        </section>
       </div>
+
       {verifying && (
         <VerificationModal
           type={verifying}
-          target={verifying === 'email' ? profile?.email || '' : profile?.phone || ''}
+          target={
+            verifying === 'email'
+              ? profile?.email || ''
+              : profile?.phone || ''
+          }
           onClose={() => setVerifying(null)}
           onVerified={() => setVerifying(null)}
         />
@@ -127,8 +365,67 @@ export function OwnerDashboard() {
   );
 }
 
+function LoadError({ text, onRetry }: { text: string; onRetry: () => void }) {
+  return (
+    <div role="alert" className="rounded-2xl border border-[var(--pc-line)] bg-[var(--pc-paper)] p-4">
+      <p className="text-sm text-[var(--pc-ink-950)]">{text}</p>
+      <button type="button" onClick={onRetry} className="mt-3 text-sm font-bold text-[var(--pc-forest-700)] underline">
+        Riprova
+      </button>
+    </div>
+  );
+}
 
-function formatDogAge(birthDate: string | null | undefined, fallbackAge: number) {
+function QuickAction({
+  icon,
+  title,
+  description,
+  meta,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  meta: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="pc-card p-5 text-left group hover:border-[var(--pc-forest-700)] transition"
+    >
+      <div className="w-10 h-10 rounded-full bg-[var(--pc-forest-100)] text-[var(--pc-forest-900)] flex items-center justify-center">
+        {icon}
+      </div>
+      <h3 className="font-bold text-[var(--pc-ink-950)] mt-4">{title}</h3>
+      <p className="text-sm leading-6 text-[var(--pc-muted-600)] mt-1 min-h-[3rem]">
+        {description}
+      </p>
+      <span className="inline-flex items-center gap-1.5 text-sm font-bold text-[var(--pc-forest-700)] mt-4">
+        {meta}
+        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+      </span>
+    </button>
+  );
+}
+
+function formatBookingDate(value: string) {
+  const date = new Date(value);
+
+  return date.toLocaleString('it-IT', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function formatDogAge(
+  birthDate: string | null | undefined,
+  fallbackAge: number
+) {
   if (!birthDate) {
     return fallbackAge > 0
       ? `${fallbackAge} ${fallbackAge === 1 ? 'anno' : 'anni'}`
@@ -156,61 +453,104 @@ function formatDogAge(birthDate: string | null | undefined, fallbackAge: number)
   }`;
 }
 
-function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
+function VerifyRow({
+  icon,
+  label,
+  verified,
+  value,
+  onVerify,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  verified: boolean;
+  value: string;
+  onVerify: () => void;
+}) {
   return (
-    <div className="bg-white rounded-2xl border border-stone-200 p-5 flex items-center gap-4">
-      <div className="w-11 h-11 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center">{icon}</div>
-      <div>
-        <div className="text-xs text-stone-500 uppercase font-semibold tracking-wide">{label}</div>
-        <div className="text-2xl font-bold text-stone-900">{value}</div>
-      </div>
-    </div>
-  );
-}
-
-function VerifyRow({ icon, label, verified, value, onVerify }: { icon: React.ReactNode; label: string; verified: boolean; value: string; onVerify: () => void }) {
-  return (
-    <div className="flex items-center justify-between py-2">
-      <div className="flex items-center gap-2 text-sm">
-        <div className="text-stone-500">{icon}</div>
-        <div>
-          <div className="font-semibold text-stone-900">{label}</div>
-          <div className="text-xs text-stone-500">{value || 'Not set'}</div>
+    <div className="flex items-center justify-between gap-3 py-3">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="text-[var(--pc-muted-600)] shrink-0">{icon}</div>
+        <div className="min-w-0">
+          <div className="font-bold text-sm text-[var(--pc-ink-950)]">
+            {label}
+          </div>
+          <div className="text-xs text-[var(--pc-muted-600)] truncate mt-0.5">
+            {value || 'Non impostato'}
+          </div>
         </div>
       </div>
+
       {verified ? (
-        <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full flex items-center gap-1 font-semibold">
-          <BadgeCheck className="w-3 h-3" /> Verified
+        <span className="text-xs bg-[var(--pc-forest-100)] text-[var(--pc-forest-900)] px-2.5 py-1 rounded-full flex items-center gap-1 font-bold shrink-0">
+          <BadgeCheck className="w-3.5 h-3.5" />
+          {label === 'Telefono' ? 'Verificato' : 'Verificata'}
         </span>
       ) : (
         <button
+          type="button"
           onClick={onVerify}
           disabled={!value}
-          className="text-xs bg-amber-500 text-white hover:bg-amber-600 px-3 py-1 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          className="text-xs border border-[var(--pc-line)] bg-[var(--pc-paper)] text-[var(--pc-forest-900)] hover:border-[var(--pc-forest-700)] px-3 py-1.5 rounded-full font-bold disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
         >
-          Verify now
+          Verifica
         </button>
       )}
     </div>
   );
 }
 
-function EmptyState({ text, action, onClick }: { text: string; action: string; onClick: () => void }) {
+function EmptyState({
+  text,
+  action,
+  onClick,
+}: {
+  text: string;
+  action: string;
+  onClick: () => void;
+}) {
   return (
-    <div className="text-center py-8">
-      <p className="text-stone-600 mb-3 text-sm">{text}</p>
-      <button onClick={onClick} className="px-4 py-2 bg-emerald-600 text-white rounded-full text-sm font-semibold hover:bg-emerald-700">{action}</button>
+    <div className="rounded-2xl border border-dashed border-[var(--pc-line)] bg-[var(--pc-bone-50)] px-5 py-8 text-center">
+      <p className="text-[var(--pc-muted-600)] text-sm leading-6 max-w-xl mx-auto">
+        {text}
+      </p>
+      <button
+        type="button"
+        onClick={onClick}
+        className="mt-4 inline-flex items-center justify-center px-4 py-2.5 rounded-full bg-[var(--pc-forest-900)] text-white text-sm font-bold hover:bg-[var(--pc-forest-700)] transition"
+      >
+        {action}
+      </button>
     </div>
   );
 }
 
 export function StatusBadge({ status }: { status: string }) {
-  const map: Record<string, string> = {
-    pending: 'bg-amber-50 text-amber-700',
-    accepted: 'bg-blue-50 text-blue-700',
-    completed: 'bg-emerald-50 text-emerald-700',
-    cancelled: 'bg-stone-100 text-stone-500',
-    declined: 'bg-rose-50 text-rose-700',
+  const styles: Record<string, string> = {
+    pending:
+      'bg-[var(--pc-ochre-100,#F5EACB)] text-[var(--pc-ochre-900)]',
+    accepted:
+      'bg-[var(--pc-evidence-100)] text-[var(--pc-evidence-700)]',
+    completed:
+      'bg-[var(--pc-forest-100)] text-[var(--pc-forest-900)]',
+    cancelled: 'bg-stone-100 text-stone-600',
+    declined: 'bg-[var(--pc-danger-100)] text-[var(--pc-danger-700)]',
   };
-  return <span className={`text-xs px-2 py-1 rounded-full font-semibold capitalize ${map[status] || 'bg-stone-100 text-stone-500'}`}>{status}</span>;
+
+  const labels: Record<string, string> = {
+    pending: 'In attesa',
+    accepted: 'Accettata',
+    completed: 'Completata',
+    cancelled: 'Annullata',
+    declined: 'Rifiutata',
+  };
+
+  return (
+    <span
+      className={`text-xs px-2.5 py-1 rounded-full font-bold shrink-0 ${
+        styles[status] || 'bg-stone-100 text-stone-600'
+      }`}
+    >
+      {labels[status] || status}
+    </span>
+  );
 }
