@@ -39,12 +39,9 @@ export function ProfessionalProfile({ id }: { id: string }) {
           )
           .eq('id', id)
           .maybeSingle(),
-        supabase
-          .from('services')
-          .select('*')
-          .eq('professional_id', id)
-          .eq('active', true)
-          .order('created_at', { ascending: false }),
+        supabase.rpc('get_public_professional_services', {
+          p_professional_id: id,
+        }),
         supabase
           .from('public_reviews')
           .select('id, professional_id, rating, comment, reviewer_name, created_at')
