@@ -1,6 +1,6 @@
 # CURRENT STATE — PawConnect / Portalecinofilo
 
-> Auto-generated repository snapshot. Generated: `2026-09-12T20:45:36+02:00`
+> Auto-generated repository snapshot. Generated: `2026-09-13T01:30:36+02:00`
 
 This file records the **implemented state**, not future plans.
 If it conflicts with code, Git history or migrations, inspect the repository directly and regenerate it.
@@ -44,8 +44,11 @@ git log --oneline --decorate -n 30
 Exit code: `0`
 
 ```text
-a2edde0 (HEAD -> signup-dog-profile) Refine professional dashboard and booking actions
-472b4ee (origin/signup-dog-profile) Refine owner dashboard and fix booking summaries
+1ce28af (HEAD -> signup-dog-profile, origin/signup-dog-profile) Fix professional booking names notes and request priority
+a8414f3 Polish professional profile and booking request modal
+bbc2231 (origin/main, origin/HEAD, main) Update project state snapshot
+a2edde0 Refine professional dashboard and booking actions
+472b4ee Refine owner dashboard and fix booking summaries
 3b9a021 Refine public home and returning user entry
 6770dd3 Introduce PortaleCinofilo design system v2
 b1681c4 Rebrand Italian experience as PortaleCinofilo
@@ -71,9 +74,6 @@ e6eae6d Add PawConnect core blueprint
 d049679 Enforce canonical FCI breed integrity
 a95314a Secure professional CRM access
 3edc233 Secure reviews and lock down public data access
-ac2cfc2 Harden public data access and dog onboarding
-4f52f42 Add dog onboarding and FCI education
-656fb6b (origin/test-national-cities-v2, origin/main, origin/HEAD, test-national-cities-v2, main) Add national city search and improved geolocation
 ```
 
 ## Supabase migration history
@@ -124,6 +124,7 @@ Local            | Remote           | Time (UTC)
    `20260911023829` | `20260911023829` | `2026-09-11 02:38:29` 
    `20260911023856` | `20260911023856` | `2026-09-11 02:38:56` 
    `20260912013839` | `20260912013839` | `2026-09-12 01:38:39` 
+   `20260912223818` | `20260912223818` | `2026-09-12 22:38:18` 
 
 
 Initialising login role...
@@ -165,63 +166,63 @@ transforming...
 rendering chunks...
 computing gzip size...
 dist/index.html                                1.53 kB │ gzip:   0.61 kB
-dist/assets/index-CBipD4_P.css                47.23 kB │ gzip:   9.25 kB
-dist/assets/check-S8dffFKY.js                  0.29 kB │ gzip:   0.24 kB
-dist/assets/activity-D_S-2jjt.js               0.31 kB │ gzip:   0.25 kB
+dist/assets/index-ov_3EDJM.css                46.95 kB │ gzip:   9.25 kB
+dist/assets/check-Bbhl1rRR.js                  0.29 kB │ gzip:   0.24 kB
+dist/assets/activity-Bl8J8E0U.js               0.31 kB │ gzip:   0.25 kB
 dist/assets/fciBreeds-DhDJr-DH.js              0.31 kB │ gzip:   0.25 kB
-dist/assets/plus-B11nG7n7.js                   0.32 kB │ gzip:   0.25 kB
-dist/assets/arrow-left-CPxSEB5Q.js             0.33 kB │ gzip:   0.27 kB
-dist/assets/arrow-right-Cz5K0rDg.js            0.33 kB │ gzip:   0.26 kB
-dist/assets/search-C25fqvqH.js                 0.34 kB │ gzip:   0.27 kB
-dist/assets/check-circle-2-CVXzj8E-.js         0.34 kB │ gzip:   0.27 kB
-dist/assets/clock-DzhibuFg.js                  0.35 kB │ gzip:   0.27 kB
-dist/assets/clock-3-BPwWrYh-.js                0.35 kB │ gzip:   0.27 kB
-dist/assets/map-pin-eV1dPwMX.js                0.37 kB │ gzip:   0.29 kB
-dist/assets/lock-l_1YnOq7.js                   0.38 kB │ gzip:   0.29 kB
-dist/assets/star-k7q5EBKl.js                   0.38 kB │ gzip:   0.29 kB
-dist/assets/home-Dt0XAaIO.js                   0.38 kB │ gzip:   0.29 kB
-dist/assets/book-open-DrmxSheQ.js              0.39 kB │ gzip:   0.29 kB
-dist/assets/bar-chart-3-DhOWqkjd.js            0.40 kB │ gzip:   0.29 kB
-dist/assets/heart-BoRqrbGT.js                  0.41 kB │ gzip:   0.31 kB
-dist/assets/external-link-But2QyYt.js          0.42 kB │ gzip:   0.30 kB
-dist/assets/calendar-uPUARozV.js               0.43 kB │ gzip:   0.30 kB
-dist/assets/alert-triangle-BRaN-qHT.js         0.43 kB │ gzip:   0.31 kB
-dist/assets/users-DwGRFYUU.js                  0.47 kB │ gzip:   0.32 kB
-dist/assets/badge-check-VaW3k-3X.js            0.48 kB │ gzip:   0.31 kB
-dist/assets/graduation-cap-BKBKumm3.js         0.50 kB │ gzip:   0.35 kB
-dist/assets/trash-2-_HxrnW4X.js                0.53 kB │ gzip:   0.35 kB
-dist/assets/phone-BMnPDzYh.js                  0.56 kB │ gzip:   0.36 kB
-dist/assets/target-NtIqul6B.js                 0.71 kB │ gzip:   0.35 kB
-dist/assets/dog-B_rZ7T9l.js                    0.89 kB │ gzip:   0.53 kB
-dist/assets/DogPhoto-sIQjufNm.js               1.19 kB │ gzip:   0.71 kB
-dist/assets/OwnerBookings-L09u3pOn.js          3.91 kB │ gzip:   1.70 kB
-dist/assets/ProBookings-DLJTd1K_.js            3.99 kB │ gzip:   1.70 kB
-dist/assets/ProLayout-rkRhP5GE.js              4.05 kB │ gzip:   1.58 kB
-dist/assets/VerificationModal-6qIP14K2.js      4.82 kB │ gzip:   1.86 kB
-dist/assets/ProAnalytics-TSySBSc3.js           5.34 kB │ gzip:   2.08 kB
-dist/assets/DogDetailPage-Dmkfv2SY.js          6.28 kB │ gzip:   2.31 kB
-dist/assets/BreedPage-BD6IZbSV.js              6.51 kB │ gzip:   2.22 kB
-dist/assets/SearchCard-Dj_bdELq.js             7.10 kB │ gzip:   2.91 kB
-dist/assets/FciGroupPage-M6zUDiZp.js           7.43 kB │ gzip:   2.69 kB
+dist/assets/plus-rk8cbsD5.js                   0.32 kB │ gzip:   0.25 kB
+dist/assets/arrow-left-DBMxRoMw.js             0.33 kB │ gzip:   0.26 kB
+dist/assets/arrow-right-BlFolccz.js            0.33 kB │ gzip:   0.26 kB
+dist/assets/search-DoYcbeqq.js                 0.34 kB │ gzip:   0.27 kB
+dist/assets/check-circle-2-BYRhAZBs.js         0.34 kB │ gzip:   0.27 kB
+dist/assets/clock-Dm3PzLid.js                  0.35 kB │ gzip:   0.27 kB
+dist/assets/clock-3-trI8W-Yj.js                0.35 kB │ gzip:   0.27 kB
+dist/assets/map-pin-pkpdoXcg.js                0.37 kB │ gzip:   0.29 kB
+dist/assets/lock-0gFwNN_U.js                   0.38 kB │ gzip:   0.29 kB
+dist/assets/star-CsJ1bZ0H.js                   0.38 kB │ gzip:   0.29 kB
+dist/assets/home-CT0ffZ3C.js                   0.38 kB │ gzip:   0.29 kB
+dist/assets/book-open-DPceAATg.js              0.39 kB │ gzip:   0.29 kB
+dist/assets/bar-chart-3-S--hyxXQ.js            0.40 kB │ gzip:   0.29 kB
+dist/assets/heart-DbyNCeKw.js                  0.41 kB │ gzip:   0.31 kB
+dist/assets/external-link-1zzEpJZi.js          0.42 kB │ gzip:   0.30 kB
+dist/assets/calendar-Ck-qKTkZ.js               0.43 kB │ gzip:   0.30 kB
+dist/assets/alert-triangle-xBXta2AN.js         0.43 kB │ gzip:   0.31 kB
+dist/assets/users-ku_YVH67.js                  0.47 kB │ gzip:   0.32 kB
+dist/assets/badge-check-Ci5nsxoj.js            0.48 kB │ gzip:   0.31 kB
+dist/assets/graduation-cap-BkQvqyQr.js         0.50 kB │ gzip:   0.35 kB
+dist/assets/trash-2-CpYLp9fR.js                0.53 kB │ gzip:   0.35 kB
+dist/assets/phone-UofPGtAl.js                  0.56 kB │ gzip:   0.36 kB
+dist/assets/target-CYkp4uY-.js                 0.71 kB │ gzip:   0.35 kB
+dist/assets/dog-COaE9XKe.js                    0.89 kB │ gzip:   0.53 kB
+dist/assets/DogPhoto-vAf_uKsO.js               1.19 kB │ gzip:   0.71 kB
+dist/assets/OwnerBookings-nKbinOvZ.js          3.91 kB │ gzip:   1.69 kB
+dist/assets/ProLayout-Dvpck2up.js              4.05 kB │ gzip:   1.58 kB
+dist/assets/VerificationModal-B5xkTPcc.js      4.82 kB │ gzip:   1.86 kB
+dist/assets/ProAnalytics-DuTge45d.js           5.34 kB │ gzip:   2.08 kB
+dist/assets/DogDetailPage-DBZ2dmHM.js          6.28 kB │ gzip:   2.30 kB
+dist/assets/BreedPage-CRqy7BEu.js              6.51 kB │ gzip:   2.22 kB
+dist/assets/SearchCard-DFhlfMHn.js             7.10 kB │ gzip:   2.91 kB
+dist/assets/ProBookings-Bp0nPKn7.js            7.29 kB │ gzip:   2.97 kB
+dist/assets/FciGroupPage-C0Orb6W9.js           7.43 kB │ gzip:   2.69 kB
 dist/assets/fciGroups-BHmHcsg7.js              7.55 kB │ gzip:   2.69 kB
-dist/assets/ImparaHomePage-Dpy0rA6F.js         7.82 kB │ gzip:   2.74 kB
-dist/assets/AdminDashboard-CuB5FswV.js         8.02 kB │ gzip:   2.25 kB
-dist/assets/SearchPage-DoCejb0i.js             8.15 kB │ gzip:   3.39 kB
-dist/assets/ProCRM-YDBaC0oh.js                 8.45 kB │ gzip:   2.75 kB
-dist/assets/LegalPages-CLw1nagP.js             8.74 kB │ gzip:   2.98 kB
-dist/assets/BreederGuidePage-D6ydxC9y.js       9.53 kB │ gzip:   3.46 kB
-dist/assets/ProDashboard-PPWnY0Ul.js          10.12 kB │ gzip:   3.39 kB
-dist/assets/BecomeProPage-dccy2gFk.js         10.16 kB │ gzip:   3.20 kB
-dist/assets/AuthPages-B2Hg5roy.js             11.21 kB │ gzip:   3.38 kB
-dist/assets/OwnerDashboard-CLs99E0Q.js        13.18 kB │ gzip:   4.16 kB
-dist/assets/DogsPage-DnUdicXQ.js              14.15 kB │ gzip:   4.58 kB
-dist/assets/HomePage-BGFzN5Ir.js              15.20 kB │ gzip:   4.79 kB
-dist/assets/ProfessionalProfile-B_5lpME4.js   16.24 kB │ gzip:   4.56 kB
-dist/assets/ProSettings-uv4jkLun.js           17.41 kB │ gzip:   4.89 kB
-dist/assets/ImparaLessonPage-Cch_dazM.js      17.95 kB │ gzip:   5.23 kB
+dist/assets/ImparaHomePage-BqTAgS8-.js         7.82 kB │ gzip:   2.74 kB
+dist/assets/AdminDashboard-B-EmX4l3.js         8.02 kB │ gzip:   2.25 kB
+dist/assets/SearchPage-BhTzu5ma.js             8.15 kB │ gzip:   3.38 kB
+dist/assets/ProCRM-DpONmia6.js                 8.45 kB │ gzip:   2.74 kB
+dist/assets/LegalPages-BfECZ4kd.js             8.74 kB │ gzip:   2.98 kB
+dist/assets/BreederGuidePage-cNTncLcu.js       9.53 kB │ gzip:   3.46 kB
+dist/assets/BecomeProPage-CGEQhrDQ.js         10.16 kB │ gzip:   3.20 kB
+dist/assets/ProDashboard-DMVUJ9K3.js          10.27 kB │ gzip:   3.43 kB
+dist/assets/AuthPages-DsToODs9.js             11.21 kB │ gzip:   3.38 kB
+dist/assets/OwnerDashboard-BzRYz_kh.js        13.18 kB │ gzip:   4.16 kB
+dist/assets/DogsPage-BPsDu2eS.js              14.15 kB │ gzip:   4.58 kB
+dist/assets/HomePage-CsBbwQGD.js              15.20 kB │ gzip:   4.79 kB
+dist/assets/ProSettings-rRltVX-o.js           17.41 kB │ gzip:   4.89 kB
+dist/assets/ImparaLessonPage-BhIkcyeS.js      17.95 kB │ gzip:   5.23 kB
+dist/assets/ProfessionalProfile-BHBI_wiD.js   20.30 kB │ gzip:   5.91 kB
 dist/assets/imparaContent-DIr_gzCv.js         29.42 kB │ gzip:   9.28 kB
-dist/assets/BeforeDogPage-CF0hX5_O.js         30.03 kB │ gzip:   9.16 kB
-dist/assets/index-BB7r-RPp.js                386.42 kB │ gzip: 109.78 kB
-✓ built in 3.79s
+dist/assets/BeforeDogPage-xU9LDktD.js         30.03 kB │ gzip:   9.16 kB
+dist/assets/index-DjIQv0hl.js                386.42 kB │ gzip: 109.76 kB
+✓ built in 3.56s
 ```
 
