@@ -160,6 +160,170 @@ const steps: Array<{
   },
 ];
 
+
+type FciGroupSuggestion = {
+  group: number;
+  reason: string;
+  score: number;
+};
+
+function buildFciGroupSuggestions(answers: Answers): FciGroupSuggestion[] {
+  const scores = new Map<number, number>();
+  const reasons = new Map<number, string[]>();
+
+  const add = (group: number, points: number, reason: string) => {
+    scores.set(group, (scores.get(group) || 0) + points);
+
+    const currentReasons = reasons.get(group) || [];
+    if (!currentReasons.includes(reason)) {
+      reasons.set(group, [...currentReasons, reason]);
+    }
+  };
+
+  // L'obiettivo orienta la prima esplorazione; l'attività ne modifica l'ordine.
+  // Household, budget e tempo restano invece vincoli da leggere nelle "lenti":
+  // non sono abbastanza specifici per raccomandare da soli un gruppo FCI.
+  if (answers.goal === 'companion') {
+    add(
+      9,
+      7,
+      'Il tuo obiettivo principale è la compagnia e la vita quotidiana: questo gruppo è un punto di partenza naturale da conoscere.'
+    );
+  }
+
+  if (answers.goal === 'outdoor') {
+    add(
+      8,
+      5,
+      'Cerchi una vita attiva condivisa: questo gruppo comprende razze selezionate per attività dinamiche e collaborazione.'
+    );
+    add(
+      1,
+      4,
+      'Cerchi collaborazione e attività condivise: qui trovi molte razze nate per lavorare a stretto contatto con il conduttore.'
+    );
+    add(
+      5,
+      3,
+      'Per una vita outdoor vale la pena conoscere anche questo gruppo, leggendo con attenzione autonomia, motivazioni e gestione.'
+    );
+  }
+
+  if (answers.goal === 'sport') {
+    add(
+      1,
+      7,
+      'Per sport e formazione è utile partire da razze storicamente selezionate per collaborazione, conduzione e lavoro con l’uomo.'
+    );
+    add(
+      2,
+      5,
+      'Nel gruppo esistono diverse razze da utilità e lavoro: disciplina e linea di selezione restano decisive.'
+    );
+    add(
+      8,
+      4,
+      'Retrievers, cani da cerca e cani da acqua possono offrire spunti interessanti per attività tecniche e collaborative.'
+    );
+  }
+
+  if (answers.goal === 'work') {
+    add(
+      1,
+      6,
+      'Per un obiettivo funzionale specifico questo gruppo merita approfondimento, soprattutto quando servono collaborazione e conduzione.'
+    );
+    add(
+      2,
+      6,
+      'Qui trovi molte razze storicamente legate a utilità, guardia e lavoro; il tipo di attività deve però venire prima del gruppo.'
+    );
+  }
+
+  if (answers.activity === 'calm') {
+    add(
+      9,
+      4,
+      'Hai indicato una quotidianità tranquilla: esplora prima le razze nate principalmente per compagnia, senza dare per scontato che siano tutte semplici.'
+    );
+  }
+
+  if (answers.activity === 'moderate') {
+    add(
+      9,
+      2,
+      'Una routine moderata può essere compatibile con molte razze da compagnia, da valutare poi sul singolo soggetto.'
+    );
+    add(
+      8,
+      2,
+      'Se vuoi aggiungere attività ed escursioni alla vita quotidiana, questo gruppo può essere utile da conoscere.'
+    );
+  }
+
+  if (answers.activity === 'active') {
+    add(
+      1,
+      4,
+      'Hai indicato una vita molto attiva: può essere utile conoscere razze selezionate per collaborazione e attività strutturate.'
+    );
+    add(
+      8,
+      4,
+      'Il livello di attività che cerchi rende questo gruppo un buon punto di partenza da approfondire.'
+    );
+    add(
+      5,
+      3,
+      'Una vita molto attiva rende interessante esplorare anche questo gruppo, prestando attenzione ad autonomia e caratteristiche individuali.'
+    );
+  }
+
+  if (answers.activity === 'sport') {
+    add(
+      1,
+      5,
+      'Hai indicato esplicitamente lo sport cinofilo: funzione, motivazioni, salute e linee di selezione diventano centrali.'
+    );
+    add(
+      2,
+      3,
+      'Per alcuni percorsi sportivi e di utilità questo gruppo merita approfondimento, senza generalizzare tra razze molto diverse.'
+    );
+    add(
+      8,
+      3,
+      'Il gruppo include razze con forte predisposizione alla collaborazione e ad attività strutturate.'
+    );
+  }
+
+  if (answers.management === 'low' && answers.goal === 'companion') {
+    add(
+      9,
+      2,
+      'Hai chiesto una gestione tendenzialmente semplice: parti dalle razze da compagnia, confrontando comunque mantello, salute e bisogni reali.'
+    );
+  }
+
+  if (answers.experience === 'first' && answers.goal === 'companion') {
+    add(
+      9,
+      1,
+      'Essendo il tuo primo cane, può essere utile iniziare da un gruppo orientato alla compagnia e poi valutare con attenzione la singola razza.'
+    );
+  }
+
+  return Array.from(scores.entries())
+    .map(([group, score]) => ({
+      group,
+      score,
+      reason: (reasons.get(group) || []).slice(0, 2).join(' '),
+    }))
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score || a.group - b.group)
+    .slice(0, 3);
+}
+
 function loadStoredAnswers(): Answers {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -229,6 +393,96 @@ export function BeforeDogPage() {
   }, [answers]);
 
 
+
+  const decisionProfile = useMemo(() => {
+    const blockingConstraints: string[] = [];
+    const cautionTraits: string[] = [];
+
+    if (answers.dailyTime === 'under1') {
+      blockingConstraints.push(
+        'Meno di un’ora al giorno è un margine molto ridotto per uscite, relazione, educazione e gestione.'
+      );
+      cautionTraits.push(
+        'Cani con elevato bisogno di attività fisica o mentale e razze selezionate per lavoro intenso.'
+      );
+    }
+
+    if (answers.aloneTime === '6plus') {
+      blockingConstraints.push(
+        'Più di 6 ore di solitudine abituale richiedono prima una soluzione organizzativa stabile.'
+      );
+      cautionTraits.push(
+        'Soggetti che tollerano poco la solitudine o che richiedono molta presenza e interazione quotidiana.'
+      );
+    }
+
+    if (answers.management === 'low') {
+      cautionTraits.push(
+        'Cani con grande forza fisica, forte intensità motivazionale o gestione quotidiana particolarmente complessa.'
+      );
+    }
+
+    if (answers.household.includes('cats')) {
+      cautionTraits.push(
+        'Soggetti con forte motivazione predatoria: con gatti o altri piccoli animali la valutazione individuale è essenziale.'
+      );
+    }
+
+    if (answers.household.includes('children')) {
+      cautionTraits.push(
+        'Soggetti molto fisici, facilmente sovraeccitabili o poco prevedibili nelle interazioni: con bambini servono gestione e supervisione.'
+      );
+    }
+
+    if (answers.budget === 'essential') {
+      cautionTraits.push(
+        'Razze o soggetti con costi prevedibilmente elevati per taglia, mantello, prevenzione sanitaria o supporto specialistico.'
+      );
+    }
+
+    const uniqueCautionTraits = Array.from(new Set(cautionTraits)).slice(0, 4);
+
+    if (blockingConstraints.length >= 2) {
+      return {
+        level: 'high' as const,
+        eyebrow: 'Prima di scegliere la razza',
+        title: 'Il problema principale, oggi, non è trovare il gruppo FCI giusto.',
+        summary:
+          'Le tue risposte mostrano più vincoli strutturali contemporaneamente. PawConnect partirebbe dall’organizzazione della vita quotidiana prima di restringere la scelta a una razza.',
+        nextStep:
+          'Risolti questi vincoli, il questionario diventa davvero utile per confrontare gruppi, razze e singoli soggetti.',
+        blockingConstraints,
+        cautionTraits: uniqueCautionTraits,
+      };
+    }
+
+    if (blockingConstraints.length === 1) {
+      return {
+        level: 'medium' as const,
+        eyebrow: 'Compatibilità da costruire',
+        title: 'Puoi continuare la ricerca, ma c’è un vincolo da risolvere prima della scelta.',
+        summary:
+          'Non significa che tu non possa avere un cane: significa che la scelta responsabile parte dal rendere sostenibile la routine prima di concentrarsi sull’estetica o sulla razza.',
+        nextStep:
+          'Usa i gruppi suggeriti come punto di partenza, poi scendi a razza, linee di selezione e singolo soggetto.',
+        blockingConstraints,
+        cautionTraits: uniqueCautionTraits,
+      };
+    }
+
+    return {
+      level: 'good' as const,
+      eyebrow: 'Una base da approfondire',
+      title: 'Il tuo profilo non mostra un ostacolo strutturale evidente.',
+      summary:
+        'Questo non rende automaticamente adatta una razza: puoi però usare attività, obiettivo, famiglia e complessità gestionale per restringere in modo sensato il campo.',
+      nextStep:
+        'Parti dai gruppi suggeriti, confronta le razze e verifica sempre salute, selezione, carattere dei genitori e qualità dell’allevamento.',
+      blockingConstraints,
+      cautionTraits: uniqueCautionTraits,
+    };
+  }, [answers]);
+
   const explorationLenses = useMemo(() => {
     const lenses: string[] = [
       'Confronta sempre storia funzionale, bisogni e gestione con il tempo che puoi garantire davvero.',
@@ -264,6 +518,11 @@ export function BeforeDogPage() {
 
     return lenses;
   }, [answers]);
+
+  const suggestedFciGroups = useMemo(
+    () => buildFciGroupSuggestions(answers),
+    [answers]
+  );
 
   const fciGroups = useMemo(
     () => Object.values(FCI_GROUP_CONTENT).sort((a, b) => a.group - b.group),
@@ -313,10 +572,66 @@ export function BeforeDogPage() {
               Prima della razza, questi sono i criteri da rispettare.
             </h1>
             <p className="text-stone-600 mt-4 max-w-3xl leading-relaxed">
-              PawConnect non assegna una “razza perfetta”. Questo profilo evidenzia i vincoli reali della tua vita che dovrebbero guidare la scelta del singolo cane, dell’allevamento e del percorso educativo.
+              PawConnect non assegna una “razza perfetta”. Usa le tue risposte per dirti prima di tutto
+              quanto la tua situazione attuale è compatibile con la scelta di un cane e quali aspetti meritano più attenzione.
             </p>
 
-            <div className="mt-8 space-y-3">
+            <div
+              className={`mt-8 rounded-3xl border p-6 md:p-7 ${
+                decisionProfile.level === 'high'
+                  ? 'border-rose-200 bg-rose-50'
+                  : decisionProfile.level === 'medium'
+                    ? 'border-amber-200 bg-amber-50'
+                    : 'border-emerald-200 bg-emerald-50'
+              }`}
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-stone-600">
+                {decisionProfile.eyebrow}
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold text-stone-900 mt-2">
+                {decisionProfile.title}
+              </h2>
+              <p className="text-stone-700 mt-3 leading-relaxed">
+                {decisionProfile.summary}
+              </p>
+
+              {decisionProfile.blockingConstraints.length > 0 && (
+                <div className="mt-5 space-y-2">
+                  {decisionProfile.blockingConstraints.map((constraint) => (
+                    <div key={constraint} className="flex gap-3 text-sm text-stone-800 leading-relaxed">
+                      <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
+                      <span>{constraint}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <p className="text-sm font-semibold text-stone-900 mt-5">
+                Prossimo passo: {decisionProfile.nextStep}
+              </p>
+            </div>
+
+            {decisionProfile.cautionTraits.length > 0 && (
+              <div className="mt-6 rounded-2xl border border-stone-200 bg-stone-50 p-5">
+                <p className="font-bold text-stone-900">
+                  Profili da valutare con più cautela nel tuo caso
+                </p>
+                <p className="text-sm text-stone-600 mt-1 leading-relaxed">
+                  Non sono divieti e non identificano automaticamente una razza: sono caratteristiche che aumentano il carico gestionale rispetto alle risposte che hai dato.
+                </p>
+                <div className="mt-4 space-y-2">
+                  {decisionProfile.cautionTraits.map((trait) => (
+                    <div key={trait} className="flex gap-3 text-sm text-stone-700 leading-relaxed">
+                      <CheckCircle2 className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                      <span>{trait}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <h2 className="text-xl font-bold text-stone-900 mt-8">Cosa pesa nella tua scelta</h2>
+            <div className="mt-4 space-y-3">
               {considerations.map((item) => (
                 <div key={item} className="flex gap-3 rounded-2xl bg-stone-50 border border-stone-100 p-4">
                   <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
@@ -333,6 +648,58 @@ export function BeforeDogPage() {
             </div>
 
 
+
+            <div className="mt-8 rounded-3xl border border-sky-200 bg-sky-50/70 p-6 md:p-7">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-sky-800">
+                Perché vale la pena scegliere con calma
+              </p>
+              <h2 className="text-2xl font-bold text-stone-900 mt-2">
+                Una scelta sbagliata può diventare anni di gestione difficile.
+              </h2>
+              <p className="text-sm text-stone-700 mt-3 leading-relaxed max-w-3xl">
+                Questi dati non dimostrano che una razza “causi” abbandono o morsicature.
+                Mostrano però che possesso responsabile, gestione e compatibilità hanno conseguenze reali.
+              </p>
+
+              <div className="grid md:grid-cols-2 gap-4 mt-5">
+                <a
+                  href="https://www.legambiente.it/attivita-scientifiche/animali-in-citta"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-2xl bg-white border border-sky-100 p-5 hover:border-sky-300 transition"
+                >
+                  <div className="text-3xl font-bold text-stone-900">oltre 2 su 10</div>
+                  <p className="text-sm text-stone-700 mt-2 leading-relaxed">
+                    Tra i cani entrati nel 2025 nei canili rifugio dei 221 comuni mappati da Legambiente,
+                    oltre due su dieci — circa 3.000 — non risultavano adottati, restituiti al proprietario
+                    o inseriti come cani di quartiere.
+                  </p>
+                  <p className="text-xs text-stone-500 mt-3">Legambiente · Animali in Città 2026</p>
+                </a>
+
+                <a
+                  href="https://www.veterinariaitaliana.izs.it/index.php/SMF/article/view/3997"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-2xl bg-white border border-sky-100 p-5 hover:border-sky-300 transition"
+                >
+                  <div className="text-3xl font-bold text-stone-900">650 casi</div>
+                  <p className="text-sm text-stone-700 mt-2 leading-relaxed">
+                    Uno studio sui registri della ASL di Imola ha analizzato 650 cani morsicatori dal 2014
+                    a luglio 2025. Nel territorio studiato, il 68,3% degli episodi era avvenuto in ambito familiare.
+                  </p>
+                  <p className="text-xs text-stone-500 mt-3">
+                    Dato territoriale, non nazionale · Veterinaria Italiana / ASL Imola
+                  </p>
+                </a>
+              </div>
+
+              <p className="text-xs text-stone-500 mt-4 leading-relaxed">
+                PawConnect mostrerà sempre anno, popolazione osservata e fonte: nessun numero viene usato
+                per classificare una razza come “buona” o “cattiva”.
+              </p>
+            </div>
+
             <div className="mt-10 border-t border-stone-200 pt-9">
               <div className="max-w-3xl">
                 <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-700 mb-3">
@@ -347,7 +714,51 @@ export function BeforeDogPage() {
                 </p>
               </div>
 
-              <div className="mt-6 rounded-2xl bg-emerald-50 border border-emerald-100 p-5">
+              {suggestedFciGroups.length > 0 && (
+                <div className="mt-7">
+                  <div className="max-w-3xl">
+                    <p className="text-sm font-bold uppercase tracking-[0.16em] text-amber-700">
+                      Da dove potresti iniziare
+                    </p>
+                    <h3 className="text-xl md:text-2xl font-bold text-stone-900 mt-2">
+                      Gruppi FCI da esplorare per primi
+                    </h3>
+                    <p className="text-sm text-stone-600 mt-2 leading-relaxed">
+                      Non è una classifica e non significa che tutte le razze del gruppo siano adatte a te.
+                      Le tue risposte servono solo a restringere il primo campo di esplorazione.
+                    </p>
+                  </div>
+
+                  <div className="grid md:grid-cols-3 gap-4 mt-5">
+                    {suggestedFciGroups.map((suggestion) => (
+                      <button
+                        key={suggestion.group}
+                        type="button"
+                        onClick={() => navigate(`/gruppi-fci/${suggestion.group}`)}
+                        className="group text-left rounded-2xl border border-amber-200 bg-amber-50/70 p-5 hover:border-amber-300 hover:bg-amber-50 transition"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <div className="text-xs font-bold uppercase tracking-[0.14em] text-amber-700">
+                              Gruppo FCI {suggestion.group}
+                            </div>
+                            <h4 className="font-bold text-stone-900 mt-1">
+                              {FCI_GROUP_NAMES[suggestion.group]}
+                            </h4>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-stone-400 group-hover:text-amber-700 group-hover:translate-x-1 transition" />
+                        </div>
+
+                        <p className="text-sm text-stone-700 mt-3 leading-relaxed">
+                          {suggestion.reason}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-7 rounded-2xl bg-emerald-50 border border-emerald-100 p-5">
                 <p className="font-bold text-stone-900 mb-3">Le lenti con cui leggere i gruppi, in base alle tue risposte</p>
                 <div className="space-y-2">
                   {explorationLenses.map((lens) => (
@@ -359,8 +770,14 @@ export function BeforeDogPage() {
                 </div>
               </div>
 
-              <div className="mt-7 grid md:grid-cols-2 gap-4">
-                {fciGroups.map((group) => (
+              <div className="mt-9">
+                <h3 className="text-xl font-bold text-stone-900">Tutti i gruppi FCI</h3>
+                <p className="text-sm text-stone-600 mt-1">
+                  Dopo i suggerimenti iniziali, puoi comunque esplorare l’intera classificazione.
+                </p>
+
+                <div className="mt-5 grid md:grid-cols-2 gap-4">
+                  {fciGroups.map((group) => (
                   <button
                     key={group.group}
                     type="button"
@@ -394,7 +811,8 @@ export function BeforeDogPage() {
                       ))}
                     </div>
                   </button>
-                ))}
+                  ))}
+                </div>
               </div>
 
               <div className="mt-7 rounded-2xl border border-stone-200 bg-stone-50 p-5">
