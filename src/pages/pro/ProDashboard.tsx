@@ -10,11 +10,11 @@ type DashboardBooking = {
   id: string;
   start_at: string;
   price: number | string | null;
-  profiles: { full_name: string | null } | { full_name: string | null }[] | null;
+  client_name: string;
+  notes: string | null;
 };
 type BookingList = { rows: DashboardBooking[]; count: number; error: boolean };
 const emptyList = (): BookingList => ({ rows: [], count: 0, error: false });
-const fields = 'id, start_at, price, profiles:owner_id(full_name)';
 
 export function ProDashboard() {
   const { user, profile } = useAuth();
@@ -53,15 +53,15 @@ export function ProDashboard() {
       const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
       try {
         const results = await Promise.allSettled([
-          supabase.from('bookings').select(fields, { count: 'exact' })
-            .eq('professional_id', userId).eq('status', 'pending')
+          supabase.rpc('get_professional_bookings', {}, { count: 'exact' })
+            .eq('status', 'pending')
             .order('start_at', { ascending: true }).order('id').limit(5),
-          supabase.from('bookings').select(fields, { count: 'exact' })
-            .eq('professional_id', userId).eq('status', 'accepted')
+          supabase.rpc('get_professional_bookings', {}, { count: 'exact' })
+            .eq('status', 'accepted')
             .gte('start_at', start.toISOString()).lt('start_at', end.toISOString())
             .order('start_at', { ascending: true }).order('id').limit(5),
-          supabase.from('bookings').select(fields)
-            .eq('professional_id', userId).eq('status', 'accepted')
+          supabase.rpc('get_professional_bookings')
+            .eq('status', 'accepted')
             .gt('start_at', now.toISOString())
             .order('start_at', { ascending: true }).order('id').limit(1),
         ]);
@@ -128,13 +128,6 @@ export function ProDashboard() {
           <p className="text-[var(--pc-muted-600)] text-lg mt-3">Gestisci le richieste e organizza il lavoro con clienti e cani.</p>
         </header>
 
-        <section aria-label="Strumenti professionali" className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-7">
-          <QuickCard icon={<Bell className="w-5 h-5" />} label="Richieste e prenotazioni" description="Consulta dettagli e gestisci le richieste." onClick={() => navigate('/pro/bookings')} />
-          <QuickCard icon={<Users className="w-5 h-5" />} label="Clienti e cani" description="Apri la gestione clienti e le informazioni disponibili." onClick={() => navigate('/pro/crm')} />
-          <QuickCard icon={<Calendar className="w-5 h-5" />} label="Agenda e impegni" description="Consulta le date delle tue prenotazioni." onClick={() => navigate('/pro/bookings')} />
-          <QuickCard icon={<Settings className="w-5 h-5" />} label="Profilo e servizi" description="Aggiorna presentazione e servizi offerti." onClick={() => navigate('/pro/settings')} />
-        </section>
-
         {notice && <p role={notice.error ? 'alert' : 'status'} className="pc-card p-4 mb-5 text-sm">{notice.text}</p>}
 
         <div className="grid xl:grid-cols-2 gap-6">
@@ -180,6 +173,13 @@ export function ProDashboard() {
           <div className="mt-4">{loading ? <Loading /> : nextError ? <LoadError onRetry={retry} /> : next ? <BookingSummary booking={next} /> : <p className="text-sm text-[var(--pc-muted-600)]">Non ci sono appuntamenti accettati con inizio futuro.</p>}</div>
           <SectionLink onClick={() => navigate('/pro/bookings')}>Consulta prenotazioni</SectionLink>
         </section>
+        <section aria-label="Strumenti professionali" className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-7">
+          <QuickCard icon={<Bell className="w-5 h-5" />} label="Richieste e prenotazioni" description="Consulta dettagli e gestisci le richieste." onClick={() => navigate('/pro/bookings')} />
+          <QuickCard icon={<Users className="w-5 h-5" />} label="Clienti e cani" description="Apri la gestione clienti e le informazioni disponibili." onClick={() => navigate('/pro/crm')} />
+          <QuickCard icon={<Calendar className="w-5 h-5" />} label="Agenda e impegni" description="Consulta le date delle tue prenotazioni." onClick={() => navigate('/pro/bookings')} />
+          <QuickCard icon={<Settings className="w-5 h-5" />} label="Profilo e servizi" description="Aggiorna presentazione e servizi offerti." onClick={() => navigate('/pro/settings')} />
+        </section>
+
       </div>
     </ProLayout>
   );
@@ -188,14 +188,19 @@ export function ProDashboard() {
 function BookingSummary({ booking }: { booking: DashboardBooking }) {
   const price = booking.price === null ? NaN : Number(booking.price);
   const date = new Date(booking.start_at);
-  const client = Array.isArray(booking.profiles) ? booking.profiles[0] : booking.profiles;
-  return <div className="flex flex-wrap items-start justify-between gap-3">
+  return <div>
+    <div className="flex flex-wrap items-start justify-between gap-3">
     <div>
-      <p className="font-bold mb-1">{client?.full_name || 'Richiesta cliente'}</p>
+      <p className="font-bold mb-1">{booking.client_name || 'Nome non indicato'}</p>
       <p className="font-bold">{Number.isNaN(date.getTime()) ? 'Data da controllare' : date.toLocaleString('it-IT', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
       <p className="mt-1 text-xs text-[var(--pc-muted-600)]">Riferimento {booking.id.slice(0, 8)}</p>
     </div>
     <p className="text-sm font-semibold">{Number.isFinite(price) && price > 0 ? price.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' }) : 'Prezzo da confermare'}</p>
+    </div>
+    <div className="mt-3 rounded-xl bg-[var(--pc-bone-50)] p-3">
+      <p className="text-sm font-bold">Note della richiesta</p>
+      <p className="text-sm whitespace-pre-wrap break-words mt-1">{booking.notes?.trim() || 'Nessuna nota inserita.'}</p>
+    </div>
   </div>;
 }
 function Loading() { return <p role="status" className="text-sm text-[var(--pc-muted-600)]">Caricamento…</p>; }
