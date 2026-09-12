@@ -1,144 +1,214 @@
-import { useEffect, useState } from 'react';
-import { Calendar, DollarSign, Users, TrendingUp, Bell, Check, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
+import { ArrowRight, Bell, Calendar, Check, Settings, Users, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
 import { ProLayout } from './ProLayout';
 
+type DashboardBooking = {
+  id: string;
+  start_at: string;
+  price: number | string | null;
+  profiles: { full_name: string | null } | { full_name: string | null }[] | null;
+};
+type BookingList = { rows: DashboardBooking[]; count: number; error: boolean };
+const emptyList = (): BookingList => ({ rows: [], count: 0, error: false });
+const fields = 'id, start_at, price, profiles:owner_id(full_name)';
+
 export function ProDashboard() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { navigate } = useRouter();
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [clients, setClientes] = useState<any[]>([]);
+  const userId = user?.id;
+  const [pending, setPending] = useState<BookingList>(emptyList);
+  const [today, setToday] = useState<BookingList>(emptyList);
+  const [next, setNext] = useState<DashboardBooking | null>(null);
+  const [nextError, setNextError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [reloadKey, setReloadKey] = useState(0);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [notice, setNotice] = useState<{ error: boolean; text: string } | null>(null);
+  const mutationLock = useRef(false);
+  const session = useRef(0);
 
-  const load = async () => {
-    if (!user) return;
-    const [b, c] = await Promise.all([
-      supabase.from('bookings').select('*, profiles:owner_id(full_name, avatar_url, email)').eq('professional_id', user.id).order('start_at', { ascending: true }),
-      supabase.from('bookings').select('owner_id').eq('professional_id', user.id),
-    ]);
-    setBookings(b.data || []);
-    const unique = new Set((c.data || []).map((x: any) => x.owner_id));
-    setClientes([...unique]);
-    setLoading(false);
-  };
+  useEffect(() => {
+    session.current += 1;
+    setBusyId(null);
+    setNotice(null);
+    return () => { session.current += 1; };
+  }, [userId]);
 
-  useEffect(() => { load(); }, [user]);
+  useEffect(() => {
+    let active = true;
+    setPending(emptyList());
+    setToday(emptyList());
+    setNext(null);
+    setNextError(false);
+    setLoading(Boolean(userId));
+    if (!userId) return;
 
-  const today = new Date();
-  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).toISOString();
-  const todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1).toISOString();
-  const todays = bookings.filter((b) => b.start_at >= todayStart && b.start_at < todayEnd);
-  const pending = bookings.filter((b) => b.status === 'pending');
-  const completed = bookings.filter((b) => b.status === 'completed');
-  const revenue = completed.reduce((s, b) => s + Number(b.price), 0);
-
-  const updateStatus = async (id: string, status: string) => {
-    const { error } = await supabase.rpc('change_booking_status', {
-      p_booking_id: id,
-      p_new_status: status,
-    });
-
-    if (error) {
-      alert(error.message);
-      return;
+    async function load() {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      try {
+        const results = await Promise.allSettled([
+          supabase.from('bookings').select(fields, { count: 'exact' })
+            .eq('professional_id', userId).eq('status', 'pending')
+            .order('start_at', { ascending: true }).order('id').limit(5),
+          supabase.from('bookings').select(fields, { count: 'exact' })
+            .eq('professional_id', userId).eq('status', 'accepted')
+            .gte('start_at', start.toISOString()).lt('start_at', end.toISOString())
+            .order('start_at', { ascending: true }).order('id').limit(5),
+          supabase.from('bookings').select(fields)
+            .eq('professional_id', userId).eq('status', 'accepted')
+            .gt('start_at', now.toISOString())
+            .order('start_at', { ascending: true }).order('id').limit(1),
+        ]);
+        if (!active) return;
+        const [requests, schedule, upcoming] = results;
+        for (const [result, setter] of [[requests, setPending], [schedule, setToday]] as const) {
+          if (result.status === 'fulfilled' && !result.value.error && result.value.count !== null) {
+            setter({ rows: (result.value.data || []) as DashboardBooking[], count: result.value.count, error: false });
+          } else {
+            setter({ ...emptyList(), error: true });
+          }
+        }
+        if (upcoming.status === 'fulfilled' && !upcoming.value.error) {
+          setNext((upcoming.value.data as DashboardBooking[] | null)?.[0] ?? null);
+        } else {
+          setNextError(true);
+        }
+      } catch {
+        if (!active) return;
+        setPending({ ...emptyList(), error: true });
+        setToday({ ...emptyList(), error: true });
+        setNextError(true);
+      } finally {
+        if (active) setLoading(false);
+      }
     }
+    void load();
+    return () => { active = false; };
+  }, [userId, reloadKey]);
 
-    load();
+  const retry = () => setReloadKey((key) => key + 1);
+  const updateStatus = async (id: string, status: 'accepted' | 'declined') => {
+    if (!userId || mutationLock.current) return;
+    mutationLock.current = true;
+    const currentSession = session.current;
+    setBusyId(id);
+    setNotice(null);
+    try {
+      const { error } = await supabase.rpc('change_booking_status', {
+        p_booking_id: id,
+        p_new_status: status,
+      });
+      if (session.current !== currentSession) return;
+      if (error) throw error;
+      setNotice({ error: false, text: status === 'accepted' ? 'Richiesta accettata.' : 'Richiesta rifiutata.' });
+      retry();
+    } catch {
+      if (session.current !== currentSession) return;
+      setNotice({ error: true, text: 'Non è stato possibile confermare l’esito. Controlla lo stato aggiornato prima di riprovare.' });
+      retry();
+    } finally {
+      mutationLock.current = false;
+      if (session.current === currentSession) setBusyId(null);
+    }
   };
+  const firstName = profile?.full_name?.trim().split(/\s+/)[0];
 
   return (
     <ProLayout active="dashboard">
-      <div className="p-8 max-w-6xl">
-        <h1 className="text-3xl font-bold text-stone-900 mb-1">Mission Control</h1>
-        <p className="text-stone-600 mb-8">Your business at a glance.</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-10 text-[var(--pc-ink-950)]">
+        <header className="mb-7">
+          <p className="pc-kicker">La tua attività</p>
+          <h1 className="pc-display text-4xl md:text-5xl font-semibold mt-2">{firstName ? `Ciao, ${firstName}.` : 'La tua area professionale'}</h1>
+          <p className="text-[var(--pc-muted-600)] text-lg mt-3">Gestisci le richieste e organizza il lavoro con clienti e cani.</p>
+        </header>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Stat icon={<Calendar />} label="Today" value={todays.length} color="emerald" />
-          <Stat icon={<Bell />} label="Pending" value={pending.length} color="amber" />
-          <Stat icon={<Users />} label="Clientes" value={clients.length} color="sky" />
-          <Stat icon={<DollarSign />} label="Revenue" value={`$${revenue.toFixed(0)}`} color="stone" />
-        </div>
+        <section aria-label="Strumenti professionali" className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-7">
+          <QuickCard icon={<Bell className="w-5 h-5" />} label="Richieste e prenotazioni" description="Consulta dettagli e gestisci le richieste." onClick={() => navigate('/pro/bookings')} />
+          <QuickCard icon={<Users className="w-5 h-5" />} label="Clienti e cani" description="Apri la gestione clienti e le informazioni disponibili." onClick={() => navigate('/pro/crm')} />
+          <QuickCard icon={<Calendar className="w-5 h-5" />} label="Agenda e impegni" description="Consulta le date delle tue prenotazioni." onClick={() => navigate('/pro/bookings')} />
+          <QuickCard icon={<Settings className="w-5 h-5" />} label="Profilo e servizi" description="Aggiorna presentazione e servizi offerti." onClick={() => navigate('/pro/settings')} />
+        </section>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-2xl border border-stone-200 p-6">
-            <h2 className="text-lg font-bold text-stone-900 mb-4">Today's schedule</h2>
-            {loading ? <p className="text-stone-500 text-sm">Loading...</p> :
-              todays.length === 0 ? <p className="text-stone-500 text-sm">Nothing scheduled today. Enjoy your day.</p> :
-              <div className="space-y-3">
-                {todays.map((b) => (
-                  <div key={b.id} className="flex items-center gap-3 p-3 rounded-lg bg-stone-50">
-                    <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold">
-                      {new Date(b.start_at).getHours()}:{String(new Date(b.start_at).getMinutes()).padStart(2, '0')}
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-semibold text-stone-900 text-sm">{b.profiles?.full_name}</div>
-                      <div className="text-xs text-stone-500">{b.notes || 'No notes'}</div>
-                    </div>
-                    <div className="text-sm font-bold">${b.price}</div>
+        {notice && <p role={notice.error ? 'alert' : 'status'} className="pc-card p-4 mb-5 text-sm">{notice.text}</p>}
+
+        <div className="grid xl:grid-cols-2 gap-6">
+          <section className="pc-card p-5 md:p-6" aria-labelledby="pro-requests-title" aria-busy={loading}>
+            <p className="pc-kicker">Da gestire</p>
+            <h2 id="pro-requests-title" className="pc-display text-2xl font-semibold mt-1">Richieste in attesa{!loading && !pending.error ? ` · ${pending.count}` : ''}</h2>
+            <div className="mt-5">
+              {loading ? <Loading /> : pending.error ? <LoadError onRetry={retry} /> : pending.rows.length === 0 ? (
+                <p className="text-sm text-[var(--pc-muted-600)]">Non ci sono richieste in attesa.</p>
+              ) : <div className="space-y-4">{pending.rows.map((booking) => (
+                <article key={booking.id} className="rounded-2xl border border-[var(--pc-line)] p-4">
+                  <BookingSummary booking={booking} />
+                  {new Date(booking.start_at).getTime() <= Date.now() && <p className="text-sm text-[var(--pc-muted-600)] mt-2">La data richiesta è trascorsa: controlla i dettagli prima di decidere.</p>}
+                  <button type="button" onClick={() => navigate('/pro/bookings')} className="mt-3 text-sm font-bold text-[var(--pc-forest-700)] underline">Consulta dettagli</button>
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    <button type="button" disabled={busyId !== null} onClick={() => void updateStatus(booking.id, 'accepted')} className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--pc-forest-900)] text-white px-4 py-2.5 text-sm font-bold disabled:opacity-50 disabled:cursor-wait"><Check className="w-4 h-4" />{busyId === booking.id ? 'Aggiornamento…' : 'Accetta'}</button>
+                    <button type="button" disabled={busyId !== null} onClick={() => void updateStatus(booking.id, 'declined')} className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--pc-line)] px-4 py-2.5 text-sm font-bold disabled:opacity-50 disabled:cursor-wait"><X className="w-4 h-4" />Rifiuta</button>
                   </div>
-                ))}
-              </div>
-            }
-          </div>
+                </article>
+              ))}</div>}
+            </div>
+            {!loading && !pending.error && pending.count > pending.rows.length && <p className="mt-4 text-sm text-[var(--pc-muted-600)]">Mostrate {pending.rows.length} richieste su {pending.count}, ordinate per data dell’appuntamento.</p>}
+            <SectionLink onClick={() => navigate('/pro/bookings')}>Vedi tutte le richieste</SectionLink>
+          </section>
 
-          <div className="bg-white rounded-2xl border border-stone-200 p-6">
-            <h2 className="text-lg font-bold text-stone-900 mb-4">Pending requests</h2>
-            {pending.length === 0 ? <p className="text-stone-500 text-sm">No pending requests.</p> :
-              <div className="space-y-3">
-                {pending.map((b) => (
-                  <div key={b.id} className="p-3 rounded-lg border border-stone-100">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <div className="font-semibold text-stone-900 text-sm">{b.profiles?.full_name}</div>
-                        <div className="text-xs text-stone-500">{new Date(b.start_at).toLocaleString()}</div>
-                      </div>
-                      <div className="text-sm font-bold">${b.price}</div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button onClick={() => updateStatus(b.id, 'accepted')} className="flex-1 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1"><Check className="w-3 h-3" /> Accept</button>
-                      <button onClick={() => updateStatus(b.id, 'declined')} className="flex-1 py-1.5 border border-stone-300 rounded-lg text-xs font-semibold flex items-center justify-center gap-1"><X className="w-3 h-3" /> Decline</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            }
-          </div>
+          <section className="pc-card p-5 md:p-6" aria-labelledby="pro-today-title" aria-busy={loading}>
+            <p className="pc-kicker">Agenda di oggi</p>
+            <h2 id="pro-today-title" className="pc-display text-2xl font-semibold mt-1">Appuntamenti accettati{!loading && !today.error ? ` · ${today.count}` : ''}</h2>
+            <p className="mt-2 text-sm text-[var(--pc-muted-600)]">Orari nel fuso del tuo dispositivo. Appuntamenti con inizio oggi.</p>
+            <div className="mt-5">
+              {loading ? <Loading /> : today.error ? <LoadError onRetry={retry} /> : today.rows.length === 0 ? <p className="text-sm text-[var(--pc-muted-600)]">Nessun appuntamento accettato con inizio oggi.</p> : (
+                <div className="divide-y divide-[var(--pc-line)]">{today.rows.map((booking) => <div key={booking.id} className="py-4 first:pt-0"><BookingSummary booking={booking} /></div>)}</div>
+              )}
+            </div>
+            {!loading && !today.error && today.count > today.rows.length && <p className="mt-4 text-sm text-[var(--pc-muted-600)]">Mostrati {today.rows.length} appuntamenti su {today.count}.</p>}
+            <SectionLink onClick={() => navigate('/pro/bookings')}>Apri prenotazioni</SectionLink>
+          </section>
         </div>
 
-        <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <QuickCard label="Go to Bookings" onClick={() => navigate('/pro/bookings')} />
-          <QuickCard label="Open CRM" onClick={() => navigate('/pro/crm')} />
-          <QuickCard label="Run a Campaign" onClick={() => navigate('/pro/campaigns')} />
-          <QuickCard label="View Analytics" onClick={() => navigate('/pro/analytics')} />
-        </div>
+        <section className="pc-card p-5 md:p-6 mt-6" aria-labelledby="pro-next-title" aria-busy={loading}>
+          <p className="pc-kicker">In programma</p>
+          <h2 id="pro-next-title" className="pc-display text-2xl font-semibold mt-1">Prossimo impegno</h2>
+          <div className="mt-4">{loading ? <Loading /> : nextError ? <LoadError onRetry={retry} /> : next ? <BookingSummary booking={next} /> : <p className="text-sm text-[var(--pc-muted-600)]">Non ci sono appuntamenti accettati con inizio futuro.</p>}</div>
+          <SectionLink onClick={() => navigate('/pro/bookings')}>Consulta prenotazioni</SectionLink>
+        </section>
       </div>
     </ProLayout>
   );
 }
 
-function Stat({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: string | number; color: string }) {
-  const colors: Record<string, string> = {
-    emerald: 'bg-emerald-50 text-emerald-700',
-    amber: 'bg-amber-50 text-amber-700',
-    sky: 'bg-sky-50 text-sky-700',
-    stone: 'bg-stone-100 text-stone-700',
-  };
-  return (
-    <div className="bg-white rounded-2xl border border-stone-200 p-5">
-      <div className={`w-10 h-10 rounded-lg ${colors[color]} flex items-center justify-center mb-3`}>{icon}</div>
-      <div className="text-2xl font-bold text-stone-900">{value}</div>
-      <div className="text-xs text-stone-500 font-semibold uppercase tracking-wide">{label}</div>
+function BookingSummary({ booking }: { booking: DashboardBooking }) {
+  const price = booking.price === null ? NaN : Number(booking.price);
+  const date = new Date(booking.start_at);
+  const client = Array.isArray(booking.profiles) ? booking.profiles[0] : booking.profiles;
+  return <div className="flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <p className="font-bold mb-1">{client?.full_name || 'Richiesta cliente'}</p>
+      <p className="font-bold">{Number.isNaN(date.getTime()) ? 'Data da controllare' : date.toLocaleString('it-IT', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+      <p className="mt-1 text-xs text-[var(--pc-muted-600)]">Riferimento {booking.id.slice(0, 8)}</p>
     </div>
-  );
+    <p className="text-sm font-semibold">{Number.isFinite(price) && price > 0 ? price.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' }) : 'Prezzo da confermare'}</p>
+  </div>;
 }
-
-function QuickCard({ label, onClick }: { label: string; onClick: () => void }) {
-  return (
-    <button onClick={onClick} className="bg-white border border-stone-200 rounded-xl p-4 text-left hover:border-emerald-300 hover:shadow-sm transition text-sm font-semibold text-stone-900 flex items-center justify-between">
-      {label}
-      <TrendingUp className="w-4 h-4 text-emerald-600" />
-    </button>
-  );
+function Loading() { return <p role="status" className="text-sm text-[var(--pc-muted-600)]">Caricamento…</p>; }
+function LoadError({ onRetry }: { onRetry: () => void }) {
+  return <div role="alert"><p className="text-sm">Non è stato possibile caricare questi dati.</p><button type="button" onClick={onRetry} className="mt-3 text-sm font-bold text-[var(--pc-forest-700)] underline">Riprova</button></div>;
+}
+function SectionLink({ children, onClick }: { children: ReactNode; onClick: () => void }) {
+  return <button type="button" onClick={onClick} className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[var(--pc-forest-700)]">{children}<ArrowRight className="w-4 h-4" /></button>;
+}
+function QuickCard({ icon, label, description, onClick }: { icon: ReactNode; label: string; description: string; onClick: () => void }) {
+  return <button type="button" onClick={onClick} className="pc-card p-5 text-left hover:border-[var(--pc-forest-700)] transition">
+    <span className="w-10 h-10 rounded-full bg-[var(--pc-forest-100)] text-[var(--pc-forest-900)] flex items-center justify-center">{icon}</span>
+    <span className="block font-bold mt-4">{label}</span>
+    <span className="block text-sm leading-6 text-[var(--pc-muted-600)] mt-1">{description}</span>
+  </button>;
 }
