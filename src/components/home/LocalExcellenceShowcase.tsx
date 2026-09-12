@@ -198,16 +198,16 @@ export function LocalExcellenceShowcase() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-2 text-sm font-semibold text-emerald-100 mb-5">
               <Sparkles className="w-4 h-4" />
-              Rete selezionata
+              Professionisti approvati
             </div>
 
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
-              Eccellenze locali
+              Professionisti nella tua zona
             </h2>
 
             <p className="local-excellence-subtitle text-lg mt-4">
-              Una selezione visuale dei professionisti approvati più rilevanti nella tua zona,
-              basata su servizi attivi, distanza e recensioni recenti.
+              Scopri alcuni professionisti approvati disponibili nella zona selezionata.
+              La vetrina considera servizi attivi, area di copertura e recensioni disponibili.
             </p>
           </div>
 
@@ -231,7 +231,7 @@ export function LocalExcellenceShowcase() {
 
         {error && (
           <div className="mb-6 rounded-2xl border border-rose-400/30 bg-rose-500/10 p-4 text-rose-100">
-            {error}
+            Impossibile caricare i professionisti in questo momento. Riprova tra poco.
           </div>
         )}
 
@@ -281,7 +281,7 @@ export function LocalExcellenceShowcase() {
                     {featured && (
                       <div className="hidden sm:flex items-center gap-1 rounded-full bg-amber-400 text-stone-950 px-3 py-1 text-xs font-bold">
                         <Trophy className="w-3.5 h-3.5" />
-                        {hasRecentReviews ? 'Top 30 giorni' : 'In evidenza'}
+                        {hasRecentReviews ? 'Recensioni recenti' : 'In evidenza'}
                       </div>
                     )}
                   </div>
@@ -299,30 +299,39 @@ export function LocalExcellenceShowcase() {
                             <span>
                               {featured.professional.zone_text || selectedCity.name}
                               {typeof featured.distanceKm === 'number'
-                                ? ' · ' + featured.distanceKm.toFixed(1) + ' km'
+                                ? ' · entro ' + Math.max(5, Math.ceil(featured.distanceKm / 5) * 5) + ' km'
                                 : ''}
                             </span>
                           </div>
 
                           <h4 className="text-2xl font-bold mt-1">
-                            {featured.professional.display_name || 'Professionista verificato'}
+                            {featured.professional.display_name || 'Professionista approvato'}
                           </h4>
 
                           <p className="text-sm text-stone-600 mt-1">
-                            {featured.service.name} · da €{featured.service.price || 0}
+                            {
+                              typeof featured.service.price === 'number' && featured.service.price > 0
+                                ? featured.service.name + ' · da €' + featured.service.price
+                                : featured.service.name
+                            }
                           </p>
 
                           <div className="flex flex-wrap items-center gap-3 mt-3 text-sm">
-                            <span className="inline-flex items-center gap-1 font-semibold">
-                              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                              {displayedRating.toFixed(1)}
-                            </span>
-
-                            <span className="text-stone-500">
-                              {hasRecentReviews
-                                ? featured.recentReviewCount + ' recensioni negli ultimi 30 giorni'
-                                : (featured.professional.review_count || 0) + ' recensioni totali'}
-                            </span>
+                            {(hasRecentReviews || (featured.professional.review_count || 0) > 0) ? (
+                              <>
+                                <span className="inline-flex items-center gap-1 font-semibold">
+                                  <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                                  {displayedRating.toFixed(1)}
+                                </span>
+                                <span className="text-stone-500">
+                                  {hasRecentReviews
+                                    ? featured.recentReviewCount + ' recensioni negli ultimi 30 giorni'
+                                    : (featured.professional.review_count || 0) + ' recensioni totali'}
+                                </span>
+                              </>
+                            ) : (
+                              <span className="text-stone-500">Nessuna recensione ancora</span>
+                            )}
                           </div>
                         </div>
 

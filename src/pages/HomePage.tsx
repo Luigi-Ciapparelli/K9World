@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Star, Shield, Heart, Search, CreditCard, Smile, ChevronDown, Compass, PawPrint, ArrowRight } from 'lucide-react';
+import { Shield, Heart, Search, CreditCard, Smile, ChevronDown, Compass, PawPrint, ArrowRight, BookOpen } from 'lucide-react';
 import { SearchCard } from '../components/SearchCard';
 import { useRouter } from '../lib/RouterContext';
 import { LocalExcellenceShowcase } from '../components/home/LocalExcellenceShowcase';
@@ -7,15 +7,15 @@ import { LocalExcellenceShowcase } from '../components/home/LocalExcellenceShowc
 const faqs = [
   {
     q: `Che cos'è PawConnect?`,
-    a: `PawConnect è una rete locale che rende trovabile online il passaparola cinofilo: proprietari di cani e professionisti selezionati, approvati manualmente prima di apparire nella ricerca.`,
+    a: `PawConnect è un ecosistema dedicato alla vita con il cane: aiuta a scegliere in modo più consapevole, imparare le basi della cultura cinofila, gestire il proprio cane e trovare professionisti approvati quando servono.`,
   },
   {
-    q: `Come vengono verificati i professionisti?`,
-    a: `Ogni professionista completa il profilo con servizi, zona, esperienza e recapiti. Gli admin possono controllare qualifiche, documenti e informazioni prima dell'approvazione.`,
+    q: `Come vengono approvati i professionisti?`,
+    a: `Ogni professionista completa il proprio profilo con servizi, zona, esperienza e informazioni utili. Prima di comparire nella ricerca pubblica deve essere approvato dalla piattaforma. Le eventuali qualifiche ufficiali restano distinte dall'approvazione del profilo.`,
   },
   {
-    q: `È sicuro?`,
-    a: `PawConnect usa professionisti approvati manualmente, richieste tracciate, recensioni e informazioni chiare sui servizi per aiutare i proprietari a scegliere meglio.`,
+    q: `Come mi aiuta PawConnect a scegliere meglio?`,
+    a: `La piattaforma combina profili approvati, informazioni sui servizi, richieste tracciate e recensioni legate alle prenotazioni concluse. L'obiettivo è rendere la scelta più trasparente, non sostituire il giudizio del proprietario.`,
   },
   {
     q: `Come funzionano i pagamenti?`,
@@ -56,12 +56,11 @@ export function HomePage() {
           <div className="max-w-4xl mx-auto">
             <SearchCard />
           </div>
-          <div className="mt-6 flex items-center justify-center gap-2 text-white/90 text-sm">
-            <div className="flex -space-x-0.5">
-              {[1,2,3,4,5].map((i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
+          <div className="mt-6 flex items-center justify-center">
+            <div className="rounded-full border border-white/20 bg-white/10 backdrop-blur px-4 py-2 text-sm text-white/90">
+              <span className="font-semibold">Beta PawConnect</span>
+              <span className="text-white/70"> · educazione, gestione e professionisti approvati</span>
             </div>
-            <span className="font-semibold">Beta PawConnect</span>
-            <span className="text-white/70">rete selezionata di professionisti</span>
           </div>
         </div>
       </section>
@@ -78,7 +77,7 @@ export function HomePage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-5">
+          <div className="grid md:grid-cols-3 gap-5">
             <button
               type="button"
               onClick={() => navigate('/prima-del-cane')}
@@ -98,18 +97,35 @@ export function HomePage() {
 
             <button
               type="button"
-              onClick={() => navigate('/services')}
+              onClick={() => navigate('/impara')}
+              className="group text-left rounded-3xl border border-amber-200 bg-amber-50/70 p-7 hover:bg-amber-50 hover:border-amber-300 transition"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center mb-5">
+                <BookOpen className="w-6 h-6 text-amber-800" />
+              </div>
+              <h3 className="text-xl font-bold text-stone-900">Voglio capire meglio il cane</h3>
+              <p className="text-stone-600 mt-2 leading-relaxed">
+                Parti dalle fondamenta: bisogni, riposo, sicurezza, relazione e gestione quotidiana, con un percorso semplice e progressivo.
+              </p>
+              <span className="inline-flex items-center gap-2 mt-5 text-sm font-bold text-amber-900">
+                Vai a Impara <ArrowRight className="w-4 h-4 transition group-hover:translate-x-1" />
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate('/search')}
               className="group text-left rounded-3xl border border-stone-200 bg-stone-50 p-7 hover:bg-stone-100 transition"
             >
               <div className="w-12 h-12 rounded-2xl bg-white border border-stone-200 flex items-center justify-center mb-5">
                 <PawPrint className="w-6 h-6 text-stone-700" />
               </div>
-              <h3 className="text-xl font-bold text-stone-900">Ho già un cane</h3>
+              <h3 className="text-xl font-bold text-stone-900">Cerco un professionista</h3>
               <p className="text-stone-600 mt-2 leading-relaxed">
-                Cerca professionisti, gestisci il profilo del tuo cane e usa PawConnect come punto di riferimento per la sua vita quotidiana.
+                Esplora i professionisti approvati, confronta servizi e profili e invia una richiesta quando trovi quello adatto al tuo cane.
               </p>
               <span className="inline-flex items-center gap-2 mt-5 text-sm font-bold text-stone-800">
-                Vai ai servizi <ArrowRight className="w-4 h-4 transition group-hover:translate-x-1" />
+                Trova un professionista <ArrowRight className="w-4 h-4 transition group-hover:translate-x-1" />
               </span>
             </button>
           </div>
@@ -120,10 +136,10 @@ export function HomePage() {
 
       <section className="bg-amber-50 py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-stone-900 text-center mb-14">Professionisti locali che trattano il tuo cane con cura</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-stone-900 text-center mb-14">Quando ti serve un professionista</h2>
           <div className="grid md:grid-cols-3 gap-10 max-w-5xl mx-auto">
             {[
-              { icon: Search, title: '1. Cerca', text: 'Consulta i profili verificati e scegli il professionista più adatto al tuo cane.' },
+              { icon: Search, title: '1. Cerca', text: 'Consulta i profili approvati e confronta servizi, esperienza e informazioni disponibili.' },
               { icon: CreditCard, title: '2. Richiedi una prenotazione', text: 'Invia una richiesta chiara con date, servizio e informazioni sul cane.' },
               { icon: Smile, title: '3. Conferma e rilassati', text: 'Il professionista può accettare o rifiutare la richiesta dal proprio pannello.' },
             ].map((s) => {
