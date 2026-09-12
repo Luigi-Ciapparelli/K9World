@@ -1,191 +1,225 @@
-import { useEffect, useState } from 'react';
-import { Shield, Heart, Search, CreditCard, Smile, ChevronDown, Compass, PawPrint, ArrowRight, BookOpen } from 'lucide-react';
-import { SearchCard } from '../components/SearchCard';
+import {
+  ArrowRight,
+  BookOpen,
+  Compass,
+  ExternalLink,
+  Search,
+  ShieldCheck,
+} from 'lucide-react';
+import { TraceMark } from '../components/design/TraceMark';
 import { useRouter } from '../lib/RouterContext';
-import { LocalExcellenceShowcase } from '../components/home/LocalExcellenceShowcase';
 
-const faqs = [
-  {
-    q: `Che cos'è PawConnect?`,
-    a: `PawConnect è un ecosistema dedicato alla vita con il cane: aiuta a scegliere in modo più consapevole, imparare le basi della cultura cinofila, gestire il proprio cane e trovare professionisti approvati quando servono.`,
-  },
-  {
-    q: `Come vengono approvati i professionisti?`,
-    a: `Ogni professionista completa il proprio profilo con servizi, zona, esperienza e informazioni utili. Prima di comparire nella ricerca pubblica deve essere approvato dalla piattaforma. Le eventuali qualifiche ufficiali restano distinte dall'approvazione del profilo.`,
-  },
-  {
-    q: `Come mi aiuta PawConnect a scegliere meglio?`,
-    a: `La piattaforma combina profili approvati, informazioni sui servizi, richieste tracciate e recensioni legate alle prenotazioni concluse. L'obiettivo è rendere la scelta più trasparente, non sostituire il giudizio del proprietario.`,
-  },
-  {
-    q: `Come funzionano i pagamenti?`,
-    a: `In questa fase beta le richieste vengono gestite tramite la piattaforma. I pagamenti online saranno integrati in una fase successiva.`,
-  },
-];
+type PathCardProps = {
+  number: string;
+  title: string;
+  text: string;
+  cta: string;
+  onClick: () => void;
+  icon: typeof Compass;
+};
+
+function PathCard({ number, title, text, cta, onClick, icon: Icon }: PathCardProps) {
+  return (
+    <button type="button" onClick={onClick} className="pc-card pc-card-interactive group w-full text-left p-6 md:p-7">
+      <div className="flex items-start justify-between gap-5">
+        <div>
+          <div className="pc-number">{number}</div>
+          <h3 className="pc-display text-2xl md:text-3xl font-semibold text-[var(--pc-ink-950)] mt-3">{title}</h3>
+        </div>
+        <div className="w-11 h-11 rounded-xl bg-[var(--pc-forest-100)] text-[var(--pc-forest-900)] flex items-center justify-center shrink-0">
+          <Icon className="w-5 h-5" />
+        </div>
+      </div>
+      <p className="text-[var(--pc-muted-600)] leading-7 mt-4 max-w-xl">{text}</p>
+      <span className="inline-flex items-center gap-2 text-sm font-bold text-[var(--pc-forest-900)] mt-6">
+        {cta}<ArrowRight className="w-4 h-4 transition group-hover:translate-x-1" />
+      </span>
+    </button>
+  );
+}
 
 export function HomePage() {
-  useEffect(() => {
-    const queryParams = window.location.hash.includes('?')
-      ? new URLSearchParams(window.location.hash.split('?')[1])
-      : new URLSearchParams();
-
-    if (queryParams.get('section') === 'services') {
-      setTimeout(() => {
-        document.getElementById('services')?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
-      }, 50);
-    }
-  }, []);
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
   const { navigate } = useRouter();
 
   return (
-    <div className="bg-white">
-      <section className="relative">
-        <div className="absolute inset-0">
-          <img src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1920" className="w-full h-full object-cover" alt="" />
-          <div className="absolute inset-0 bg-gradient-to-r from-stone-900/60 via-stone-900/40 to-stone-900/60" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-6 pt-20 pb-28">
-          <div className="text-center text-white mb-8">
-            <h1 className="text-4xl md:text-6xl font-bold mb-3 tracking-tight">Vivere bene con un cane inizia prima della scelta</h1>
-            <p className="text-lg md:text-xl text-white/90 max-w-4xl mx-auto">PawConnect ti accompagna dalla scelta consapevole del cane alla sua gestione quotidiana, fino ai professionisti giusti quando servono.</p>
-          </div>
-          <div className="max-w-4xl mx-auto">
-            <SearchCard />
-          </div>
-          <div className="mt-6 flex items-center justify-center">
-            <div className="rounded-full border border-white/20 bg-white/10 backdrop-blur px-4 py-2 text-sm text-white/90">
-              <span className="font-semibold">Beta PawConnect</span>
-              <span className="text-white/70"> · educazione, gestione e professionisti approvati</span>
+    <div className="min-h-screen bg-[var(--pc-bone-50)] text-[var(--pc-ink-950)]">
+      <section className="relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 lg:py-28">
+          <div className="grid lg:grid-cols-[1.12fr_0.88fr] gap-10 lg:gap-16 items-center">
+            <div>
+              <div className="flex items-center gap-4">
+                <TraceMark className="text-[var(--pc-forest-700)]" />
+                <span className="pc-kicker">PortaleCinofilo · Italia</span>
+              </div>
+              <h1 className="pc-display text-[clamp(2.8rem,6.5vw,5rem)] leading-[0.98] font-semibold mt-7 max-w-4xl">
+                Prima di scegliere un cane, capisci che vita puoi offrirgli.
+              </h1>
+              <p className="pc-lead pc-reading mt-7">
+                Dalla scelta consapevole alla gestione quotidiana: conosci il cane, confronta gruppi FCI e razze e trova professionisti competenti quando servono.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 mt-8">
+                <button type="button" onClick={() => navigate('/prima-del-cane')} className="pc-btn pc-btn-primary">
+                  Fai il profilo di compatibilità <ArrowRight className="w-4 h-4" />
+                </button>
+                <button type="button" onClick={() => navigate('/impara')} className="pc-btn pc-btn-secondary">Ho già un cane</button>
+              </div>
+              <p className="text-sm text-[var(--pc-muted-600)] mt-5 max-w-2xl leading-6">
+                Nessun account obbligatorio per imparare o iniziare il percorso. La registrazione serve quando vuoi salvare dati, sincronizzare progressi o prenotare.
+              </p>
+            </div>
+
+            <div className="pc-field-grid border border-[var(--pc-line)] rounded-[24px] p-6 md:p-8">
+              <p className="pc-kicker">La scelta parte dalla realtà</p>
+              <h2 className="pc-display text-3xl md:text-4xl font-semibold mt-3">Non da una fotografia.</h2>
+              <div className="mt-8 space-y-3">
+                {[
+                  ['Tempo quotidiano', 'Quanto puoi esserci davvero'],
+                  ['Solitudine', 'Quanto resterà solo abitualmente'],
+                  ['Attività', 'Che vita vuoi condividere'],
+                  ['Famiglia', 'Persone e animali già presenti'],
+                  ['Gestione', 'Quanta complessità puoi sostenere'],
+                ].map(([label, value], index) => (
+                  <div key={label} className="bg-[rgba(255,254,250,0.92)] border border-[var(--pc-line)] rounded-xl p-4 flex items-start gap-4">
+                    <span className="pc-number mt-0.5">0{index + 1}</span>
+                    <div><div className="font-bold">{label}</div><div className="text-sm text-[var(--pc-muted-600)] mt-1">{value}</div></div>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center gap-3 mt-7 text-[var(--pc-forest-700)]">
+                <TraceMark /><span className="text-sm font-bold">profilo → gruppi → razze → scelta</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="border-b border-stone-100 bg-white">
-        <div className="max-w-7xl mx-auto px-6 py-14">
-          <div className="max-w-3xl mb-8">
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-700 mb-3">Da dove vuoi partire?</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">
-              PawConnect non inizia dalla prenotazione. Inizia dal cane.
-            </h2>
-            <p className="text-stone-600 mt-3 leading-relaxed">
-              Se hai già un cane puoi cercare servizi e professionisti. Se stai ancora pensando di prenderne uno, partiamo prima da te: tempo, esperienza, famiglia, obiettivi e gestione reale.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-5">
-            <button
-              type="button"
-              onClick={() => navigate('/prima-del-cane')}
-              className="group text-left rounded-3xl border border-emerald-200 bg-emerald-50/60 p-7 hover:bg-emerald-50 hover:border-emerald-300 transition"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center mb-5">
-                <Compass className="w-6 h-6 text-emerald-700" />
-              </div>
-              <h3 className="text-xl font-bold text-stone-900">Sto pensando di prendere un cane</h3>
-              <p className="text-stone-600 mt-2 leading-relaxed">
-                Costruisci il tuo profilo di compatibilità prima di parlare di razze. Nessuna “razza perfetta”: solo criteri più seri per scegliere consapevolmente.
+      <section className="pc-surface-dark">
+        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
+          <div className="grid lg:grid-cols-[0.72fr_1.28fr] gap-10 lg:gap-16 items-start">
+            <div>
+              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#c9d8cf]">Perché questa scelta conta</p>
+              <div className="pc-display text-6xl md:text-7xl font-semibold text-white mt-4">&gt; 2 su 10</div>
+              <p className="text-sm text-[#c9d8cf] mt-3">cani entrati nei canili rifugio dei comuni osservati</p>
+            </div>
+            <div className="max-w-3xl">
+              <h2 className="pc-display text-3xl md:text-5xl font-semibold leading-tight">Una scelta dura anni. Vale la pena farla bene.</h2>
+              <p className="text-[#dbe5df] text-lg leading-8 mt-5">
+                Nel 2025, nei canili rifugio dei 221 comuni mappati da Legambiente, oltre due cani su dieci tra quelli entrati — circa 3.000 — non risultavano adottati, restituiti ai proprietari o inseriti come cani di quartiere.
               </p>
-              <span className="inline-flex items-center gap-2 mt-5 text-sm font-bold text-emerald-800">
-                Inizia il percorso <ArrowRight className="w-4 h-4 transition group-hover:translate-x-1" />
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate('/impara')}
-              className="group text-left rounded-3xl border border-amber-200 bg-amber-50/70 p-7 hover:bg-amber-50 hover:border-amber-300 transition"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center mb-5">
-                <BookOpen className="w-6 h-6 text-amber-800" />
-              </div>
-              <h3 className="text-xl font-bold text-stone-900">Voglio capire meglio il cane</h3>
-              <p className="text-stone-600 mt-2 leading-relaxed">
-                Parti dalle fondamenta: bisogni, riposo, sicurezza, relazione e gestione quotidiana, con un percorso semplice e progressivo.
+              <p className="text-sm text-[#b9c8bf] leading-6 mt-4">
+                Questo dato non dimostra che una scelta di razza sbagliata sia la causa. Mostra perché prevenzione, compatibilità e gestione responsabile meritano attenzione.
               </p>
-              <span className="inline-flex items-center gap-2 mt-5 text-sm font-bold text-amber-900">
-                Vai a Impara <ArrowRight className="w-4 h-4 transition group-hover:translate-x-1" />
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate('/search')}
-              className="group text-left rounded-3xl border border-stone-200 bg-stone-50 p-7 hover:bg-stone-100 transition"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-white border border-stone-200 flex items-center justify-center mb-5">
-                <PawPrint className="w-6 h-6 text-stone-700" />
-              </div>
-              <h3 className="text-xl font-bold text-stone-900">Cerco un professionista</h3>
-              <p className="text-stone-600 mt-2 leading-relaxed">
-                Esplora i professionisti approvati, confronta servizi e profili e invia una richiesta quando trovi quello adatto al tuo cane.
-              </p>
-              <span className="inline-flex items-center gap-2 mt-5 text-sm font-bold text-stone-800">
-                Trova un professionista <ArrowRight className="w-4 h-4 transition group-hover:translate-x-1" />
-              </span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <LocalExcellenceShowcase />
-
-      <section className="bg-amber-50 py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-stone-900 text-center mb-14">Quando ti serve un professionista</h2>
-          <div className="grid md:grid-cols-3 gap-10 max-w-5xl mx-auto">
-            {[
-              { icon: Search, title: '1. Cerca', text: 'Consulta i profili approvati e confronta servizi, esperienza e informazioni disponibili.' },
-              { icon: CreditCard, title: '2. Richiedi una prenotazione', text: 'Invia una richiesta chiara con date, servizio e informazioni sul cane.' },
-              { icon: Smile, title: '3. Conferma e rilassati', text: 'Il professionista può accettare o rifiutare la richiesta dal proprio pannello.' },
-            ].map((s) => {
-              const Icon = s.icon;
-              return (
-                <div key={s.title} className="text-center">
-                  <div className="w-24 h-24 mx-auto rounded-full bg-emerald-100 flex items-center justify-center mb-5">
-                    <Icon className="w-10 h-10 text-emerald-700" />
-                  </div>
-                  <h3 className="font-bold text-stone-900 mb-2">{s.title}</h3>
-                  <p className="text-sm text-stone-700 leading-relaxed">{s.text}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-16 items-start">
-        <div>
-          <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-3">Domande frequenti</h2>
-          <p className="text-stone-600 mb-8">Domande frequenti su PawConnect</p>
-          <div className="space-y-3">
-            {faqs.map((f, i) => (
-              <div key={i} className="border border-stone-200 rounded-xl overflow-hidden">
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex justify-between items-center p-4 text-left hover:bg-stone-50"
-                >
-                  <span className="font-semibold text-stone-900">{f.q}</span>
-                  <ChevronDown className={`w-5 h-5 text-stone-500 transition ${openFaq === i ? 'rotate-180' : ''}`} />
+              <div className="flex flex-wrap gap-3 mt-7">
+                <button type="button" onClick={() => navigate('/prima-del-cane')} className="pc-btn pc-btn-inverse">
+                  Inizia dalla tua situazione <ArrowRight className="w-4 h-4" />
                 </button>
-                {openFaq === i && <div className="p-4 pt-0 text-stone-600 text-sm leading-relaxed">{f.a}</div>}
+                <a href="https://www.legambiente.it/attivita-scientifiche/animali-in-citta" target="_blank" rel="noreferrer" className="pc-btn border border-white/25 text-white hover:bg-white/10">
+                  Fonte e contesto <ExternalLink className="w-4 h-4" />
+                </a>
               </div>
+              <p className="text-xs text-[#9fb0a6] mt-4">Legambiente · Animali in Città 2026 · dati riferiti a 221 comuni</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+        <div className="max-w-3xl">
+          <p className="pc-kicker">Il tuo prossimo passo utile</p>
+          <h2 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Capire. Decidere. Agire.</h2>
+          <p className="pc-lead mt-5">
+            PortaleCinofilo non prova a trattenerti più a lungo possibile. Ti porta al passo successivo che può davvero migliorare la vita con un cane.
+          </p>
+        </div>
+        <div className="grid lg:grid-cols-3 gap-4 mt-10">
+          <PathCard number="01" title="Sto pensando di prendere un cane" text="Parti dalla tua vita reale: tempo, solitudine, attività, famiglia, budget e complessità gestionale. Poi restringi il campo." cta="Inizia Prima del cane" icon={Compass} onClick={() => navigate('/prima-del-cane')} />
+          <PathCard number="02" title="Voglio capire meglio il cane" text="Impara attraverso sottolezioni, osservazione, attività pratiche e verifiche. Non un blog: un percorso." cta="Vai a Impara" icon={BookOpen} onClick={() => navigate('/impara')} />
+          <PathCard number="03" title="Mi serve un professionista" text="Confronta profili approvati, servizi e informazioni concrete. La competenza viene prima della popolarità." cta="Trova un professionista" icon={Search} onClick={() => navigate('/search')} />
+        </div>
+      </section>
+
+      <section className="pc-evidence-surface border-y border-[#cedde1]">
+        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
+          <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16">
+            <div>
+              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--pc-evidence-700)]">Evidence layer</p>
+              <h2 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Non devi crederci sulla parola.</h2>
+              <p className="text-[var(--pc-muted-600)] text-lg leading-8 mt-5 max-w-xl">
+                Le affermazioni importanti devono poter essere controllate. Fonte, contesto e limiti fanno parte del contenuto.
+              </p>
+            </div>
+            <div className="space-y-3">
+              {[
+                ['Dati con contesto', 'Anno, popolazione osservata e limiti prima del numero.'],
+                ['Metodo dichiarato', 'Distinguiamo ricerca, fonte ufficiale, sintesi editoriale e approcci professionali.'],
+                ['Limiti espliciti', 'Quando i dati non permettono una conclusione, PortaleCinofilo non la inventa.'],
+              ].map(([title, text]) => (
+                <div key={title} className="bg-[var(--pc-paper)] border border-[#cedde1] rounded-2xl p-5 flex gap-4">
+                  <ShieldCheck className="w-5 h-5 text-[var(--pc-evidence-700)] shrink-0 mt-0.5" />
+                  <div><h3 className="font-bold">{title}</h3><p className="text-sm text-[var(--pc-muted-600)] leading-6 mt-1">{text}</p></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+        <div className="grid lg:grid-cols-[1fr_0.9fr] gap-10 lg:gap-16 items-center">
+          <div>
+            <p className="pc-kicker">Impara</p>
+            <h2 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Possedere un cane non significa conoscerlo.</h2>
+            <p className="pc-lead mt-5 max-w-2xl">
+              Lo Stage 1 parte dalle fondamenta e arriva all’osservazione pratica. Il progresso non premia lo scrolling: studio, attività e verifica hanno pesi diversi.
+            </p>
+            <button type="button" onClick={() => navigate('/impara')} className="pc-btn pc-btn-primary mt-7">Entra in Impara <ArrowRight className="w-4 h-4" /></button>
+          </div>
+          <div className="pc-card p-6 md:p-8">
+            <p className="pc-number">ESEMPIO DI PROGRESSIONE</p>
+            <div className="mt-6 space-y-5">
+              {[
+                ['○', 'Da conoscere', 'Il concetto non è ancora stato affrontato.', 'text-[var(--pc-muted-600)]'],
+                ['◐', 'Appreso', 'Hai studiato e completato l’attività prevista.', 'text-[var(--pc-ochre-900)]'],
+                ['✓', 'Verificato', 'Hai dimostrato di aver capito con una verifica.', 'text-[var(--pc-forest-700)]'],
+              ].map(([symbol, title, text, color]) => (
+                <div key={title} className="flex gap-4"><div className={`text-2xl font-bold ${color}`}>{symbol}</div><div><div className="font-bold">{title}</div><div className="text-sm text-[var(--pc-muted-600)] leading-6 mt-1">{text}</div></div></div>
+              ))}
+            </div>
+            <div className="pc-rule my-6" />
+            <div className="flex items-center gap-3 text-sm font-bold text-[var(--pc-forest-900)]"><TraceMark /> comprendi → applica → verifica</div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-[var(--pc-line)] bg-[var(--pc-paper)]">
+        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
+          <div className="grid lg:grid-cols-[1fr_auto] gap-8 items-end">
+            <div className="max-w-3xl">
+              <p className="pc-kicker">Rete professionale</p>
+              <h2 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Quando serve aiuto, deve essere quello giusto.</h2>
+              <p className="pc-lead mt-5">Esplora professionisti approvati e confronta servizi, esperienza e informazioni disponibili senza trasformare il numero di recensioni in una misura automatica di competenza.</p>
+            </div>
+            <button type="button" onClick={() => navigate('/search')} className="pc-btn pc-btn-primary lg:mb-1">Cerca professionisti <ArrowRight className="w-4 h-4" /></button>
+          </div>
+          <div className="grid md:grid-cols-3 gap-4 mt-10">
+            {[
+              ['01', 'Competenza leggibile', 'Titoli, esperienza, servizi e stato di approvazione devono essere comprensibili.'],
+              ['02', 'Richieste pertinenti', 'Il proprietario arriva alla prenotazione con informazioni utili sul proprio cane.'],
+              ['03', 'Niente false classifiche', 'Le recensioni aiutano, ma non sostituiscono qualifiche, esperienza e compatibilità del caso.'],
+            ].map(([number, title, text]) => (
+              <div key={number} className="border-t border-[var(--pc-line)] pt-5"><div className="pc-number">{number}</div><h3 className="font-bold text-lg mt-2">{title}</h3><p className="text-sm text-[var(--pc-muted-600)] leading-6 mt-2">{text}</p></div>
             ))}
           </div>
         </div>
-        <div className="bg-stone-50 rounded-3xl p-10 flex flex-col items-center text-center border border-stone-100">
-          <Heart className="w-14 h-14 text-rose-500 mb-4" />
-          <h3 className="text-2xl font-bold text-stone-900 mb-2">Diventa professionista su PawConnect</h3>
-          <p className="text-stone-600 mb-6">Entra in una rete selezionata di professionisti cinofili. Gestisci profilo, servizi, richieste, clienti e prenotazioni da un unico pannello.</p>
-          <button onClick={() => navigate('/become-pro')} className="px-6 py-3 bg-stone-900 text-white rounded-full font-semibold hover:bg-stone-800 transition">
-            Inizia ora
-          </button>
-          <div className="flex items-center gap-2 mt-6 text-sm text-stone-500">
-            <Shield className="w-4 h-4" /> Beta locale con professionisti approvati manualmente
+      </section>
+
+      <section className="pc-surface-dark">
+        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
+          <div className="max-w-4xl">
+            <TraceMark className="text-[var(--pc-ochre-500)]" />
+            <h2 className="pc-display text-4xl md:text-6xl font-semibold mt-5">Il cane non può scegliere la famiglia in cui vivrà. Tu puoi scegliere meglio.</h2>
+            <p className="text-[#c9d8cf] text-lg leading-8 mt-5 max-w-2xl">Il primo passo non è trovare la razza più bella. È capire quale vita sei davvero in grado di condividere.</p>
+            <button type="button" onClick={() => navigate('/prima-del-cane')} className="pc-btn pc-btn-inverse mt-8">Inizia Prima del cane <ArrowRight className="w-4 h-4" /></button>
           </div>
         </div>
       </section>
