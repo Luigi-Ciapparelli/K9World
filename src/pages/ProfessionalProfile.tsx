@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
   BadgeCheck,
@@ -22,14 +22,29 @@ export function ProfessionalProfile({ id }: { id: string }) {
   const [verifying, setVerifying] = useState<'email' | 'phone' | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [profileError, setProfileError] = useState('');
+  const [servicesError, setServicesError] = useState(false);
+  const [reviewsError, setReviewsError] = useState(false);
+  const [dogsLoadError, setDogsLoadError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   const { user, profile } = useAuth();
   const { navigate } = useRouter();
 
   useEffect(() => {
+    let active = true;
+    setShowBook(false);
+    setVerifying(null);
     const load = async () => {
       setLoadingProfile(true);
       setProfileError('');
+      setServicesError(false);
+      setReviewsError(false);
+      setDogsLoadError(false);
+      setPro(null);
+      setServices([]);
+      setReviews([]);
+      setDogs([]);
+      try {
 
       const [profileRes, servicesRes, reviewsRes] = await Promise.all([
         supabase
@@ -50,44 +65,44 @@ export function ProfessionalProfile({ id }: { id: string }) {
           .limit(10),
       ]);
 
+      if (!active) return;
       if (profileRes.error) {
-        setProfileError(profileRes.error.message);
+        setProfileError('Il profilo non è stato caricato. Riprova tra poco.');
         setPro(null);
         setLoadingProfile(false);
         return;
       }
 
-      if (servicesRes.error) {
-        setProfileError(servicesRes.error.message);
-        setPro(null);
-        setLoadingProfile(false);
-        return;
-      }
-
-      if (reviewsRes.error) {
-        console.warn('Reviews load error:', reviewsRes.error);
-      }
+      setServicesError(Boolean(servicesRes.error));
+      setReviewsError(Boolean(reviewsRes.error));
 
       setPro(profileRes.data);
       setServices(servicesRes.data || []);
       setReviews(reviewsRes.data || []);
 
-      if (user) {
+      if (user && profile?.role === 'owner') {
         const { data: dogRows, error: dogsError } = await supabase
           .from('dogs')
-          .select('*')
+          .select('id, name')
           .eq('owner_id', user.id);
 
+        if (!active) return;
+        setDogsLoadError(Boolean(dogsError));
         setDogs(dogsError ? [] : dogRows || []);
       } else {
         setDogs([]);
       }
 
-      setLoadingProfile(false);
+      } catch {
+        if (active) setProfileError('Non è stato possibile caricare il profilo. Riprova tra poco.');
+      } finally {
+        if (active) setLoadingProfile(false);
+      }
     };
 
-    load();
-  }, [id, user]);
+    void load();
+    return () => { active = false; };
+  }, [id, user?.id, profile?.role, reloadKey]);
 
   if (loadingProfile) {
     return (
@@ -102,11 +117,12 @@ export function ProfessionalProfile({ id }: { id: string }) {
       <div className="min-h-[calc(100vh-4rem)] bg-stone-50 p-8">
         <div className="max-w-xl mx-auto bg-white border border-rose-200 rounded-3xl p-6">
           <h1 className="text-xl font-bold text-rose-700">Impossibile caricare il profilo</h1>
-          <p className="text-stone-700 mt-2">{profileError}</p>
+          <p role="alert" className="text-stone-700 mt-2">{profileError}</p>
+          <button type="button" onClick={() => setReloadKey((key) => key + 1)} className="block mt-4 font-semibold underline">Riprova</button>
           <button
             type="button"
             onClick={() => navigate('/search')}
-            className="mt-5 px-4 py-2 bg-[#0f5f46] text-white rounded-xl font-semibold"
+            className="mt-5 px-4 py-2 bg-[var(--pc-forest-900)] text-white rounded-xl font-semibold"
           >
             Torna alla ricerca
           </button>
@@ -126,7 +142,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
           <button
             type="button"
             onClick={() => navigate('/search')}
-            className="mt-5 px-4 py-2 bg-[#0f5f46] text-white rounded-xl font-semibold"
+            className="mt-5 px-4 py-2 bg-[var(--pc-forest-900)] text-white rounded-xl font-semibold"
           >
             Torna alla ricerca
           </button>
@@ -142,11 +158,20 @@ export function ProfessionalProfile({ id }: { id: string }) {
     'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1800';
   const rating = Number(pro.rating || 0);
   const reviewCount = Number(pro.review_count || 0);
-  const startingPrice = Number(pro.starting_price || services[0]?.price || 0);
+  const servicePrices = services.map((service) => Number(service.price)).filter((price) => Number.isFinite(price) && price > 0);
+  const listedPrice = Number(pro.starting_price);
+  const startingPrice = Number.isFinite(listedPrice) && listedPrice > 0
+    ? listedPrice : servicePrices.length ? Math.min(...servicePrices) : null;
+  const hasRating = reviewCount > 0 && Number.isFinite(rating) && rating >= 1 && rating <= 5;
+  const professionalLabels: Record<string, string> = {
+    trainer: 'Educazione e addestramento', walker: 'Dog walking',
+    sitter: 'Dog sitting', boarding: 'Pensione per cani',
+  };
   const isVerified = !!profile?.email_verified;
 
   const onBookClick = () => {
     if (!user) return navigate('/signin');
+    if (profile?.role !== 'owner' || servicesError || dogsLoadError || !services.length) return;
     setShowBook(true);
   };
 
@@ -172,7 +197,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
           </button>
 
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-amber-400/10 border border-amber-300/20 px-4 py-2 text-sm font-semibold text-amber-100 mb-5">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 px-4 py-2 text-sm font-semibold text-white mb-5">
               <BadgeCheck className="w-4 h-4" />
               Profilo approvato PortaleCinofilo
             </div>
@@ -182,15 +207,15 @@ export function ProfessionalProfile({ id }: { id: string }) {
             </h1>
 
             <div className="flex flex-wrap items-center gap-4 text-sm text-stone-200 mt-5">
-              <span className="capitalize rounded-full bg-amber-400/15 border border-amber-300/25 px-3 py-1 font-semibold text-amber-100">
-                {pro.professional_type || 'professionista'}
+              <span className="capitalize rounded-full bg-white/10 border border-white/20 px-3 py-1 font-semibold text-white">
+                {professionalLabels[pro.professional_type] || 'Professionista cinofilo'}
               </span>
 
-              <span className="flex items-center gap-1">
+              {hasRating ? <span className="flex items-center gap-1">
                 <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                 <b>{rating.toFixed(1)}</b>
-                <span className="text-stone-300">({reviewCount} recensioni)</span>
-              </span>
+                <span className="text-stone-300">({reviewCount} {reviewCount === 1 ? 'recensione' : 'recensioni'})</span>
+              </span> : <span>Valutazione non ancora disponibile</span>}
 
               <span className="flex items-center gap-1">
                 <MapPin className="w-4 h-4" />
@@ -200,7 +225,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
             <p className="text-stone-200 text-lg mt-6 max-w-2xl leading-relaxed">
               {pro.bio ||
-                'Professionista cinofilo approvato su PortaleCinofilo. Servizi, zona e disponibilità sono consultabili nella scheda.'}
+                'Professionista cinofilo approvato su PortaleCinofilo. Servizi e zona sono consultabili nella scheda. Le date richieste devono essere accettate dal professionista.'}
             </p>
           </div>
         </div>
@@ -209,7 +234,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 -mt-20 relative z-10 pb-14">
         <div className="grid lg:grid-cols-[1fr_380px] gap-6 items-start">
           <div className="space-y-6">
-            <section className="bg-[#fffdf8] rounded-[2rem] border border-amber-100 shadow-sm p-6 md:p-8">
+            <section className="bg-[var(--pc-paper)] rounded-[2rem] border border-[var(--pc-line)] shadow-sm p-6 md:p-8">
               <div className="flex flex-col sm:flex-row gap-5 items-start">
                 {avatarUrl ? (
                   <img
@@ -218,7 +243,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
                     className="w-24 h-24 rounded-2xl object-cover border border-stone-200 shadow-sm"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-3xl font-bold text-[#0f5f46] shadow-sm">
+                  <div className="w-24 h-24 rounded-2xl bg-amber-50 border border-[var(--pc-line)] flex items-center justify-center text-3xl font-bold text-[var(--pc-forest-900)] shadow-sm">
                     {displayName.slice(0, 1)}
                   </div>
                 )}
@@ -228,27 +253,27 @@ export function ProfessionalProfile({ id }: { id: string }) {
                     <h2 className="text-2xl md:text-3xl font-bold text-stone-900">
                       {displayName}
                     </h2>
-                    <span className="text-xs bg-amber-50 text-[#0f5f46] px-2 py-1 rounded-full font-semibold flex items-center gap-1">
+                    <span className="text-xs bg-amber-50 text-[var(--pc-forest-900)] px-2 py-1 rounded-full font-semibold flex items-center gap-1">
                       <BadgeCheck className="w-3 h-3" />
-                      Verificato
+                      Approvato
                     </span>
                   </div>
 
                   <p className="text-stone-700 mt-4 leading-relaxed">
                     {pro.bio ||
-                      'Profilo verificato da PortaleCinofilo. Informazioni e servizi disponibili nella scheda.'}
+                      'Profilo approvato da PortaleCinofilo. Informazioni e servizi disponibili nella scheda.'}
                   </p>
 
                   <div className="grid sm:grid-cols-3 gap-3 mt-6">
                     <InfoPill label="Zona" value={pro.zone_text || 'Locale'} />
-                    <InfoPill label="Rating" value={rating.toFixed(1)} />
+                    <InfoPill label="Valutazione" value={hasRating ? rating.toFixed(1) : 'Non disponibile'} />
                     <InfoPill label="Recensioni" value={String(reviewCount)} />
                   </div>
                 </div>
               </div>
             </section>
 
-            <section className="bg-[#fffdf8] rounded-[2rem] border border-amber-100 shadow-sm p-6 md:p-8">
+            <section className="bg-[var(--pc-paper)] rounded-[2rem] border border-[var(--pc-line)] shadow-sm p-6 md:p-8">
               <div className="mb-5">
                 <h2 className="text-2xl font-bold text-stone-900">Servizi</h2>
                 <p className="text-sm text-stone-500 mt-1">
@@ -256,7 +281,9 @@ export function ProfessionalProfile({ id }: { id: string }) {
                 </p>
               </div>
 
-              {services.length === 0 ? (
+              {servicesError ? (
+                <InlineLoadError text="Non è stato possibile caricare i servizi." onRetry={() => setReloadKey((key) => key + 1)} />
+              ) : services.length === 0 ? (
                 <div className="rounded-2xl bg-stone-50 border border-stone-200 p-5">
                   <p className="text-stone-600 text-sm">Nessun servizio inserito.</p>
                 </div>
@@ -269,13 +296,15 @@ export function ProfessionalProfile({ id }: { id: string }) {
               )}
             </section>
 
-            <section className="bg-[#fffdf8] rounded-[2rem] border border-amber-100 shadow-sm p-6 md:p-8">
+            <section className="bg-[var(--pc-paper)] rounded-[2rem] border border-[var(--pc-line)] shadow-sm p-6 md:p-8">
               <h2 className="text-2xl font-bold text-stone-900 mb-5">Recensioni</h2>
 
-              {reviews.length === 0 ? (
+              {reviewsError ? (
+                <InlineLoadError text="Non è stato possibile caricare le recensioni." onRetry={() => setReloadKey((key) => key + 1)} />
+              ) : reviews.length === 0 ? (
                 <div className="rounded-2xl bg-stone-50 border border-stone-200 p-5">
                   <p className="text-stone-600 text-sm">
-                    Nessuna recensione ancora. Le recensioni verranno mostrate dopo richieste completate.
+                    Nessuna recensione ancora. Le recensioni verranno mostrate dopo prenotazioni completate.
                   </p>
                 </div>
               ) : (
@@ -287,7 +316,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
                           {review.reviewer_name || 'Cliente'}
                         </div>
                         <div className="flex">
-                          {Array.from({ length: Number(review.rating || 0) }).map((_, index) => (
+                          {Array.from({ length: Math.max(0, Math.min(5, Math.floor(Number(review.rating) || 0))) }).map((_, index) => (
                             <Star
                               key={index}
                               className="w-3 h-3 fill-amber-400 text-amber-400"
@@ -304,10 +333,10 @@ export function ProfessionalProfile({ id }: { id: string }) {
           </div>
 
           <aside className="lg:sticky lg:top-24">
-            <div className="bg-[#fffdf8] rounded-[2rem] border border-amber-100 shadow-xl p-6">
-              <div className="text-sm text-stone-500">A partire da</div>
+            <div className="bg-[var(--pc-paper)] rounded-[2rem] border border-[var(--pc-line)] shadow-xl p-6">
+              <div className="text-sm text-stone-500">{startingPrice === null ? 'Tariffa' : 'A partire da'}</div>
               <div className="text-4xl font-bold text-stone-900 mt-1">
-                €{startingPrice}
+                {formatPrice(startingPrice)}
               </div>
 
               <div className="h-px bg-stone-200 my-5" />
@@ -315,7 +344,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
               <div className="space-y-3 text-sm text-stone-700">
                 <div className="flex items-center justify-between">
                   <span>Profilo</span>
-                  <span className="font-semibold text-[#0f5f46]">Approvato</span>
+                  <span className="font-semibold text-[var(--pc-forest-900)]">Approvato</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Zona</span>
@@ -323,19 +352,22 @@ export function ProfessionalProfile({ id }: { id: string }) {
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Servizi attivi</span>
-                  <span className="font-semibold">{services.length}</span>
+                  <span className="font-semibold">{servicesError ? 'Non disponibili' : services.length}</span>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={onBookClick}
-                className="w-full justify-center mt-6 px-6 py-3 bg-[#0f5f46] text-white rounded-full font-semibold hover:bg-[#0b4a37] transition inline-flex items-center gap-2"
+                disabled={servicesError || services.length === 0 || dogsLoadError || Boolean(user && profile?.role !== 'owner')}
+                className="w-full justify-center mt-6 px-6 py-3 bg-[var(--pc-forest-900)] text-white rounded-full font-semibold hover:bg-[var(--pc-forest-700)] transition inline-flex items-center gap-2"
               >
                 <Calendar className="w-4 h-4" />
                 Richiedi prenotazione
               </button>
 
+              {dogsLoadError && <InlineLoadError text="Non è stato possibile caricare i tuoi cani." onRetry={() => setReloadKey((key) => key + 1)} />}
+              {user && profile?.role !== 'owner' && <p className="text-sm text-stone-600 mt-4">Per inviare una richiesta, accedi con un account proprietario.</p>}
               <p className="text-xs text-stone-500 mt-4 leading-relaxed">
                 Invia una richiesta con data, orario, servizio e informazioni sul cane.
                 Il professionista potrà accettare o rifiutare dal proprio pannello.
@@ -350,7 +382,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
             dogs={dogs}
             isVerified={isVerified}
             emailVerified={!!profile?.email_verified}
-            onVerify={(kind) => setVerifying(kind)}
+            onVerify={(kind) => { setShowBook(false); setVerifying(kind); }}
             onClose={() => setShowBook(false)}
           />
         )}
@@ -366,6 +398,17 @@ export function ProfessionalProfile({ id }: { id: string }) {
       </main>
     </div>
   );
+}
+
+function formatPrice(value: unknown) {
+  const price = Number(value);
+  return Number.isFinite(price) && price > 0
+    ? price.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })
+    : 'Prezzo da confermare';
+}
+
+function InlineLoadError({ text, onRetry }: { text: string; onRetry: () => void }) {
+  return <div role="alert" className="mt-4 text-sm"><p>{text}</p><button type="button" onClick={onRetry} className="mt-2 font-semibold underline">Riprova</button></div>;
 }
 
 function InfoPill({ label, value }: { label: string; value: string }) {
@@ -386,18 +429,18 @@ function ServiceCard({ service }: { service: any }) {
         : 'variabile';
 
   return (
-    <div className="rounded-2xl border border-stone-200 bg-stone-50 p-5 hover:border-amber-200 hover:bg-amber-50/50 transition">
+    <div className="rounded-2xl border border-stone-200 bg-stone-50 p-5 hover:border-[var(--pc-forest-700)] transition">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="font-bold text-stone-900">{service.name}</h3>
           <p className="text-xs text-stone-500 mt-1">
-            {service.duration_minutes} min · {durationKind}
+            {Number(service.duration_minutes) > 0 ? `${service.duration_minutes} min · ` : ''}{durationKind}
           </p>
         </div>
 
         <div className="text-right">
-          <div className="text-lg font-bold text-stone-900">€{service.price}</div>
-          <div className="text-xs text-stone-500">da</div>
+          <div className="text-lg font-bold text-stone-900">{formatPrice(service.price)}</div>
+
         </div>
       </div>
 
@@ -435,9 +478,30 @@ function BookingModal({
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const inFlight = useRef(false);
+  const mounted = useRef(false);
+  const [uncertain, setUncertain] = useState(false);
+  const localToday = new Date();
+  const minDate = `${localToday.getFullYear()}-${String(localToday.getMonth() + 1).padStart(2, '0')}-${String(localToday.getDate()).padStart(2, '0')}`;
+
+  useEffect(() => {
+    mounted.current = true;
+    const previous = document.activeElement;
+    const dialog = dialogRef.current;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    dialog?.showModal();
+    return () => {
+      mounted.current = false;
+      dialog?.close();
+      document.body.style.overflow = overflow;
+      if (previous instanceof HTMLElement && previous.isConnected) previous.focus();
+    };
+  }, []);
 
   const submit = async () => {
-    if (!user) return;
+    if (!user || inFlight.current || uncertain) return;
 
     if (!isVerified) {
       setError('Conferma la tua email prima di richiedere una prenotazione.');
@@ -449,43 +513,58 @@ function BookingModal({
       return;
     }
 
+    if (!services.some((service) => service.id === serviceId) || !dogs.some((dog) => dog.id === dogId)) {
+      setError('Seleziona un servizio e un cane disponibili.');
+      return;
+    }
+    const start = new Date(`${date}T${time}`);
+    if (!Number.isFinite(start.getTime()) || start.getTime() <= Date.now()) {
+      setError('Scegli una data e un orario futuri.');
+      return;
+    }
+    inFlight.current = true;
     setSubmitting(true);
     setError('');
-
-    const start = new Date(`${date}T${time}`);
-
-    const { error: bookingError } = await supabase.rpc(
-      'create_booking_with_dog',
-      {
+    try {
+      const { error: bookingError } = await supabase.rpc('create_booking_with_dog', {
         p_service_id: serviceId,
         p_dog_id: dogId,
         p_start_at: start.toISOString(),
-        p_notes: notes,
+        p_notes: notes.trim(),
+      });
+      if (!mounted.current) return;
+      if (bookingError) {
+        if (/email verification required/i.test(bookingError.message)) {
+          setError('Conferma la tua email prima di inviare la richiesta.');
+        } else {
+          setUncertain(true);
+          setError('Non è stato possibile confermare l’esito. Controlla le tue prenotazioni prima di inviare una nuova richiesta.');
+        }
+        return;
       }
-    );
-
-    if (bookingError) {
-      const message = /email verification required/i.test(bookingError.message)
-        ? 'Conferma la tua email prima di prenotare.'
-        : bookingError.message;
-
-      setError(message);
-      setSubmitting(false);
-      return;
+      onClose();
+      navigate('/owner/bookings');
+    } catch {
+      if (mounted.current) {
+        setUncertain(true);
+        setError('Connessione interrotta. Controlla le tue prenotazioni prima di inviare una nuova richiesta.');
+      }
+    } finally {
+      inFlight.current = false;
+      if (mounted.current) setSubmitting(false);
     }
-
-    setSubmitting(false);
-    onClose();
-    navigate('/owner/bookings');
   };
 
   return (
-    <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-xl">
-        <h2 className="text-xl font-bold text-stone-900 mb-4">
+    <dialog ref={dialogRef} aria-labelledby="booking-title" aria-describedby="booking-description"
+      onCancel={(event) => { event.preventDefault(); if (!inFlight.current) onClose(); }}
+      className="m-auto w-[calc(100%-2rem)] max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain rounded-3xl p-0 bg-white text-stone-900 backdrop:bg-stone-900/50">
+      <div className="p-4 sm:p-6" aria-busy={submitting}>
+        <h2 id="booking-title" className="text-xl font-bold text-stone-900 mb-4">
           Richiedi prenotazione
         </h2>
 
+        <p id="booking-description" className="text-sm text-stone-600 mb-4">Proponi data e orario nel fuso del tuo dispositivo. L’appuntamento sarà confermato solo dopo l’accettazione del professionista.</p>
         {!isVerified && (
           <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-2xl">
             <div className="flex items-start gap-3">
@@ -523,31 +602,34 @@ function BookingModal({
         ) : dogs.length === 0 ? (
           <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-sm text-amber-800 mb-4">
             Aggiungi prima un cane al tuo profilo.
+            <button type="button" onClick={() => { onClose(); navigate('/owner/dogs'); }} className="block mt-3 font-semibold underline">Vai ai tuoi cani</button>
           </div>
         ) : (
           <div className="space-y-3">
             <div>
-              <label className="text-sm font-semibold text-stone-700">Servizio</label>
+              <label htmlFor="booking-service" className="text-sm font-semibold text-stone-700">Servizio</label>
               <select
+                id="booking-service"
                 value={serviceId}
                 onChange={(event) => setServiceId(event.target.value)}
-                disabled={!isVerified}
+                disabled={!isVerified || submitting || uncertain}
                 className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-xl text-sm disabled:bg-stone-50 disabled:text-stone-400"
               >
                 {services.map((service) => (
                   <option key={service.id} value={service.id}>
-                    {service.name} — €{service.price}
+                    {service.name} — {formatPrice(service.price)}
                   </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="text-sm font-semibold text-stone-700">Cane</label>
+              <label htmlFor="booking-dog" className="text-sm font-semibold text-stone-700">Cane</label>
               <select
+                id="booking-dog"
                 value={dogId}
                 onChange={(event) => setDogId(event.target.value)}
-                disabled={!isVerified}
+                disabled={!isVerified || submitting || uncertain}
                 className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-xl text-sm disabled:bg-stone-50 disabled:text-stone-400"
               >
                 {dogs.map((dog) => (
@@ -560,34 +642,38 @@ function BookingModal({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-semibold text-stone-700">Data</label>
+                <label htmlFor="booking-date" className="text-sm font-semibold text-stone-700">Data</label>
                 <input
                   type="date"
-                  value={date}
+                  min={minDate}
+                  id="booking-date"
+                value={date}
                   onChange={(event) => setDate(event.target.value)}
-                  disabled={!isVerified}
+                  disabled={!isVerified || submitting || uncertain}
                   className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-xl text-sm disabled:bg-stone-50 disabled:text-stone-400"
                 />
               </div>
 
               <div>
-                <label className="text-sm font-semibold text-stone-700">Ora</label>
+                <label htmlFor="booking-time" className="text-sm font-semibold text-stone-700">Ora</label>
                 <input
                   type="time"
-                  value={time}
+                  id="booking-time"
+                value={time}
                   onChange={(event) => setTime(event.target.value)}
-                  disabled={!isVerified}
+                  disabled={!isVerified || submitting || uncertain}
                   className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-xl text-sm disabled:bg-stone-50 disabled:text-stone-400"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-semibold text-stone-700">Note</label>
+              <label htmlFor="booking-notes" className="text-sm font-semibold text-stone-700">Note</label>
               <textarea
+                id="booking-notes"
                 value={notes}
                 onChange={(event) => setNotes(event.target.value)}
-                disabled={!isVerified}
+                disabled={!isVerified || submitting || uncertain}
                 rows={3}
                 className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-xl text-sm disabled:bg-stone-50 disabled:text-stone-400"
                 placeholder="Esigenze del cane, informazioni utili, preferenze..."
@@ -596,12 +682,14 @@ function BookingModal({
           </div>
         )}
 
-        {error && <p className="text-sm text-rose-600 mt-4">{error}</p>}
+        {error && <p role="alert" className="text-sm text-rose-600 mt-4">{error}</p>}
+        {uncertain && <button type="button" onClick={() => { onClose(); navigate('/owner/bookings'); }} className="mt-3 font-semibold underline">Controlla le prenotazioni</button>}
 
         <div className="flex gap-3 mt-6">
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => { if (!inFlight.current) onClose(); }}
+            disabled={submitting}
             className="flex-1 py-2.5 border border-stone-300 rounded-xl font-semibold"
           >
             Annulla
@@ -611,17 +699,17 @@ function BookingModal({
             type="button"
             onClick={submit}
             disabled={
-              submitting ||
+              submitting || uncertain ||
               !isVerified ||
               services.length === 0 ||
               dogs.length === 0
             }
-            className="flex-1 py-2.5 bg-[#0f5f46] text-white rounded-xl font-semibold hover:bg-[#0b4a37] disabled:opacity-50"
+            className="flex-1 py-2.5 bg-[var(--pc-forest-900)] text-white rounded-xl font-semibold hover:bg-[var(--pc-forest-700)] disabled:opacity-50"
           >
             {submitting ? 'Invio...' : 'Invia richiesta'}
           </button>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }
