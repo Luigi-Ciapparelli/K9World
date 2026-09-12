@@ -11,8 +11,9 @@ import {
 } from 'lucide-react';
 import { useRouter } from '../lib/RouterContext';
 import { cityLabel, loadItalianCities, normalizeCitySearch, type ItalianCity } from '../lib/italianCities';
+import type { ServiceCategoryType } from '../lib/serviceCategories';
 
-const services = [
+const services: Array<{ id: ServiceCategoryType; label: string; icon: typeof Home }> = [
   { id: 'boarding', label: 'Pensione', icon: Home },
   { id: 'sitter', label: 'Pet sitting', icon: Building2 },
   { id: 'walker', label: 'Passeggiate', icon: Bone },
@@ -20,16 +21,41 @@ const services = [
   { id: 'groomer', label: 'Toelettatura', icon: Scissors },
 ];
 
+function isServiceCategory(value: string | null): value is ServiceCategoryType {
+  return services.some((service) => service.id === value);
+}
+
 export function SearchCard({ compact = false }: { compact?: boolean }) {
-  const [service, setServizio] = useState('walker');
+  const { path, navigate } = useRouter();
+  const [service, setServizio] = useState<ServiceCategoryType>('walker');
   const [address, setAddress] = useState('');
-  const [date, setData] = useState('');
   const [locationLoading, setLocationLoading] = useState(false);
   const [locationAccuracy, setLocationAccuracy] = useState<number | null>(null);
   const [cities, setCities] = useState<ItalianCity[]>([]);
   const [selectedCity, setSelectedCity] = useState<ItalianCity | null>(null);
   const [gpsCoords, setGpsCoords] = useState<{ lat: number; lng: number } | null>(null);
-  const { navigate } = useRouter();
+
+  useEffect(() => {
+    const params = path.includes('?')
+      ? new URLSearchParams(path.split('?')[1])
+      : new URLSearchParams();
+
+    const type = params.get('type');
+    const nextAddress = params.get('address') || '';
+    const lat = Number(params.get('lat'));
+    const lng = Number(params.get('lng'));
+    const hasCoords =
+      params.get('lat') !== null &&
+      params.get('lng') !== null &&
+      Number.isFinite(lat) &&
+      Number.isFinite(lng);
+
+    setServizio(isServiceCategory(type) ? type : 'walker');
+    setAddress(nextAddress);
+    setSelectedCity(null);
+    setGpsCoords(hasCoords ? { lat, lng } : null);
+    setLocationAccuracy(null);
+  }, [path]);
 
   useEffect(() => {
     let active = true;
@@ -89,7 +115,6 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
     const params = new URLSearchParams({
       type: service,
       address,
-      date,
     });
 
     if (coords) {
@@ -278,15 +303,6 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
                 : 'Usa posizione'}
           </button>
         </div>
-
-        <input
-          id="search-date"
-          name="date"
-          type="date"
-          value={date}
-          onChange={(e) => setData(e.target.value)}
-          className="px-4 py-3 border border-stone-300 rounded-xl text-sm focus:border-emerald-500 focus:outline-none"
-        />
 
         <button
           type="button"

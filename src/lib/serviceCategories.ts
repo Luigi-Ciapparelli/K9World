@@ -1,4 +1,4 @@
-export type ServiceCategoryType = 'trainer' | 'boarding' | 'walker' | 'sitter';
+export type ServiceCategoryType = 'trainer' | 'boarding' | 'walker' | 'sitter' | 'groomer';
 
 export type ServiceCategory = {
   type: ServiceCategoryType;
@@ -45,5 +45,14 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
       'Visite, compagnia, pasti e gestione quotidiana quando il proprietario non può occuparsi direttamente del cane.',
     badge: 'Sitting',
     gradient: 'linear-gradient(135deg, #312e81 0%, #7c3aed 45%, #f472b6 100%)',
+  },
+  {
+    type: 'groomer',
+    title: 'Toelettatura',
+    subtitle: 'Cura e igiene del mantello',
+    description:
+      'Professionisti per toelettatura, igiene e cura del mantello, con servizi indicati chiaramente nel profilo.',
+    badge: 'Grooming',
+    gradient: 'linear-gradient(135deg, #1e3a5f 0%, #0f766e 50%, #67e8f9 100%)',
   },
 ];

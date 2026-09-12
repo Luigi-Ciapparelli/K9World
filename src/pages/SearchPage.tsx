@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { useRouter } from '../lib/RouterContext';
 import { SearchCard } from '../components/SearchCard';
 import { findSupportedCity } from '../lib/locations';
+import { SERVICE_CATEGORIES } from '../lib/serviceCategories';
 
 interface ProResult {
   id: string;
@@ -78,6 +79,8 @@ export function SearchPage() {
   }, [latParam, lngParam, selectedCity]);
 
   useEffect(() => {
+    let cancelled = false;
+
     const load = async () => {
       setLoading(true);
       setLoadError('');
@@ -87,14 +90,16 @@ export function SearchPage() {
         p_lng: selectedCoordinates?.lng ?? null,
         p_zone_text: selectedCoordinates?.explicit ? null : selectedCity?.name ?? null,
         p_service_type: typeFilter || null,
-        p_max_price: maxPrice,
-        p_min_rating: minRating,
+        p_max_price: maxPrice >= 200 ? null : maxPrice,
+        p_min_rating: minRating > 0 ? minRating : null,
       });
+
+      if (cancelled) return;
 
       if (error) {
         console.error('Public professional search error:', error);
         setPros([]);
-        setLoadError(error.message);
+        setLoadError('Impossibile caricare i professionisti in questo momento.');
         setLoading(false);
         return;
       }
@@ -110,12 +115,26 @@ export function SearchPage() {
       setLoading(false);
     };
 
-    load();
+    const timer = window.setTimeout(() => {
+      void load();
+    }, 200);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
   }, [typeFilter, selectedCity, selectedCoordinates, maxPrice, minRating]);
 
   const filtered = pros;
 
-  const titleLocation = selectedCity ? 'near ' + selectedCity.name : 'near you';
+  const resultsLabel =
+    filtered.length === 1 ? '1 professionista' : `${filtered.length} professionisti`;
+
+  const titleLocation = addressFilter?.trim()
+    ? `vicino a ${addressFilter.trim()}`
+    : selectedCoordinates?.explicit
+      ? 'vicino alla posizione selezionata'
+      : 'disponibili';
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -141,7 +160,9 @@ export function SearchPage() {
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
                 className="w-full accent-emerald-600 mt-3"
               />
-              <p className="text-sm text-stone-500 mt-1">Up to €{maxPrice}</p>
+              <p className="text-sm text-stone-500 mt-1">
+                {maxPrice >= 200 ? 'Nessun limite' : `Fino a €${maxPrice}`}
+              </p>
             </div>
 
             <div>
@@ -171,7 +192,7 @@ export function SearchPage() {
           <main>
             <div className="mb-5">
               <h1 className="text-3xl font-bold text-stone-900">
-                {filtered.length} pros {titleLocation}
+                {loading ? 'Ricerca professionisti…' : `${resultsLabel} ${titleLocation}`}
               </h1>
               <p className="text-stone-600 mt-1">
                 La ricerca si basa sui servizi attivi: un professionista può comparire in più categorie.
@@ -180,11 +201,11 @@ export function SearchPage() {
 
             {loading ? (
               <div className="bg-white rounded-2xl border border-stone-200 p-8">
-                Loading...
+                Caricamento professionisti...
               </div>
             ) : loadError ? (
               <div className="bg-rose-50 rounded-2xl border border-rose-200 p-8 text-rose-700">
-                {loadError}
+                {loadError} Riprova tra poco.
               </div>
             ) : filtered.length === 0 ? (
               <div className="bg-white rounded-2xl border border-stone-200 p-8">
@@ -194,6 +215,12 @@ export function SearchPage() {
               <div className="grid gap-4">
                 {filtered.map((pro) => {
                   const firstServizio = pro.matching_services?.[0];
+                  const serviceType =
+                    firstServizio?.service_type || pro.professional_type || '';
+                  const serviceLabel =
+                    SERVICE_CATEGORIES.find((category) => category.type === serviceType)?.title ||
+                    serviceType ||
+                    'Servizi per cani';
 
                   return (
                     <button
@@ -209,27 +236,29 @@ export function SearchPage() {
                           </h3>
 
                           <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-stone-600">
-                            <span className="flex items-center gap-1">
-                              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                              <b>{(pro.rating || 0).toFixed(1)}</b>
-                            </span>
+                            {(pro.review_count || 0) > 0 && (
+                              <span className="flex items-center gap-1">
+                                <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                                <b>{(pro.rating || 0).toFixed(1)}</b>
+                              </span>
+                            )}
 
-                            <span className="capitalize">
-                              {firstServizio?.service_type || pro.professional_type}
-                            </span>
+                            <span>{serviceLabel}</span>
 
                             <span className="flex items-center gap-1">
                               <MapPin className="w-4 h-4" />
-                              {pro.zone_text || 'Nearby'}
+                              {pro.zone_text || 'Zona non specificata'}
                             </span>
 
                             {typeof pro.distance_km === 'number' && (
-                              <span>{pro.distance_km.toFixed(1)} km away</span>
+                              <span>
+                                entro {Math.max(5, Math.ceil(pro.distance_km / 5) * 5)} km
+                              </span>
                             )}
                           </div>
 
                           <p className="mt-3 text-stone-700">
-                            {pro.bio || 'Dedicato al benessere e alla cura dei cani.'}
+                            {pro.bio || 'Consulta il profilo per conoscere servizi, esperienza e disponibilità.'}
                           </p>
 
                           {pro.matching_services && pro.matching_services.length > 0 && (
@@ -239,7 +268,9 @@ export function SearchPage() {
                                   key={service.id}
                                   className="text-xs bg-stone-100 text-stone-700 px-2 py-1 rounded-full"
                                 >
-                                  {service.name} · €{service.price}
+                                  {service.price > 0
+                                    ? `${service.name} · €${service.price}`
+                                    : service.name}
                                 </span>
                               ))}
                             </div>
@@ -248,10 +279,16 @@ export function SearchPage() {
 
                         <div className="text-right shrink-0">
                           <p className="text-sm text-stone-500">
-                            {pro.review_count || 0} recensioni
+                            {(pro.review_count || 0) === 0
+                              ? 'Nessuna recensione'
+                              : (pro.review_count || 0) === 1
+                                ? '1 recensione'
+                                : `${pro.review_count} recensioni`}
                           </p>
                           <p className="font-bold text-stone-900 mt-2">
-                            Da €{pro.starting_price || 0}
+                            {typeof pro.starting_price === 'number' && pro.starting_price > 0
+                              ? `Da €${pro.starting_price}`
+                              : 'Prezzo nel profilo'}
                           </p>
                         </div>
                       </div>
