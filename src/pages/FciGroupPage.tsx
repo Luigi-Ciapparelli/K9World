@@ -197,7 +197,7 @@ export function FciGroupPage({ group }: { group: number }) {
 
         <section className="mt-6 bg-emerald-50 border border-emerald-100 rounded-3xl p-7 md:p-8">
           <p className="text-sm font-semibold text-emerald-700">
-            PawConnect Impara
+            PortaleCinofilo Impara
           </p>
 
           <h2 className="text-2xl font-bold text-stone-900 mt-1">

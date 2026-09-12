@@ -135,7 +135,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
     );
   }
 
-  const displayName = pro.display_name || 'Professionista PawConnect';
+  const displayName = pro.display_name || 'Professionista PortaleCinofilo';
   const avatarUrl = pro.avatar_url || '';
   const coverUrl =
     pro.cover_photo_url ||
@@ -174,7 +174,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-amber-400/10 border border-amber-300/20 px-4 py-2 text-sm font-semibold text-amber-100 mb-5">
               <BadgeCheck className="w-4 h-4" />
-              Profilo approvato PawConnect
+              Profilo approvato PortaleCinofilo
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
@@ -200,7 +200,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
             <p className="text-stone-200 text-lg mt-6 max-w-2xl leading-relaxed">
               {pro.bio ||
-                'Professionista cinofilo approvato su PawConnect. Servizi, zona e disponibilità sono consultabili nella scheda.'}
+                'Professionista cinofilo approvato su PortaleCinofilo. Servizi, zona e disponibilità sono consultabili nella scheda.'}
             </p>
           </div>
         </div>
@@ -236,7 +236,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
                   <p className="text-stone-700 mt-4 leading-relaxed">
                     {pro.bio ||
-                      'Profilo verificato da PawConnect. Informazioni e servizi disponibili nella scheda.'}
+                      'Profilo verificato da PortaleCinofilo. Informazioni e servizi disponibili nella scheda.'}
                   </p>
 
                   <div className="grid sm:grid-cols-3 gap-3 mt-6">

@@ -448,7 +448,7 @@ export function BeforeDogPage() {
         eyebrow: 'Prima di scegliere la razza',
         title: 'Il problema principale, oggi, non è trovare il gruppo FCI giusto.',
         summary:
-          'Le tue risposte mostrano più vincoli strutturali contemporaneamente. PawConnect partirebbe dall’organizzazione della vita quotidiana prima di restringere la scelta a una razza.',
+          'Le tue risposte mostrano più vincoli strutturali contemporaneamente. PortaleCinofilo partirebbe dall’organizzazione della vita quotidiana prima di restringere la scelta a una razza.',
         nextStep:
           'Risolti questi vincoli, il questionario diventa davvero utile per confrontare gruppi, razze e singoli soggetti.',
         blockingConstraints,
@@ -572,7 +572,7 @@ export function BeforeDogPage() {
               Prima della razza, questi sono i criteri da rispettare.
             </h1>
             <p className="text-stone-600 mt-4 max-w-3xl leading-relaxed">
-              PawConnect non assegna una “razza perfetta”. Usa le tue risposte per dirti prima di tutto
+              PortaleCinofilo non assegna una “razza perfetta”. Usa le tue risposte per dirti prima di tutto
               quanto la tua situazione attuale è compatibile con la scelta di un cane e quali aspetti meritano più attenzione.
             </p>
 
@@ -695,7 +695,7 @@ export function BeforeDogPage() {
               </div>
 
               <p className="text-xs text-stone-500 mt-4 leading-relaxed">
-                PawConnect mostrerà sempre anno, popolazione osservata e fonte: nessun numero viene usato
+                PortaleCinofilo mostrerà sempre anno, popolazione osservata e fonte: nessun numero viene usato
                 per classificare una razza come “buona” o “cattiva”.
               </p>
             </div>
@@ -819,7 +819,7 @@ export function BeforeDogPage() {
                 <p className="font-bold text-stone-900">Quando una razza ti interessa davvero</p>
                 <p className="text-sm text-stone-700 mt-2 leading-relaxed">
                   Il passo successivo non è “comprarla”: è approfondire standard, funzione, salute, linee di selezione,
-                  caratteristiche dei genitori e qualità dell’allevamento. PawConnect collegherà questo passaggio alle fonti ENCI ufficiali,
+                  caratteristiche dei genitori e qualità dell’allevamento. PortaleCinofilo collegherà questo passaggio alle fonti ENCI ufficiali,
                   senza creare una certificazione parallela.
                 </p>
               </div>
@@ -831,7 +831,7 @@ export function BeforeDogPage() {
                 onClick={() => navigate('/')}
                 className="px-5 py-3 rounded-xl bg-stone-900 text-white font-semibold hover:bg-stone-800"
               >
-                Torna a PawConnect
+                Torna a PortaleCinofilo
               </button>
               <button
                 type="button"

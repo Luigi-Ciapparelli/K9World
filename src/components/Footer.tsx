@@ -15,7 +15,7 @@ export function Footer() {
               className="flex items-center gap-2 text-white"
             >
               <PawPrint className="w-7 h-7 text-emerald-500" />
-              <span className="text-xl font-bold">PawConnect</span>
+              <span className="text-xl font-bold">PortaleCinofilo</span>
             </button>
 
             <p className="text-sm text-stone-400 mt-4 max-w-md">
@@ -66,7 +66,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-stone-800 mt-8 pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-xs text-stone-500">
-          <p>© 2026 PawConnect / PortaleCinofilo.it. Tutti i diritti riservati.</p>
+          <p>© 2026 PortaleCinofilo / PortaleCinofilo.it. Tutti i diritti riservati.</p>
           <p>Progetto in fase beta. Le informazioni legali sono bozze operative da finalizzare.</p>
         </div>
       </div>

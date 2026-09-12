@@ -137,7 +137,7 @@ export function BreedPage({ slug }: { slug: string }) {
             Continua dalla scheda ENCI
           </h2>
           <p className="text-stone-600 leading-relaxed mt-3 max-w-3xl">
-            PawConnect usa la propria interfaccia per orientarti, ma non sostituisce il Libro Genealogico
+            PortaleCinofilo usa la propria interfaccia per orientarti, ma non sostituisce il Libro Genealogico
             o le informazioni ufficiali dell'ENCI. Apri la scheda ufficiale della razza per approfondire
             standard, classificazione e collegamenti messi a disposizione dall'ente.
           </p>
@@ -181,11 +181,11 @@ export function BreedPage({ slug }: { slug: string }) {
 
           <div className="mt-6 rounded-2xl border border-emerald-200 bg-white p-5">
             <p className="font-bold text-stone-900">
-              PawConnect non attribuisce certificazioni agli allevatori
+              PortaleCinofilo non attribuisce certificazioni agli allevatori
             </p>
             <p className="text-sm text-stone-600 mt-2 leading-relaxed">
               Per verifiche formali su affissi, registri o eventuali qualifiche ENCI,
-              usa sempre i canali ufficiali dell'ente. PawConnect può aiutarti a capire cosa cercare,
+              usa sempre i canali ufficiali dell'ente. PortaleCinofilo può aiutarti a capire cosa cercare,
               non sostituirsi alla fonte ufficiale.
             </p>
           </div>

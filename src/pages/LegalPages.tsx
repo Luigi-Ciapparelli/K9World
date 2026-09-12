@@ -4,14 +4,14 @@ export function PrivacyPage() {
   return (
     <LegalLayout
       title="Privacy Policy"
-      subtitle="Informativa base per la fase beta di PawConnect."
+      subtitle="Informativa base per la fase beta di PortaleCinofilo."
       icon={<ShieldCheck className="w-7 h-7" />}
     >
       <Notice />
 
       <Section title="1. Titolare del progetto">
         <p>
-          PawConnect / PortaleCinofilo.it è un progetto in fase beta gestito da Luigi Ciapparelli.
+          PortaleCinofilo / PortaleCinofilo.it è un progetto in fase beta gestito da Luigi Ciapparelli.
           Per richieste relative alla privacy puoi scrivere a:
         </p>
         <p className="font-semibold mt-2">DearerMetal525@proton.me</p>
@@ -82,14 +82,14 @@ export function TermsPage() {
   return (
     <LegalLayout
       title="Termini di utilizzo"
-      subtitle="Regole base per usare PawConnect durante la fase beta."
+      subtitle="Regole base per usare PortaleCinofilo durante la fase beta."
       icon={<FileText className="w-7 h-7" />}
     >
       <Notice />
 
       <Section title="1. Natura del servizio">
         <p>
-          PawConnect è una piattaforma beta che aiuta proprietari di cani a trovare professionisti e servizi
+          PortaleCinofilo è una piattaforma beta che aiuta proprietari di cani a trovare professionisti e servizi
           cinofili selezionati nella propria zona. La piattaforma non è un servizio veterinario e non sostituisce
           consulenze veterinarie, legali, fiscali o professionali.
         </p>
@@ -98,7 +98,7 @@ export function TermsPage() {
       <Section title="2. Profili approvati manualmente">
         <p>
           I professionisti possono candidarsi, ma la pubblicazione del profilo è soggetta ad approvazione manuale.
-          PawConnect può rifiutare, sospendere o rimuovere profili non coerenti con la qualità o la sicurezza attesa.
+          PortaleCinofilo può rifiutare, sospendere o rimuovere profili non coerenti con la qualità o la sicurezza attesa.
         </p>
       </Section>
 
@@ -125,7 +125,7 @@ export function TermsPage() {
 
       <Section title="6. Contenuti e informazioni">
         <p>
-          PawConnect può ospitare descrizioni, foto, servizi e informazioni fornite dagli utenti o dai professionisti.
+          PortaleCinofilo può ospitare descrizioni, foto, servizi e informazioni fornite dagli utenti o dai professionisti.
           Chi invia contenuti dichiara di avere il diritto di usarli e autorizzarne la pubblicazione sulla piattaforma.
         </p>
       </Section>
@@ -166,7 +166,7 @@ export function ContactPage() {
 
         <InfoCard title="Area beta">
           <p className="text-stone-700">
-            PawConnect è in fase beta locale su Rimini, Riccione, Cattolica e zone vicine.
+            PortaleCinofilo è in fase beta locale su Rimini, Riccione, Cattolica e zone vicine.
           </p>
         </InfoCard>
 

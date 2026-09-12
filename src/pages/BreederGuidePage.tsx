@@ -69,7 +69,7 @@ export function BreederGuidePage() {
           <div className="mt-7 rounded-2xl border border-amber-200 bg-amber-50 p-5">
             <p className="font-bold text-stone-900">Un nome o un badge non bastano da soli</p>
             <p className="text-sm text-stone-700 mt-2 leading-relaxed">
-              PawConnect ti aiuta a distinguere le verifiche formali ENCI dalle valutazioni che devi fare sul singolo allevamento.
+              PortaleCinofilo ti aiuta a distinguere le verifiche formali ENCI dalle valutazioni che devi fare sul singolo allevamento.
               La presenza in un registro è un dato verificabile; la qualità della scelta richiede anche domande concrete su salute,
               selezione, genitori e crescita dei cuccioli.
             </p>
@@ -156,7 +156,7 @@ export function BreederGuidePage() {
         </section>
 
         <section className="mt-6 bg-emerald-50 border border-emerald-100 rounded-3xl p-7 md:p-8">
-          <p className="text-sm font-semibold text-emerald-700">Il principio PawConnect</p>
+          <p className="text-sm font-semibold text-emerald-700">Il principio PortaleCinofilo</p>
           <h2 className="text-2xl font-bold text-stone-900 mt-1">
             Prima verifica, poi osserva, poi fai domande
           </h2>
