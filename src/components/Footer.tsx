@@ -39,7 +39,7 @@ export function Footer() {
                 Diventa professionista
               </button>
               <button type="button" onClick={() => navigate('/?section=services')} className="block hover:text-white">
-                Eccellenze locali
+                Cerca professionisti
               </button>
             </div>
           </div>

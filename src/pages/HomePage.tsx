@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   ArrowRight,
   BookOpen,
@@ -7,6 +8,8 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { TraceMark } from '../components/design/TraceMark';
+import { ImpactProof } from '../components/home/ImpactProof';
+import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
 
 type PathCardProps = {
@@ -38,7 +41,7 @@ function PathCard({ number, title, text, cta, onClick, icon: Icon }: PathCardPro
   );
 }
 
-export function HomePage() {
+function PublicHomePage() {
   const { navigate } = useRouter();
 
   return (
@@ -191,27 +194,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-t border-[var(--pc-line)] bg-[var(--pc-paper)]">
-        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
-          <div className="grid lg:grid-cols-[1fr_auto] gap-8 items-end">
-            <div className="max-w-3xl">
-              <p className="pc-kicker">Rete professionale</p>
-              <h2 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Quando serve aiuto, deve essere quello giusto.</h2>
-              <p className="pc-lead mt-5">Esplora professionisti approvati e confronta servizi, esperienza e informazioni disponibili senza trasformare il numero di recensioni in una misura automatica di competenza.</p>
-            </div>
-            <button type="button" onClick={() => navigate('/search')} className="pc-btn pc-btn-primary lg:mb-1">Cerca professionisti <ArrowRight className="w-4 h-4" /></button>
-          </div>
-          <div className="grid md:grid-cols-3 gap-4 mt-10">
-            {[
-              ['01', 'Competenza leggibile', 'Titoli, esperienza, servizi e stato di approvazione devono essere comprensibili.'],
-              ['02', 'Richieste pertinenti', 'Il proprietario arriva alla prenotazione con informazioni utili sul proprio cane.'],
-              ['03', 'Niente false classifiche', 'Le recensioni aiutano, ma non sostituiscono qualifiche, esperienza e compatibilità del caso.'],
-            ].map(([number, title, text]) => (
-              <div key={number} className="border-t border-[var(--pc-line)] pt-5"><div className="pc-number">{number}</div><h3 className="font-bold text-lg mt-2">{title}</h3><p className="text-sm text-[var(--pc-muted-600)] leading-6 mt-2">{text}</p></div>
-            ))}
-          </div>
-        </div>
-      </section>
+            <ImpactProof />
 
       <section className="pc-surface-dark">
         <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
@@ -225,4 +208,53 @@ export function HomePage() {
       </section>
     </div>
   );
+}
+
+// RETURNING_USER_ENTRY_V1
+// La home editoriale resta pubblica. Gli utenti autenticati vanno alla loro area operativa.
+export function HomePage() {
+  const auth = useAuth();
+  const { navigate } = useRouter();
+
+  const user = auth.user;
+  const profile = auth.profile;
+  const authLoading = Boolean(
+    (auth as any).loading ||
+    (auth as any).initializing ||
+    (auth as any).loadingAuth
+  );
+
+  useEffect(() => {
+    if (authLoading || !user || !profile?.role) return;
+
+    if (profile.role === 'professional') {
+      navigate('/pro');
+      return;
+    }
+
+    if (profile.role === 'admin') {
+      navigate('/admin');
+      return;
+    }
+
+    navigate('/owner');
+  }, [authLoading, user, profile?.role, navigate]);
+
+  if (authLoading || user) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] bg-[var(--pc-bone-50)] flex items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <div className="mx-auto w-10 h-10 rounded-full border-2 border-[var(--pc-line)] border-t-[var(--pc-forest-900)] animate-spin" />
+          <p className="mt-4 font-semibold text-[var(--pc-ink-950)]">
+            Apro la tua area...
+          </p>
+          <p className="text-sm text-[var(--pc-muted-600)] mt-1">
+            Ti portiamo direttamente agli strumenti che usi ogni giorno.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return <PublicHomePage />;
 }
