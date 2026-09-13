@@ -140,6 +140,10 @@ export function ProDashboard() {
               ) : <div className="space-y-4">{pending.rows.map((booking) => (
                 <article key={booking.id} className="rounded-2xl border border-[var(--pc-line)] p-4">
                   <BookingSummary booking={booking} />
+                  <section className="mt-3 rounded-xl bg-stone-50 p-3" aria-label="Messaggio del richiedente">
+                    <h3 className="text-xs font-bold uppercase tracking-wide text-stone-600">Messaggio del richiedente</h3>
+                    <p className="mt-1 whitespace-pre-wrap break-words text-sm text-stone-900">{booking.notes?.trim() || 'Nessuna nota inserita.'}</p>
+                  </section>
                   {new Date(booking.start_at).getTime() <= Date.now() && <p className="text-sm text-[var(--pc-muted-600)] mt-2">La data richiesta è trascorsa: controlla i dettagli prima di decidere.</p>}
                   <button type="button" onClick={() => navigate('/pro/bookings')} className="mt-3 text-sm font-bold text-[var(--pc-forest-700)] underline">Consulta dettagli</button>
                   <div className="flex flex-wrap gap-2 mt-4">

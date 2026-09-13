@@ -728,3 +728,8 @@ If these answers are unclear, design first and code later.
 ## Professional archive and dog continuity — approved direction
 
 See [Professional continuity and media](PROFESSIONAL_CONTINUITY_MEDIA.md). Professionals retain their authored work under an explicit retention policy; owners authorize successor access to shareable dog history. Private professional notes remain separate. Audio, video and photos use private storage and quality-preserving optimized variants. Reuse assets through authorized references, not recipient copies. Existing CRM and booking notes retain their current meaning and rules. This new domain is not yet implemented.
+
+
+## Interfaccia continuità — incremento locale
+
+Vedi [stato UI, attivazione e verifiche](CONTINUITY_UI_V1.md). Interfaccia implementata dietro flag disattivato di default; SQL ancora nelle proposte, nessuna attivazione online dichiarata. Condivisione dello storico e media restano da implementare.

@@ -1,3 +1,4 @@
+import { continuityEnabled } from '../../lib/continuity';
 import { useEffect, useState } from 'react';
 import {
   ArrowRight,
@@ -139,6 +140,7 @@ export function OwnerDashboard() {
               Trova subito ciò che ti serve
             </h2>
           </div>
+          {continuityEnabled && profile?.role === 'owner' && <button onClick={() => navigate('/owner/relationships')} className="mb-4 rounded-xl bg-emerald-700 px-5 py-3 text-white font-semibold">Professionisti dei tuoi cani</button>}
           <SearchCard />
         </section>
 

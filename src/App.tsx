@@ -4,6 +4,7 @@ import { RouterProvider, useRouter } from './lib/RouterContext';
 import { Navbar } from './components/Navbar';
 import { Chatbot } from './components/Chatbot';
 import { Footer } from './components/Footer';
+import { continuityEnabled } from './lib/continuity';
 import { ThemeProvider } from './lib/ThemeContext';
 
 const HomePage = lazy(() =>
@@ -107,6 +108,7 @@ const TermsPage = lazy(() =>
 const ContactPage = lazy(() =>
   import('./pages/LegalPages').then((module) => ({ default: module.ContactPage }))
 );
+const ContinuityPage = lazy(() => import('./pages/continuity/ContinuityPage').then(module => ({ default: module.ContinuityPage })));
 function AppShell() {
   const { path, navigate } = useRouter();
   const { user, profile, loading } = useAuth();
@@ -193,6 +195,7 @@ function AppShell() {
   else if (basePath === '/contact') content = <ContactPage />;
   else if (basePath === '/admin') content = <AdminDashboard />;
   else if (basePath === '/owner') content = <OwnerDashboard />;
+  else if (basePath === '/owner/relationships' && continuityEnabled) content = <ContinuityPage professional={false} />;
   else if (basePath === '/owner/bookings') content = <OwnerBookings />;
   else if (basePath === '/owner/dogs') content = <DogsPage />;
   else if (basePath.startsWith('/owner/dogs/')) {
@@ -200,6 +203,7 @@ function AppShell() {
     content = <DogDetailPage id={id} />;
   }
   else if (basePath === '/pro') content = <ProDashboard />;
+  else if (basePath === '/pro/archive' && continuityEnabled) content = <ContinuityPage professional />;
   else if (basePath === '/pro/bookings') content = <ProBookings />;
   else if (basePath === '/pro/crm') content = <ProCRM />;
   else if (basePath === '/pro/analytics') content = <ProAnalytics />;

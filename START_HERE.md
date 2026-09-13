@@ -58,3 +58,8 @@ Then verify the repository directly.
 ## Professional continuity and media
 
 For professional notes, dog history, permissions and private media, also read [Professional continuity and media](docs/PROFESSIONAL_CONTINUITY_MEDIA.md). This is an approved product direction with a proposed technical design, not implemented schema.
+
+
+## Interfaccia continuità — incremento locale
+
+Vedi [stato UI, attivazione e verifiche](docs/CONTINUITY_UI_V1.md). Interfaccia implementata dietro flag disattivato di default; SQL ancora nelle proposte, nessuna attivazione online dichiarata. Condivisione dello storico e media restano da implementare.

@@ -174,3 +174,8 @@ Risolverle prima della rispettiva implementazione, con opzioni concrete. Non ini
 ## Proposta tecnica per sessioni e note private
 
 Vedi [proposta e limiti](proposals/PROFESSIONAL_CONTINUITY_V1.md) e [SQL non applicabile automaticamente](proposals/professional_continuity_v1.sql). Sono bozze da verificare, non migration applicate: nessuna nuova API o funzione del sito è attiva.
+
+
+## Interfaccia continuità — incremento locale
+
+Vedi [stato UI, attivazione e verifiche](CONTINUITY_UI_V1.md). Interfaccia implementata dietro flag disattivato di default; SQL ancora nelle proposte, nessuna attivazione online dichiarata. Condivisione dello storico e media restano da implementare.

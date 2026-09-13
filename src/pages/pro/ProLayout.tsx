@@ -1,3 +1,4 @@
+import { continuityEnabled } from '../../lib/continuity';
 import { ReactNode, useState } from 'react';
 import { LayoutDashboard, Calendar, Users, BarChart3, Settings, Menu, X } from 'lucide-react';
 import { useRouter } from '../../lib/RouterContext';
@@ -11,6 +12,7 @@ export function ProLayout({ children, active }: { children: ReactNode; active: s
   const nav = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/pro' },
     { id: 'bookings', label: 'Richieste', icon: Calendar, path: '/pro/bookings' },
+    ...(continuityEnabled ? [{ id: 'archive', label: 'Relazioni e archivio', icon: Users, path: '/pro/archive' }] : []),
     { id: 'crm', label: 'Clienti', icon: Users, path: '/pro/crm' },
     { id: 'analytics', label: 'Statistiche', icon: BarChart3, path: '/pro/analytics' },
     { id: 'settings', label: 'Profilo e servizi', icon: Settings, path: '/pro/settings' },

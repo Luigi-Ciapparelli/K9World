@@ -1,3 +1,4 @@
+import { continuityEnabled } from '../lib/continuity';
 import { useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
@@ -365,6 +366,22 @@ export function ProfessionalProfile({ id }: { id: string }) {
                 <Calendar className="w-4 h-4" />
                 Richiedi prenotazione
               </button>
+
+              <section className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4" aria-labelledby="dog-relationship-heading">
+                <h2 id="dog-relationship-heading" className="font-bold text-stone-900">Percorso con il tuo cane</h2>
+                <p className="mt-2 text-sm text-stone-700">Invita questo professionista a seguire il cane. Potrà registrare sessioni quando avrà accettato l’invito.</p>
+                <button
+                  type="button"
+                  disabled={!continuityEnabled || Boolean(user && profile?.role !== 'owner')}
+                  onClick={() => navigate(user ? `/owner/relationships?professional=${encodeURIComponent(id)}` : '/signin')}
+                  className="mt-3 w-full rounded-xl bg-emerald-700 px-4 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                >Invita a seguire il tuo cane</button>
+                {!continuityEnabled ? <p className="mt-2 text-sm text-stone-700">Gli inviti non sono ancora disponibili in questa versione del sito.</p>
+                  : !user ? <p className="mt-2 text-sm text-stone-700">Accedi come proprietario per scegliere il cane e inviare l’invito.</p>
+                  : !profile ? <p role="status" className="mt-2 text-sm text-stone-700">Profilo account non disponibile. Ricarica la pagina o accedi nuovamente.</p>
+                  : profile.role !== 'owner' ? <p className="mt-2 text-sm text-stone-700">Stai usando un account {profile.role === 'professional' ? 'professionista' : profile.role === 'admin' ? 'amministratore' : 'non proprietario'}. Per inviare l’invito occorre accedere con l’account proprietario del cane.</p>
+                  : <p className="mt-2 text-sm text-stone-700">Sceglierai il cane nella schermata successiva. L’invito è distinto dalla richiesta di un appuntamento.</p>}
+              </section>
 
               {dogsLoadError && <InlineLoadError text="Non è stato possibile caricare i tuoi cani." onRetry={() => setReloadKey((key) => key + 1)} />}
               {user && profile?.role !== 'owner' && <p className="text-sm text-stone-600 mt-4">Per inviare una richiesta, accedi con un account proprietario.</p>}
