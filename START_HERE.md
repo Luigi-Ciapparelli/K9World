@@ -63,3 +63,8 @@ For professional notes, dog history, permissions and private media, also read [P
 ## Interfaccia continuità — incremento locale
 
 Vedi [stato UI, attivazione e verifiche](docs/CONTINUITY_UI_V1.md). Interfaccia implementata dietro flag disattivato di default; SQL ancora nelle proposte, nessuna attivazione online dichiarata. Condivisione dello storico e media restano da implementare.
+
+<!-- professional-calendar-v1 -->
+## Calendario professionale e indisponibilità
+
+Implementazione e rilascio: `docs/PROFESSIONAL_CALENDAR_V1.md`. Include colori per servizio, impegni con nome e note, pausa e assenze con termine. Preparazione locale: verificare e applicare la nuova migration prima del frontend. Le risposte ai clienti e i modelli di messaggio restano il prossimo incremento.

@@ -76,6 +76,9 @@ const ProBookings = lazy(() =>
     default: module.ProBookings,
   }))
 );
+const ProCalendar = lazy(() =>
+  import('./pages/pro/ProCalendar').then((module) => ({ default: module.ProCalendar }))
+);
 const ProCRM = lazy(() =>
   import('./pages/pro/ProCRM').then((module) => ({ default: module.ProCRM }))
 );
@@ -205,6 +208,7 @@ function AppShell() {
   else if (basePath === '/pro') content = <ProDashboard />;
   else if (basePath === '/pro/archive' && continuityEnabled) content = <ContinuityPage professional />;
   else if (basePath === '/pro/bookings') content = <ProBookings />;
+  else if (basePath === '/pro/calendar') content = <ProCalendar />;
   else if (basePath === '/pro/crm') content = <ProCRM />;
   else if (basePath === '/pro/analytics') content = <ProAnalytics />;
   else if (basePath === '/pro/settings') content = <ProSettings />;

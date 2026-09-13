@@ -4,6 +4,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
 import { ProLayout } from './ProLayout';
 import { StatusBadge } from '../owner/OwnerDashboard';
+import { acceptanceError } from '../../lib/professionalCalendar';
 
 type BookingRow = {
   id: string; start_at: string; status: string;
@@ -85,9 +86,9 @@ export function ProBookings() {
       if (error) throw error;
       setNotice({ error: false, text: status === 'accepted' ? 'Richiesta accettata.' : status === 'declined' ? 'Richiesta rifiutata.' : 'Prenotazione completata.' });
       reload();
-    } catch {
+    } catch (error) {
       if (currentSession !== session.current) return;
-      setNotice({ error: true, text: 'Non è stato possibile confermare l’esito. Controlla lo stato aggiornato prima di riprovare.' });
+      setNotice({ error: true, text: acceptanceError(error) });
       reload();
     } finally {
       lock.current = false;

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
   Save,
-  Plus,
-  Trash2,
   Mail,
   Phone,
   BadgeCheck,
@@ -14,6 +12,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
 import { VerificationModal } from '../../components/VerificationModal';
 import { ProLayout } from './ProLayout';
+import { CalendarServices } from '../../components/CalendarServices';
 
 type ApprovalStatus = 'pending' | 'approved' | 'rejected';
 
@@ -224,62 +223,6 @@ export function ProSettings() {
 
     setSaving(false);
     alert('Profile saved. Admin approval status is unchanged.');
-  };
-
-  const addService = async () => {
-    if (!user) return;
-
-    const { error } = await supabase.from('services').insert({
-      professional_id: user.id,
-      name: 'New service',
-      price: 25,
-      duration_minutes: 60,
-      duration_kind: 'hourly',
-      service_type: pro?.professional_type || 'walker',
-      active: true,
-    });
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    const { data, error: loadError } = await supabase
-      .from('services')
-      .select('*')
-      .eq('professional_id', user.id)
-      .order('created_at', { ascending: false });
-
-    if (loadError) {
-      alert(loadError.message);
-      return;
-    }
-
-    setServices(data || []);
-  };
-
-  const updateService = async (id: string, patch: any) => {
-    const { error } = await supabase.from('services').update(patch).eq('id', id);
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    setServices((ss) => ss.map((s) => (s.id === id ? { ...s, ...patch } : s)));
-  };
-
-  const removeService = async (id: string) => {
-    if (!confirm('Remove this service?')) return;
-
-    const { error } = await supabase.from('services').delete().eq('id', id);
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    setServices((ss) => ss.filter((s) => s.id !== id));
   };
 
   if (loadingData || !pro || !rules) {
@@ -497,73 +440,8 @@ export function ProSettings() {
           </div>
         </Section>
 
-        <Section title="Services">
-          <div className="space-y-3">
-            {services.map((s) => (
-              <div key={s.id} className="grid grid-cols-12 gap-2 items-center">
-                <input
-                  value={s.name || ''}
-                  onChange={(e) => updateService(s.id, { name: e.target.value })}
-                  className="col-span-4 px-3 py-2 border border-stone-300 rounded-lg text-sm"
-                  placeholder="Service name"
-                />
-
-                <select
-                  value={s.service_type || pro.professional_type || 'walker'}
-                  onChange={(e) => updateService(s.id, { service_type: e.target.value })}
-                  className="col-span-2 px-3 py-2 border border-stone-300 rounded-lg text-sm"
-                >
-                  {PROFESSIONAL_TYPES.map((type) => (
-                    <option key={type.value} value={type.value}>
-                      {type.label}
-                    </option>
-                  ))}
-                </select>
-
-                <input
-                  type="number"
-                  value={s.price ?? 0}
-                  onChange={(e) => updateService(s.id, { price: Number(e.target.value) })}
-                  className="col-span-2 px-3 py-2 border border-stone-300 rounded-lg text-sm"
-                  placeholder="Price"
-                />
-
-                <input
-                  type="number"
-                  value={s.duration_minutes ?? 60}
-                  onChange={(e) => updateService(s.id, { duration_minutes: Number(e.target.value) })}
-                  className="col-span-2 px-3 py-2 border border-stone-300 rounded-lg text-sm"
-                  placeholder="Minutes"
-                />
-
-                <select
-                  value={s.duration_kind || 'hourly'}
-                  onChange={(e) => updateService(s.id, { duration_kind: e.target.value })}
-                  className="col-span-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
-                >
-                  <option value="hourly">Hourly</option>
-                  <option value="daily">Daily</option>
-                  <option value="variable">Variable</option>
-                </select>
-
-                <button
-                  type="button"
-                  onClick={() => removeService(s.id)}
-                  className="col-span-1 text-stone-500 hover:text-rose-600"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
-
-            <button
-              type="button"
-              onClick={addService}
-              className="text-sm text-emerald-700 font-semibold flex items-center gap-1"
-            >
-              <Plus className="w-4 h-4" /> Add service
-            </button>
-          </div>
+        <Section title="Servizi e colori del calendario">
+          <CalendarServices key={user?.id} services={services} onChange={setServices} />
         </Section>
 
         <Section title="Booking rules">

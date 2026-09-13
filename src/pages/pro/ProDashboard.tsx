@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { ArrowRight, Bell, Calendar, Check, Settings, Users, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { acceptanceError } from '../../lib/professionalCalendar';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
 import { ProLayout } from './ProLayout';
@@ -108,9 +109,9 @@ export function ProDashboard() {
       if (error) throw error;
       setNotice({ error: false, text: status === 'accepted' ? 'Richiesta accettata.' : 'Richiesta rifiutata.' });
       retry();
-    } catch {
+    } catch (error) {
       if (session.current !== currentSession) return;
-      setNotice({ error: true, text: 'Non è stato possibile confermare l’esito. Controlla lo stato aggiornato prima di riprovare.' });
+      setNotice({ error: true, text: acceptanceError(error) });
       retry();
     } finally {
       mutationLock.current = false;
@@ -180,7 +181,7 @@ export function ProDashboard() {
         <section aria-label="Strumenti professionali" className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-7">
           <QuickCard icon={<Bell className="w-5 h-5" />} label="Richieste e prenotazioni" description="Consulta dettagli e gestisci le richieste." onClick={() => navigate('/pro/bookings')} />
           <QuickCard icon={<Users className="w-5 h-5" />} label="Clienti e cani" description="Apri la gestione clienti e le informazioni disponibili." onClick={() => navigate('/pro/crm')} />
-          <QuickCard icon={<Calendar className="w-5 h-5" />} label="Agenda e impegni" description="Consulta le date delle tue prenotazioni." onClick={() => navigate('/pro/bookings')} />
+          <QuickCard icon={<Calendar className="w-5 h-5" />} label="Calendario e disponibilità" description="Impegni per servizio, colori e periodi di assenza." onClick={() => navigate('/pro/calendar')} />
           <QuickCard icon={<Settings className="w-5 h-5" />} label="Profilo e servizi" description="Aggiorna presentazione e servizi offerti." onClick={() => navigate('/pro/settings')} />
         </section>
 

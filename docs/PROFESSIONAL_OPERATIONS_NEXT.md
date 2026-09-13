@@ -36,3 +36,8 @@ Il proprietario invia l'invito dal profilo pubblico; il professionista lo accett
 in Relazioni e archivio. La UI richiede il flag di continuita attivo nel frontend.
 Il backend di continuita risulta applicato dall'output utente (migration
 20260913121224). Restano da verificare nel browser sessioni e revisioni.
+
+<!-- professional-calendar-v1 -->
+## Calendario professionale e indisponibilità
+
+Implementazione e rilascio: `docs/PROFESSIONAL_CALENDAR_V1.md`. Include colori per servizio, impegni con nome e note, pausa e assenze con termine. Preparazione locale: verificare e applicare la nuova migration prima del frontend. Le risposte ai clienti e i modelli di messaggio restano il prossimo incremento.

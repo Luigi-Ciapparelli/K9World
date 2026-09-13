@@ -13,6 +13,8 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
 import { VerificationModal } from '../components/VerificationModal';
+import { PublicBookingAvailability } from '../components/PublicBookingAvailability';
+import { bookingAvailabilityError } from '../lib/professionalCalendar';
 
 export function ProfessionalProfile({ id }: { id: string }) {
   const [pro, setPro] = useState<any>(null);
@@ -367,6 +369,8 @@ export function ProfessionalProfile({ id }: { id: string }) {
                 Richiedi prenotazione
               </button>
 
+              <PublicBookingAvailability key={id} professionalId={id} />
+
               <section className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4" aria-labelledby="dog-relationship-heading">
                 <h2 id="dog-relationship-heading" className="font-bold text-stone-900">Percorso con il tuo cane</h2>
                 <p className="mt-2 text-sm text-stone-700">Invita questo professionista a seguire il cane. Potrà registrare sessioni quando avrà accettato l’invito.</p>
@@ -551,7 +555,10 @@ function BookingModal({
       });
       if (!mounted.current) return;
       if (bookingError) {
-        if (/email verification required/i.test(bookingError.message)) {
+        const availabilityError = bookingAvailabilityError(bookingError);
+        if (availabilityError) {
+          setError(availabilityError);
+        } else if (/email verification required/i.test(bookingError.message)) {
           setError('Conferma la tua email prima di inviare la richiesta.');
         } else {
           setUncertain(true);
