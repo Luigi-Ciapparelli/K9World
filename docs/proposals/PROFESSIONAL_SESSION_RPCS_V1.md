@@ -1,0 +1,17 @@
+# Sessioni e note private — proposta RPC v1
+
+Solo per database di prova; non è una migration. Dipende dalle proposte di struttura e relazioni. Nessuna modifica a Supabase online.
+
+record_professional_session registra atomicamente una sessione e una prima nota finalizzate. Non implementa bozze modificabili: la futura UI dovrà esplicitare il comando di registrazione. Richiede professionista approvato, relazione attiva, proprietario ancora coincidente con il concedente e attività successiva all'attivazione e non futura. Booking facoltativo, ma se fornito deve appartenere allo stesso professionista/proprietario, essere accepted/completed e includere il cane. Non verifica ancora la data attività rispetto all'intervallo del booking: scegliere la regola prima dell'interfaccia.
+
+Il client fornisce un UUID di richiesta, usato come session ID per evitare duplicazione da retry. La ripetizione a relazione attiva con contenuto identico restituisce lo stesso ID; input diversi con lo stesso ID sono respinti. Dopo revoca non viene accettato nemmeno il retry di creazione: l'utente deve consultare il proprio archivio per confermare l'esito. Nessun retry automatico cieco. I metadati di retry sono i dati della sessione e la prima revisione, non un hash globale pubblico.
+
+revise_own_professional_note richiede autore e numero di revisione atteso. Aggiunge una revisione con motivo, senza sovrascrivere la precedente. È una rettifica dello storico, consentita dopo fine/revoca del rapporto: non permette di cambiare cane, autore, data attività o creare una nuova sessione. Il testo resta attribuito all'autore; il sistema non può impedire semanticamente dichiarazioni inesatte. La UI dovrà mostrare motivo e data della rettifica.
+
+list_own_professional_note_revisions restituisce solo i contributi dell'autore autenticato, con paginazione massima di 100 revisioni. Non restituisce contatti o profili correnti del cliente. Le revisioni sono ordinate per sessione e poi dalla più recente. Proprietario e collega non leggono appunti privati; la condivisione storica sarà una funzione separata.
+
+L'archivio rimane consultabile dall'autore vivo anche dopo eliminazione del cane/proprietario; cancellare l'account autore interrompe l'accesso perché il collegamento operativo diventa NULL, senza cancellare automaticamente le revisioni. Nessun recupero automatico per stesso nome/email. Un professionista non più approvato non crea nuove sessioni ma conserva lettura e rettifica del proprio archivio; sospensione di sicurezza e disabilitazione account richiedono una procedura distinta da approved=false.
+
+Test: python3 scripts/tests/test_session_rpcs.py ~/K9World. Copre isolamento autore/collega/proprietario, mancanza accettazione, date fuori periodo, booking inesistente, retry senza duplicazione, rettifica con versione attesa, revoca e sopravvivenza a cancellazioni operative. RLS e grant diretti restano chiusi. Fixture minima con auth.uid simulata: non installare mai questa fixture in Supabase.
+
+Stato: SQL da eseguire sul computer dell'utente. Non ancora testati: scritture simultanee da connessioni separate, tutti i casi booking positivi/negativi, schema completo con trigger reali, audit, interfaccia, cancellazione definitiva e media. Nessuna promessa di sicurezza completa sulla sola base di questo test. Prima del rilascio servono anche il consenso informato nel prodotto, trattamento degli errori e flusso di archiviazione/cancellazione.
