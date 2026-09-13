@@ -170,3 +170,7 @@ Usare account e cani di test separati: autore A, nuovo professionista B, profess
 Le seguenti sono proposte tecniche, non decisioni già approvate: durata delle concessioni/link, criteri di finalizzazione delle note, gestione del cambio proprietario, periodo di conservazione degli originali, limiti e quote, codec/provider di elaborazione, esportazione/download, procedure straordinarie di assistenza, obiettivi backup e recupero.
 
 Risolverle prima della rispettiva implementazione, con opzioni concrete. Non iniziare nuove migration solo perché i nomi concettuali sono elencati qui.
+
+## Proposta tecnica per sessioni e note private
+
+Vedi [proposta e limiti](proposals/PROFESSIONAL_CONTINUITY_V1.md) e [SQL non applicabile automaticamente](proposals/professional_continuity_v1.sql). Sono bozze da verificare, non migration applicate: nessuna nuova API o funzione del sito è attiva.
