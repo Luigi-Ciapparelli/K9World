@@ -25,6 +25,7 @@ function isServiceCategory(value: string | null): value is ServiceCategoryType {
   return services.some((service) => service.id === value);
 }
 
+// ECOSYSTEM_PASS_V1
 export function SearchCard({ compact = false }: { compact?: boolean }) {
   const { path, navigate } = useRouter();
   const [service, setServizio] = useState<ServiceCategoryType>('walker');
@@ -115,6 +116,14 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
     const params = new URLSearchParams({
       type: service,
       address,
+    });
+
+    const currentParams = path.includes('?')
+      ? new URLSearchParams(path.split('?')[1])
+      : new URLSearchParams();
+    ['source', 'topic', 'intent'].forEach((key) => {
+      const value = currentParams.get(key);
+      if (value) params.set(key, value);
     });
 
     if (coords) {
@@ -217,7 +226,7 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
 
   return (
     <div
-      className={`bg-white border border-stone-200 shadow-sm rounded-3xl ${
+      className={`pc-card shadow-sm ${
         compact ? 'p-4' : 'p-6'
       }`}
     >
@@ -237,8 +246,8 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
               onClick={() => setServizio(s.id)}
               className={`flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border-2 transition ${
                 active
-                  ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
-                  : 'border-stone-200 hover:border-stone-300 text-stone-700'
+                  ? 'border-[var(--pc-forest-700)] bg-[var(--pc-forest-100)] text-[var(--pc-forest-900)]'
+                  : 'border-[var(--pc-line)] hover:border-[var(--pc-forest-700)] text-[var(--pc-ink-800)]'
               }`}
             >
               <Icon className="w-5 h-5" />
@@ -263,7 +272,7 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
               setGpsCoords(null);
               setLocationAccuracy(null);
             }}
-            className="w-full pl-10 pr-28 py-3 border border-stone-300 rounded-xl text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+            className="w-full pl-10 pr-28 py-3 border border-[var(--pc-line)] bg-[var(--pc-paper)] rounded-xl text-sm text-[var(--pc-ink-950)] focus:border-[var(--pc-forest-700)] focus:outline-none focus:ring-2 focus:ring-[var(--pc-forest-100)]"
           />
 
           {suggestions.length > 0 && (
@@ -307,7 +316,7 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
         <button
           type="button"
           onClick={handleCerca}
-          className="px-6 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 flex items-center justify-center gap-2"
+          className="pc-btn pc-btn-primary px-6"
         >
           <Search className="w-4 h-4" />
           Cerca

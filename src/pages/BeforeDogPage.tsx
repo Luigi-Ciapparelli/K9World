@@ -10,6 +10,7 @@ import {
   Home,
   PawPrint,
   RotateCcw,
+  Search,
   Target,
   Users,
   WalletCards,
@@ -35,6 +36,7 @@ type StepOption = {
 };
 
 const STORAGE_KEY = 'pawconnect-before-dog-v1';
+const PRE_DOG_SHARE_DRAFT_KEY = 'portalecinofilo-before-dog-share-draft-v1';
 
 const initialAnswers: Answers = {
   experience: '',
@@ -334,6 +336,7 @@ function loadStoredAnswers(): Answers {
   }
 }
 
+// ECOSYSTEM_PASS_V1
 export function BeforeDogPage() {
   const { navigate } = useRouter();
   const [answers, setAnswers] = useState<Answers>(() => loadStoredAnswers());
@@ -542,6 +545,36 @@ export function BeforeDogPage() {
     setAnswers({ ...answers, [step.key]: value });
   };
 
+
+  const openPreDogProfessionalSearch = () => {
+    // Draft locale soltanto: non viene inviato automaticamente a nessuno.
+    // Il pass dati successivo introdurrà consenso esplicito + condivisione revocabile.
+    window.localStorage.setItem(
+      PRE_DOG_SHARE_DRAFT_KEY,
+      JSON.stringify({
+        version: 1,
+        source: 'before-dog',
+        answers,
+        result: {
+          level: decisionProfile.level,
+          title: decisionProfile.title,
+          summary: decisionProfile.summary,
+          nextStep: decisionProfile.nextStep,
+          explorationLenses,
+        },
+        savedAt: new Date().toISOString(),
+      })
+    );
+
+    const params = new URLSearchParams({
+      source: 'before-dog',
+      topic: 'scelta-responsabile',
+      intent: 'pre-dog-consultation',
+    });
+
+    navigate(`/search?${params.toString()}`);
+  };
+
   const reset = () => {
     setAnswers(initialAnswers);
     setStepIndex(0);
@@ -609,6 +642,47 @@ export function BeforeDogPage() {
               <p className="text-sm font-semibold text-stone-900 mt-5">
                 Prossimo passo: {decisionProfile.nextStep}
               </p>
+
+              <div className="mt-6 pt-5 border-t border-black/10">
+                <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--pc-evidence-700)]">
+                  Continua dalla tua situazione reale
+                </p>
+                <p className="text-sm text-stone-700 leading-6 mt-2 max-w-3xl">
+                  Puoi approfondire i gruppi FCI oppure portare questo quadro a un professionista
+                  per valutare insieme cane, selezione, ambiente e gestione prima dell&apos;acquisto
+                  o dell&apos;adozione.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3 mt-5">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      document
+                        .getElementById('fci-exploration')
+                        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    }
+                    className="pc-btn pc-btn-secondary"
+                  >
+                    Approfondisci i gruppi FCI
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={openPreDogProfessionalSearch}
+                    className="pc-btn pc-btn-primary"
+                  >
+                    <Search className="w-4 h-4" />
+                    Trova un professionista per scegliere insieme
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <p className="text-xs text-stone-600 leading-5 mt-4">
+                  Le risposte e questo risultato vengono salvati solo come bozza sul tuo dispositivo.
+                  Non vengono condivisi automaticamente: la condivisione con il professionista
+                  richiederà un consenso esplicito.
+                </p>
+              </div>
             </div>
 
             {decisionProfile.cautionTraits.length > 0 && (
@@ -699,8 +773,7 @@ export function BeforeDogPage() {
                 per classificare una razza come “buona” o “cattiva”.
               </p>
             </div>
-
-            <div className="mt-10 border-t border-stone-200 pt-9">
+            <div id="fci-exploration" className="mt-10 border-t border-stone-200 pt-9 scroll-mt-24">
               <div className="max-w-3xl">
                 <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-700 mb-3">
                   Dal tuo profilo ai gruppi FCI

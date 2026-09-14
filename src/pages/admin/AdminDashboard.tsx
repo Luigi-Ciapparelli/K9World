@@ -1,3 +1,4 @@
+import { CredentialReviewPanel } from '../../components/admin/CredentialReviewPanel';
 import { useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { supabase } from '../../lib/supabase';
@@ -162,6 +163,8 @@ export function AdminDashboard() {
   if (profile?.role !== 'admin') {
     return (
       <div className="min-h-screen bg-stone-50 p-8">
+        <CredentialReviewPanel />
+
         <div className="max-w-2xl mx-auto bg-white border border-stone-200 rounded-2xl p-8">
           <h1 className="text-2xl font-bold text-stone-900">Access denied</h1>
           <p className="text-stone-600 mt-2">

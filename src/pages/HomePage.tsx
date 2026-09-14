@@ -41,6 +41,7 @@ function PathCard({ number, title, text, cta, onClick, icon: Icon }: PathCardPro
   );
 }
 
+// ECOSYSTEM_PASS_V1
 function PublicHomePage() {
   const { navigate } = useRouter();
 
@@ -55,17 +56,30 @@ function PublicHomePage() {
                 <span className="pc-kicker">PortaleCinofilo · Italia</span>
               </div>
               <h1 className="pc-display text-[clamp(2.8rem,6.5vw,5rem)] leading-[0.98] font-semibold mt-7 max-w-4xl">
-                Prima di scegliere un cane, capisci che vita puoi offrirgli.
+                Conosci meglio il cane. Costruisci un binomio più consapevole.
               </h1>
               <p className="pc-lead pc-reading mt-7">
-                Dalla scelta consapevole alla gestione quotidiana: conosci il cane, confronta gruppi FCI e razze e trova professionisti competenti quando servono.
+                Dalla scelta alla vita quotidiana, PortaleCinofilo ti aiuta a capire bisogni e comportamento, trovare professionisti competenti e costruire con loro un percorso che continui nel tempo.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 mt-8">
-                <button type="button" onClick={() => navigate('/prima-del-cane')} className="pc-btn pc-btn-primary">
-                  Fai il profilo di compatibilità <ArrowRight className="w-4 h-4" />
+                <button
+                  type="button"
+                  onClick={() => navigate('/search?source=home&topic=binomio&intent=professional-support')}
+                  className="pc-btn pc-btn-primary"
+                >
+                  Trova un professionista <ArrowRight className="w-4 h-4" />
                 </button>
-                <button type="button" onClick={() => navigate('/impara')} className="pc-btn pc-btn-secondary">Ho già un cane</button>
+                <button type="button" onClick={() => navigate('/impara')} className="pc-btn pc-btn-secondary">
+                  Impara a conoscere il cane
+                </button>
               </div>
+              <button
+                type="button"
+                onClick={() => navigate('/prima-del-cane')}
+                className="mt-4 text-sm font-bold text-[var(--pc-forest-900)] underline underline-offset-4"
+              >
+                Stai pensando di prendere un cane? Parti da qui
+              </button>
               <p className="text-sm text-[var(--pc-muted-600)] mt-5 max-w-2xl leading-6">
                 Nessun account obbligatorio per imparare o iniziare il percorso. La registrazione serve quando vuoi salvare dati, sincronizzare progressi o prenotare.
               </p>
@@ -128,16 +142,16 @@ function PublicHomePage() {
 
       <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
         <div className="max-w-3xl">
-          <p className="pc-kicker">Il tuo prossimo passo utile</p>
-          <h2 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Capire. Decidere. Agire.</h2>
+          <p className="pc-kicker">Dalla scelta alla vita insieme</p>
+          <h2 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Capire meglio il cane cambia il modo in cui vivete insieme.</h2>
           <p className="pc-lead mt-5">
-            PortaleCinofilo non prova a trattenerti più a lungo possibile. Ti porta al passo successivo che può davvero migliorare la vita con un cane.
+            Prima di scegliere, mentre impari e durante il lavoro con un professionista, ogni passaggio dovrebbe aiutarti a prendere decisioni migliori per il cane e per il vostro binomio.
           </p>
         </div>
         <div className="grid lg:grid-cols-3 gap-4 mt-10">
-          <PathCard number="01" title="Sto pensando di prendere un cane" text="Parti dalla tua vita reale: tempo, solitudine, attività, famiglia, budget e complessità gestionale. Poi restringi il campo." cta="Inizia Prima del cane" icon={Compass} onClick={() => navigate('/prima-del-cane')} />
-          <PathCard number="02" title="Voglio capire meglio il cane" text="Impara attraverso sottolezioni, osservazione, attività pratiche e verifiche. Non un blog: un percorso." cta="Vai a Impara" icon={BookOpen} onClick={() => navigate('/impara')} />
-          <PathCard number="03" title="Mi serve un professionista" text="Confronta profili approvati, servizi e informazioni concrete. La competenza viene prima della popolarità." cta="Trova un professionista" icon={Search} onClick={() => navigate('/search')} />
+          <PathCard number="01" title="Prima del cane" text="Valuta con realismo tempo, ambiente, aspettative e responsabilità. Poi confronta il quadro con un professionista prima della scelta." cta="Prepara la scelta" icon={Compass} onClick={() => navigate('/prima-del-cane')} />
+          <PathCard number="02" title="Impara e osserva" text="Conosci bisogni, comunicazione e routine per osservare meglio il cane e arrivare più preparato al confronto professionale." cta="Costruisci le basi" icon={BookOpen} onClick={() => navigate('/impara')} />
+          <PathCard number="03" title="Lavora con un professionista" text="Scegli in base a competenze, esperienza e contesto. Il valore nasce dal percorso che costruite sul binomio, non da una singola prenotazione." cta="Trova un professionista" icon={Search} onClick={() => navigate('/search?source=home&topic=binomio&intent=professional-support')} />
         </div>
       </section>
 

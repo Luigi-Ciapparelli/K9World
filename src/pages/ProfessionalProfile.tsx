@@ -1,3 +1,4 @@
+import { ProfessionalCredentialsPublic } from '../components/ProfessionalCredentialsPublic';
 import { continuityEnabled } from '../lib/continuity';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -15,7 +16,10 @@ import { useRouter } from '../lib/RouterContext';
 import { VerificationModal } from '../components/VerificationModal';
 import { PublicBookingAvailability } from '../components/PublicBookingAvailability';
 import { bookingAvailabilityError } from '../lib/professionalCalendar';
+import { readJourneyContext } from '../lib/journeyContext';
+import { JourneyContextNotice } from '../components/ecosystem/ProfessionalBridge';
 
+// ECOSYSTEM_PASS_V1
 export function ProfessionalProfile({ id }: { id: string }) {
   const [pro, setPro] = useState<any>(null);
   const [services, setServices] = useState<any[]>([]);
@@ -33,6 +37,9 @@ export function ProfessionalProfile({ id }: { id: string }) {
   const { user, profile } = useAuth();
   const { navigate } = useRouter();
 
+  const journey = readJourneyContext();
+  const profileQuery = window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '';
+  const returnToSearch = profileQuery ? `/search?${profileQuery}` : '/search';
   useEffect(() => {
     let active = true;
     setShowBook(false);
@@ -124,7 +131,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
           <button type="button" onClick={() => setReloadKey((key) => key + 1)} className="block mt-4 font-semibold underline">Riprova</button>
           <button
             type="button"
-            onClick={() => navigate('/search')}
+            onClick={() => navigate(returnToSearch)}
             className="mt-5 px-4 py-2 bg-[var(--pc-forest-900)] text-white rounded-xl font-semibold"
           >
             Torna alla ricerca
@@ -144,7 +151,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
           </p>
           <button
             type="button"
-            onClick={() => navigate('/search')}
+            onClick={() => navigate(returnToSearch)}
             className="mt-5 px-4 py-2 bg-[var(--pc-forest-900)] text-white rounded-xl font-semibold"
           >
             Torna alla ricerca
@@ -192,7 +199,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-28">
           <button
             type="button"
-            onClick={() => navigate('/search')}
+            onClick={() => navigate(returnToSearch)}
             className="inline-flex items-center gap-2 text-sm text-stone-200 hover:text-white mb-10"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -235,6 +242,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
       </section>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 -mt-20 relative z-10 pb-14">
+        <JourneyContextNotice context={journey} className="mb-6 shadow-sm" />
         <div className="grid lg:grid-cols-[1fr_380px] gap-6 items-start">
           <div className="space-y-6">
             <section className="bg-[var(--pc-paper)] rounded-[2rem] border border-[var(--pc-line)] shadow-sm p-6 md:p-8">
@@ -275,6 +283,8 @@ export function ProfessionalProfile({ id }: { id: string }) {
                 </div>
               </div>
             </section>
+
+            <ProfessionalCredentialsPublic professionalId={id} />
 
             <section className="bg-[var(--pc-paper)] rounded-[2rem] border border-[var(--pc-line)] shadow-sm p-6 md:p-8">
               <div className="mb-5">

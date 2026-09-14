@@ -1025,3 +1025,230 @@ cambia significato in base al tipo di risultato selezionato:
 
 La UI deve esplicitare questa differenza e non confrontare i due valori come se fossero la stessa metrica.
 
+---
+
+## 29. Search Card v2 e identità visiva professionista
+
+**Stato: NOW / DECIDED — approvazione visiva ancora richiesta.**
+
+### Search Card v2
+
+Il primo redesign della card risultati è **bocciato** e non va considerato `DONE`.
+
+La card non deve essere costruita come una sequenza di tre fasce orizzontali o come un pannello amministrativo. Deve avere una sola superficie continua, più editoriale e premium, con gerarchia visiva chiara.
+
+Ordine di lettura:
+
+1. immagine professionista o logo;
+2. nome, ruolo/tipo, zona e stato di verifica;
+3. breve bio;
+4. esperienza/anni di attività e ambiti principali;
+5. prezzo, distanza e recensioni come dati pratici secondari;
+6. CTA evidente `Vedi profilo e competenze →`.
+
+Sono ammessi micro-movimenti sobri (lift della card, movimento della freccia) nel rispetto di `prefers-reduced-motion`. Evitare UI da e-commerce aggressivo, badge inutili e separatori che frammentano la scheda.
+
+### Foto profilo / logo
+
+Ogni professionista deve poter caricare, sostituire e rimuovere dalla propria area personale una **foto professionale oppure il logo della propria attività**.
+
+Questa immagine:
+- è l'identità visiva pubblica principale;
+- appare nel quadrato della Search Card;
+- viene riutilizzata nel profilo pubblico;
+- usa le iniziali di nome/cognome esclusivamente come fallback quando non è presente alcuna immagine;
+- può essere una foto personale o un logo, senza trasformare il logo in una credenziale o verifica.
+
+L'asset è pubblico perché destinato alle superfici pubbliche del portale. Upload, sostituzione e cancellazione devono essere consentiti soltanto al proprietario autenticato del profilo.
+
+La qualità visiva finale della Search Card deve essere approvata dal product owner prima di marcarla `DONE`.
+
+---
+
+## 30. Esperienza professionale — dato reale e verificabile
+
+**Stato: NOW / DECIDED.**
+
+Gli anni di esperienza di un professionista non devono essere salvati come un numero statico modificabile (`years_experience`).
+
+La fonte del dato diventa l'**anno di inizio dell'attività professionale** (`experience_start_year`). Gli anni mostrati dalla piattaforma vengono calcolati automaticamente rispetto all'anno corrente.
+
+Regole:
+
+- il professionista può dichiarare il proprio anno di inizio;
+- il valore dichiarato non equivale a un dato verificato;
+- `Esperienza verificata` può comparire solo dopo il processo documentale previsto da PortaleCinofilo;
+- il professionista non può auto-attribuirsi lo stato di verifica;
+- la Search usa questo dato per i soli livelli `0+ / 10+ / 20+`;
+- i profili privi di anno di inizio non entrano nei filtri `10+` e `20+`;
+- il vecchio `years_experience` non è più la fonte autorevole e va rimosso soltanto in una futura migrazione di pulizia, dopo verifica di tutti i consumer.
+
+Questa regola riguarda esclusivamente il **professionista singolo**. Per una struttura, l'anzianità resta separata e deriva dalla data/anno reale di apertura della struttura, senza ereditare gli anni del fondatore.
+
+---
+
+## 31. Campi contestuali e credenziali professionali
+
+**Stato: NOW / DECIDED.**
+
+### Campi contestuali in base al tipo profilo
+
+Quando `listing_type = individual`, PortaleCinofilo rappresenta una persona fisica e non deve chiedere o usare come identità pubblica campi da organizzazione.
+
+Per un professionista individuale non vengono richiesti:
+
+- referente principale;
+- numero persone nel team;
+- nome attività / struttura;
+- URL foto copertina attività.
+
+Il nome pubblico deriva dal nome della persona. Partita IVA, sito e Instagram possono rimanere disponibili perché possono appartenere anche a un libero professionista.
+
+Quando il tipo profilo rappresenta invece attività, centro o pensione, i campi organizzativi diventano pertinenti.
+
+### Formazione, prove e risultati sportivi
+
+La sezione `Experience and verification details` deve contenere **evidenze strutturate**, non soltanto testo libero.
+
+Tipi iniziali:
+
+- qualifica professionale;
+- corso / attestato;
+- seminario / stage;
+- prova o brevetto ufficiale;
+- risultato gara / titolo sportivo;
+- altro.
+
+Ogni voce può contenere ente/fonte, data, disciplina, risultato/livello, descrizione, documento privato e URL esterno pubblico.
+
+Per il lavoro sportivo è esplicitamente valido collegare una pagina o un risultato **Working-Dog** o altra fonte pertinente. I file originali restano privati; il profilo pubblico mostra solo i metadati autorizzati e lo stato di verifica.
+
+Gli stati devono essere distinguibili almeno tra dichiarato, in verifica, verificato, rifiutato e revocato. Il professionista non può attribuirsi autonomamente lo stato `verified`.
+
+Un risultato come **IGP3** è un segnale professionale forte e visibile nella relativa disciplina e deve permettere all'utente di distinguere chi possiede esperienza sportiva documentabile da chi non la possiede. Non va però trasformato in un punteggio universale per ambiti diversi: sport, educazione del cane da compagnia, comportamento, allevamento e altre specializzazioni restano fatti distinti.
+
+La Search può mostrare pochi highlight fattuali (`IGP3`, qualifica verificata, corso rilevante) con il relativo stato di verifica. Il numero grezzo di corsi o attestati non diventa un ranking.
+
+---
+
+## 32. Albo d'Oro della Cinofilia e priorità del merito sportivo
+
+**Stato: NOW / DECIDED.**
+
+PortaleCinofilo distingue tra **Albo d'Oro della Cinofilia** e normali criteri di ricerca.
+
+### Albo d'Oro IGP
+
+- `IGP3 verificato` → **Oro** → `Maestro Addestratore · Oro IGP3`;
+- `IGP2 verificato` → **Argento**;
+- `IGP1 verificato` → **Bronzo**.
+
+La dicitura `Maestro Addestratore` è editoriale PortaleCinofilo e non va rappresentata come titolo ENCI, statale o di altra organizzazione.
+
+Nessun risultato `self_declared` o `pending` produce medaglia o priorità: serve stato `verified`.
+
+### Priorità di ricerca
+
+Ordine iniziale:
+
+1. IGP3 verificato;
+2. IGP2 verificato;
+3. IGP1 verificato;
+4. altra attività sportiva verificata;
+5. professionisti senza risultato sportivo verificato.
+
+Prima gerarchia disciplinare:
+
+`IGP > Obedience > Agility`.
+
+Dentro la stessa fascia, più brevetti e risultati verificati aumentano il merito. In futuro il modello `Persona → Cane → Disciplina → Prova/Gara → Risultato → Fonte → Verifica` permetterà di premiare esplicitamente la replicabilità su cani diversi.
+
+La distanza è secondaria rispetto al merito sportivo verificato. La Search può mantenere visibili un numero limitato di professionisti sportivi anche fuori dal normale raggio locale e deve dichiararlo chiaramente.
+
+### Strutture
+
+Le medaglie appartengono alle persone. Una struttura potrà mostrare `Nel team: Maestro Addestratore Oro IGP3` solo attraverso una relazione team attiva e verificabile. Il prestigio non viene trasferito permanentemente alla facility.
+
+### Trasparenza educativa
+
+La Search deve contenere `Perché vedo questi professionisti?` e spiegare che brevetti e risultati verificati possono precedere distanza, prezzo e popolarità.
+
+### Divieto di pay-to-rank
+
+Nessun abbonamento, boost o sponsorizzazione può comprare una posizione superiore al merito verificato.
+
+---
+
+## 33. Working-Dog — verifica automatica della carriera sportiva
+
+**Stato: NOW / DECIDED.**
+
+Working-Dog diventa il primo provider esterno con verifica automatica per la carriera sportiva.
+
+### Regola fondamentale
+
+Un semplice URL non equivale a `verified`.
+
+PortaleCinofilo controlla la fonte **lato server** e assegna automaticamente `verified` solo quando la pagina Working-Dog permette di far coincidere in modo sufficiente:
+
+- identità del professionista;
+- disciplina;
+- brevetto / livello;
+- cane condotto, obbligatorio per la verifica automatica IGP;
+- prova/gara quando indicata.
+
+Se il controllo non è univoco, la voce resta `pending`. L'admin interviene soltanto come fallback per casi ambigui, altre fonti, documenti e contestazioni.
+
+### Profilo Working-Dog collegato
+
+Il professionista può collegare il proprio profilo Working-Dog.
+
+Lo stato pubblico `Profilo Working-Dog verificato` compare solo dopo la corrispondenza automatica dell'identità. Lo stesso profilo Working-Dog non può essere rivendicato contemporaneamente da due account.
+
+Il collegamento del profilo non rende automaticamente vera ogni futura dichiarazione: ogni risultato sportivo mantiene una propria provenienza e verifica.
+
+### Fonte del risultato
+
+Per un brevetto/risultato Working-Dog vengono registrati:
+
+- URL pubblico;
+- provider;
+- data dell'ultimo controllo;
+- metodo di verifica;
+- fingerprint della fonte;
+- esito sintetico del controllo.
+
+PortaleCinofilo non salva una copia pubblica integrale della pagina esterna.
+
+### Carriera strutturata
+
+I risultati sportivi devono poter rappresentare:
+
+`Professionista → Cane → Disciplina → Prova/Gara → Livello/Risultato → Fonte → Verifica`
+
+Campi iniziali:
+
+- cane;
+- disciplina;
+- livello/brevetto;
+- nome prova/gara;
+- livello della competizione;
+- piazzamento;
+- punteggio/dettaglio;
+- data;
+- fonte.
+
+Per l'Albo d'Oro, a parità di fascia, la **replicabilità su cani diversi precede il numero grezzo di risultati**.
+
+### Effetto sull'Albo d'Oro
+
+Solo `verification_status = verified` incide sul merito.
+
+Una verifica `working_dog_auto` ha pieno valore come una verifica amministrativa: la differenza resta visibile nella provenienza (`Verificato automaticamente tramite Working-Dog`).
+
+### Fail closed
+
+Se Working-Dog non è raggiungibile, cambia markup, blocca l'accesso automatico o non espone abbastanza informazioni, PortaleCinofilo **non inventa la verifica**: mantiene la voce `pending`.
+
+L'architettura deve restare a provider, così in futuro fonti ufficiali o sportive di altri paesi possano essere integrate senza cambiare il Core.
+
