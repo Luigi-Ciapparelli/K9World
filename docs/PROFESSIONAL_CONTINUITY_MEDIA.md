@@ -179,3 +179,8 @@ Vedi [proposta e limiti](proposals/PROFESSIONAL_CONTINUITY_V1.md) e [SQL non app
 ## Interfaccia continuità — incremento locale
 
 Vedi [stato UI, attivazione e verifiche](CONTINUITY_UI_V1.md). Interfaccia implementata dietro flag disattivato di default; SQL ancora nelle proposte, nessuna attivazione online dichiarata. Condivisione dello storico e media restano da implementare.
+
+<!-- continuity-sharing-v1 -->
+## Continuità condivisa fra professionisti
+
+Revisioni scelte dall’autore e concessioni del proprietario a destinatari specifici, con durata e revoca. Riferimento: `docs/CONTINUITY_SHARING_V1.md`. PostgreSQL nativo: regressioni e sette casi concorrenti superati dall’utente il 14 settembre 2026. Incremento preparato localmente; applicare la nuova migrazione prima del frontend e registrare l’esito del rilascio. Archivio originale conservato; media e compressione restano nel passo successivo.

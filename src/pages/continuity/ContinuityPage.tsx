@@ -3,6 +3,9 @@ import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
 import { supabase } from '../../lib/supabase';
 import { ProLayout } from '../pro/ProLayout';
+import { ProfessionalContinuitySharing } from '../../components/ProfessionalContinuitySharing';
+import { OwnerContinuitySharing } from '../../components/OwnerContinuitySharing';
+import { notifySharingChanged } from '../../lib/continuitySharing';
 import { continuityEnabled, continuityError, continuityRpc, displayDate, relationshipLabels, type NoteRevision, type Relationship } from '../../lib/continuity';
 
 const button = 'rounded-xl bg-emerald-700 px-4 py-2 font-semibold text-white disabled:opacity-50';
@@ -52,7 +55,7 @@ function ContinuityWorkspace({ professional, userId, verified }: { professional:
         p_relationship_id: r.id, ...(accept === undefined ? {} : { p_accept: accept }),
       });
       setMessage(accept === true ? 'Invito accettato.' : accept === false ? 'Invito rifiutato.' : 'Relazione chiusa.');
-      setSelected(null); await reload();
+      setSelected(null); setArchiveKey((value) => value + 1); await reload();
     } catch (e) { setError(continuityError(e)); }
     finally { lock.current = false; setBusy(false); }
   }
@@ -61,10 +64,11 @@ function ContinuityWorkspace({ professional, userId, verified }: { professional:
       {!professional && <button className="underline" onClick={() => navigate('/owner')}>Torna alla tua area</button>}
       <h1 className="text-3xl font-bold">{professional ? 'Relazioni e archivio' : 'Professionisti dei tuoi cani'}</h1>
       <p className="text-stone-600">{professional
-        ? 'Accetta gli inviti e registra il lavoro svolto. Le note di questo archivio sono private e consultabili solo da te.'
+        ? 'Accetta gli inviti e registra il lavoro svolto. Le note nascono private; scegli quali revisioni rendere condivisibili e consulta lo storico autorizzato.'
         : 'Invita un professionista dal suo profilo. La relazione inizia quando accetta e puoi revocarla in qualsiasi momento.'}</p>
       {!professional && <p className="text-sm text-stone-600">L’invito autorizza la registrazione di sessioni sul cane. Gli appunti privati del professionista restano riservati; non vengono condivisi con altri addestratori.</p>}
     </header>
+    {professional ? <ProfessionalContinuitySharing refreshKey={archiveKey} /> : <OwnerContinuitySharing userId={userId} verified={verified} refreshKey={archiveKey} />}
     {!professional && target && <InviteForm key={target} professionalId={target} userId={userId} verified={verified} onSaved={() => { setMessage('Invito registrato. Controlla lo stato nell’elenco.'); void reload(); }} />}
     {!professional && !target && <button className={button} onClick={() => navigate('/search')}>Trova un professionista</button>}
     <div className="flex items-center justify-between gap-4"><h2 className="text-xl font-bold">Relazioni</h2><button className={secondary} disabled={loading || busy || selected !== null} onClick={() => void reload()}>Aggiorna</button></div>
@@ -178,7 +182,7 @@ function Archive({ refreshKey }: { refreshKey: number }) {
   return <section className="space-y-4">
     <div className="flex flex-wrap justify-between gap-3"><h2 className="text-2xl font-bold">Il tuo archivio privato</h2><button className={secondary} disabled={loading} onClick={() => { setPage(0); setReload(k => k + 1); }}>Aggiorna archivio</button></div>
     <p className="text-sm text-stone-600">Sessioni e revisioni del tuo lavoro, anche dopo la fine della relazione. I nomi sono quelli conservati nello storico.</p>
-    {editing && <RevisionForm key={`${editing.note_id}:${editing.revision_number}`} revision={editing} onClose={() => setEditing(null)} onSaved={() => { setEditing(null); setPage(0); setReload(k => k + 1); }} />}
+    {editing && <RevisionForm key={`${editing.note_id}:${editing.revision_number}`} revision={editing} onClose={() => setEditing(null)} onSaved={() => { setEditing(null); setPage(0); setReload(k => k + 1); notifySharingChanged(); }} />}
     {error && <p role="alert" className="text-rose-700">{error}</p>}
     {loading ? <p role="status">Caricamento archivio…</p> : !error && !rows.length ? <p>Nessuna revisione in questa pagina.</p> : null}
     {rows.map(r => <article className={card} key={`${r.note_id}:${r.revision_number}`}>
@@ -205,6 +209,7 @@ function RevisionForm({ revision, onClose, onSaved }: { revision: NoteRevision; 
   return <form onSubmit={submit} className={card}>
     <h3 className="font-bold">Rettifica · {revision.dog_name} · {revision.activity}</h3>
     <p className="text-sm">Parti dalla revisione {revision.revision_number}. Il salvataggio sarà consentito solo se è ancora la più recente; le versioni precedenti saranno conservate.</p>
+    <p className="text-sm text-stone-600">Se la nota era stata resa condivisibile, la versione precedente verrà ritirata dallo storico condiviso. La nuova revisione nascerà privata e potrai prepararla di nuovo per la continuità.</p>
     <label className="block">Nota corretta<textarea required rows={7} maxLength={20000} className={input} disabled={busy} value={body} onChange={e => setBody(e.target.value)} /></label>
     <label className="block">Motivo della rettifica<textarea required maxLength={1000} className={input} disabled={busy} value={reason} onChange={e => setReason(e.target.value)} /></label>
     {error && <p role="alert" className="text-rose-700">{error}</p>}
