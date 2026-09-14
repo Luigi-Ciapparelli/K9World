@@ -5,6 +5,7 @@ import { useRouter } from '../../lib/RouterContext';
 import { supabase } from '../../lib/supabase';
 import { ProLayout } from './ProLayout';
 import { StatusBadge } from '../owner/OwnerDashboard';
+import { BookingConversation } from '../../components/BookingConversation';
 import {
   acceptanceError, addDays, bookingOnDay, calendarDateTime, calendarTime, dayLabel,
   monthDays, romeDay, serviceColor, shiftMonth, type CalendarBooking, type Schedule,
@@ -207,7 +208,7 @@ function CalendarContent() {
         <div className="flex flex-wrap items-start justify-between gap-3"><div><h3 className="font-bold">{booking.client_name}</h3><p className="mt-1 text-sm">{booking.service_name}</p></div><StatusBadge status={booking.status} /></div>
         <p className="mt-3 text-sm text-stone-600">{calendarDateTime(booking.start_at)} – {calendarDateTime(booking.end_at)} · {Number(booking.price || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
         <div className="mt-3 rounded-xl bg-stone-50 p-3"><p className="text-xs font-bold text-stone-600">Note del cliente</p><p className="mt-1 whitespace-pre-wrap break-words text-sm">{booking.notes?.trim() || 'Nessuna nota inserita.'}</p></div>
-        <div className="mt-4 flex flex-wrap gap-2">{booking.status === 'pending' && <><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'accepted')} className={primary}>Accetta</button><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'declined')} className={button}>Rifiuta</button></>}
+        <div className="mt-4 flex flex-wrap gap-2"><BookingConversation bookingId={booking.id} professional requestNotes={booking.notes} />{booking.status === 'pending' && <><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'accepted')} className={primary}>Accetta</button><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'declined')} className={button}>Rifiuta</button></>}
           {booking.status === 'accepted' && <button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'completed')} className={primary}>Segna completata</button>}</div>
       </article>)}
     </section>}

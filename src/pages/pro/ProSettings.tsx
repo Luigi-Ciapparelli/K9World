@@ -13,6 +13,7 @@ import { useAuth } from '../../lib/AuthContext';
 import { VerificationModal } from '../../components/VerificationModal';
 import { ProLayout } from './ProLayout';
 import { CalendarServices } from '../../components/CalendarServices';
+import { ProfessionalReplyTemplates } from '../../components/ProfessionalReplyTemplates';
 
 type ApprovalStatus = 'pending' | 'approved' | 'rejected';
 
@@ -442,6 +443,10 @@ export function ProSettings() {
 
         <Section title="Servizi e colori del calendario">
           <CalendarServices key={user?.id} services={services} onChange={setServices} />
+        </Section>
+
+        <Section title="Messaggi e risposte automatiche">
+          <ProfessionalReplyTemplates key={user?.id} />
         </Section>
 
         <Section title="Booking rules">

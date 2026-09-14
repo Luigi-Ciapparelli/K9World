@@ -5,6 +5,8 @@ import { useAuth } from '../../lib/AuthContext';
 import { ProLayout } from './ProLayout';
 import { StatusBadge } from '../owner/OwnerDashboard';
 import { acceptanceError } from '../../lib/professionalCalendar';
+import { BookingConversation } from '../../components/BookingConversation';
+import { useBookingMessageSummaries } from '../../lib/bookingMessages';
 
 type BookingRow = {
   id: string; start_at: string; status: string;
@@ -32,6 +34,7 @@ export function ProBookings() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const lock = useRef(false);
   const session = useRef(0);
+  const messageSummaries = useBookingMessageSummaries(bookings.map((booking) => booking.id));
 
   useEffect(() => {
     session.current += 1;
@@ -142,6 +145,7 @@ export function ProBookings() {
               </div>
               {busyId === booking.id && <p role="status" className="text-sm mt-3">Aggiornamento…</p>}
               <div className="flex flex-wrap gap-2 mt-4">
+                <BookingConversation bookingId={booking.id} professional summary={messageSummaries[booking.id]} requestNotes={booking.notes} />
                 {booking.status === 'pending' && <>
                   <Action disabled={busyId !== null} onClick={() => void updateStatus(booking.id, 'accepted')}>Accetta</Action>
                   <Action disabled={busyId !== null} onClick={() => void updateStatus(booking.id, 'declined')}>Rifiuta</Action>

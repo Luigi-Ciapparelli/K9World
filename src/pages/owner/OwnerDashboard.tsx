@@ -1,4 +1,5 @@
 import { continuityEnabled } from '../../lib/continuity';
+import { BookingMessageInbox } from '../../components/BookingMessageInbox';
 import { useEffect, useState } from 'react';
 import {
   ArrowRight,
@@ -130,6 +131,7 @@ export function OwnerDashboard() {
           )}
         </header>
 
+        <BookingMessageInbox />
         <section aria-labelledby="owner-search-title">
           <div className="flex items-center gap-2 mb-3">
             <Search className="w-5 h-5 text-[var(--pc-forest-700)]" />

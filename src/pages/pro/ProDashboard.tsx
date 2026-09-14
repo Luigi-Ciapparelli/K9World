@@ -3,6 +3,8 @@ import type { ReactNode } from 'react';
 import { ArrowRight, Bell, Calendar, Check, Settings, Users, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { acceptanceError } from '../../lib/professionalCalendar';
+import { BookingConversation } from '../../components/BookingConversation';
+import { BookingMessageInbox } from '../../components/BookingMessageInbox';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
 import { ProLayout } from './ProLayout';
@@ -130,6 +132,7 @@ export function ProDashboard() {
         </header>
 
         {notice && <p role={notice.error ? 'alert' : 'status'} className="pc-card p-4 mb-5 text-sm">{notice.text}</p>}
+        <BookingMessageInbox professional />
 
         <div className="grid xl:grid-cols-2 gap-6">
           <section className="pc-card p-5 md:p-6" aria-labelledby="pro-requests-title" aria-busy={loading}>
@@ -148,6 +151,7 @@ export function ProDashboard() {
                   {new Date(booking.start_at).getTime() <= Date.now() && <p className="text-sm text-[var(--pc-muted-600)] mt-2">La data richiesta è trascorsa: controlla i dettagli prima di decidere.</p>}
                   <button type="button" onClick={() => navigate('/pro/bookings')} className="mt-3 text-sm font-bold text-[var(--pc-forest-700)] underline">Consulta dettagli</button>
                   <div className="flex flex-wrap gap-2 mt-4">
+                    <BookingConversation bookingId={booking.id} professional requestNotes={booking.notes} />
                     <button type="button" disabled={busyId !== null} onClick={() => void updateStatus(booking.id, 'accepted')} className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--pc-forest-900)] text-white px-4 py-2.5 text-sm font-bold disabled:opacity-50 disabled:cursor-wait"><Check className="w-4 h-4" />{busyId === booking.id ? 'Aggiornamento…' : 'Accetta'}</button>
                     <button type="button" disabled={busyId !== null} onClick={() => void updateStatus(booking.id, 'declined')} className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--pc-line)] px-4 py-2.5 text-sm font-bold disabled:opacity-50 disabled:cursor-wait"><X className="w-4 h-4" />Rifiuta</button>
                   </div>
