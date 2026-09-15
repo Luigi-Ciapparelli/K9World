@@ -108,6 +108,16 @@ const PrivacyPage = lazy(() =>
 const TermsPage = lazy(() =>
   import('./pages/LegalPages').then((module) => ({ default: module.TermsPage }))
 );
+const CookiePage = lazy(() =>
+  import('./pages/LegalPages').then((module) => ({ default: module.CookiePage }))
+)
+const ProfessionalTermsPage = lazy(() =>
+  import('./pages/LegalPages').then((module) => ({ default: module.ProfessionalTermsPage }))
+)
+const RankingPage = lazy(() =>
+  import('./pages/LegalPages').then((module) => ({ default: module.RankingPage }))
+)
+
 const ContactPage = lazy(() =>
   import('./pages/LegalPages').then((module) => ({ default: module.ContactPage }))
 );
@@ -195,6 +205,9 @@ function AppShell() {
   else if (basePath === '/become-a-pro') content = <BecomeProPage />;
   else if (basePath === '/privacy') content = <PrivacyPage />;
   else if (basePath === '/terms') content = <TermsPage />;
+  else if (basePath === '/cookies') content = <CookiePage />;
+  else if (basePath === '/professional-terms') content = <ProfessionalTermsPage />;
+  else if (basePath === '/ranking') content = <RankingPage />;
   else if (basePath === '/contact') content = <ContactPage />;
   else if (basePath === '/admin') content = <AdminDashboard />;
   else if (basePath === '/owner') content = <OwnerDashboard />;

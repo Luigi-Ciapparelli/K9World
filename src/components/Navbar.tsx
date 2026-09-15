@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PawPrint, LogOut, User, AlertCircle, Menu, X } from 'lucide-react';
+import { LogOut, User, AlertCircle, Menu, X } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
 import { ThemeToggle } from './ThemeToggle';
@@ -27,7 +27,7 @@ export function Navbar() {
     <nav className="sticky top-0 z-40 bg-white border-b border-stone-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <button onClick={() => go('/')} className="flex items-center gap-2 group">
-          <PawPrint className="w-7 h-7 text-emerald-600 group-hover:rotate-12 transition" />
+          <img src="/brand/portalecinofilo-mark.png" alt="" aria-hidden="true" className="w-8 h-8 object-contain" />
           <span className="text-xl font-bold text-stone-900">PortaleCinofilo</span>
         </button>
 

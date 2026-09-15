@@ -1252,3 +1252,37 @@ Se Working-Dog non è raggiungibile, cambia markup, blocca l'accesso automatico 
 
 L'architettura deve restare a provider, così in futuro fonti ufficiali o sportive di altri paesi possano essere integrate senza cambiare il Core.
 
+## 34. MVP launch freeze e avvio business — DECIDED
+
+### Obiettivo
+PortaleCinofilo entra nella fase di lancio: da questo punto la priorità non è ampliare il prodotto ma portarlo sul mercato, ottenere professionisti esterni reali e misurare l'uso.
+
+### Freeze fino alla beta
+- Nessuna nuova macro-feature prima della beta, salvo bug, sicurezza, requisiti legali o blocchi reali al lancio.
+- Facility/team e altre estensioni strutturali restano successive alla validazione MVP.
+- L'infrastruttura pubblica resta su servizi cloud già operativi; il desktop personale non diventa il server pubblico dell'MVP.
+
+### Brand MVP
+- Identità principale provvisoria: binomio persona-cane al lavoro.
+- Compact mark/favicon: monogramma PC con cane integrato.
+- Sigillo separato: Albo d'Oro.
+- Il branding viene considerato sufficiente per l'MVP e sarà rifinito prima del lancio nazionale quando esisteranno dati e utenti reali.
+
+### Business MVP
+- Proprietari: accesso gratuito.
+- Professionisti: accesso gratuito durante la beta.
+- Nessun pay-to-rank.
+- Nessun pagamento della prestazione gestito da PortaleCinofilo durante la beta.
+- La monetizzazione futura deve privilegiare strumenti professionali/SaaS, non l'acquisto di visibilità meritocratica.
+
+### Legal/privacy MVP
+- Gestione attuale come persona fisica.
+- Privacy, cookie, termini utenti, termini professionisti e spiegazione del ranking devono essere accessibili pubblicamente.
+- Nessun tracking pubblicitario o profilazione nella beta.
+- I documenti professionali privati non diventano pubblici per default.
+- L'Albo d'Oro è una classificazione editoriale PortaleCinofilo, non un titolo ENCI/FCI o pubblico.
+
+### Prossimo obiettivo operativo
+Costruire la prima supply reale:
+**50 professionisti identificati → 20 contattati → 10 conversazioni → primi 5 professionisti esterni onboarded.**
+
