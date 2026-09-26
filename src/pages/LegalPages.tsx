@@ -473,6 +473,17 @@ export function ContactPage() {
           </a>
         </InfoCard>
 
+        {/* portal-public-phone-3534077841 */}
+        <InfoCard title="Telefono">
+          <p className="text-[#3F4943]">+39 353 407 7841</p>
+          <a
+            href="tel:+393534077841"
+            className="inline-flex mt-4 px-4 py-2 rounded-full bg-[#163D2A] text-white font-semibold hover:bg-[#235B40] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#163D2A]"
+          >
+            Chiama PortaleCinofilo
+          </a>
+        </InfoCard>
+
         <InfoCard title="Area beta">
           <p className="text-[#3F4943]">
             PortaleCinofilo sta preparando la beta locale in Romagna prima dell'espansione nazionale.

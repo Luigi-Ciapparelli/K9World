@@ -82,6 +82,13 @@ export function Footer() {
                 {CONTACT_EMAIL}
               </a>
             </div>
+            {/* portal-public-phone-3534077841 */}
+            <a
+              href="tel:+393534077841"
+              className="mt-3 inline-flex items-center gap-2 rounded text-sm text-[#AAB4AD] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D5A33A]"
+            >
+              Telefono: +39 353 407 7841
+            </a>
           </div>
         </div>
 

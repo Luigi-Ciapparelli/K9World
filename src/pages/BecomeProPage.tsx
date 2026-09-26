@@ -4,7 +4,6 @@ import {
   Briefcase,
   CalendarCheck,
   CheckCircle2,
-  Dog,
   MapPin,
   Medal,
   MessageCircle,
