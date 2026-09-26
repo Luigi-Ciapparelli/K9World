@@ -1,4 +1,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import {
+  findMatchingWorkingDogResult,
+  parseWorkingDogResultRows,
+} from '../_shared/workingDogResultParser.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -142,6 +146,7 @@ async function fetchWorkingDog(rawUrl: string) {
 
     return {
       url: finalUrl.toString(),
+      html,
       text,
       normalized: normalize(text),
       fingerprint: await sha256(text),
@@ -347,7 +352,7 @@ Deno.serve(async (req) => {
     const { data: credential, error: credentialError } = await service
       .from('professional_credentials')
       .select(
-        'id, professional_id, credential_type, title, discipline, achievement, external_url, dog_name, event_name, issued_at, verification_status'
+        'id, professional_id, credential_type, title, discipline, achievement, external_url, dog_name, event_name, issued_at, placement, score_text, verification_status'
       )
       .eq('id', body.credentialId)
       .maybeSingle();
@@ -408,28 +413,40 @@ Deno.serve(async (req) => {
       });
     }
 
-    const personMatch = personMatches(
-      professionalProfile?.full_name || '',
-      source.text
-    );
-
     const discipline = normalize(credential.discipline);
 
-    const levelMatch =
-      discipline === 'igp'
-        ? igpLevelMatches(credential.achievement, source.text)
-        : valueMatches(credential.achievement, source.text);
+    // The handler and dog must be found in one result row. Whole-page token
+    // matches can combine two different competitors and are not evidence.
+    const resultRows = parseWorkingDogResultRows(source.html, source.title || null);
+    const matchedResult = findMatchingWorkingDogResult(
+      resultRows,
+      professionalProfile?.full_name || '',
+      credential.dog_name,
+      credential.event_name || source.title || null
+    );
+    const personMatch = Boolean(matchedResult?.handlerName);
 
-    const disciplineMatch = valueMatches(credential.discipline, source.text);
+    const levelMatch = matchedResult
+      ? discipline === 'igp'
+        ? igpLevelMatches(credential.achievement, matchedResult.rawText)
+        : (() => {
+            const compactAchievement = normalize(credential.achievement).replace(/\s+/g, '');
+            const classNumber = compactAchievement.match(/(?:class|classe|klasse)([123])/)?.[1];
+            if (classNumber) return matchedResult.classCode === classNumber;
+            return valueMatches(credential.achievement, `${matchedResult.rawText} ${source.title}`);
+          })()
+      : false;
+
+    const disciplineMatch = Boolean(matchedResult) && valueMatches(credential.discipline, source.title);
 
     const dogRequired = discipline === 'igp';
     const dogMatch = credential.dog_name
-      ? valueMatches(credential.dog_name, source.text)
+      ? Boolean(matchedResult?.dogName)
       : !dogRequired;
 
-    const eventMatch = credential.event_name
-      ? valueMatches(credential.event_name, source.text)
-      : true;
+    const eventMatch = Boolean(matchedResult) && (credential.event_name
+      ? valueMatches(credential.event_name, source.title)
+      : true);
 
     const verified =
       personMatch &&
@@ -441,7 +458,7 @@ Deno.serve(async (req) => {
     const now = new Date().toISOString();
 
     const reason = verified
-      ? 'Risultato verificato automaticamente: identità, disciplina, livello e cane coincidono con la fonte Working-Dog.'
+      ? 'Risultato verificato automaticamente: conduttore, cane, disciplina, livello e gara coincidono nella stessa riga della fonte Working-Dog.'
       : [
           !personMatch ? 'identità non coincidente' : null,
           !disciplineMatch ? 'disciplina non coincidente' : null,
@@ -452,6 +469,7 @@ Deno.serve(async (req) => {
               : 'cane obbligatorio per IGP'
             : null,
           !eventMatch ? 'prova/gara non coincidente' : null,
+          !matchedResult ? 'riga risultato non identificata in modo univoco' : null,
         ]
           .filter(Boolean)
           .join('; ');
@@ -467,6 +485,11 @@ Deno.serve(async (req) => {
           verification_note: reason,
           reviewed_at: null,
           reviewed_by: null,
+          placement: matchedResult?.placement ?? credential.placement,
+          score_text:
+            matchedResult?.score !== null && matchedResult?.score !== undefined
+              ? String(matchedResult.score)
+              : credential.score_text,
         }
       : {
           source_provider: 'working_dog',
@@ -500,6 +523,14 @@ Deno.serve(async (req) => {
         dog: dogMatch,
         event: eventMatch,
       },
+      result: matchedResult
+        ? {
+            placement: matchedResult.placement,
+            score: matchedResult.score,
+            qualification: matchedResult.qualification,
+            classCode: matchedResult.classCode,
+          }
+        : null,
       sourceUrl: source.url,
     });
   }

@@ -105,3 +105,11 @@ autonoma, catalogo dinamico, due checkbox professionista e ricerca quotidiana
 senza priorità IGP generale. Stato di test, migrazione e pubblicazione:
 [SPORT_SEARCH_RELEASE_V1.md](docs/SPORT_SEARCH_RELEASE_V1.md). Il nuovo verifier Working-Dog e il ranking
 per disciplina restano il blocco successivo. Nessun rilascio remoto è implicito.
+
+
+## Verifica e merito per disciplina — checkpoint 26 settembre 2026
+
+Criteri, motore server isolato e limiti del collegamento Working-Dog: [docs/SPORT_MERIT_AND_VERIFICATION_V2.md](docs/SPORT_MERIT_AND_VERIFICATION_V2.md).
+Nove discipline con regole testabili; Disc Dog, Flyball e ulteriori discipline
+richiedono ancora definizioni/mappature. Nessun nuovo badge o importatore è stato
+pubblicato. Serve una fonte reale accessibile e una prova dell’identità.

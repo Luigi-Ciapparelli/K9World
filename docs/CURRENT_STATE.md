@@ -263,3 +263,15 @@ dist/assets/index--9v3aMO9.js                 388.14 kB │ gzip: 110.47 kB
 ✓ built in 3.68s
 ```
 
+
+
+## Checkpoint merito per disciplina — 26 settembre 2026
+
+Base GitHub letta: `8d1baf9`. Preparati motore server non collegato a endpoint,
+criteri editoriali V2, 69 controlli sintetici e proposta SQL per invalidare
+verifiche dopo modifica dell'evidenza. Proposta e regressioni superate su
+PostgreSQL WASM con 46 migrazioni ricostruite; Auth/Storage simulati.
+Nessun accesso al database online, deploy o nuovo badge verificato nel browser.
+Parser Working-Dog collegato all'Edge Function e testato con una fixture basata
+sul risultato reale fornito di Valentina Balli; accesso live e autorizzazione del
+provider restano da verificare. Dettagli: `docs/SPORT_MERIT_AND_VERIFICATION_V2.md`.
