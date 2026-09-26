@@ -87,3 +87,13 @@ Therefore:
 ## Professional continuity and media
 
 Mandatory additional reading before work on professional notes, dog history or media: [Professional continuity and media](PROFESSIONAL_CONTINUITY_MEDIA.md). Preserve the distinction between approved direction, technical proposals and implemented behavior.
+
+<!-- sport-search-and-working-dog-v1 -->
+
+## Regola per la ricerca sportiva e i badge
+
+Non trattare IGP come priorità universale. La ricerca deve distinguere
+Gestione del cane e Sport cinofili; il professionista sceglie una o entrambe.
+Working-Dog, badge e ranking sono per disciplina, con configurazione, fonte,
+versione e audit propri. Dati ambigui o non verificabili restano in revisione.
+Vedi `docs/SPORT_SEARCH_AND_WORKING_DOG_V1.md` prima di proporre codice o SQL.

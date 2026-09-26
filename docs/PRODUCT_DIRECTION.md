@@ -1,6 +1,6 @@
 # PortaleCinofilo — Product Direction
 
-_Last updated: 2026-09-14_
+_Last updated: 2026-09-26_
 
 ## 1. Missione
 
@@ -1285,4 +1285,134 @@ PortaleCinofilo entra nella fase di lancio: da questo punto la priorità non è 
 ### Prossimo obiettivo operativo
 Costruire la prima supply reale:
 **50 professionisti identificati → 20 contattati → 10 conversazioni → primi 5 professionisti esterni onboarded.**
+
+<!-- sport-search-and-working-dog-v1 -->
+
+## 35. Ricerca professionisti: due percorsi distinti — DECIDED / NOW
+
+PortaleCinofilo deve offrire due ingressi leggibili e separati:
+
+1. **Gestione del cane**: aiuto quotidiano al binomio, educazione, convivenza,
+   prevenzione dei problemi, puppy/adolescenza e accompagnamento del proprietario.
+2. **Sport cinofili**: preparazione e pratica di una disciplina scelta, con
+   risultati, livelli, gare e competenze riferiti soltanto a quella disciplina.
+
+Il professionista sceglie una visibilità `companion`, `sport` oppure `both`.
+La scelta governa la comparsa nelle due sezioni e non cancella servizi,
+credenziali o storico. I professionisti già approvati devono essere migrati
+inizialmente a `both`, così nessuno scompare dalla ricerca senza una scelta
+esplicita.
+
+La ricerca **Gestione del cane** usa servizio, contesto, zona, disponibilità,
+esperienza dichiarata e credenziali verificabili. La ricerca **Sport** richiede
+una disciplina e mostra solo chi ha scelto `sport` o `both` e offre quella
+disciplina. Una competenza IGP non aumenta automaticamente la posizione in
+Obedience, Agility o in altre discipline. Non sono ammessi follower, prezzo
+pagato o sponsorizzazione come proxy di competenza.
+
+## 36. Catalogo sport e badge per disciplina — DECIDED / NEXT
+
+Il catalogo delle discipline è un registro versionato e riconciliabile con le
+fonti dei risultati, non una lista copiata a mano dentro ogni card frontend.
+Ogni voce conserva identificativo del provider, etichetta canonica, alias,
+stato attivo, fonte e versione. Il frontend può quindi aggiungere una nuova
+disciplina senza una modifica separata per ogni pagina.
+
+Ogni disciplina possiede la propria configurazione di merito: livelli validi,
+campi obbligatori, pesi di piazzamento/evento, fattore di recenza, bonus per
+cani distinti, regole di badge e fonti alternative. La configurazione è
+versionata e revisionabile.
+
+Il collegamento a Working-Dog avvia la verifica; non assegna da solo un badge.
+Il server deve verificare identità del professionista, disciplina, cane,
+evento, data, livello e risultato prima di pubblicare un merito. Per esempio,
+se l’identità di Valentina Balli è verificata e il risultato Obedience supera
+le regole configurate, il profilo può mostrare **Oro · OBEDIENCE**. Il testo è
+un esempio di comportamento del prodotto: non è una dichiarazione sul suo
+risultato reale finché la verifica non è completata.
+
+Una disciplina senza livelli comparabili mostra risultati verificati e fonte,
+ma non inventa un medaglione. Badge e risultati restano sempre associati alla
+coppia `(professionista, disciplina)`.
+
+## 37. Verifica e ranking automatico — DECIDED / NEXT
+
+Il collegamento crea una richiesta di verifica asincrona. Un worker server:
+
+- scarica la pagina o risposta del provider senza fidarsi dei dati inseriti nel
+  browser e salva URL, timestamp e fingerprint della fonte;
+- riconcilia l'identità con segnali verificabili e normalizza la disciplina
+  tramite il catalogo versionato;
+- richiede i campi obbligatori della disciplina (per esempio livello, evento,
+  data, cane e piazzamento) e rifiuta claim incompleti, duplicati o riferiti a
+  un altro cane;
+- calcola il merito solo per risultati verificati. Fonte irraggiungibile,
+  identità ambigua o dati discordanti restano `pending_review` e non diventano
+  badge pubblici;
+- conserva configurazione, versione dell'algoritmo, fingerprint, data del
+  controllo e motivo di eventuale revisione.
+
+Per ogni disciplina `D` e risultato verificato `r`:
+
+```text
+result_score(D, r) =
+  level_weight(D, r)
+  × placement_weight(D, r)
+  × event_weight(D, r)
+  × verification_weight(r)
+  × recency_factor(D, r)
+
+discipline_score(P, D) = cap(
+  sum(result_score(D, r))
+  + distinct_dog_bonus(D, P)
+  + consistency_bonus(D, P)
+)
+```
+
+`badge_tier(D, discipline_score)` usa soglie e pesi della sola disciplina
+`D`. Non esiste un punteggio globale che sommi IGP, Obedience, Agility e altre
+discipline, e un risultato di una disciplina non può gonfiare il badge di
+un'altra. A parità si ordinano, nell'ordine, tier verificato, cani distinti,
+numero di risultati verificati e data dell'ultima verifica. Follower,
+recensioni non comparabili e pagamento non sono spareggi.
+
+## 38. Superficie sportiva e ordine di rilascio — DECIDED / NEXT
+
+La sezione Sport deve partire da un catalogo ricercabile con l'azione
+**Trova addestratore per disciplina**. Ogni disciplina ha una scheda con
+descrizione, alias, livelli, professionisti visibili, badge e risultati
+verificati, fonte e data dell'ultima verifica. La scheda deve spiegare perché
+un risultato è mostrato e distinguere sempre il percorso sportivo da quello
+di gestione quotidiana.
+
+Ordine vincolante:
+
+1. modellare catalogo e alias versionati;
+2. aggiungere i modi di visibilità `companion` / `sport` / `both`;
+3. costruire il verifier Working-Dog provider-aware;
+4. configurare le regole per disciplina, iniziando da IGP e Obedience senza
+   trasformarle in regole hardcoded del frontend;
+5. collegare ricerca, filtri, card e pagina disciplina;
+6. aggiungere ranking, audit e revisione dei casi ambigui;
+7. provare il flusso con professionisti reali prima di ampliare il catalogo.
+
+Questa decisione sostituisce l'ordine generale precedente `IGP > Obedience >
+Agility`: le discipline sono parallele e ciascuna ha il proprio significato.
+
+## 39. Criteri di accettazione
+
+- Un professionista può scegliere una sola sezione o entrambe; la scelta
+  cambia realmente i risultati delle due ricerche.
+- Un risultato IGP non cambia il punteggio Obedience e viceversa.
+- L'esempio **Oro · OBEDIENCE** compare solo dopo identità e risultato
+  verificati, con disciplina e fonte visibili.
+- Una nuova disciplina del provider può essere importata nel catalogo senza
+  riscrivere ogni card o filtro del frontend.
+- Fonte non raggiungibile, identità ambigua, cane errato o risultato duplicato
+  restano in attesa/revisione e non producono un badge pubblico.
+- Nessun follower, recensione non comparabile o pagamento modifica il merito.
+- Il client non può auto-dichiararsi verificato né scrivere tier, ranking,
+  risultati o configurazioni; RLS e RPC devono imporre questa separazione.
+- Ogni badge pubblico espone disciplina, livello, fonte, data del controllo e
+  stato di verifica; il profilo conserva l'audit necessario alla rettifica.
 

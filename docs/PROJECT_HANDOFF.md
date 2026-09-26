@@ -748,3 +748,13 @@ Incremento successivo al calendario `a712352`: conversazioni fra i partecipanti,
 ## Continuità condivisa fra professionisti
 
 Revisioni scelte dall’autore e concessioni del proprietario a destinatari specifici, con durata e revoca. Riferimento: `docs/CONTINUITY_SHARING_V1.md`. PostgreSQL nativo: regressioni e sette casi concorrenti superati dall’utente il 14 settembre 2026. Incremento preparato localmente; applicare la nuova migrazione prima del frontend e registrare l’esito del rilascio. Archivio originale conservato; media e compressione restano nel passo successivo.
+
+<!-- sport-search-and-working-dog-v1 -->
+
+## Direttiva successiva: ricerca per percorso e disciplina
+
+È stata aggiunta la specifica `docs/SPORT_SEARCH_AND_WORKING_DOG_V1.md`.
+Richiede due sezioni di ricerca (gestione del cane e sport), visibilità scelta
+dal professionista, catalogo discipline versionato e badge/ranking Working-Dog
+calcolati separatamente per disciplina. Il catalogo e il verifier sono ancora
+da implementare: la documentazione non è prova di funzioni presenti.

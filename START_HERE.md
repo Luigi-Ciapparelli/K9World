@@ -78,3 +78,15 @@ Incremento successivo al calendario `a712352`: conversazioni fra i partecipanti,
 ## Continuità condivisa fra professionisti
 
 Revisioni scelte dall’autore e concessioni del proprietario a destinatari specifici, con durata e revoca. Riferimento: `docs/CONTINUITY_SHARING_V1.md`. PostgreSQL nativo: regressioni e sette casi concorrenti superati dall’utente il 14 settembre 2026. Incremento preparato localmente; applicare la nuova migrazione prima del frontend e registrare l’esito del rilascio. Archivio originale conservato; media e compressione restano nel passo successivo.
+
+<!-- sport-search-and-working-dog-v1 -->
+
+## Nuova direttiva: ricerca gestione cane e sport
+
+La prossima area prodotto ha due percorsi separati: **Gestione del cane** e
+**Sport cinofili**. Ogni professionista sceglie `companion`, `sport` o `both`.
+Working-Dog e i badge vengono verificati e calcolati per singola disciplina;
+non esiste una gerarchia generale con IGP sopra le altre discipline.
+
+La specifica completa è in `docs/SPORT_SEARCH_AND_WORKING_DOG_V1.md`. È una
+direttiva da approvare: non confonderla con codice o migration già applicati.
