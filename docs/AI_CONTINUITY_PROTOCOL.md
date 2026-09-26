@@ -92,8 +92,14 @@ Mandatory additional reading before work on professional notes, dog history or m
 
 ## Regola per la ricerca sportiva e i badge
 
-Non trattare IGP come priorità universale. La ricerca deve distinguere
-Gestione del cane e Sport cinofili; il professionista sceglie una o entrambe.
-Working-Dog, badge e ranking sono per disciplina, con configurazione, fonte,
-versione e audit propri. Dati ambigui o non verificabili restano in revisione.
-Vedi `docs/SPORT_SEARCH_AND_WORKING_DOG_V1.md` prima di proporre codice o SQL.
+Non trattare IGP come priorità universale. Il percorso normale del proprietario
+deve portare direttamente alla ricerca per gestione quotidiana del cane, senza
+chiedergli di scegliere tra gestione e sport e senza aggiungere click. **Sport
+cinofili** è una sezione autonoma nel menu e nella Home; la disciplina si sceglie
+solo al suo interno. Il professionista controlla la visibilità con due selettori
+indipendenti. Working-Dog, badge e ranking sono per disciplina, con fonte,
+versione e audit propri. Dati ambigui restano in revisione. Vedi
+`docs/SPORT_SEARCH_AND_WORKING_DOG_V1.md` prima di proporre codice o SQL.
+
+
+<!-- sport-search-owner-ux-v2 -->

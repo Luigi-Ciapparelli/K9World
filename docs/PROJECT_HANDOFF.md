@@ -754,7 +754,12 @@ Revisioni scelte dall’autore e concessioni del proprietario a destinatari spec
 ## Direttiva successiva: ricerca per percorso e disciplina
 
 È stata aggiunta la specifica `docs/SPORT_SEARCH_AND_WORKING_DOG_V1.md`.
-Richiede due sezioni di ricerca (gestione del cane e sport), visibilità scelta
-dal professionista, catalogo discipline versionato e badge/ranking Working-Dog
-calcolati separatamente per disciplina. Il catalogo e il verifier sono ancora
-da implementare: la documentazione non è prova di funzioni presenti.
+Richiede un percorso normale e diretto per trovare aiuto nella gestione del
+cane e una sezione autonoma **Sport cinofili** nel menu e nella Home. Il
+proprietario sceglie la disciplina solo entrando in Sport; nel percorso normale
+non ci sono domande o click aggiuntivi. Il professionista controlla la visibilità
+con due selettori indipendenti. Catalogo e verifier sono ancora da implementare: la
+documentazione non è prova di funzioni presenti.
+
+
+<!-- sport-search-owner-ux-v2 -->

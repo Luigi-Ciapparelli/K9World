@@ -8,15 +8,18 @@ dichiara implementate le funzioni descritte.
 
 ## Obiettivo
 
-Separare la ricerca per gestione quotidiana del cane dalla ricerca per sport
-cinofilo, lasciando a ogni professionista la scelta `companion`, `sport` o
-`both`. I risultati Working-Dog e i badge sono sempre valutati per la singola
-disciplina.
+Offrire un percorso diretto per chi cerca aiuto nella gestione quotidiana del
+cane e una sezione autonoma Sport cinofili, accessibile volontariamente dal
+menu o dalla Home. La scelta della disciplina avviene solo dentro Sport. Nel
+percorso normale non si chiede al proprietario di scegliere tra gestione e
+sport e non si aggiungono click tra ricerca e addestratore. Il professionista
+ha due selettori indipendenti di visibilità. Working-Dog e badge sono valutati
+per singola disciplina.
 
 ## Modello logico proposto
 
-- `professional_search_modes`: profilo, modalità visibili, autore, timestamp e
-  stato di migrazione iniziale.
+- `professional_search_modes`: profilo, booleani indipendenti
+  `show_companion` e `show_sport`, autore, timestamp e stato di migrazione.
 - `sport_discipline_catalog`: provider, provider id, label canonica, alias,
   versione, fonti e stato.
 - `professional_sport_disciplines`: discipline offerte da un professionista,
@@ -56,12 +59,21 @@ livello, fonte, data di controllo e stato.
 
 ## Ricerca e interfaccia
 
-- ingresso **Gestione del cane** con filtri pratici e competenze di contesto;
-- ingresso **Sport cinofili** con azione “Trova addestratore per disciplina”;
-- catalogo con alias e descrizione, filtro disciplina e pagina dedicata;
-- card filtrate per modalità di visibilità e disciplina offerta;
+- il percorso normale **Trova aiuto per il cane** conduce direttamente alla
+  ricerca di gestione quotidiana, senza schermate di scelta o filtri sportivi;
+- **Sport cinofili** è una sezione distinta nel menu e nella Home, da aprire
+  soltanto quando il proprietario cerca preparazione sportiva;
+- il filtro disciplina compare dentro Sport, con l'azione “Trova addestratore
+  per disciplina”;
+- nel pannello professionista due selettori indipendenti controllano le due
+  sezioni. Se sono entrambi attivi, il professionista compare in ciascun
+  elenco senza che il proprietario debba scegliere una modalità combinata;
+- l'interazione di prenotazione è la stessa da entrambi i percorsi;
+- catalogo con alias e descrizione, pagina disciplina e card filtrate per
+  visibilità e disciplina offerta;
 - badge e risultati verificati separati, con spiegazione del calcolo;
-- migrazione iniziale dei profili esistenti a `both` per evitare sparizioni.
+- migrazione iniziale con entrambi i selettori attivi sui profili esistenti,
+  così nessuno scompare dalla ricerca.
 
 ## Sicurezza e revisione
 
@@ -72,7 +84,9 @@ soglie sono versionate e soggette a audit.
 
 ## Test obbligatori
 
-1. modalità `companion`, `sport` e `both` nella ricerca;
+1. i due selettori professionista controllano indipendentemente la visibilità;
+2. il percorso normale proprietario arriva alla ricerca senza scelta Gestione/Sport;
+3. Sport è visibile come sezione separata e il filtro disciplina appare solo lì;
 2. disciplina nuova importata dal catalogo senza modifica alle card;
 3. identità Working-Dog corretta e identità ambigua;
 4. risultato IGP isolato da Obedience;
@@ -89,3 +103,16 @@ Prima approvare questo documento e il catalogo iniziale. Poi implementare
 schema/RPC, verifier e configurazioni, eseguire i test sullo schema completo,
 collegare UI e ricerca, provare con professionisti reali e solo dopo attivare
 la pubblicazione dei badge.
+
+
+<!-- sport-search-owner-ux-v2 -->
+
+## Regola UX: lo sport è un'area separata e facoltativa
+
+**Trova aiuto per il cane** porta direttamente alla ricerca normale. Non mostra
+una domanda Gestione/Sport, non richiede una scelta di disciplina e non aggiunge
+passaggi tra il proprietario e l'addestratore. **Sport cinofili** deve essere
+chiaramente visibile come sezione propria nel menu e nella Home. Chi la apre
+sceglie poi la disciplina. Prenotazione e contatto mantengono lo stesso flusso.
+Nel pannello professionista, due checkbox indipendenti controllano la visibilità
+in Gestione del cane e in Sport cinofili.

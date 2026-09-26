@@ -83,10 +83,16 @@ Revisioni scelte dall’autore e concessioni del proprietario a destinatari spec
 
 ## Nuova direttiva: ricerca gestione cane e sport
 
-La prossima area prodotto ha due percorsi separati: **Gestione del cane** e
-**Sport cinofili**. Ogni professionista sceglie `companion`, `sport` o `both`.
-Working-Dog e i badge vengono verificati e calcolati per singola disciplina;
-non esiste una gerarchia generale con IGP sopra le altre discipline.
+Il proprietario che cerca aiuto quotidiano entra direttamente in **Trova aiuto
+per il cane**: non deve scegliere una modalità e non compie click aggiuntivi.
+**Sport cinofili** è una sezione autonoma nel menu e nella Home; solo entrando
+lì il proprietario sceglie una disciplina. Nel pannello professionista ci sono
+due selettori indipendenti per apparire in una o in entrambe le sezioni.
+Working-Dog e i badge sono verificati e calcolati per singola disciplina;
+IGP non ha una gerarchia generale sopra le altre discipline.
 
 La specifica completa è in `docs/SPORT_SEARCH_AND_WORKING_DOG_V1.md`. È una
 direttiva da approvare: non confonderla con codice o migration già applicati.
+
+
+<!-- sport-search-owner-ux-v2 -->

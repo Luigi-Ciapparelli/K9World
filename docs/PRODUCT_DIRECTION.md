@@ -1297,18 +1297,23 @@ PortaleCinofilo deve offrire due ingressi leggibili e separati:
 2. **Sport cinofili**: preparazione e pratica di una disciplina scelta, con
    risultati, livelli, gare e competenze riferiti soltanto a quella disciplina.
 
-Il professionista sceglie una visibilità `companion`, `sport` oppure `both`.
-La scelta governa la comparsa nelle due sezioni e non cancella servizi,
-credenziali o storico. I professionisti già approvati devono essere migrati
-inizialmente a `both`, così nessuno scompare dalla ricerca senza una scelta
-esplicita.
+Nel pannello professionista ci sono due selettori indipendenti: **Mostrami
+nella sezione Gestione del cane** e **Mostrami nella sezione Sport cinofili**.
+Il modello tecnico li conserva come booleani `show_companion` e `show_sport`;
+non presenta una scelta combinata né l'etichetta “Entrambi”. I profili
+professionali già approvati partono con entrambi i selettori attivi, così
+nessuno scompare dalla ricerca senza una scelta esplicita.
 
-La ricerca **Gestione del cane** usa servizio, contesto, zona, disponibilità,
-esperienza dichiarata e credenziali verificabili. La ricerca **Sport** richiede
-una disciplina e mostra solo chi ha scelto `sport` o `both` e offre quella
-disciplina. Una competenza IGP non aumenta automaticamente la posizione in
-Obedience, Agility o in altre discipline. Non sono ammessi follower, prezzo
-pagato o sponsorizzazione come proxy di competenza.
+**Gestione del cane** è il percorso normale e diretto per chi cerca aiuto
+quotidiano: usa servizio, contesto, zona, disponibilità, esperienza dichiarata
+e credenziali verificabili. La sezione **Sport cinofili** è un'area autonoma,
+riconoscibile nel menu e nella Home. Solo chi vi entra volontariamente sceglie
+una disciplina; la ricerca sportiva mostra professionisti con `show_sport`
+attivo che offrono quella disciplina. Nel percorso normale non appare una
+domanda Gestione/Sport, un filtro sportivo o un passaggio aggiuntivo: ricerca
+e prenotazione restano dirette. Una competenza IGP non aumenta la posizione
+in Obedience, Agility o altre discipline. Follower, prezzo pagato e
+sponsorizzazione non sono proxy di competenza.
 
 ## 36. Catalogo sport e badge per disciplina — DECIDED / NEXT
 
@@ -1388,7 +1393,7 @@ di gestione quotidiana.
 Ordine vincolante:
 
 1. modellare catalogo e alias versionati;
-2. aggiungere i modi di visibilità `companion` / `sport` / `both`;
+2. aggiungere i due selettori indipendenti `show_companion` e `show_sport`;
 3. costruire il verifier Working-Dog provider-aware;
 4. configurare le regole per disciplina, iniziando da IGP e Obedience senza
    trasformarle in regole hardcoded del frontend;
@@ -1416,3 +1421,16 @@ Agility`: le discipline sono parallele e ciascuna ha il proprio significato.
 - Ogni badge pubblico espone disciplina, livello, fonte, data del controllo e
   stato di verifica; il profilo conserva l'audit necessario alla rettifica.
 
+
+
+<!-- sport-search-owner-ux-v2 -->
+
+### Regola di semplicità per il proprietario
+
+La Home e il menu rendono riconoscibili due destinazioni: **Trova aiuto per il cane**
+e **Sport cinofili**. Il primo è il percorso principale: apre subito la ricerca
+normale e non chiede di scegliere tra gestione e sport. Sport è un ingresso
+autonomo e facoltativo; soltanto lì compaiono disciplina e risultati sportivi.
+Il proprietario non deve fare un passaggio aggiuntivo per contattare o prenotare
+un professionista nel percorso normale. Nel pannello professionista, invece,
+due selettori indipendenti decidono in quali elenchi comparire.
