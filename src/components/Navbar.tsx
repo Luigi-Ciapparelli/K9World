@@ -31,14 +31,15 @@ export function Navbar() {
           <span className="text-xl font-bold text-stone-900">PortaleCinofilo</span>
         </button>
 
-        <div className="hidden md:flex items-center gap-6 text-sm text-stone-700">
+        <div className="hidden xl:flex items-center gap-4 text-sm text-stone-700">
           <button onClick={() => go('/impara')} className="hover:text-emerald-600 transition">Impara</button>
-          <button onClick={() => go('/search')} className="hover:text-emerald-600 transition">Trova un professionista</button>
+          <button onClick={() => go('/search?type=trainer')} className="hover:text-emerald-600 transition">Trova aiuto per il cane</button>
+          <button onClick={() => go('/sport')} className="hover:text-emerald-600 transition">Sport cinofili</button>
           <button onClick={() => go('/become-a-pro')} className="hover:text-emerald-600 transition">Diventa professionista</button>
           <button onClick={() => go('/?section=services')} className="hover:text-emerald-600 transition">Servizi</button>
         </div>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden xl:flex items-center gap-3">
           <ThemeToggle />
           {user ? (
             <>
@@ -59,18 +60,20 @@ export function Navbar() {
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden p-2 -mr-2 text-stone-700 hover:text-emerald-600"
-          aria-label="Toggle menu"
+          className="xl:hidden p-2 -mr-2 text-stone-700 hover:text-emerald-600"
+          aria-label={mobileOpen ? "Chiudi menu" : "Apri menu"}
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-stone-200 bg-white">
+        <div className="xl:hidden border-t border-stone-200 bg-white">
           <div className="px-4 py-3 flex flex-col gap-1 text-sm">
             <button onClick={() => go('/impara')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Impara</button>
-            <button onClick={() => go('/search')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Trova un professionista</button>
+            <button onClick={() => go('/search?type=trainer')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Trova aiuto per il cane</button>
+            <button onClick={() => go('/sport')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Sport cinofili</button>
             <button onClick={() => go('/become-a-pro')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Diventa professionista</button>
             <button onClick={() => go('/?section=services')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Servizi</button>
             <div className="px-3 py-2">

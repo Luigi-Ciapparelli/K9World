@@ -64,10 +64,10 @@ function PublicHomePage() {
               <div className="flex flex-col sm:flex-row gap-3 mt-8">
                 <button
                   type="button"
-                  onClick={() => navigate('/search?source=home&topic=binomio&intent=professional-support')}
+                  onClick={() => navigate('/search?type=trainer&source=home&topic=binomio&intent=professional-support')}
                   className="pc-btn pc-btn-primary"
                 >
-                  Trova un professionista <ArrowRight className="w-4 h-4" />
+                  Trova aiuto per il cane <ArrowRight className="w-4 h-4" />
                 </button>
                 <button type="button" onClick={() => navigate('/impara')} className="pc-btn pc-btn-secondary">
                   Impara a conoscere il cane
@@ -151,7 +151,18 @@ function PublicHomePage() {
         <div className="grid lg:grid-cols-3 gap-4 mt-10">
           <PathCard number="01" title="Prima del cane" text="Valuta con realismo tempo, ambiente, aspettative e responsabilità. Poi confronta il quadro con un professionista prima della scelta." cta="Prepara la scelta" icon={Compass} onClick={() => navigate('/prima-del-cane')} />
           <PathCard number="02" title="Impara e osserva" text="Conosci bisogni, comunicazione e routine per osservare meglio il cane e arrivare più preparato al confronto professionale." cta="Costruisci le basi" icon={BookOpen} onClick={() => navigate('/impara')} />
-          <PathCard number="03" title="Lavora con un professionista" text="Scegli in base a competenze, esperienza e contesto. Il valore nasce dal percorso che costruite sul binomio, non da una singola prenotazione." cta="Trova un professionista" icon={Search} onClick={() => navigate('/search?source=home&topic=binomio&intent=professional-support')} />
+          <PathCard number="03" title="Lavora con un professionista" text="Scegli in base a competenze, esperienza e contesto. Il valore nasce dal percorso che costruite sul binomio, non da una singola prenotazione." cta="Trova aiuto per il cane" icon={Search} onClick={() => navigate('/search?type=trainer&source=home&topic=binomio&intent=professional-support')} />
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-6 pb-16" aria-labelledby="home-sport-title">
+        <div className="rounded-3xl bg-[var(--pc-forest-900)] text-white p-7 md:p-10 grid md:grid-cols-[1fr_auto] items-center gap-6">
+          <div>
+            <p className="text-xs uppercase tracking-widest font-bold text-emerald-200">Per chi cerca un percorso sportivo</p>
+            <h2 id="home-sport-title" className="pc-display text-3xl md:text-4xl font-semibold mt-3">Sport cinofili</h2>
+            <p className="mt-4 max-w-2xl text-emerald-50 leading-7">Obedience, Agility, IGP e altre discipline: trova un addestratore per l’attività che vuoi praticare con il tuo cane.</p>
+          </div>
+          <button type="button" onClick={() => navigate('/sport')} className="pc-btn pc-btn-inverse">Esplora gli sport <ArrowRight className="w-4 h-4" /></button>
         </div>
       </section>
 

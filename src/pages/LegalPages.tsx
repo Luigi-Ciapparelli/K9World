@@ -400,37 +400,18 @@ export function RankingPage() {
         </p>
       </Section>
 
-      <Section title="2. Principali fattori">
-        <p>A seconda della ricerca possono contribuire, tra gli altri:</p>
-        <ul>
-          <li>corrispondenza tra servizio cercato e servizi realmente offerti;</li>
-          <li>zona, distanza e raggio di copertura;</li>
-          <li>tipo di professionista o struttura e altri filtri selezionati dall'utente;</li>
-          <li>esperienza professionale dichiarata o verificata, quando pertinente;</li>
-          <li>qualifiche e risultati con stato di verifica;</li>
-          <li>prezzo, rating e altri criteri secondari quando pertinenti all'ordinamento scelto.</li>
-        </ul>
+      <Section title="2. Ricerca per la vita quotidiana">
+        <p>La ricerca normale mostra i professionisti approvati che offrono il servizio cercato e coprono la zona indicata. Per l’addestramento vengono inclusi quelli che hanno attivato la visibilità nella gestione del cane.</p>
+        <p className="mt-3">L’ordine iniziale segue la distanza, quando disponibile, poi il nome. È possibile ordinare anche per esperienza, prezzo o valutazioni. L’ordinamento scelto dall’utente viene rispettato.</p>
       </Section>
 
-      <Section title="3. Merito sportivo">
-        <p>
-          Nelle ricerche legate all'addestramento e alla carriera sportiva, il merito verificato può
-          avere rilevanza primaria. Possono contribuire il livello sportivo raggiunto, la disciplina,
-          il numero di cani distinti portati a risultati verificati, la ripetibilità dei risultati,
-          il livello della competizione e il piazzamento.
-        </p>
-        <p className="mt-3">
-          Risultati soltanto dichiarati o ancora in attesa di verifica non ricevono lo stesso peso
-          dei risultati verificati.
-        </p>
+      <Section title="3. Sport cinofili">
+        <p>Sport cinofili è una sezione distinta. Mostra chi ha scelto di offrire un percorso sportivo, con un servizio di addestramento attivo, nella disciplina e nella zona cercate. Le discipline offerte sono dichiarate dal professionista: non costituiscono una qualifica o un risultato verificato.</p>
+        <p className="mt-3">I risultati IGP non attribuiscono precedenza nelle altre discipline o nella ricerca quotidiana. In questa versione gli elenchi Sport seguono gli stessi ordinamenti pratici della ricerca normale. I badge eventualmente presenti nel profilo descrivono il risultato indicato e non modificano questo ordine.</p>
       </Section>
 
-      <Section title="4. Distanza e professionisti di merito">
-        <p>
-          La distanza resta importante, ma in alcune ricerche PortaleCinofilo può rendere visibili
-          professionisti con merito sportivo verificato anche oltre il normale raggio locale, così
-          che l'utente possa confrontare competenze particolarmente rilevanti.
-        </p>
+      <Section title="4. Zona e distanza">
+        <p>Indicando una zona si vedono i professionisti che la coprono. Per cercare anche altrove si può cambiare o cancellare la città. Non vengono aggiunti automaticamente risultati fuori zona in base ai titoli sportivi. Le distanze pubbliche sono approssimate per proteggere la posizione esatta del professionista.</p>
       </Section>
 
       <Section title="5. Nessun pay-to-rank">

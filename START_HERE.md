@@ -96,3 +96,12 @@ direttiva da approvare: non confonderla con codice o migration già applicati.
 
 
 <!-- sport-search-owner-ux-v2 -->
+
+
+## Sport cinofili: incremento ricerca e visibilità — 26 settembre 2026
+
+Il primo blocco della direttiva è implementato nella copia di lavoro: area Sport
+autonoma, catalogo dinamico, due checkbox professionista e ricerca quotidiana
+senza priorità IGP generale. Stato di test, migrazione e pubblicazione:
+[SPORT_SEARCH_RELEASE_V1.md](docs/SPORT_SEARCH_RELEASE_V1.md). Il nuovo verifier Working-Dog e il ranking
+per disciplina restano il blocco successivo. Nessun rilascio remoto è implicito.

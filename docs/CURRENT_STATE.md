@@ -1,3 +1,19 @@
+# Checkpoint locale — Sport cinofili, 26 settembre 2026
+
+Base GitHub verificata: `f8d476669fa30e22192285d68df67a4c8808e006`.
+Implementati catalogo, ricerca Sport separata e visibilità professionista.
+Riferimento corrente: [SPORT_SEARCH_RELEASE_V1.md](SPORT_SEARCH_RELEASE_V1.md).
+Test TypeScript/build e SQL con schema completo superati in ambiente isolato.
+La nuova migrazione `20260926220000_separate_sport_search.sql` e il frontend
+non sono dichiarati applicati/pubblicati online. Il nuovo verifier e ranking
+per disciplina restano da implementare.
+
+Il report seguente è uno **snapshot storico**. Rigenerarlo con
+`scripts/update_project_state.py` nel repository collegato a Supabase dopo
+l’applicazione e il commit di questo incremento.
+
+---
+
 # CURRENT STATE — PawConnect / Portalecinofilo
 
 > Auto-generated repository snapshot. Generated: `2026-09-14T13:31:24+02:00`

@@ -11,7 +11,6 @@ import {
   UserRound,
   Award,
   Trophy,
-  Medal,
   Info,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -102,25 +101,6 @@ function getExperienceYears(pro: ProResult): number | null {
   return Math.max(0, currentYear - startYear);
 }
 
-function honorLabel(pro: ProResult) {
-  if (pro.honor_tier === 'gold') return 'Maestro Addestratore · Oro IGP3';
-  if (pro.honor_tier === 'silver') return 'Albo d’Oro · Argento IGP2';
-  if (pro.honor_tier === 'bronze') return 'Albo d’Oro · Bronzo IGP1';
-  if ((pro.verified_sport_results || 0) > 0) return 'Attività sportiva verificata';
-  return '';
-}
-
-function compareCynologyMerit(a: ProResult, b: ProResult) {
-  const igp = (b.highest_igp_level || 0) - (a.highest_igp_level || 0);
-  if (igp !== 0) return igp;
-
-  const discipline =
-    (b.sport_discipline_priority || 0) - (a.sport_discipline_priority || 0);
-  if (discipline !== 0) return discipline;
-
-  return (b.verified_sport_results || 0) - (a.verified_sport_results || 0);
-}
-
 function initials(name: string): string {
   return name
     .split(/\s+/)
@@ -131,8 +111,8 @@ function initials(name: string): string {
 }
 
 // ECOSYSTEM_PASS_V1
-export function SearchPage() {
-  const { navigate } = useRouter();
+export function SearchPage({ sport = false }: { sport?: boolean }) {
+  const { path, navigate } = useRouter();
   const [pros, setPros] = useState<ProResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [maxPrice, setMaxPrice] = useState(200);
@@ -143,12 +123,13 @@ export function SearchPage() {
   const [sortMode, setSortMode] = useState<SortMode>('relevance');
 
   const journey = readJourneyContext();
-  const hash = window.location.hash;
+  const hash = path;
   const qs = hash.includes('?')
     ? new URLSearchParams(hash.split('?')[1])
     : new URLSearchParams();
 
-  const typeFilter = qs.get('type');
+  const typeFilter = sport ? 'trainer' : qs.get('type') || 'trainer';
+  const disciplineFilter = sport ? qs.get('discipline') : null;
   const addressFilter = qs.get('address');
   const latParam = qs.get('lat');
   const lngParam = qs.get('lng');
@@ -186,11 +167,11 @@ export function SearchPage() {
       setLoading(true);
       setLoadError('');
 
-      const { data, error } = await supabase.rpc('search_public_professionals', {
+      const { data, error } = await supabase.rpc(sport ? 'search_sport_professionals' : 'search_public_professionals', {
         p_lat: selectedCoordinates?.lat ?? null,
         p_lng: selectedCoordinates?.lng ?? null,
-        p_zone_text: selectedCoordinates?.explicit ? null : selectedCity?.name ?? null,
-        p_service_type: typeFilter || null,
+        p_zone_text: selectedCoordinates?.explicit ? null : (selectedCity?.name ?? addressFilter?.trim()) || null,
+        ...(sport ? { p_discipline_id: disciplineFilter || null } : { p_service_type: typeFilter }),
         p_max_price: maxPrice >= 200 ? null : maxPrice,
         p_min_rating: minRating > 0 ? minRating : null,
       });
@@ -224,7 +205,7 @@ export function SearchPage() {
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [typeFilter, selectedCity, selectedCoordinates, maxPrice, minRating]);
+  }, [sport, disciplineFilter, typeFilter, addressFilter, selectedCity, selectedCoordinates, maxPrice, minRating]);
 
   const filtered = useMemo(() => {
     const minExperience = EXPERIENCE_STEPS[experienceStep];
@@ -243,9 +224,6 @@ export function SearchPage() {
     });
 
     return [...rows].sort((a, b) => {
-      const meritOrder = compareCynologyMerit(a, b);
-      if (meritOrder !== 0) return meritOrder;
-
       if (sortMode === 'distance') {
         return (a.distance_km ?? Number.POSITIVE_INFINITY) -
           (b.distance_km ?? Number.POSITIVE_INFINITY);
@@ -321,8 +299,13 @@ export function SearchPage() {
   return (
     <div className="min-h-screen bg-[var(--pc-bone-50)]">
       <div className="max-w-7xl mx-auto px-6 py-8 md:py-12">
-        <JourneyContextNotice context={journey} className="mb-6" />
-        <SearchCard compact />
+        {!sport && <h1 className="sr-only">Trova aiuto per il cane</h1>}
+        {sport ? <header className="mb-8 max-w-3xl">
+          <p className="pc-kicker">Un percorso sportivo con il tuo cane</p>
+          <h1 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Sport cinofili</h1>
+          <p className="pc-lead mt-4">Cerca chi insegna la disciplina che vuoi praticare. Confronta esperienza e attività nel profilo, poi contatta il professionista.</p>
+        </header> : <JourneyContextNotice context={journey} className="mb-6" />}
+        <SearchCard compact sport={sport} />
 
         <div className="grid lg:grid-cols-[280px_1fr] gap-6 mt-8">
           <aside className="pc-card p-5 md:p-6 h-fit lg:sticky lg:top-24">
@@ -331,27 +314,7 @@ export function SearchPage() {
                 <SlidersHorizontal className="w-4 h-4 text-[var(--pc-forest-700)]" />
                 <h3 className="font-bold text-[var(--pc-ink-950)]">Filtra la ricerca</h3>
               </div>
-              <details className="pc-evidence-surface border border-[var(--pc-line)] rounded-2xl px-5 py-4 mt-5">
-                <summary className="cursor-pointer list-none flex items-center gap-2 text-sm font-extrabold text-[var(--pc-forest-900)]">
-                  <Info className="w-4 h-4" />
-                  Perché vedo questi professionisti?
-                </summary>
-                <div className="mt-3 text-sm leading-6 text-[var(--pc-muted-600)] max-w-4xl">
-                  <p>
-                    PortaleCinofilo dà priorità alle competenze cinofile documentabili.
-                    IGP3, IGP2, IGP1 e gli altri risultati sportivi incidono sull’ordine
-                    soltanto quando sono verificati.
-                  </p>
-                  <p className="mt-2">
-                    Un professionista sportivo può restare visibile anche oltre il normale
-                    raggio locale. Distanza, prezzo e rating vengono dopo il merito cinofilo
-                    verificato; sponsorizzazioni e abbonamenti non possono comprare questa precedenza.
-                  </p>
-                  <p className="mt-2 font-semibold text-[var(--pc-ink-800)]">
-                    Albo d’Oro IGP: Oro = IGP3 · Argento = IGP2 · Bronzo = IGP1.
-                  </p>
-                </div>
-              </details>
+
 
               {activeFilterChips.length > 0 && (
                 <button type="button" onClick={resetFilters} className="text-xs font-bold text-[var(--pc-forest-900)] hover:underline">
@@ -363,6 +326,14 @@ export function SearchPage() {
             <p className="text-sm text-[var(--pc-muted-600)] leading-6 mt-3">
               Filtri fattuali per restringere il campo. La competenza si valuta entrando nel profilo.
             </p>
+
+            <details className="rounded-xl bg-[var(--pc-bone-50)] p-3 mt-4">
+              <summary className="cursor-pointer text-sm font-semibold"><Info className="w-4 h-4 inline mr-2" />Come sono ordinati?</summary>
+              <p className="mt-3 text-sm leading-6 text-[var(--pc-muted-600)]">
+                {sport ? 'Compaiono i professionisti che offrono la disciplina cercata, con un servizio di addestramento attivo e copertura nella zona scelta.' : 'Compaiono i professionisti che offrono il servizio cercato e coprono la zona scelta.'}
+                {' '}L’ordine iniziale segue la distanza, quando disponibile, poi il nome. Puoi scegliere un altro ordinamento. I risultati sportivi non danno precedenza generale.
+              </p>
+            </details>
 
             <div className="pc-rule my-5" />
 
@@ -468,9 +439,9 @@ export function SearchPage() {
               <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4">
                 <div>
                   <p className="pc-kicker">Confronta dati, poi entra nel profilo</p>
-                  <h1 className="pc-display text-3xl md:text-4xl font-semibold text-[var(--pc-ink-950)] mt-2">
+                  <h2 className="pc-display text-3xl md:text-4xl font-semibold text-[var(--pc-ink-950)] mt-2">
                     {loading ? 'Ricerca professionisti…' : `${resultsLabel} ${titleLocation}`}
-                  </h1>
+                  </h2>
                   <p className="text-[var(--pc-muted-600)] mt-2 leading-6 max-w-3xl">
                     Servizio, zona, esperienza e budget servono a scremare. Per scegliere, guarda competenze,
                     formazione, attività e contesto professionale.
@@ -566,23 +537,6 @@ export function SearchPage() {
                                     ? 'Struttura / centro cinofilo'
                                     : serviceLabel}
                                 </span>
-                                {honorLabel(pro) && (
-                                  <span
-                                    className={
-                                      pro.honor_tier === 'gold'
-                                        ? 'inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 normal-case tracking-normal text-amber-900 ring-1 ring-amber-200'
-                                        : pro.honor_tier === 'silver'
-                                          ? 'inline-flex items-center gap-1.5 rounded-full bg-slate-50 px-2.5 py-1 normal-case tracking-normal text-slate-700 ring-1 ring-slate-200'
-                                          : pro.honor_tier === 'bronze'
-                                            ? 'inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-2.5 py-1 normal-case tracking-normal text-orange-900 ring-1 ring-orange-200'
-                                            : 'inline-flex items-center gap-1.5 rounded-full bg-[var(--pc-bone-50)] px-2.5 py-1 normal-case tracking-normal text-[var(--pc-ink-800)] ring-1 ring-[var(--pc-line)]'
-                                    }
-                                  >
-                                    <Medal className="w-3.5 h-3.5" />
-                                    {honorLabel(pro)}
-                                  </span>
-                                )}
-
                                 {Boolean(pro.professional_verified) ? (
                                   <span className="inline-flex items-center gap-1.5 normal-case tracking-normal text-[var(--pc-evidence-700)]">
                                     <BadgeCheck className="w-3.5 h-3.5" />
@@ -609,13 +563,6 @@ export function SearchPage() {
                                   <span>entro {Math.max(5, Math.ceil(pro.distance_km / 5) * 5)} km</span>
                                 )}
                               </div>
-
-                              {pro.honor_out_of_area && (
-                                <p className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-[var(--pc-evidence-700)]">
-                                  <Medal className="w-3.5 h-3.5" />
-                                  Albo d’Oro: mostrato anche fuori dal raggio locale
-                                </p>
-                              )}
 
                               <p className="mt-4 text-[var(--pc-ink-800)] leading-7 line-clamp-3 max-w-3xl">
                                 {pro.bio || 'Apri il profilo per conoscere servizi, esperienza e percorso professionale.'}
@@ -718,7 +665,7 @@ export function SearchPage() {
 
                               <button
                                 type="button"
-                                onClick={() => navigate('/p/' + pro.id + (qs.toString() ? `?${qs.toString()}` : ''))}
+                                onClick={() => { const params = new URLSearchParams(qs); if (sport) params.set('context', 'sport'); else params.delete('context'); navigate('/p/' + pro.id + (params.toString() ? `?${params}` : '')); }}
                                 className="pc-btn pc-btn-primary w-full sm:w-auto lg:w-full justify-center group/cta"
                               >
                                 Vedi profilo e competenze

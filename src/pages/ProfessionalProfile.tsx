@@ -30,6 +30,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [profileError, setProfileError] = useState('');
   const [servicesError, setServicesError] = useState(false);
+  const [sportOfferings, setSportOfferings] = useState<Array<{ id: string; label: string }>>([]);
   const [reviewsError, setReviewsError] = useState(false);
   const [dogsLoadError, setDogsLoadError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
@@ -39,7 +40,8 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
   const journey = readJourneyContext();
   const profileQuery = window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '';
-  const returnToSearch = profileQuery ? `/search?${profileQuery}` : '/search';
+  const searchBase = new URLSearchParams(profileQuery).get('context') === 'sport' ? '/sport' : '/search';
+  const returnToSearch = profileQuery ? `${searchBase}?${profileQuery}` : searchBase;
   useEffect(() => {
     let active = true;
     setShowBook(false);
@@ -52,11 +54,12 @@ export function ProfessionalProfile({ id }: { id: string }) {
       setDogsLoadError(false);
       setPro(null);
       setServices([]);
+      setSportOfferings([]);
       setReviews([]);
       setDogs([]);
       try {
 
-      const [profileRes, servicesRes, reviewsRes] = await Promise.all([
+      const [profileRes, servicesRes, reviewsRes, sportsRes] = await Promise.all([
         supabase
           .from('public_professional_profiles')
           .select(
@@ -73,6 +76,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
           .eq('professional_id', id)
           .order('created_at', { ascending: false })
           .limit(10),
+        supabase.rpc('get_public_professional_sports', { p_professional_id: id }),
       ]);
 
       if (!active) return;
@@ -88,6 +92,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
       setPro(profileRes.data);
       setServices(servicesRes.data || []);
+      setSportOfferings(sportsRes.error ? [] : sportsRes.data || []);
       setReviews(reviewsRes.data || []);
 
       if (user && profile?.role === 'owner') {
@@ -274,6 +279,12 @@ export function ProfessionalProfile({ id }: { id: string }) {
                     {pro.bio ||
                       'Profilo approvato da PortaleCinofilo. Informazioni e servizi disponibili nella scheda.'}
                   </p>
+
+                  {sportOfferings.length > 0 && <div className="mt-5">
+                    <h3 className="font-semibold text-[var(--pc-ink-950)]">Discipline sportive offerte</h3>
+                    <div className="flex flex-wrap gap-2 mt-2">{sportOfferings.map(d => <span key={d.id} className="rounded-full bg-[var(--pc-forest-100)] px-3 py-1 text-sm text-[var(--pc-forest-900)]">{d.label}</span>)}</div>
+                    <p className="text-xs text-[var(--pc-muted-600)] mt-2">Attività dichiarate dal professionista. Qualifiche e risultati sono indicati con il loro stato di verifica.</p>
+                  </div>}
 
                   <div className="grid sm:grid-cols-3 gap-3 mt-6">
                     <InfoPill label="Zona" value={pro.zone_text || 'Locale'} />

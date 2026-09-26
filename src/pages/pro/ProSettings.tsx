@@ -21,6 +21,7 @@ import { useAuth } from '../../lib/AuthContext';
 import { VerificationModal } from '../../components/VerificationModal';
 import { ProLayout } from './ProLayout';
 import { CalendarServices } from '../../components/CalendarServices';
+import { ProfessionalSearchSettings } from '../../components/ProfessionalSearchSettings';
 import { ProfessionalReplyTemplates } from '../../components/ProfessionalReplyTemplates';
 
 
@@ -889,6 +890,8 @@ export function ProSettings() {
           adminNotes={pro.admin_notes}
           rejectionReason={pro.rejection_reason}
         />
+
+        <ProfessionalSearchSettings key={user?.id} />
 
         <section className="pc-card relative overflow-hidden mb-5">
           <div

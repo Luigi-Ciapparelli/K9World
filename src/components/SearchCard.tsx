@@ -9,6 +9,7 @@ import {
   GraduationCap,
   Navigation,
 } from 'lucide-react';
+import { useSportDisciplines } from '../lib/sportSearch';
 import { useRouter } from '../lib/RouterContext';
 import { cityLabel, loadItalianCities, normalizeCitySearch, type ItalianCity } from '../lib/italianCities';
 import type { ServiceCategoryType } from '../lib/serviceCategories';
@@ -26,9 +27,11 @@ function isServiceCategory(value: string | null): value is ServiceCategoryType {
 }
 
 // ECOSYSTEM_PASS_V1
-export function SearchCard({ compact = false }: { compact?: boolean }) {
+export function SearchCard({ compact = false, sport = false }: { compact?: boolean; sport?: boolean }) {
+  const catalog = useSportDisciplines(sport);
+  const [discipline, setDiscipline] = useState('');
   const { path, navigate } = useRouter();
-  const [service, setServizio] = useState<ServiceCategoryType>('walker');
+  const [service, setServizio] = useState<ServiceCategoryType>('trainer');
   const [address, setAddress] = useState('');
   const [locationLoading, setLocationLoading] = useState(false);
   const [locationAccuracy, setLocationAccuracy] = useState<number | null>(null);
@@ -51,12 +54,13 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
       Number.isFinite(lat) &&
       Number.isFinite(lng);
 
-    setServizio(isServiceCategory(type) ? type : 'walker');
+    setServizio(sport ? 'trainer' : isServiceCategory(type) ? type : 'trainer');
+    setDiscipline(params.get('discipline') || '');
     setAddress(nextAddress);
     setSelectedCity(null);
     setGpsCoords(hasCoords ? { lat, lng } : null);
     setLocationAccuracy(null);
-  }, [path]);
+  }, [path, sport]);
 
   useEffect(() => {
     let active = true;
@@ -114,7 +118,7 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
       (city ? { lat: city.lat, lng: city.lng } : null);
 
     const params = new URLSearchParams({
-      type: service,
+      type: sport ? 'trainer' : service,
       address,
     });
 
@@ -131,7 +135,9 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
       params.set('lng', String(coords.lng));
     }
 
-    navigate(`/search?${params.toString()}`);
+    if (sport && discipline) params.set('discipline', discipline);
+    if (sport) params.set('context', 'sport');
+    navigate(`${sport ? '/sport' : '/search'}?${params.toString()}`);
   };
 
   const handleUseLocation = () => {
@@ -230,6 +236,17 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
         compact ? 'p-4' : 'p-6'
       }`}
     >
+      {sport ? <div className="mb-4">
+        <label htmlFor="sport-discipline" className="block text-sm font-bold mb-2">Disciplina sportiva</label>
+        {catalog.error ? <div role="alert"><p>{catalog.error}</p><button type="button" className="underline mt-2" onClick={catalog.retry}>Riprova</button></div>
+          : <select id="sport-discipline" value={discipline} disabled={catalog.loading}
+              onChange={e => setDiscipline(e.target.value)} className="w-full rounded-xl border border-[var(--pc-line)] bg-[var(--pc-paper)] p-3 text-[var(--pc-ink-950)]">
+              <option value="">{catalog.loading ? 'Caricamento discipline…' : 'Tutte le discipline'}</option>
+              {discipline && !catalog.loading && !catalog.disciplines.some(d => d.id === discipline) && <option value={discipline}>Disciplina non disponibile</option>}
+              {catalog.disciplines.map(d => <option key={d.id} value={d.id}>{d.label}</option>)}
+            </select>}
+        {catalog.disciplines.find(d => d.id === discipline)?.description && <p className="mt-2 text-sm text-[var(--pc-muted-600)]">{catalog.disciplines.find(d => d.id === discipline)?.description}</p>}
+      </div> : <>
       <p className="text-xs font-bold tracking-wider text-stone-500 mb-3">
         SCEGLI UN SERVIZIO
       </p>
@@ -257,9 +274,12 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
         })}
       </div>
 
+      </>}
+
       <div className="flex flex-col md:flex-row gap-3">
         <div className="relative flex-1">
           <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+          <label htmlFor="search-address" className="sr-only">Città o zona</label>
           <input
             id="search-address"
             name="address"
@@ -319,7 +339,7 @@ export function SearchCard({ compact = false }: { compact?: boolean }) {
           className="pc-btn pc-btn-primary px-6"
         >
           <Search className="w-4 h-4" />
-          Cerca
+          {sport ? 'Trova addestratore per disciplina' : 'Cerca'}
         </button>
       </div>
     </div>

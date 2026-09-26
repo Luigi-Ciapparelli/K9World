@@ -1,8 +1,10 @@
 # Ricerca sportiva e Working-Dog per disciplina — v1
 
-Stato: direttiva prodotto del 26 settembre 2026. Questo documento è una
-specifica tecnica da approvare; non crea migration, non modifica Supabase e non
-dichiara implementate le funzioni descritte.
+Stato: direttiva prodotto del 26 settembre 2026 approvata dall’utente per
+l’implementazione. Il primo incremento (catalogo, visibilità e ricerca separata)
+è descritto in [SPORT_SEARCH_RELEASE_V1.md](SPORT_SEARCH_RELEASE_V1.md).
+Verifier, ranking e pubblicazione dei nuovi badge restano successivi; questa
+specifica non costituisce prova della loro implementazione o del deploy.
 
 <!-- sport-search-and-working-dog-v1 -->
 
@@ -87,20 +89,21 @@ soglie sono versionate e soggette a audit.
 1. i due selettori professionista controllano indipendentemente la visibilità;
 2. il percorso normale proprietario arriva alla ricerca senza scelta Gestione/Sport;
 3. Sport è visibile come sezione separata e il filtro disciplina appare solo lì;
-2. disciplina nuova importata dal catalogo senza modifica alle card;
-3. identità Working-Dog corretta e identità ambigua;
-4. risultato IGP isolato da Obedience;
-5. risultato Obedience che produce il tier configurato solo dopo verifica;
-6. cane errato, duplicato e fonte non raggiungibile;
-7. ricalcolo con nuova versione della configurazione;
-8. client che tenta di scrivere tier, score o risultato;
-9. RLS tra professionisti e profilo pubblico;
-10. migrazione profili esistenti senza scomparsa dalla ricerca.
+4. disciplina nuova importata dal catalogo senza modifica alle card;
+5. identità Working-Dog corretta e identità ambigua;
+6. risultato IGP isolato da Obedience;
+7. risultato Obedience che produce il tier configurato solo dopo verifica;
+8. cane errato, duplicato e fonte non raggiungibile;
+9. ricalcolo con nuova versione della configurazione;
+10. client che tenta di scrivere tier, score o risultato;
+11. RLS tra professionisti e profilo pubblico;
+12. migrazione profili esistenti senza scomparsa dalla ricerca.
+
 
 ## Rilascio
 
-Prima approvare questo documento e il catalogo iniziale. Poi implementare
-schema/RPC, verifier e configurazioni, eseguire i test sullo schema completo,
+Procedere per incrementi: catalogo e ricerca/visibilità, poi verifier e
+configurazioni. Eseguire i test sullo schema completo,
 collegare UI e ricerca, provare con professionisti reali e solo dopo attivare
 la pubblicazione dei badge.
 
