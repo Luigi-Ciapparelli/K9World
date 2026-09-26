@@ -8,7 +8,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 
-const CONTACT_EMAIL = 'DearerMetal525@proton.me';
+const CONTACT_EMAIL = 'info@portalecinofilo.com';
 
 export function PrivacyPage() {
   return (

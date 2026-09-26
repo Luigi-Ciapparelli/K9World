@@ -1,7 +1,7 @@
 import { Mail, ShieldCheck } from 'lucide-react';
 import { useRouter } from '../lib/RouterContext';
 
-const CONTACT_EMAIL = 'DearerMetal525@proton.me';
+const CONTACT_EMAIL = 'info@portalecinofilo.com';
 
 export function Footer() {
   const { navigate } = useRouter();
