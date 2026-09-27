@@ -1,285 +1,81 @@
-import { useEffect, useMemo, useState } from 'react';
-import {
-  ArrowRight,
-  CheckCircle2,
-  Clock3,
-  GraduationCap,
-  Lock,
-  PawPrint,
-} from 'lucide-react';
-import {
-  STAGE_1_LESSONS,
-  STAGE_1_MODULES,
-  getStage1LessonsForModule,
-} from '../lib/imparaContent';
+import { useRef, useState } from 'react';
+import { ArrowRight, BookOpen, Check, Clock3, Download, Leaf, NotebookPen, Search, Target, Upload } from 'lucide-react';
+import { STAGE_1_LESSONS, STAGE_1_MODULES } from '../lib/imparaContent';
+import { downloadText, emptyProgress, lessonStatus, normalizeProgress, notebookText } from '../lib/imparaProgress';
+import { useImparaProgress } from '../lib/useImparaProgress';
 import { useRouter } from '../lib/RouterContext';
-import { ProfessionalBridge } from '../components/ecosystem/ProfessionalBridge';
+import '../impara.css';
 
-const PROGRESS_KEY = 'pawconnect-impara-stage1-v2';
-
-type ImparaProgress = {
-  studied: string[];
-  activities: string[];
-  verified: string[];
-};
-
-const EMPTY_PROGRESS: ImparaProgress = {
-  studied: [],
-  activities: [],
-  verified: [],
-};
-
-function readProgress(): ImparaProgress {
-  try {
-    const value = JSON.parse(window.localStorage.getItem(PROGRESS_KEY) || '{}');
-    return {
-      studied: Array.isArray(value.studied) ? value.studied : [],
-      activities: Array.isArray(value.activities) ? value.activities : [],
-      verified: Array.isArray(value.verified) ? value.verified : [],
-    };
-  } catch {
-    return EMPTY_PROGRESS;
-  }
-}
-
-// ECOSYSTEM_PASS_V1
 export function ImparaHomePage() {
   const { navigate } = useRouter();
-  const [progressState, setProgressState] = useState<ImparaProgress>(EMPTY_PROGRESS);
-
-  useEffect(() => {
-    const sync = () => setProgressState(readProgress());
-    sync();
-    window.addEventListener('storage', sync);
-    window.addEventListener('pawconnect-impara-progress', sync);
-    return () => {
-      window.removeEventListener('storage', sync);
-      window.removeEventListener('pawconnect-impara-progress', sync);
-    };
-  }, []);
-
-  const totals = useMemo(() => {
-    const sublessons = STAGE_1_LESSONS.reduce((sum, lesson) => sum + lesson.sublessons.length, 0);
-    const activities = STAGE_1_LESSONS.reduce((sum, lesson) => sum + lesson.activities.length, 0);
-    const checks = sublessons + activities + STAGE_1_LESSONS.length;
-    const done =
-      progressState.studied.length +
-      progressState.activities.length +
-      progressState.verified.length;
-
-    return {
-      sublessons,
-      activities,
-      progress: checks > 0 ? Math.round((Math.min(done, checks) / checks) * 100) : 0,
-    };
-  }, [progressState]);
-
-  const lessonStatus = (slug: string, sublessonIds: string[]) => {
-    if (progressState.verified.includes(slug)) return 'Verificato';
-    const allStudied = sublessonIds.every((id) =>
-      progressState.studied.includes(`${slug}:${id}`)
-    );
-    if (allStudied) return 'Appreso';
-    return 'Da conoscere';
+  const { progress, update, saved } = useImparaProgress();
+  const [search,setSearch] = useState('');
+  const [message,setMessage] = useState('');
+  const [reset,setReset] = useState(false);
+  const upload = useRef<HTMLInputElement>(null);
+  const complete = STAGE_1_LESSONS.filter(l=>lessonStatus(l,progress).complete).length;
+  const started = STAGE_1_LESSONS.some(l=>lessonStatus(l,progress).started);
+  const resumed = STAGE_1_LESSONS.find(l=>l.slug===progress.resume && !lessonStatus(l,progress).complete);
+  const next = resumed || STAGE_1_LESSONS.find(l=>!lessonStatus(l,progress).complete) || STAGE_1_LESSONS[0];
+  const go = (slug: string) => navigate(`/impara/stage-1/${slug}`);
+  const query = search.trim().toLocaleLowerCase('it');
+  const matches = STAGE_1_LESSONS.filter(l=>[l.title,l.summary,l.moduleTitle,...l.objectives,...l.sublessons.map(s=>s.title)].join(' ').toLocaleLowerCase('it').includes(query));
+  const restore = async (file: File) => {
+    if (file.size > 1_000_000) {setMessage('Il file è troppo grande. Seleziona un backup del percorso.');return;}
+    try { const value=JSON.parse(await file.text()); if(value?.format!=='portalecinofilo-impara-backup' || value.progress?.version!==3) throw new Error();
+      if(!window.confirm('Importare il backup? Sostituirà progressi e appunti di questo browser.')) return;
+      update(()=>normalizeProgress(value.progress));setMessage('Backup importato. Puoi riprendere il percorso.');
+    } catch {setMessage('File non riconosciuto. Usa un backup esportato da questa sezione.');}
   };
-
-  return (
-    <div className="min-h-screen bg-[var(--pc-bone-50)]">
-      <section className="border-b border-[var(--pc-line)] bg-[var(--pc-paper)]">
-        <div className="max-w-6xl mx-auto px-6 py-14 md:py-20">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-3">
-              <GraduationCap className="w-5 h-5 text-[var(--pc-forest-700)]" />
-              <span className="pc-kicker">PortaleCinofilo · Impara</span>
-            </div>
-            <h1 className="pc-display text-4xl md:text-6xl font-semibold text-[var(--pc-ink-950)] mt-5">
-              Capire il cane prima di chiedergli qualcosa.
-            </h1>
-            <p className="pc-lead pc-reading mt-5">
-              Un percorso progressivo fatto di sottolezioni, attività pratiche e verifiche.
-              Non basta scorrere una pagina: l’obiettivo è imparare a osservare, ragionare e applicare.
-            </p>
-
-            <div className="mt-6 pc-evidence-surface border border-[#cedde1] rounded-[var(--pc-radius-lg)] p-4 max-w-4xl">
-              <p className="text-sm text-[var(--pc-ink-800)] leading-relaxed">
-                <strong>Revisione editoriale in corso.</strong> Gli appunti del corso ENCI 2024
-                sono materiale sorgente, non “verità PortaleCinofilo” automatica. Le formulazioni
-                metodologiche specifiche vengono separate dalle nozioni da validare con fonti
-                indipendenti prima della versione definitiva.
-              </p>
-            </div>
-          </div>
+  return <main className="impara im-home">
+    <div className="im-wrap">
+      <header className="im-hero">
+        <div>
+          <p className="im-eyebrow"><Leaf size={15}/> IMPARA · PORTALECINOFILO</p>
+          <h1>Vivere meglio insieme<br/>{' '}<em>si impara.</em></h1>
+          <p className="im-lead">Comprendi i bisogni del cane, osserva quello che ti comunica e porta una cosa utile nella vostra giornata. Un passo alla volta.</p>
+          <div className="im-actions"><button className="im-button" onClick={()=>go(next.slug)}>{complete===STAGE_1_LESSONS.length ? 'Rileggi il percorso' : started ? 'Riprendi il percorso' : 'Inizia dalle basi'}<ArrowRight size={18}/></button><button className="im-link" onClick={()=>document.getElementById('im-programma')?.scrollIntoView({behavior:'smooth'})}>Esplora le lezioni ↓</button></div>
+          <p className="im-small im-benefits">Gratuito · Senza iscrizione · Anche prima di avere un cane</p>
         </div>
+        <aside className="im-course-card" aria-label="Il tuo percorso">
+          <div className="im-card-top"><span className="im-eyebrow">IL TUO PERCORSO</span><BookOpen size={24}/></div>
+          <h2>Le fondamenta<br/>della relazione.</h2>
+          <div className="im-course-map" aria-hidden="true">{STAGE_1_MODULES.map(m=><div key={m.id}><span>{String(m.order).padStart(2,'0')}</span><strong>{m.title}</strong></div>)}</div>
+          <div className="im-progress-label"><span>{complete===8?'Percorso completato':`${complete} di 8 lezioni completate`}</span><strong>{Math.round(complete/8*100)}%</strong></div>
+          <progress value={complete} max={8} aria-label="Lezioni completate"/>
+          <p className="im-small">Leggi, osserva, metti alla prova ciò che hai capito.</p>
+        </aside>
+      </header>
+      {!saved && <p className="im-notice" role="alert">Il browser non consente il salvataggio. Puoi continuare; scarica il backup prima di chiudere questa pagina.</p>}
+      {progress.migrated && <p className="im-notice">Abbiamo recuperato le tue letture precedenti. Attività e verifiche sono nuove: completale per aggiornare il percorso.</p>}
+      {complete===8 && <section className="im-milestone"><Check size={30}/><div><h2>Hai completato le fondamenta.</h2><p>Il prossimo passo è nella vita quotidiana. Rileggi il quaderno, scegli un obiettivo concreto e, se vuoi, confrontati con un professionista. Questo risultato è un’autoverifica, non una qualifica.</p><button className="im-link" onClick={()=>downloadText('PortaleCinofilo-il-mio-quaderno.txt',notebookText(progress))}>Scarica il tuo quaderno <Download size={16}/></button></div></section>}
+      <section className="im-feature-row" aria-label="Strumenti per imparare">
+        <button onClick={()=>go('osservazione-timing-marker')}><Target size={24}/><span><strong>Allena il tuo timing</strong><small>Un laboratorio da provare, non solo da leggere.</small></span><ArrowRight size={20}/></button>
+        <button onClick={()=>navigate('/prima-del-cane')}><Leaf size={24}/><span><strong>Stai pensando a un cane?</strong><small>Parti dalla vita che puoi offrirgli.</small></span><ArrowRight size={20}/></button>
       </section>
-
-      <main className="max-w-6xl mx-auto px-6 py-10 md:py-14">
-        <ProfessionalBridge
-          source="impara"
-          topic="fondamenta"
-          title="Porta ciò che impari nel lavoro con un professionista."
-          text="Capire bisogni, routine e comunicazione ti aiuta a osservare meglio il cane e a fare domande più utili. Il professionista aggiunge esperienza, metodo e continuità sul singolo binomio."
-          cta="Trova un professionista"
-          className="mb-8"
-        />
-
-        <section className="pc-card p-6 md:p-8">
-          <div className="flex flex-col md:flex-row md:justify-between gap-6">
-            <div className="max-w-3xl">
-              <p className="text-sm font-bold uppercase tracking-[0.18em] text-[var(--pc-forest-700)]">
-                Stage 1
-              </p>
-              <h2 className="text-3xl font-bold text-[var(--pc-ink-950)] mt-2">Fondamenta</h2>
-              <p className="text-[var(--pc-muted-600)] mt-2">
-                {STAGE_1_MODULES.length} moduli · {STAGE_1_LESSONS.length} lezioni ·{' '}
-                {totals.sublessons} sottolezioni · {totals.activities} attività.
-              </p>
-            </div>
-
-            <div className="min-w-[220px] rounded-2xl bg-white border border-[var(--pc-line)] p-4">
-              <div className="flex justify-between text-sm font-semibold text-[var(--pc-ink-800)]">
-                <span>Progresso reale</span>
-                <span>{totals.progress}%</span>
-              </div>
-              <div className="h-2 bg-stone-200 rounded-full overflow-hidden mt-3">
-                <div
-                  className="h-full bg-[var(--pc-forest-700)] rounded-full"
-                  style={{ width: `${totals.progress}%` }}
-                />
-              </div>
-              <p className="text-xs text-[var(--pc-muted-400)] mt-2">
-                Studio + attività + verifica finale.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-8 space-y-6">
-            {STAGE_1_MODULES.map((module) => {
-              const lessons = getStage1LessonsForModule(module.id);
-
-              return (
-                <section
-                  key={module.id}
-                  className="pc-card p-5 md:p-6"
-                >
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--pc-forest-700)]">
-                    Modulo {module.order}
-                  </p>
-                  <h3 className="text-2xl font-bold text-[var(--pc-ink-950)] mt-1">{module.title}</h3>
-                  <p className="text-sm text-[var(--pc-muted-600)] mt-2 max-w-3xl leading-relaxed">
-                    {module.description}
-                  </p>
-
-                  <div className="grid gap-3 mt-5">
-                    {lessons.map((lesson) => {
-                      const status = lessonStatus(
-                        lesson.slug,
-                        lesson.sublessons.map((item) => item.id)
-                      );
-
-                      return (
-                        <button
-                          key={lesson.slug}
-                          type="button"
-                          onClick={() => navigate(`/impara/stage-1/${lesson.slug}`)}
-                          className="group w-full text-left rounded-2xl bg-[var(--pc-bone-50)] border border-[var(--pc-line)] p-5 hover:border-[var(--pc-forest-700)] hover:bg-[var(--pc-forest-100)] transition"
-                        >
-                          <div className="flex items-start gap-4">
-                            <div
-                              className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                                status === 'Verificato'
-                                  ? 'bg-[var(--pc-forest-700)] text-white'
-                                  : status === 'Appreso'
-                                    ? 'bg-amber-100 text-amber-800'
-                                    : 'bg-[var(--pc-paper)] border border-[var(--pc-line)] text-[var(--pc-muted-600)]'
-                              }`}
-                            >
-                              {status === 'Verificato' ? (
-                                <CheckCircle2 className="w-5 h-5" />
-                              ) : (
-                                <span className="font-bold">{lesson.order}</span>
-                              )}
-                            </div>
-
-                            <div className="min-w-0 flex-1">
-                              <div className="flex flex-wrap gap-2 items-center">
-                                <h4 className="font-bold text-[var(--pc-ink-950)]">{lesson.title}</h4>
-                                <span className="text-[11px] font-bold uppercase tracking-wide rounded-full bg-[var(--pc-paper)] border border-[var(--pc-line)] px-2 py-1 text-[var(--pc-muted-400)]">
-                                  {status}
-                                </span>
-                              </div>
-
-                              <p className="text-sm text-[var(--pc-muted-600)] mt-2 leading-relaxed">
-                                {lesson.summary}
-                              </p>
-
-                              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[var(--pc-muted-400)] mt-3">
-                                <span className="inline-flex items-center gap-1.5">
-                                  <Clock3 className="w-3.5 h-3.5" />
-                                  circa {lesson.durationMinutes} min
-                                </span>
-                                <span>{lesson.sublessons.length} sottolezioni</span>
-                                <span>{lesson.activities.length} attività</span>
-                                <span>{lesson.quiz.length} domande di verifica</span>
-                              </div>
-                            </div>
-
-                            <ArrowRight className="w-5 h-5 text-stone-400 group-hover:text-[var(--pc-forest-700)] group-hover:translate-x-1 transition shrink-0 mt-2" />
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </section>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="mt-8 grid md:grid-cols-2 gap-5">
-          {[
-            [
-              'Stage 2',
-              'Pratica e gestione consapevole',
-              'Video guidati, esercizi sul campo, comunicazione, gestione e competenze applicate.',
-            ],
-            [
-              'Stage 3',
-              'Percorso avanzato',
-              'Competenze più tecniche, attività strutturate e preparazione a verifiche pratiche esterne.',
-            ],
-          ].map(([stage, title, text]) => (
-            <article
-              key={stage}
-              className="pc-card p-6 opacity-80"
-            >
-              <div className="w-11 h-11 rounded-xl bg-stone-100 text-[var(--pc-muted-400)] flex items-center justify-center">
-                <Lock className="w-5 h-5" />
-              </div>
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--pc-muted-400)] mt-5">
-                {stage} · In sviluppo
-              </p>
-              <h2 className="text-xl font-bold text-[var(--pc-ink-950)] mt-1">{title}</h2>
-              <p className="text-sm text-[var(--pc-muted-600)] leading-relaxed mt-2">{text}</p>
-            </article>
-          ))}
-        </section>
-
-        <section className="mt-8 rounded-3xl pc-surface-dark p-7 md:p-8">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
-              <PawPrint className="w-6 h-6" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold">Da conoscere → Appreso → Verificato</h2>
-              <p className="text-stone-300 mt-2 leading-relaxed max-w-3xl">
-                “Appreso” richiede di studiare le sottolezioni. “Verificato” richiede anche
-                attività e quiz. Nel prototipo il progresso resta locale sul dispositivo e non
-                rappresenta una qualifica ufficiale.
-              </p>
-            </div>
-          </div>
-        </section>
-      </main>
+      <section id="im-programma" className="im-program" aria-labelledby="program-title">
+        <div className="im-section-heading"><div><p className="im-eyebrow">01 — FONDAMENTA</p><h2 id="program-title">Otto lezioni. Una relazione da costruire.</h2><p>Segui l’ordine suggerito oppure apri subito il tema che ti serve.</p></div><label className="im-search"><Search size={18}/><span className="sr-only">Cerca nelle lezioni</span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cerca un argomento" type="search"/></label></div>
+        {matches.length===0 && <div className="im-panel"><p>Nessuna lezione trovata per “{search}”.</p><button className="im-link" onClick={()=>setSearch('')}>Mostra tutte le lezioni</button></div>}
+        {STAGE_1_MODULES.map(module=>{
+          const lessons=matches.filter(l=>l.moduleId===module.id);if(!lessons.length)return null;
+          return <section className="im-module" key={module.id} aria-labelledby={`module-${module.id}`}>
+            <div className="im-module-title"><span className="im-number">0{module.order}</span><div><h3 id={`module-${module.id}`}>{module.title}</h3><p>{module.description}</p></div></div>
+            <div className="im-lessons-grid">{lessons.map(l=>{const status=lessonStatus(l,progress);return <button key={l.slug} className={`im-lesson-card ${status.complete?'complete':''}`} onClick={()=>go(l.slug)}>
+              <div className="im-card-top"><span className="im-eyebrow">LEZIONE {String(l.order).padStart(2,'0')}</span><span className={`im-status ${status.complete?'done':''}`}>{status.complete?<><Check size={14}/>Completata</>:status.started?'In corso':'Da iniziare'}</span></div>
+              <h4>{l.title}</h4><p>{l.summary}</p>
+              <div className="im-card-bottom"><span><Clock3 size={15}/>{l.durationMinutes} min + pratica</span><span>{status.complete?'Ripassa':'Apri lezione'}<ArrowRight size={17}/></span></div>
+            </button>;})}</div>
+          </section>;
+        })}
+      </section>
+      <section className="im-notebook" aria-labelledby="notebook-title"><NotebookPen size={30}/><div><p className="im-eyebrow">DALLE LEZIONI ALLA TUA GIORNATA</p><h2 id="notebook-title">Il tuo quaderno di osservazione.</h2><p>Raccogli appunti, casi e domande durante le attività. Puoi scaricarli e portarli a un professionista. Restano in questo browser: chi usa lo stesso dispositivo può leggerli.</p>
+        <div className="im-actions"><button className="im-button secondary" onClick={()=>downloadText('PortaleCinofilo-il-mio-quaderno.txt',notebookText(progress))}><Download size={17}/>Scarica il quaderno</button><button className="im-link" onClick={()=>navigate('/search?type=trainer&from=impara')}>Trova un addestratore<ArrowRight size={16}/></button></div>
+        <details className="im-storage"><summary>Gestisci progressi e backup</summary><p>I progressi non sono sincronizzati con un account. Per spostarli su un altro browser esporta il backup e importalo lì. Cancellare i dati del browser può eliminarli.</p><div className="im-actions"><button className="im-button secondary" onClick={()=>downloadText('PortaleCinofilo-progressi.json',JSON.stringify({format:'portalecinofilo-impara-backup',exportedAt:new Date().toISOString(),progress},null,2),'application/json')}><Download size={16}/>Esporta backup</button><button className="im-button secondary" onClick={()=>upload.current?.click()}><Upload size={16}/>Importa backup</button><button className="im-link" onClick={()=>setReset(!reset)}>Azzera il percorso</button></div><input ref={upload} type="file" accept=".json,application/json" hidden onChange={e=>{const file=e.target.files?.[0];if(file)void restore(file);e.target.value='';}}/>
+          {reset && <div className="im-notice"><p>Vuoi cancellare appunti e progressi da questo browser? Esporta prima un backup se vuoi conservarli.</p><div className="im-actions"><button className="im-button secondary" onClick={()=>setReset(false)}>Annulla</button><button className="im-button" onClick={()=>{update(()=>emptyProgress());setReset(false);setMessage('Appunti e progressi azzerati.');}}>Conferma azzeramento</button></div></div>}
+          {message && <p role="status">{message}</p>}
+        </details>
+      </div></section>
+      <p className="im-footnote">Un percorso educativo di PortaleCinofilo. Per difficoltà specifiche costruisci il lavoro con un professionista; per cambiamenti improvvisi o sospetti problemi di salute rivolgiti al veterinario.</p>
     </div>
-  );
+  </main>;
 }

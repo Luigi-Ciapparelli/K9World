@@ -113,3 +113,12 @@ Criteri, motore server isolato e limiti del collegamento Working-Dog: [docs/SPOR
 Nove discipline con regole testabili; Disc Dog, Flyball e ulteriori discipline
 richiedono ancora definizioni/mappature. Nessun nuovo badge o importatore è stato
 pubblicato. Serve una fonte reale accessibile e una prova dell’identità.
+
+
+## Impara operativo — 27 settembre 2026
+
+Percorso gratuito: 8 lezioni, letture applicate, quaderno con attività reali,
+quiz con correzione, progressi/ripresa, backup e laboratorio video di timing.
+Specifiche, verifiche e limiti: [IMPARA_RELEASE_V3.md](docs/IMPARA_RELEASE_V3.md).
+Implementato nella copia di lavoro; nessuna migration. Stato online da registrare
+dopo il deployment. Le autoverifiche non sono qualifiche professionali.

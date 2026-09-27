@@ -786,3 +786,12 @@ richiede una riga univoca con conduttore e cane, estrae posizione, punteggio e
 qualifica e lascia il record in attesa se la struttura del provider è ambigua.
 Fixture locale basata sul risultato fornito di Valentina Balli: 4ª, 264,38, EX,
 Classe 3 → Oro Obedience. Endpoint live e accesso Working-Dog non collaudati.
+
+
+## Impara operativo — 27 settembre 2026
+
+Percorso gratuito: 8 lezioni, letture applicate, quaderno con attività reali,
+quiz con correzione, progressi/ripresa, backup e laboratorio video di timing.
+Specifiche, verifiche e limiti: [IMPARA_RELEASE_V3.md](IMPARA_RELEASE_V3.md).
+Implementato nella copia di lavoro; nessuna migration. Stato online da registrare
+dopo il deployment. Le autoverifiche non sono qualifiche professionali.

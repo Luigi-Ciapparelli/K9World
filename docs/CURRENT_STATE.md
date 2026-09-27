@@ -1,3 +1,13 @@
+# Checkpoint Impara — 27 settembre 2026
+
+Base corrente esaminata: `fa43378` su `origin/main`. Lavoro Impara v3 implementato
+e verificato in copia isolata; rilascio remoto non dichiarato. Vedi
+[IMPARA_RELEASE_V3.md](IMPARA_RELEASE_V3.md) per funzionalità e verifiche.
+Nessuna migration o modifica ai servizi remoti. Il report seguente è storico:
+non usarlo per dedurre lo stato del sito senza controllare Git e deployment.
+
+---
+
 # Checkpoint locale — Sport cinofili, 26 settembre 2026
 
 Base GitHub verificata: `f8d476669fa30e22192285d68df67a4c8808e006`.
