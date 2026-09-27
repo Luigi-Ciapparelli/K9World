@@ -6,9 +6,9 @@ import ts from 'typescript';
 const root = process.cwd();
 const temp = await fs.mkdtemp(path.join(os.tmpdir(),'pc-impara-test-'));
 try {
-  for(const file of ['imparaContent','imparaProgress']) {
+  for(const file of ['imparaContent','shapingLab','imparaProgress']) {
     const source=await fs.readFile(path.join(root,`src/lib/${file}.ts`),'utf8');
-    const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText.replaceAll("'./imparaContent'","'./imparaContent.mjs'");
+    const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText.replaceAll("'./imparaContent'","'./imparaContent.mjs'").replaceAll("'./shapingLab'", "'./shapingLab.mjs'");
     await fs.writeFile(path.join(temp,`${file}.mjs`),code);
   }
   const { STAGE_1_LESSONS:L }=await import(`file://${temp}/imparaContent.mjs`);

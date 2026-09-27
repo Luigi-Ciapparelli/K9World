@@ -1,4 +1,4 @@
-// Start Vite using the synthetic backend in docs/IMPARA_RELEASE_V3.md.
+// Start Vite using the synthetic backend in docs/IMPARA_SHAPING_V1.md.
 // No production credentials required. All backend requests are intercepted.
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
@@ -53,25 +53,43 @@ try {
  if(screenshots)await page.screenshot({path:`${screenshots}/impara-verifica.png`,fullPage:true});
  await page.getByRole('button',{name:'Lezione successiva'}).click();
  await page.getByRole('heading',{name:lessons[1].title,exact:true}).waitFor();
- assert.equal(await page.getByRole('button',{name:'Ho letto questa parte',exact:true}).count(),3,'lesson-local state reset');
+ assert.equal(await page.getByRole('button',{name:'Ho letto questa parte',exact:true}).count(),lessons[1].sublessons.length,'lesson-local state reset');
  await page.getByRole('button',{name:'2 Metti in pratica',exact:true}).click();
- await page.getByRole('button',{name:'Avvia esercizio'}).click();
- const useVideo=await page.locator('video').count();
- if(useVideo) {
-   for(const target of [2,5,8,11]) {
-     await page.waitForFunction(t=>{const v=document.querySelector('video');return v && v.currentTime>=t-.08;},target);
-     await page.getByRole('button',{name:'Segna il momento',exact:true}).click();
-   }
-   await page.getByText(/Timing completato./).waitFor({timeout:16000});
-   assert.match(await page.locator('.im-feedback').innerText(),/4\/4/);
-   await page.getByRole('button',{name:'Riprova il timing'}).click();
-   await page.waitForFunction(()=>document.querySelector('video')?.currentTime>=1.9);
-   await page.getByRole('button',{name:'Segna il momento',exact:true}).click({clickCount:4});
-   await page.getByText(/Guarda il confronto e riprova./).waitFor({timeout:16000});
-   assert.match(await page.locator('.im-feedback').innerText(),/1\/4|0\/4/);
+ await page.getByLabel('Senza fretta · fotogrammi guidati').check();
+ // Early clicks do not advance the criterion or award progress.
+ await page.getByRole('button',{name:'Avvia passaggio',exact:true}).click();
+ await page.getByRole('button',{name:'Click · segna il momento',exact:true}).click();
+ await page.getByText('Un po’ presto: il criterio non è ancora raggiunto.').waitFor();
+ assert.equal(await page.getByRole('button',{name:'Passa al piccolo obiettivo successivo'}).count(),0);
+ for(let i=0;i<4;i++) {
+   await page.getByRole('button',{name:/^(Avvia passaggio|Riprova questo passaggio)$/}).click();
+   await page.getByRole('button',{name:'Osserva il fotogramma successivo'}).click();
+   await page.getByRole('button',{name:'Osserva il fotogramma successivo'}).click();
+   if(screenshots) await page.locator('.im-shaping').screenshot({path:`${screenshots}/shaping-step-${i+1}.png`});
+   const click=page.getByRole('button',{name:'Click · segna il momento',exact:true});
+   await click.focus();await page.keyboard.press('Space');
+   await page.getByText('Giusto: hai premiato questa approssimazione.').waitFor();
    const saved=JSON.parse(await page.evaluate(k=>localStorage.getItem(k),key));
-   assert.equal(saved.activities[`${lessons[1].slug}:video-lab`].done,true,'a practice retry preserves previous completed lab');
+   assert.equal(saved.activities[`${lessons[1].slug}:video-lab`].lab.completed.length,i+1);
+   assert.equal(saved.activities[`${lessons[1].slug}:video-lab`].done,i===3);
+   if(i===0){
+     await page.reload();
+     await page.getByRole('button',{name:'2 Metti in pratica',exact:true}).click();
+     assert.equal(await page.locator('.im-shaping-stage').getAttribute('data-step'),'approach','resume next uncompleted criterion');
+     await page.getByLabel('Senza fretta · fotogrammi guidati').check();
+   } else if(i<3) await page.getByRole('button',{name:'Passa al piccolo obiettivo successivo'}).click();
  }
+ await page.getByText('Shaping completato: entrambe le zampe anteriori sono sulla piattaforma.').waitFor();
+ await page.getByRole('button',{name:'Rivedi la dimostrazione dall’inizio'}).click();
+ await page.getByLabel('Senza fretta · fotogrammi guidati').uncheck();
+ await page.getByRole('button',{name:'Avvia passaggio',exact:true}).click();
+ await page.waitForFunction(()=>Number(document.querySelector('.im-shaping-stage')?.dataset.sceneTime)>=3.25);
+ await page.getByRole('button',{name:'Click · segna il momento',exact:true}).click();
+ await page.getByText('Giusto: hai premiato questa approssimazione.').waitFor();
+ await page.getByRole('button',{name:'Riprova questo passaggio'}).click();
+ await page.getByText('Il momento è passato. Puoi riprovare con calma.').waitFor();
+ const saved=JSON.parse(await page.evaluate(k=>localStorage.getItem(k),key));
+ assert.equal(saved.activities[`${lessons[1].slug}:video-lab`].done,true,'retries do not remove completed shaping');
  const downloadPromise=page.waitForEvent('download');
  await page.getByRole('button',{name:'Scarica il quaderno'}).click();const download=await downloadPromise;
  assert.equal(download.suggestedFilename(),'PortaleCinofilo-il-mio-quaderno.txt');
@@ -89,7 +107,7 @@ try {
  await page.evaluate(k=>{const p=JSON.parse(localStorage.getItem(k));p.studied=[];localStorage.setItem(k,JSON.stringify(p));},key);
  await second.getByText('0 di 8 lezioni completate').waitFor();await second.close();
  await context.close();
- console.log('OK: public course, gating, notes reload, quiz feedback, route state, real timing video, anti-spam, notebook, backup import/reset and cross-tab sync.');
+ console.log('OK: public course, gating, notes reload, quiz feedback, route state, shaping animation, early/late clicks, keyboard, criterion order and resume, notebook, backup import/reset and cross-tab sync.');
  const mobile=await setup({width:390,height:844});
  await mobile.page.goto(base+'/#/impara');await mobile.page.getByRole('button',{name:'Inizia dalle basi'}).waitFor();
  assert.ok(await mobile.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'mobile home overflow');
@@ -99,16 +117,21 @@ try {
  await mobile.page.evaluate(()=>{localStorage.setItem('pawconnect-theme','dark');});await mobile.page.reload();
  await mobile.page.getByRole('heading',{name:lessons[0].title,exact:true}).waitFor();
  if(screenshots)await mobile.page.screenshot({path:`${screenshots}/impara-dark-mobile.png`,fullPage:true});
+ await mobile.page.goto(base+`/#/impara/stage-1/${lessons[1].slug}`);
+ await mobile.page.getByRole('button',{name:'2 Metti in pratica',exact:true}).click();
+ await mobile.page.getByLabel('Senza fretta · fotogrammi guidati').check();
+ await mobile.page.getByRole('button',{name:'Avvia passaggio',exact:true}).click();
+ for(let i=0;i<2;i++) await mobile.page.getByRole('button',{name:'Osserva il fotogramma successivo'}).click();
+ await mobile.page.getByRole('button',{name:'Click · segna il momento',exact:true}).click();
+ await mobile.page.getByText('Giusto: hai premiato questa approssimazione.').waitFor();
+ await mobile.page.getByText('Click → premio',{exact:true}).waitFor();
+ assert.ok(await mobile.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'mobile shaping overflow');
+ if(screenshots)await mobile.page.locator('.im-shaping').screenshot({path:`${screenshots}/shaping-mobile-dark.png`});
  await mobile.context.close();
- // A video outage still leaves the authored exercise usable via the matching animation.
- const failed=await setup();await failed.context.route('**/media/impara/*.mp4',route=>route.abort());
- await failed.page.goto(base+`/#/impara/stage-1/${lessons[1].slug}`);
- await failed.page.getByRole('button',{name:'2 Metti in pratica',exact:true}).click();
- await failed.page.getByRole('img',{name:/Esercizio animato/}).waitFor();
- await failed.page.getByRole('button',{name:'Avvia esercizio'}).click();
- await failed.page.getByRole('button',{name:'Segna il momento'}).focus();await failed.page.keyboard.press('Space');
- await failed.page.getByText('1 click',{exact:true}).waitFor();
- await failed.context.close();
+ // The full basics are reachable; all new learning topics have an explanation and quiz.
+ const basics=await setup();await basics.page.goto(base+`/#/impara/stage-1/${lessons[7].slug}`);
+ for(const heading of ['Condizionamento classico: un evento ne anticipa un altro','Condizionamento operante: le conseguenze contano','Rinforzo e punizione: leggere i termini tecnici','Segnali, generalizzazione e mantenimento']) await basics.page.getByRole('heading',{name:heading,exact:true}).waitFor();
+ await basics.context.close();
  assert.deepEqual(errors,[],'No runtime errors');
- console.log('OK: mobile layout, dark theme, fallback animation and keyboard click. Backend mocked; no real accounts or database changed.');
+ console.log('OK: mobile layout, dark theme, learning foundations and keyboard click. Backend mocked; no real accounts or database changed.');
 } finally {await browser.close();}

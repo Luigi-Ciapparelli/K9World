@@ -1,6 +1,6 @@
-// Content revision: 2026-09-26. Examples and activities authored by PortaleCinofilo.
+// Content revision: 2026-09-27. Examples and activities authored by PortaleCinofilo.
 export type ImparaSublesson = { id: string; title: string; durationMinutes: number; paragraphs: string[]; example: string; tryThis: string };
-export type ImparaActivity = { id: string; type: 'reflection' | 'checklist' | 'video-lab'; title: string; summary: string; instructions: string[]; completionHint: string; fields?: string[]; videoSrc?: string; markerTargets?: number[]; markerToleranceMs?: number };
+export type ImparaActivity = { id: string; type: 'reflection' | 'checklist' | 'video-lab'; title: string; summary: string; instructions: string[]; completionHint: string; labKind?: 'shaping'; fields?: string[]; videoSrc?: string; markerTargets?: number[]; markerToleranceMs?: number };
 export type ImparaQuizQuestion = { id: string; prompt: string; options: string[]; correctIndex: number; explanation: string };
 export type ImparaLesson = { slug: string; order: number; moduleId: string; moduleOrder: number; moduleTitle: string; title: string; summary: string; durationMinutes: number; practiceMinutes: string; objectives: string[]; sublessons: ImparaSublesson[]; activities: ImparaActivity[]; quiz: ImparaQuizQuestion[]; sources: {label: string; url: string}[]; caseStudy: {title: string; text: string}; links?: {label: string; path: string}[] };
 export type ImparaModule = { id: string; order: number; title: string; description: string };
@@ -169,12 +169,12 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
     "moduleOrder": 1,
     "moduleTitle": "Capire i bisogni",
     "title": "Osservazione e clicker: allenare il timing",
-    "summary": "Osserva senza etichette e allena la precisione di occhio e mano nel laboratorio clicker.",
+    "summary": "Osserva il cane e scopri lo shaping: piccoli passi, dal guardare una piattaforma ad appoggiarvi entrambe le zampe anteriori.",
     "durationMinutes": 12,
     "objectives": [
-      "Separare ciò che vedi da ciò che stai già interpretando.",
-      "Osservare direzione del corpo, traiettoria, velocità e ritmo.",
-      "Allenare il timing di un marker/click senza trasformarlo in un esercizio meccanico."
+      "Descrivere ciò che il cane fa, prima di interpretarlo.",
+      "Segnare con il click il criterio scelto per quel passaggio.",
+      "Comprendere lo shaping per approssimazioni successive."
     ],
     "sublessons": [
       {
@@ -200,37 +200,41 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
         "tryThis": "Nel prossimo incontro tranquillo, nota chi si avvicina e chi sceglie di interrompere."
       },
       {
-        "id": "marker-timing",
-        "title": "Il momento del segnale",
+        "id": "marker-timing-shaping",
+        "title": "Marker, ricompensa e piccoli obiettivi",
         "durationMinutes": 2,
         "paragraphs": [
-          "Un marker è un segnale breve, come una parola o un click, usato per indicare il comportamento che si vuole rinforzare. Per avere significato va prima associato a una conseguenza gradita; non è un richiamo né un ordine.",
-          "Il laboratorio allena soltanto l’occhio e la mano, senza coinvolgere il cane. Segna quando il centro del punto attraversa la linea. La finestra di precisione è una regola di questo esercizio, non una misura della tua competenza cinofila."
+          "Il marker è un segnale breve, come un click o una parola, che indica l’istante scelto. Prima di usarlo così, il cane deve aver appreso che quel segnale anticipa una ricompensa. Il click non è un comando e non serve ad attirare l’attenzione.",
+          "Nel laboratorio ogni click corretto è seguito dalla rappresentazione di un premio. Questa associazione chiarisce la differenza fra indicare un comportamento e rinforzarlo. Un suono ripetuto senza significato non insegna da solo cosa fare."
         ],
-        "example": "Vuoi indicare un istante preciso, ma premi quando il movimento è già finito. Il confronto tra il tuo click e l’attraversamento ti aiuta a riconoscere il ritardo.",
-        "tryThis": "Prima osserva un passaggio senza cliccare, poi avvia un tentativo completo."
+        "example": "Il cane appoggia una zampa: segni quel contatto e poi dai la ricompensa. Se aspetti che abbia già cambiato posizione, il segnale può indicare un’altra azione.",
+        "tryThis": "Prima di avviare ogni passaggio, leggi esattamente quale comportamento vuoi segnare."
+      },
+      {
+        "id": "shaping-piattaforma",
+        "title": "Shaping: una forma costruita poco alla volta",
+        "durationMinutes": 2,
+        "paragraphs": [
+          "Lo shaping sviluppa un comportamento rinforzando approssimazioni successive. Nell’esempio il criterio cambia da orientarsi verso la piattaforma, ad avvicinarsi, a posare una zampa anteriore, infine entrambe. Non chiediamo subito il risultato finale.",
+          "La sequenza è semplificata: nella realtà si ripete e si adatta ogni passo. Si aumenta la difficoltà quando il criterio attuale è facilmente ripetibile; se il cane fatica, si riduce il salto. Il laboratorio non richiede di guidare il cane con un boccone o di spingerlo sulla pedana."
+        ],
+        "example": "Se oggi premi l’avvicinamento, non devi aspettare già due zampe sopra. Decidi un solo piccolo obiettivo e riconosci quando compare.",
+        "tryThis": "Quale passo intermedio potresti inserire se dal guardare la piattaforma al salirci il salto fosse troppo grande?"
       }
     ],
     "activities": [
       {
         "id": "video-lab",
         "type": "video-lab",
-        "title": "Laboratorio: cogli il momento",
-        "summary": "Allena il timing su un filmato animato del portale, senza coinvolgere il cane.",
+        "title": "Laboratorio: shaping sulla piattaforma",
+        "summary": "Una dimostrazione semplice e guidata. Segna il piccolo obiettivo di ciascuna scena, fino a entrambe le zampe anteriori sopra.",
         "instructions": [
-          "Avvia il video. Il punto attraversa quattro volte la linea verticale.",
-          "Premi Segna il momento quando il centro del punto incontra la linea.",
-          "Guarda il confronto, poi riprova: servono almeno tre centri e nessun click extra."
+          "Leggi il criterio del passaggio e avvia la scena.",
+          "Clicca quando il cane raggiunge quel criterio. Se anticipi o aspetti troppo, riprova con calma.",
+          "Dopo il click corretto osserva il premio e passa al criterio successivo."
         ],
-        "completionHint": "L’esercizio allena la precisione del gesto, non valuta abilità pratiche con il cane.",
-        "videoSrc": "/media/impara/timing-linea-v1.mp4",
-        "markerTargets": [
-          2,
-          5,
-          8,
-          11
-        ],
-        "markerToleranceMs": 350
+        "completionHint": "Completa i quattro esempi. Puoi usare i fotogrammi guidati, senza alcuna fretta; il risultato indica soltanto la comprensione della dimostrazione.",
+        "labKind": "shaping"
       },
       {
         "id": "osservazione-neutra",
@@ -263,26 +267,26 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
         "explanation": "Descrive ciò che accade senza assegnare automaticamente una motivazione."
       },
       {
-        "id": "q2",
-        "prompt": "A cosa serve il marker nell’esercizio?",
+        "id": "marker-e-premio",
+        "prompt": "Dopo aver segnato correttamente il comportamento con il click, cosa segue in questa dimostrazione?",
         "options": [
-          "A sostituire l’osservazione",
-          "A rendere il cane più eccitato",
-          "A segnare un istante comportamentale scelto"
-        ],
-        "correctIndex": 2,
-        "explanation": "Il marker allena la precisione del timing."
-      },
-      {
-        "id": "q3",
-        "prompt": "Come usi il laboratorio di timing?",
-        "options": [
-          "Per certificare la capacità di addestrare",
-          "Per allenare occhio e mano senza coinvolgere il cane",
-          "Per scegliere la razza migliore"
+          "Un secondo click senza premio",
+          "La ricompensa associata al marker",
+          "La richiesta di un comportamento molto più difficile"
         ],
         "correctIndex": 1,
-        "explanation": "Il filmato animato è un esercizio di precisione, non una valutazione pratica sul cane."
+        "explanation": "Il marker indica il momento; la ricompensa segue. Il click non la sostituisce."
+      },
+      {
+        "id": "shaping-criterio",
+        "prompt": "Stai lavorando sul criterio “una zampa sopra”. Quando clicchi?",
+        "options": [
+          "Appena guarda la piattaforma",
+          "Solo quando ha già entrambe le zampe sopra",
+          "Quando la prima zampa anteriore tocca la superficie"
+        ],
+        "correctIndex": 2,
+        "explanation": "Il click riguarda il criterio scelto adesso: l’appoggio della prima zampa."
       },
       {
         "id": "caso-pratico",
@@ -294,6 +298,17 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
         ],
         "correctIndex": 2,
         "explanation": "La terza frase descrive un evento osservabile. Lasciare spazio evita di forzare un contatto."
+      },
+      {
+        "id": "progressione-shaping",
+        "prompt": "Quando aumenti il criterio con un cane reale?",
+        "options": [
+          "Quando il passo attuale è facilmente ripetibile, adattando l’incremento al cane",
+          "Sempre dopo un unico click",
+          "Quando il cane si stanca"
+        ],
+        "correctIndex": 0,
+        "explanation": "Un esempio per scena basta nel simulatore. Nella realtà servono ripetizioni e criteri individuali."
       }
     ],
     "sources": [
@@ -304,9 +319,13 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
       {
         "label": "Dogs Trust · Ricompense e timing",
         "url": "https://www.dogstrust.org.uk/dog-advice/training/techniques/positive-reinforcement-training-with-rewards"
+      },
+      {
+        "label": "Karen Pryor · Principi dello shaping",
+        "url": "https://clickertraining.com/the-ten-laws-of-shaping/"
       }
     ],
-    "practiceMinutes": "3 minuti nel laboratorio e una breve osservazione",
+    "practiceMinutes": "2 minuti nella dimostrazione e una breve osservazione",
     "caseStudy": {
       "title": "Una situazione da osservare",
       "text": "Un cane si allontana quando una persona allunga la mano. Quale nota è più utile? Puoi usare questo caso nel quaderno se non hai ancora un cane."
@@ -962,15 +981,81 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
     "moduleId": "relazione-apprendimento",
     "moduleOrder": 4,
     "moduleTitle": "Costruire la relazione",
-    "title": "Imparare insieme, un passo alla volta",
-    "summary": "Comprendi come si impara, rispetta contatto e distanze e costruisci un piccolo piano per continuare insieme.",
-    "durationMinutes": 9,
+    "title": "Come impara il cane: le basi",
+    "summary": "Condizionamento classico e operante, rinforzo, segnali e generalizzazione: comprendi le basi prima di chiedere nuovi comportamenti.",
+    "durationMinutes": 18,
     "objectives": [
-      "Descrivere il singolo cane senza etichette rigide.",
-      "Comprendere rinforzo, contatto e uso dello spazio.",
-      "Scegliere un prossimo passo per il binomio."
+      "Distinguere un’associazione tra eventi da una conseguenza del comportamento.",
+      "Capire marker, rinforzo e criteri graduali.",
+      "Riconoscere il ruolo di contesto, motivazione e generalizzazione."
     ],
     "sublessons": [
+      {
+        "id": "condizionamento-classico",
+        "title": "Condizionamento classico: un evento ne anticipa un altro",
+        "durationMinutes": 2,
+        "paragraphs": [
+          "Nel condizionamento classico si apprendono associazioni tra eventi. Un suono inizialmente neutro, se anticipa regolarmente il cibo, può provocare una risposta di anticipazione. Non è necessario che il cane compia prima l’azione che vuoi insegnargli.",
+          "Pensa alla preparazione della ciotola: certi rumori possono annunciare il pasto. Anche il click acquista significato attraverso l’associazione con una ricompensa. Questa è la base che permette poi di usarlo per indicare un comportamento."
+        ],
+        "example": "Un rumore precede ripetutamente il pasto; il cane comincia ad anticiparlo già al rumore. Qui osservi un’associazione tra eventi.",
+        "tryThis": "Annota un evento quotidiano che il cane sembra usare per prevederne un altro, senza provocare reazioni nuove."
+      },
+      {
+        "id": "condizionamento-operante",
+        "title": "Condizionamento operante: le conseguenze contano",
+        "durationMinutes": 2,
+        "paragraphs": [
+          "Nel condizionamento operante il comportamento cambia in relazione alle sue conseguenze. Se appoggiare una zampa porta a una conseguenza gradita e quell’azione diventa più probabile, la conseguenza ha funzionato da rinforzo.",
+          "Per osservare una situazione usa tre domande: cosa accade prima, che cosa fa il cane, che cosa succede dopo? È lo schema antecedente–comportamento–conseguenza. Classico e operante possono agire nello stesso episodio: il click anticipa il premio e il comportamento che lo precede può essere rinforzato."
+        ],
+        "example": "Piattaforma presente; il cane vi appoggia una zampa; seguono click e premio. Osservi nelle prove successive se quel comportamento ricompare più facilmente.",
+        "tryThis": "Nel tuo quaderno separa “prima”, “azione” e “dopo” per un episodio semplice."
+      },
+      {
+        "id": "rinforzo-punizione",
+        "title": "Rinforzo e punizione: leggere i termini tecnici",
+        "durationMinutes": 2,
+        "paragraphs": [
+          "Rinforzo significa che un comportamento diventa più probabile; punizione che diventa meno probabile. Positivo indica aggiungere uno stimolo, negativo toglierlo: non sono sinonimi di buono e cattivo. L’effetto va osservato nel tempo, non dedotto dall’intenzione di chi interviene.",
+          "I quattro casi sono: rinforzo positivo (aggiunta, aumento); rinforzo negativo (rimozione, aumento); punizione positiva (aggiunta, diminuzione); punizione negativa (rimozione, diminuzione). Conoscere i termini non significa sperimentare pressione o interventi punitivi. Qui lavoriamo su gestione, gradualità e ricompense adatte al cane."
+        ],
+        "example": "Chiami un oggetto “premio”, ma il cane non lo cerca e il comportamento non aumenta: il nome che gli dai non prova che stia funzionando da rinforzo.",
+        "tryThis": "Spiega con parole tue perché rinforzo negativo e punizione non sono la stessa cosa."
+      },
+      {
+        "id": "strategie-apprendimento",
+        "title": "Shaping, cattura e guida: tre strade diverse",
+        "durationMinutes": 2,
+        "paragraphs": [
+          "Nello shaping rinforzi piccoli avvicinamenti al risultato. Nella cattura riconosci e premi un comportamento che compare già spontaneamente nella forma scelta. Nella guida con esca, detta anche luring, il cane segue un incentivo per arrivare alla posizione: non è ciò che rappresenta il nostro laboratorio.",
+          "Il premio si sceglie in base al valore per il soggetto e al contesto: non è sempre cibo e non è interessante in ogni momento. Quando introduci una nuova abilità, rendi chiara la relazione tra risposta e conseguenza. Le sessioni devono lasciare spazio a pause e recupero."
+        ],
+        "example": "Cliccare un cane che si distende spontaneamente è cattura. Costruire gradualmente due zampe sulla pedana, partendo da un avvicinamento, è shaping.",
+        "tryThis": "Dividi un risultato semplice in un primo passo osservabile, senza proporre ancora una prova al cane."
+      },
+      {
+        "id": "segnali-generalizzazione",
+        "title": "Segnali, generalizzazione e mantenimento",
+        "durationMinutes": 2,
+        "paragraphs": [
+          "Un segnale indica un’occasione in cui un comportamento appreso può avere una conseguenza. Nel percorso di shaping non serve ripetere subito una parola che il cane non conosce: prima rendi il comportamento comprensibile e facilmente ripetibile, poi collega il segnale nel lavoro guidato.",
+          "Saper rispondere in casa non garantisce la stessa facilità al parco. Generalizzare significa trasferire l’apprendimento a contesti diversi con gradualità. Varia un elemento alla volta, per esempio distrazioni, durata o distanza, e torna più semplice quando serve. Mantenere un’abilità richiede occasioni di pratica e conseguenze ancora significative."
+        ],
+        "example": "Una risposta riesce in cucina. In una strada affollata non la pretendi subito uguale: prepari un contesto intermedio meno impegnativo.",
+        "tryThis": "Quale singola difficoltà cambieresti per prima? Scrivi anche come potresti ridurla."
+      },
+      {
+        "id": "abituazione-sensibilizzazione",
+        "title": "Abituazione, sensibilizzazione e limiti",
+        "durationMinutes": 2,
+        "paragraphs": [
+          "Con l’abituazione una risposta può diminuire a seguito di esposizioni ripetute a uno stimolo non significativo. La ripetizione però non garantisce tranquillità: nella sensibilizzazione la reazione aumenta. Non basta dire “deve abituarsi” per sapere che cosa sta accadendo.",
+          "Estinzione indica la diminuzione di un comportamento quando non produce più il rinforzo che lo manteneva: non equivale a ignorare qualunque disagio. Difficoltà, paura e sospetto dolore richiedono una lettura del contesto. Desensibilizzazione graduale e controcondizionamento sono procedure da adattare con un professionista; non consistono nel sommergere il cane di stimoli."
+        ],
+        "example": "Un rumore ripetuto provoca reazioni sempre più intense. Non puoi concludere che aumentare ancora l’esposizione sia la strada giusta.",
+        "tryThis": "Scegli una situazione già conosciuta e descrivi se la risposta nel tempo diminuisce, aumenta o resta incerta."
+      },
       {
         "id": "doti-caratteriali",
         "title": "Conoscere il soggetto senza etichettarlo",
@@ -983,38 +1068,15 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
         "tryThis": "Riscrivi una caratteristica del tuo cane come osservazione situata."
       },
       {
-        "id": "predazione-preda",
-        "title": "Come una conseguenza influenza il comportamento",
-        "durationMinutes": 2,
-        "paragraphs": [
-          "Un rinforzo è una conseguenza che rende più probabile un comportamento. Non basta che tu chiami qualcosa premio: conta l’effetto nel tempo e se il cane lo gradisce in quella situazione.",
-          "Per insegnare una piccola abilità prepara un ambiente semplice, rendi chiaro ciò che chiedi e premia tempestivamente la risposta desiderata. Aumenta la difficoltà gradualmente. Se il cane fatica, semplifica invece di ripetere la richiesta sempre più forte.",
-          "Nel linguaggio tecnico, positivo significa aggiungere e negativo togliere uno stimolo; non sono giudizi morali. Rinforzo indica un aumento della probabilità del comportamento, punizione una sua riduzione. Sono definizioni degli effetti, non un invito a sperimentare interventi punitivi: questo percorso usa gestione, gradualità e ricompense."
-        ],
-        "example": "Vuoi lavorare su una risposta facile già conosciuta. Inizi in un posto tranquillo prima di aspettarti lo stesso risultato tra molti stimoli.",
-        "tryThis": "Indica una difficoltà che puoi ridurre: durata, distanza o distrazioni."
-      },
-      {
-        "id": "rinforzo-punizione",
-        "title": "Contatto, spazio e comunicazione",
-        "durationMinutes": 2,
-        "paragraphs": [
-          "Anche il contatto e la distanza fanno parte della comunicazione. Aptica indica lo studio del contatto; prossemica quello dell’uso dello spazio. Per iniziare osserva se il cane cerca un contatto, vi resta o preferisce allontanarsi.",
-          "Una carezza non è sempre una ricompensa: dipende dal soggetto e dal momento. Lascia la possibilità di interrompere e non trattenere il cane per ottenere una risposta. Puoi imparare molto anche osservando senza intervenire."
-        ],
-        "example": "Il cane si avvicina, riceve una breve carezza e poi si sposta. Rispetti la pausa senza richiamarlo per continuare.",
-        "tryThis": "Scrivi un esempio di contatto cercato dal cane e uno di distanza scelta."
-      },
-      {
         "id": "aptica-prossemica",
-        "title": "Portare le basi nella vita reale",
+        "title": "Contatto, spazio e un obiettivo per continuare",
         "durationMinutes": 2,
         "paragraphs": [
-          "Alla fine del percorso hai strumenti per osservare, organizzare e porre domande migliori. Una verifica online misura la comprensione dei contenuti, non la capacità di gestire ogni cane o una qualifica professionale.",
-          "Rileggi il quaderno, scegli un cambiamento sostenibile e un obiettivo per il mese successivo. Se vuoi iniziare uno sport, l’area Sport è un percorso separato; se cerchi aiuto quotidiano puoi trovare direttamente un addestratore."
+          "Anche contatto e distanza comunicano. Aptica indica lo studio del contatto, prossemica quello dell’uso dello spazio. Una carezza non è automaticamente un rinforzo: osserva se il cane la cerca o preferisce interrompere.",
+          "Rileggi i tuoi appunti, scegli un piccolo obiettivo concreto e una domanda da portare a un professionista. Conoscere queste basi aiuta a osservare e progettare: il quiz non conferisce una qualifica né dimostra da solo competenza pratica."
         ],
-        "example": "Porti a un professionista una descrizione concreta della giornata e due domande. L’incontro può partire dai fatti invece che da una lista di etichette.",
-        "tryThis": "Scegli una cosa da mantenere, una da adattare e una domanda da approfondire."
+        "example": "Il cane si sposta dopo una breve carezza. Gli lasci spazio e annoti il contesto, senza trattenerlo per ottenere un’interazione.",
+        "tryThis": "Scrivi una cosa da mantenere nella vostra giornata e una da approfondire insieme a un professionista."
       }
     ],
     "activities": [
@@ -1034,58 +1096,139 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
           "Un esempio pratico e una difficoltà da ridurre",
           "Un obiettivo e una domanda da portare a un professionista"
         ]
+      },
+      {
+        "id": "associazioni-conseguenze",
+        "type": "reflection",
+        "title": "Classico o operante? Prova a distinguerli",
+        "summary": "Usa un episodio semplice o il caso della piattaforma: distingui gli eventi dalle conseguenze del comportamento.",
+        "fields": [
+          "Un esempio di condizionamento classico e uno di operante, spiegando la differenza",
+          "Un episodio descritto come prima → comportamento → conseguenza",
+          "Un piccolo criterio di shaping e una domanda da approfondire"
+        ],
+        "instructions": [
+          "Ho distinto associazioni tra eventi e conseguenze del comportamento.",
+          "Ho descritto azioni osservabili, senza etichette.",
+          "Ho scelto un criterio semplice e una domanda da approfondire."
+        ],
+        "completionHint": "Puoi lavorare sui casi della lezione. I tuoi precedenti appunti del glossario restano conservati."
       }
     ],
     "quiz": [
       {
-        "id": "q1",
-        "prompt": "Come valuti se una conseguenza funziona da rinforzo?",
+        "id": "classico",
+        "prompt": "Un suono annuncia regolarmente il pasto e il cane comincia ad anticiparlo già al suono. Quale processo stai descrivendo?",
         "options": [
-          "Dal fatto che io la chiamo premio",
-          "Dal suo effetto sul comportamento nel tempo",
-          "Dal costo del premio"
-        ],
-        "correctIndex": 1,
-        "explanation": "La definizione riguarda l’effetto sulla probabilità del comportamento."
-      },
-      {
-        "id": "q2",
-        "prompt": "Il cane fatica in un esercizio. Quale modifica consideri?",
-        "options": [
-          "Semplificare durata, distanza o distrazioni",
-          "Ripetere sempre più forte",
-          "Chiedere subito una prova più lunga"
+          "Condizionamento classico",
+          "Un esercizio di forza",
+          "Soltanto cattura"
         ],
         "correctIndex": 0,
-        "explanation": "Ridurre una difficoltà rende la richiesta più affrontabile e aiuta a capire cosa serve."
+        "explanation": "Il suono acquisisce valore predittivo attraverso l’associazione con il pasto."
       },
       {
-        "id": "q3",
-        "prompt": "Qual è il rischio principale di un’etichetta caratteriale?",
+        "id": "operante",
+        "prompt": "Il cane appoggia una zampa, riceve una ricompensa e ripete più spesso quella risposta. Quale relazione descrivi?",
         "options": [
-          "Essere troppo lunga",
-          "Sostituire l’osservazione concreta del soggetto",
-          "Essere difficile da ricordare"
+          "Una diagnosi del temperamento",
+          "Comportamento e conseguenza: condizionamento operante",
+          "Abituazione a un rumore"
         ],
         "correctIndex": 1,
-        "explanation": "Il termine deve aiutare l’osservazione, non sostituirla."
+        "explanation": "Il cambiamento nella probabilità di un’azione è collegato a ciò che la segue."
       },
       {
-        "id": "caso-pratico",
-        "prompt": "Hai completato lezioni e quiz. Che cosa dimostra questo risultato?",
+        "id": "negativo",
+        "prompt": "Che cosa significa “negativo” nel termine rinforzo negativo?",
+        "options": [
+          "Cattivo",
+          "Una punizione",
+          "Rimozione di uno stimolo"
+        ],
+        "correctIndex": 2,
+        "explanation": "Negativo descrive la rimozione. Rinforzo descrive l’aumento della probabilità del comportamento."
+      },
+      {
+        "id": "shaping",
+        "prompt": "Quale esempio rappresenta lo shaping?",
+        "options": [
+          "Rinforzare approssimazioni graduali verso due zampe sulla piattaforma",
+          "Spingere il cane sulla piattaforma",
+          "Ripetere il comando senza definire un criterio"
+        ],
+        "correctIndex": 0,
+        "explanation": "Il risultato si costruisce con passi intermedi scelti e adattati al cane."
+      },
+      {
+        "id": "marker",
+        "prompt": "Qual è la funzione del marker in questo percorso?",
+        "options": [
+          "Sostituire per sempre la ricompensa",
+          "Indicare il momento del comportamento, grazie alla relazione appresa con la ricompensa",
+          "Costringere il cane a guardarti"
+        ],
+        "correctIndex": 1,
+        "explanation": "Il marker segnala il momento. Nella dimostrazione il click corretto è sempre seguito dal premio."
+      },
+      {
+        "id": "generalizzazione",
+        "prompt": "Un comportamento riesce in casa ma non al parco. Quale aspetto devi considerare?",
+        "options": [
+          "Ha dimenticato tutto per dispetto",
+          "Il contesto non conta",
+          "La generalizzazione e il livello di difficoltà"
+        ],
+        "correctIndex": 2,
+        "explanation": "Si costruisce il trasferimento tra contesti con gradualità, senza pretendere subito la stessa risposta."
+      },
+      {
+        "id": "sensibilizzazione",
+        "prompt": "Con esposizioni ripetute la reazione a un rumore aumenta. Che cosa puoi dire?",
+        "options": [
+          "Potrebbe esserci sensibilizzazione: la ripetizione non garantisce abituazione",
+          "Bisogna aumentare il rumore",
+          "È sicuramente disobbedienza"
+        ],
+        "correctIndex": 0,
+        "explanation": "Osservare la direzione del cambiamento aiuta a non confondere adattamento e crescente difficoltà."
+      },
+      {
+        "id": "limiti",
+        "prompt": "Che cosa dimostra il completamento di questo percorso?",
         "options": [
           "Una qualifica da addestratore",
-          "La comprensione di queste basi, da applicare con gradualità",
-          "Che puoi gestire qualsiasi problema comportamentale"
+          "Una comprensione di base da applicare e approfondire con gradualità",
+          "La capacità di gestire ogni problema comportamentale"
         ],
         "correctIndex": 1,
-        "explanation": "Il percorso è educativo e non rilascia qualifiche professionali o una valutazione pratica certificata."
+        "explanation": "Le autoverifiche sono educative, non certificazioni pratiche o qualifiche professionali."
       }
     ],
     "sources": [
       {
         "label": "RSPCA · Principi di educazione",
         "url": "https://www.rspca.org.uk/adviceandwelfare/pets/dogs/training"
+      },
+      {
+        "label": "Karen Pryor · Glossario di apprendimento",
+        "url": "https://clickertraining.com/glossary/"
+      },
+      {
+        "label": "Karen Pryor · Introduzione al clicker",
+        "url": "https://clickertraining.com/15tips/"
+      },
+      {
+        "label": "AKC · Condizionamento operante e conseguenze",
+        "url": "https://www.akc.org/expert-advice/training/operant-conditioning-positive-reinforcement-dog-training/"
+      },
+      {
+        "label": "Merck Veterinary Manual · Processi di apprendimento",
+        "url": "https://www.merckvetmanual.com/dog-owners/behavior-of-dogs/behavior-modification-in-dogs"
+      },
+      {
+        "label": "Karen Pryor · Principi dello shaping",
+        "url": "https://clickertraining.com/the-ten-laws-of-shaping/"
       }
     ],
     "practiceMinutes": "15 minuti di osservazione, da distribuire nella giornata",

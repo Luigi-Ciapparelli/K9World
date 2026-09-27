@@ -795,3 +795,14 @@ quiz con correzione, progressi/ripresa, backup e laboratorio video di timing.
 Specifiche, verifiche e limiti: [IMPARA_RELEASE_V3.md](IMPARA_RELEASE_V3.md).
 Implementato nella copia di lavoro; nessuna migration. Stato online da registrare
 dopo il deployment. Le autoverifiche non sono qualifiche professionali.
+
+
+## Impara: shaping e basi dell’apprendimento — 27 settembre 2026
+
+Il nuovo laboratorio usa un cane animato: orientamento, avvicinamento, una zampa
+e due zampe anteriori sulla piattaforma. Criteri facili, feedback sul click e
+modalità guidata senza fretta. Condizionamento classico e operante ampliati con
+esempi, attività e quiz. Stato, progressi e rilascio:
+[IMPARA_SHAPING_V1.md](IMPARA_SHAPING_V1.md). Sostituisce le indicazioni
+sul laboratorio astratto di Impara v3. Il ripristino degli strumenti professionali
+rimane la successiva richiesta aperta; non è realizzato da questo incremento.

@@ -1,5 +1,10 @@
 # Impara — percorso operativo v3
 
+> Checkpoint storico. Per il laboratorio corrente, i nuovi contenuti e le
+> verifiche aggiornate leggere [IMPARA_SHAPING_V1.md](IMPARA_SHAPING_V1.md).
+> I conteggi e la descrizione della sfera qui sotto documentano la versione v3
+> originale, non la successiva dimostrazione di shaping.
+
 Data: 27 settembre 2026. Base esaminata: `fa43378` (`origin/main`).
 Stato di questo incremento: implementato e collaudato nella copia di lavoro;
 la pubblicazione sul dominio non è dichiarata eseguita da questo documento.

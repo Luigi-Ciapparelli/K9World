@@ -1,9 +1,11 @@
 import { STAGE_1_LESSONS, type ImparaLesson } from './imparaContent';
+import { normalizeShapingResult, shapingPassed, SHAPING_STEPS, type ShapingResult } from './shapingLab';
 
 export const PROGRESS_KEY = 'portalecinofilo-impara-v3';
 export const LEGACY_KEY = 'pawconnect-impara-stage1-v2';
 export const PROGRESS_EVENT = 'portalecinofilo-impara-progress';
-export type LabResult = { hits: number; extras: number; total: number; offsets: (number | null)[] };
+export type TimingResult = { hits: number; extras: number; total: number; offsets: (number | null)[] };
+export type LabResult = TimingResult | ShapingResult;
 export type ActivityDraft = { fields: string[]; checks: boolean[]; done: boolean; lab?: LabResult };
 export type QuizAttempt = { answers: number[]; date: string };
 export type LearningProgress = {
@@ -28,7 +30,10 @@ export function normalizeProgress(value: unknown): LearningProgress {
       const fields = (activity.fields || []).map((_, i) => Array.isArray(source.fields) && typeof source.fields[i] === 'string' ? source.fields[i].slice(0, 3000) : '');
       const checks = activity.instructions.map((_, i) => Array.isArray(source.checks) && source.checks[i] === true);
       const draft: ActivityDraft = { fields, checks, done: false };
-      if (activity.type === 'video-lab') {
+      if (activity.type === 'video-lab' && activity.labKind === 'shaping') {
+        draft.lab = normalizeShapingResult(source.lab);
+        draft.done = source.done === true && !!draft.lab && shapingPassed(draft.lab);
+      } else if (activity.type === 'video-lab') {
         const lab = record(source.lab); const total = activity.markerTargets?.length || 0;
         const offsets = Array.isArray(lab.offsets) && lab.offsets.length === total ? lab.offsets.map(x => typeof x === 'number' && Number.isFinite(x) ? x : null) : [];
         const hits = offsets.filter(x => x !== null && Math.abs(x) <= (activity.markerToleranceMs || 350)).length;
@@ -50,7 +55,7 @@ export function normalizeProgress(value: unknown): LearningProgress {
 }
 export const scoreQuiz = (lesson: ImparaLesson, answers: number[]) => lesson.quiz.filter((q, i) => answers[i] === q.correctIndex).length;
 export const passScore = (lesson: ImparaLesson) => Math.ceil(lesson.quiz.length * 0.75);
-export const labPassed = (r: LabResult) => r.hits >= Math.ceil(r.total * .75) && r.total > 0 && r.extras === 0;
+export const labPassed = (r: LabResult) => 'exercise' in r ? shapingPassed(r) : r.hits >= Math.ceil(r.total * .75) && r.total > 0 && r.extras === 0;
 export function lessonStatus(lesson: ImparaLesson, p: LearningProgress) {
   const studied = lesson.sublessons.filter(s => p.studied.includes(learningKey(lesson.slug, s.id))).length;
   const activities = lesson.activities.filter(a => p.activities[learningKey(lesson.slug, a.id)]?.done).length;
@@ -61,7 +66,7 @@ export function lessonStatus(lesson: ImparaLesson, p: LearningProgress) {
   return { studied, activities, ready, passed, complete: ready && passed, started: studied > 0 || lesson.activities.some(a => !!p.activities[learningKey(lesson.slug, a.id)]) || attempts.length > 0 };
 }
 // Match a click to at most one crossing. Extra clicks never improve the score.
-export function scoreMarkers(targets: number[], clicks: number[], toleranceMs: number): LabResult {
+export function scoreMarkers(targets: number[], clicks: number[], toleranceMs: number): TimingResult {
   const offsets: (number | null)[] = targets.map(() => null); let extras = 0;
   for (const click of clicks) {
     if (!Number.isFinite(click)) { extras++; continue; }
@@ -96,7 +101,7 @@ export function notebookText(p: LearningProgress): string {
     ...STAGE_1_LESSONS.flatMap(l => [l.title, `Stato: ${lessonStatus(l,p).complete ? 'Completata' : 'Da completare'}`,
       ...l.activities.flatMap(a => { const draft = p.activities[learningKey(l.slug,a.id)]; return [a.title,
         ...(a.fields || []).map((label,i) => `${label}\n${draft?.fields[i] || '(non compilato)'}`),
-        ...(draft?.lab ? [`Timing: ${draft.lab.hits}/${draft.lab.total}; click extra: ${draft.lab.extras}`] : [])]; }), ''])].join('\n\n');
+        ...(draft?.lab ? ['exercise' in draft.lab ? `Shaping: ${draft.lab.completed.length}/${SHAPING_STEPS.length} approssimazioni completate` : `Timing: ${draft.lab.hits}/${draft.lab.total}; click extra: ${draft.lab.extras}`] : [])]; }), ''])].join('\n\n');
 }
 export function downloadText(filename: string, value: string, mime = 'text/plain') {
   const url = URL.createObjectURL(new Blob([value], { type: `${mime};charset=utf-8` }));

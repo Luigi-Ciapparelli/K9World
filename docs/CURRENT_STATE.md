@@ -1,3 +1,14 @@
+# Checkpoint Impara: shaping — 27 settembre 2026
+
+Base GitHub verificata: `1e8cbb3`, Impara v3 presente su `origin/main`.
+Preparato il laboratorio con cane e piattaforma e completate le basi
+dell’apprendimento. Specifica corrente: [IMPARA_SHAPING_V1.md](IMPARA_SHAPING_V1.md).
+Incremento verificato in copia isolata; nessuna modifica ai servizi remoti.
+Il ripristino degli strumenti professionali resta il prossimo lavoro richiesto.
+I checkpoint seguenti sono storici e non attestano lo stato del deployment.
+
+---
+
 # Checkpoint Impara — 27 settembre 2026
 
 Base corrente esaminata: `fa43378` su `origin/main`. Lavoro Impara v3 implementato
