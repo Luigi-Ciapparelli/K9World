@@ -133,3 +133,15 @@ esempi, attività e quiz. Stato, progressi e rilascio:
 [IMPARA_SHAPING_V1.md](docs/IMPARA_SHAPING_V1.md). Sostituisce le indicazioni
 sul laboratorio astratto di Impara v3. Il ripristino degli strumenti professionali
 rimane la successiva richiesta aperta; non è realizzato da questo incremento.
+
+
+## Audit Supabase — migrazione applicata il 27 settembre 2026
+
+Permessi client ridotti, controlli RLS ottimizzati e quattro policy duplicate
+eliminate. Corretta anche una divergenza fra ricostruzione Git e policy online.
+Test nativi superati su 46 migrazioni precedenti più la nuova. L’utente ha
+confermato l’applicazione online il 27 settembre 2026: `Finished supabase db push`.
+Questo checkpoint registra il rilascio; i controlli applicativi dopo il rilascio
+non sono ancora documentati. Ambito e avvisi intenzionali:
+[SUPABASE_AUDIT_FIXES_V1.md](docs/SUPABASE_AUDIT_FIXES_V1.md).
+Gli strumenti professionali da ripristinare rimangono il prossimo blocco.

@@ -296,3 +296,15 @@ Nessun accesso al database online, deploy o nuovo badge verificato nel browser.
 Parser Working-Dog collegato all'Edge Function e testato con una fixture basata
 sul risultato reale fornito di Valentina Balli; accesso live e autorizzazione del
 provider restano da verificare. Dettagli: `docs/SPORT_MERIT_AND_VERIFICATION_V2.md`.
+
+
+## Audit Supabase — migrazione applicata il 27 settembre 2026
+
+Permessi client ridotti, controlli RLS ottimizzati e quattro policy duplicate
+eliminate. Corretta anche una divergenza fra ricostruzione Git e policy online.
+Test nativi superati su 46 migrazioni precedenti più la nuova. L’utente ha
+confermato l’applicazione online il 27 settembre 2026: `Finished supabase db push`.
+Questo checkpoint registra il rilascio; i controlli applicativi dopo il rilascio
+non sono ancora documentati. Ambito e avvisi intenzionali:
+[SUPABASE_AUDIT_FIXES_V1.md](SUPABASE_AUDIT_FIXES_V1.md).
+Gli strumenti professionali da ripristinare rimangono il prossimo blocco.
