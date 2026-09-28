@@ -1,5 +1,15 @@
 # PawConnect / Portalecinofilo — Project Handoff
 
+## Correzione Home dopo il feedback — 28 settembre 2026
+
+Base: `c5285ca`, confermata su origin/main. Approvati solo i pulsanti superiori
+del precedente incremento. La nuova correzione elimina moduli, tendine e blocchi
+che duplicavano il menu; riprende il messaggio precedente e ne rifinisce lo stile.
+Specifica corrente: [HOME_NAVIGATION_V2.md](HOME_NAVIGATION_V2.md). Le descrizioni precedenti della Home
+sono storiche. Preparazione locale verificata; pubblicazione di questa correzione
+ancora da registrare. Nessuna migrazione o modifica al database.
+
+
 > Canonical continuity document for developers, collaborators and future AI assistants.
 
 ## 1. What this project is

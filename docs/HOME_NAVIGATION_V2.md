@@ -1,55 +1,41 @@
-# Home e navigazione — 28 settembre 2026
+# Home e navigazione — correzione del 28 settembre 2026
 
-## Problema e decisione
+## Feedback vincolante di Luigi
 
-Luigi ha chiesto una revisione netta della Home: menu desktop poco riconoscibile,
-inviti ripetuti alle stesse destinazioni e grandi blocchi editoriali interrompevano
-la ricerca di informazioni o di un professionista. La Home deve orientare verso
-azioni concrete per il proprietario e rendere evidente il valore educativo gratuito.
+Il rilascio `c5285ca` è stato caricato su GitHub dall’utente. Luigi ha approvato
+lo stile dei pulsanti superiori ma ha rifiutato il resto della revisione Home:
+troppi blocchi ripetevano le destinazioni già raggiungibili dal menu.
+La richiesta attuale è rifinire lo stile e riprendere l’identità precedente,
+senza aggiungere moduli, menu secondari o riquadri promozionali ridondanti.
+Questa correzione sostituisce le decisioni Home descritte in precedenza qui.
 
-## Cosa cambia
+## Intervento
 
-- Menu desktop con pulsanti delimitati, icone, stati attivi e ricerca quotidiana
-  in evidenza. Account, tema e ingresso professionisti sono separati dalle
-  destinazioni del proprietario. Menu mobile utilizzabile anche da tastiera.
-- Primo schermo: proposta chiara, accesso a Impara e ricerca immediata di un
-  addestratore. La città è facoltativa; suggerimenti dal catalogo italiano già
-  presente e coordinate solo per una corrispondenza univoca.
-- Pensioni, pet sitting, passeggiate e toelettatura portano alle categorie reali.
-  Il vecchio link `/?section=services`, privo di una destinazione operativa,
-  è sostituito da un menu con accessi diretti alle ricerche.
-- Impara mostra tre lezioni esistenti con accesso diretto; Prima del cane ha
-  uno spazio dedicato a chi deve ancora scegliere.
-- Sport ha un blocco autonomo e un ingresso distinto nel menu. Non compare
-  alcuna scelta Gestione/Sport nel percorso di ricerca quotidiano.
-- Area professionisti distinta: presentazione competenze e strumenti di lavoro.
-- Eliminati dalla Home i grandi blocchi statistici, `Evidence layer`, la
-  progressione illustrativa non operativa e gli inviti finali ripetuti.
-  Le pagine educative e di verifica conservano il proprio contenuto.
-- Colori coerenti nei temi chiaro/scuro e layout provato da 320 a 1920 pixel.
-  Link reali per mantenere apertura in nuova scheda, copia indirizzo e tastiera.
+- Pulsanti superiori, account e ingresso professionisti mantenuti.
+- `Servizi` è un link semplice a `/search`, la ricerca esistente con selettore
+  delle categorie. Eliminata la tendina dal menu principale.
+- Eliminati il modulo di ricerca nella Home, la riga di servizi quotidiani,
+  il blocco promozionale professionisti e gli altri rimandi ripetuti al menu.
+- Ripreso il titolo precedente: «Conosci meglio il cane. Costruisci un binomio
+  più consapevole.» La prima parte è il titolo, la seconda il sottotitolo.
+- Composizione editoriale con caratteri e colori del progetto, spaziature
+  regolari, un riquadro sintetico sui bisogni quotidiani e tre testi brevi
+  non interattivi. Questi testi non sono nuove funzioni né passaggi obbligatori.
+- Un solo collegamento nel corpo Home: Prima del cane, assente dal menu
+  principale. Nessun ripristino di Evidence layer o dei grandi blocchi statistici.
+- Sport resta una destinazione autonoma del menu. La ricerca ordinaria apre
+  direttamente gli addestratori senza chiedere di scegliere una modalità.
+- Homepage pubblica e rimandi owner/pro/admin conservati.
 
-## Ambito
+## Verifiche e rilascio
 
-Base: `ff721ce`, abbonamenti professionali. Modifiche frontend e documentazione;
-nessuna migrazione, modifica ai dati, politica di accesso o configurazione Vercel.
-L'accesso dalla Home degli utenti autenticati continua a portare all'area owner,
-professional o admin. La Home pubblica si vede senza sessione autenticata.
+Base esaminata: `c5285ca`. Solo Navbar, Home, CSS dedicato e documentazione.
+TypeScript, build con continuità attiva, ESLint sui due componenti e diff check
+superati. Chromium con API simulate: percorsi dei pulsanti, menu mobile ed
+Escape, assenza dei blocchi rimossi, nessuno sconfinamento da 320 a 1920 px,
+tema scuro e rimandi ai tre ruoli. Anteprime ispezionate.
 
-Il merito Working-Dog multi-disciplina rimane incompleto; nessun testo nuovo
-presenta come verificato un badge non ancora operativo. Non promettere una
-sincronizzazione dei progressi Impara: i progressi attuali restano nel browser.
-
-## Verifiche
-
-- TypeScript e build Vite superati, flag continuità attivo e configurazione
-  Supabase sintetica per le prove isolate.
-- ESLint sui componenti modificati, controllo whitespace Git.
-- Chromium con API simulate: ricerca con/senza città, coordinate Rimini,
-  servizi, Sport, apertura lezione, menu mobile, Escape, chiusura su navigazione.
-- Nessuno sconfinamento della Home a 320, 390, 768, 1024, 1280 e 1920 pixel;
-  immagini desktop/mobile/tema scuro ispezionate.
-- Accessi automatici ai tre ruoli conservati; nessun errore JavaScript raccolto.
-
-Le prove non interrogano il database online. Dopo il push identificare il
-deployment Vercel tramite il commit del rilascio prima di dichiararlo Ready.
+Nessun database o dato online modificato. Nessuna migrazione necessaria.
+Correzione preparata per applicazione dal WSL dell’utente tramite installer
+con verifica dei file, backup, build e pubblicazione opzionale. Non dichiararla
+online senza il nuovo commit dell’utente e il deployment Vercel Ready.

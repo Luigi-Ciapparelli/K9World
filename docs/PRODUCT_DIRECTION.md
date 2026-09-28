@@ -1435,14 +1435,18 @@ Il proprietario non deve fare un passaggio aggiuntivo per contattare o prenotare
 un professionista nel percorso normale. Nel pannello professionista, invece,
 due selettori indipendenti decidono in quali elenchi comparire.
 
-## 40. Home orientata alle azioni del proprietario — 28 settembre 2026
+## 40. Home e stile: correzione vincolante — 28 settembre 2026
 
-La Home deve comunicare il valore della cultura cinofila gratuita e portare
-subito a imparare o trovare aiuto. Menu riconoscibile anche su desktop, azioni
-concrete e destinazioni chiare. Evitare blocchi editoriali/statistici autonomi
-fra più serie di inviti alle stesse pagine: fonti e metodo appartengono ai
-contenuti di approfondimento e alle verifiche pertinenti.
-Sport resta un ingresso autonomo e facoltativo; il percorso quotidiano non
-richiede una scelta di modalità. Prima del cane serve chi deve ancora scegliere;
-i professionisti hanno un ingresso distinto dai bisogni del proprietario.
-Implementazione e limiti: [HOME_NAVIGATION_V2.md](HOME_NAVIGATION_V2.md).
+Luigi ha approvato i pulsanti del menu ma rifiutato la Home del commit `c5285ca`.
+Il lavoro stilistico deve preservare il messaggio del progetto e la familiarità
+della versione precedente. Non aggiungere sezioni che ripetano le destinazioni
+del menu: niente modulo ricerca in Home, tendina Servizi, elenco dei servizi
+quotidiani o riquadro promozionale professionisti.
+
+Usare gerarchia tipografica, spazi, colore e allineamenti. Niente nuovi strumenti
+come pretesto per una revisione grafica. Gli approfondimenti restano nelle
+rispettive pagine; evitare Evidence layer e statistiche interposte agli ingressi.
+Sport è riconoscibile nel menu e resta facoltativo. Il normale proprietario arriva
+subito alla ricerca per gestione quotidiana, senza passaggi intermedi.
+Prima del cane può avere un solo richiamo nella Home perché non duplica il menu.
+Specifica e stato: [HOME_NAVIGATION_V2.md](HOME_NAVIGATION_V2.md).
