@@ -132,6 +132,7 @@ export function OwnerDashboard() {
         </header>
 
         <BookingMessageInbox />
+        <button onClick={() => navigate('/owner/subscriptions')} className="mb-5 mr-3 rounded-xl border border-emerald-800 px-4 py-3 font-semibold text-emerald-900">I miei abbonamenti</button>
         <button onClick={() => navigate('/owner/passes')} className="mb-5 rounded-xl border border-emerald-800 px-4 py-3 font-semibold text-emerald-900">I miei pacchetti · lezioni e scadenze</button>
         <section aria-labelledby="owner-search-title">
           <div className="flex items-center gap-2 mb-3">

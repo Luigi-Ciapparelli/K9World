@@ -58,6 +58,7 @@ const OwnerBookings = lazy(() =>
     default: module.OwnerBookings,
   }))
 );
+const SubscriptionsPage = lazy(() => import('./pages/SubscriptionsPage').then(module => ({ default: module.SubscriptionsPage })));
 const PassesPage = lazy(() => import('./pages/PassesPage').then(module => ({ default: module.PassesPage })));
 const DogsPage = lazy(() =>
   import('./pages/owner/DogsPage').then((module) => ({ default: module.DogsPage }))
@@ -215,6 +216,7 @@ function AppShell() {
   else if (basePath === '/owner') content = <OwnerDashboard />;
   else if (basePath === '/owner/relationships' && continuityEnabled) content = <ContinuityPage professional={false} />;
   else if (basePath === '/owner/bookings') content = <OwnerBookings />;
+  else if (basePath === '/owner/subscriptions') content = <SubscriptionsPage />;
   else if (basePath === '/owner/passes') content = <PassesPage />;
   else if (basePath === '/owner/dogs') content = <DogsPage />;
   else if (basePath.startsWith('/owner/dogs/')) {
@@ -225,6 +227,7 @@ function AppShell() {
   else if (basePath === '/pro/archive' && continuityEnabled) content = <ContinuityPage professional />;
   else if (basePath === '/pro/bookings') content = <ProBookings />;
   else if (basePath === '/pro/calendar') content = <ProCalendar />;
+  else if (basePath === '/pro/subscriptions') content = <SubscriptionsPage professional />;
   else if (basePath === '/pro/passes') content = <PassesPage professional />;
   else if (basePath === '/pro/crm') content = <ProCRM />;
   else if (basePath === '/pro/analytics') content = <ProAnalytics />;

@@ -1,6 +1,6 @@
 # CURRENT STATE — PawConnect / Portalecinofilo
 
-> Auto-generated repository snapshot. Generated: `2026-09-28T10:31:54+02:00`
+> Auto-generated repository snapshot. Generated: `2026-09-28T16:39:13+02:00`
 
 This file records the **implemented state**, not future plans.
 If it conflicts with code, Git history or migrations, inspect the repository directly and regenerate it.
@@ -34,28 +34,20 @@ M START_HERE.md
  M docs/CURRENT_STATE.md
  M docs/PROFESSIONAL_OPERATIONS_NEXT.md
  M docs/PROJECT_HANDOFF.md
- M docs/SUPABASE_AUDIT_FIXES_V1.md
  M src/App.tsx
+ M src/components/PassDialogs.tsx
  M src/pages/owner/OwnerDashboard.tsx
  M src/pages/pro/ProLayout.tsx
  M supabase/.temp/cli-latest
-?? docs/PROFESSIONAL_PASSES_V1.md
-?? docs/SUPABASE_PRIVATE_API_V2.md
-?? scripts/audit/
+?? docs/PROFESSIONAL_SUBSCRIPTIONS_V1.md
 ?? scripts/tests/__pycache__/
-?? scripts/tests/private_api_assertions.sql
-?? scripts/tests/private_api_before.sql
-?? scripts/tests/private_api_lint_assertions.sql
-?? scripts/tests/professional_passes_assertions.sql
-?? scripts/tests/professional_passes_fixture.sql
-?? scripts/tests/test_private_api_boundary.py
-?? scripts/tests/test_professional_passes.py
-?? scripts/tests/test_professional_passes_ui.mjs
-?? src/components/PassDialogs.tsx
-?? src/lib/professionalPasses.ts
-?? src/pages/PassesPage.tsx
-?? supabase/migrations/20260927170000_restore_professional_passes.sql
-?? supabase/migrations/20260928100000_private_api_boundary.sql
+?? scripts/tests/professional_subscriptions_assertions.sql
+?? scripts/tests/test_professional_subscriptions.py
+?? scripts/tests/test_professional_subscriptions_ui.mjs
+?? src/components/SubscriptionDialogs.tsx
+?? src/lib/professionalSubscriptions.ts
+?? src/pages/SubscriptionsPage.tsx
+?? supabase/migrations/20260928120000_professional_subscriptions.sql
 ```
 
 ## Recent commits
@@ -69,7 +61,8 @@ git log --oneline --decorate -n 30
 Exit code: `0`
 
 ```text
-db2e010 (HEAD -> main, origin/main, origin/HEAD) Record applied Supabase privilege and RLS fixes
+f7d94f4 (HEAD -> main, origin/main, origin/HEAD) Restore professional lesson packages and secure API boundary
+db2e010 Record applied Supabase privilege and RLS fixes
 5725b5e Teach shaping with platform timing lab and learning foundations
 1e8cbb3 Restore Impara lessons activities progress and timing lab
 fa43378 Add discipline-specific sport merit verification foundation
@@ -98,7 +91,6 @@ a712352 (backup-production-before-booking-messages) Add professional calendar se
 a8414f3 Polish professional profile and booking request modal
 bbc2231 (backup-production-before-booking-fixes) Update project state snapshot
 a2edde0 Refine professional dashboard and booking actions
-472b4ee Refine owner dashboard and fix booking summaries
 ```
 
 ## Supabase migration history
@@ -163,6 +155,7 @@ Local            | Remote           | Time (UTC)
    `20260927131000` | `20260927131000` | `2026-09-27 13:10:00`
    `20260927170000` | `20260927170000` | `2026-09-27 17:00:00`
    `20260928100000` | `20260928100000` | `2026-09-28 10:00:00`
+   `20260928120000` | `20260928120000` | `2026-09-28 12:00:00`
 
 
 Initialising login role...
@@ -200,80 +193,82 @@ Exit code: `0`
 
 vite v5.4.21 building for production...
 transforming...
-✓ 1586 modules transformed.
+✓ 1589 modules transformed.
 rendering chunks...
 computing gzip size...
 dist/index.html                                 1.56 kB │ gzip:   0.61 kB
 dist/assets/impara-XUiVz4k1.css                16.78 kB │ gzip:   4.04 kB
-dist/assets/index-rgeshr4i.css                 54.33 kB │ gzip:  10.74 kB
-dist/assets/check-CHX5MT32.js                   0.29 kB │ gzip:   0.24 kB
-dist/assets/activity-DAUKfO8f.js                0.31 kB │ gzip:   0.25 kB
+dist/assets/index-iyCipT0a.css                 54.59 kB │ gzip:  10.82 kB
+dist/assets/check-B-n72H_i.js                   0.29 kB │ gzip:   0.24 kB
+dist/assets/activity-BFzL0S-5.js                0.31 kB │ gzip:   0.25 kB
 dist/assets/fciBreeds-DhDJr-DH.js               0.31 kB │ gzip:   0.25 kB
-dist/assets/plus-zEzqn0ri.js                    0.32 kB │ gzip:   0.25 kB
-dist/assets/arrow-left-C052OCJ1.js              0.33 kB │ gzip:   0.26 kB
-dist/assets/arrow-right-qf54T_tB.js             0.33 kB │ gzip:   0.27 kB
-dist/assets/search-BCWdLMDE.js                  0.34 kB │ gzip:   0.27 kB
-dist/assets/check-circle-2-BswJn2vZ.js          0.34 kB │ gzip:   0.27 kB
-dist/assets/clock-Db0N-Stv.js                   0.35 kB │ gzip:   0.27 kB
-dist/assets/rotate-ccw-CoHQQ_Ja.js              0.37 kB │ gzip:   0.29 kB
-dist/assets/map-pin-Lf57Pxf1.js                 0.37 kB │ gzip:   0.29 kB
-dist/assets/star-5FrSu9yI.js                    0.38 kB │ gzip:   0.29 kB
-dist/assets/book-open-DO9izhX5.js               0.39 kB │ gzip:   0.29 kB
-dist/assets/bar-chart-3-D4kTaW7H.js             0.40 kB │ gzip:   0.29 kB
-dist/assets/heart-CKWnx33O.js                   0.41 kB │ gzip:   0.31 kB
-dist/assets/external-link-BLd-gl_u.js           0.42 kB │ gzip:   0.30 kB
-dist/assets/upload-DUL8n69j.js                  0.43 kB │ gzip:   0.32 kB
-dist/assets/calendar-5HeScRCU.js                0.43 kB │ gzip:   0.30 kB
-dist/assets/alert-triangle-BRKyOLSj.js          0.43 kB │ gzip:   0.31 kB
-dist/assets/users-DW22vHTb.js                   0.47 kB │ gzip:   0.32 kB
-dist/assets/badge-check-B-h9_PWe.js             0.48 kB │ gzip:   0.31 kB
-dist/assets/sportSearch-OQXAGqnQ.js             0.49 kB │ gzip:   0.34 kB
-dist/assets/refresh-cw-D4Lb2lhG.js              0.49 kB │ gzip:   0.33 kB
-dist/assets/file-text-DXhjpXv_.js               0.50 kB │ gzip:   0.32 kB
-dist/assets/paw-print-MNjKP7j9.js               0.51 kB │ gzip:   0.35 kB
-dist/assets/trash-2-B3gbkCy5.js                 0.53 kB │ gzip:   0.35 kB
-dist/assets/scale-CDbTHQDQ.js                   0.53 kB │ gzip:   0.34 kB
-dist/assets/phone-XzqzDkPp.js                   0.56 kB │ gzip:   0.36 kB
-dist/assets/medal-CkKXQtrI.js                   0.60 kB │ gzip:   0.39 kB
-dist/assets/calendar-days-BOgpgesT.js           0.66 kB │ gzip:   0.37 kB
-dist/assets/target-DjwuwA_U.js                  0.70 kB │ gzip:   0.31 kB
-dist/assets/home-BH5hUmnm.js                    0.83 kB │ gzip:   0.43 kB
-dist/assets/trophy-Oc9-TAgs.js                  0.95 kB │ gzip:   0.47 kB
-dist/assets/DogPhoto-DwhGbaa3.js                1.19 kB │ gzip:   0.71 kB
-dist/assets/bookingMessages-CtX5JQhX.js         1.47 kB │ gzip:   0.81 kB
+dist/assets/plus-BiAcAbU9.js                    0.32 kB │ gzip:   0.25 kB
+dist/assets/arrow-left-DZlax1iE.js              0.33 kB │ gzip:   0.26 kB
+dist/assets/arrow-right-DoG_SObt.js             0.33 kB │ gzip:   0.26 kB
+dist/assets/search-BmhT5y3w.js                  0.34 kB │ gzip:   0.27 kB
+dist/assets/check-circle-2-DOg1JXGH.js          0.34 kB │ gzip:   0.27 kB
+dist/assets/clock-BPylWAQM.js                   0.35 kB │ gzip:   0.27 kB
+dist/assets/rotate-ccw-BJJmiY6d.js              0.37 kB │ gzip:   0.29 kB
+dist/assets/map-pin-Z0VW32Od.js                 0.37 kB │ gzip:   0.29 kB
+dist/assets/star-c_sNmlug.js                    0.38 kB │ gzip:   0.29 kB
+dist/assets/book-open-Jgwy22-h.js               0.39 kB │ gzip:   0.29 kB
+dist/assets/bar-chart-3-Cu-t1q7O.js             0.40 kB │ gzip:   0.29 kB
+dist/assets/heart-CrMe35iH.js                   0.41 kB │ gzip:   0.31 kB
+dist/assets/external-link-B7t7zFRz.js           0.42 kB │ gzip:   0.30 kB
+dist/assets/upload-KTX1avjD.js                  0.43 kB │ gzip:   0.32 kB
+dist/assets/calendar-DTgrjJql.js                0.43 kB │ gzip:   0.30 kB
+dist/assets/alert-triangle-DeB74A9C.js          0.43 kB │ gzip:   0.31 kB
+dist/assets/users-CQWt1A7J.js                   0.47 kB │ gzip:   0.32 kB
+dist/assets/badge-check-BTwA7sv1.js             0.48 kB │ gzip:   0.31 kB
+dist/assets/sportSearch-bXype2bM.js             0.49 kB │ gzip:   0.34 kB
+dist/assets/refresh-cw-BWWIKt7K.js              0.49 kB │ gzip:   0.32 kB
+dist/assets/file-text-C-B87XFy.js               0.50 kB │ gzip:   0.32 kB
+dist/assets/paw-print-BtN9Ocdo.js               0.51 kB │ gzip:   0.35 kB
+dist/assets/trash-2-1vjCOKe1.js                 0.53 kB │ gzip:   0.35 kB
+dist/assets/scale-DTI4_EBL.js                   0.53 kB │ gzip:   0.34 kB
+dist/assets/phone-BFTz4L2o.js                   0.56 kB │ gzip:   0.36 kB
+dist/assets/medal-j83Onw97.js                   0.60 kB │ gzip:   0.38 kB
+dist/assets/calendar-days-TcbQOFF4.js           0.66 kB │ gzip:   0.36 kB
+dist/assets/target-D7ZD8_tW.js                  0.70 kB │ gzip:   0.31 kB
+dist/assets/home-D7vEiOru.js                    0.83 kB │ gzip:   0.43 kB
+dist/assets/trophy-B2W6sePC.js                  0.95 kB │ gzip:   0.47 kB
+dist/assets/DogPhoto-BD5c02eg.js                1.19 kB │ gzip:   0.71 kB
+dist/assets/bookingMessages-BgpyiM5B.js         1.47 kB │ gzip:   0.81 kB
 dist/assets/professionalCalendar-CiVuepea.js    1.96 kB │ gzip:   0.90 kB
-dist/assets/ProfessionalBridge-DMZ_Oa0o.js      2.19 kB │ gzip:   1.14 kB
-dist/assets/ProLayout-CGrUJerp.js               4.78 kB │ gzip:   1.77 kB
-dist/assets/VerificationModal-WnLhqoWL.js       4.82 kB │ gzip:   1.86 kB
-dist/assets/DogDetailPage-CyCL4FJt.js           5.31 kB │ gzip:   1.96 kB
-dist/assets/ProAnalytics-DbI9kkYQ.js            5.38 kB │ gzip:   2.09 kB
-dist/assets/OwnerBookings-DATpTp1-.js           5.66 kB │ gzip:   2.30 kB
-dist/assets/BreedPage-EfYUQ1Pq.js               6.55 kB │ gzip:   2.24 kB
-dist/assets/FciGroupPage-Dv0D2OWi.js            7.47 kB │ gzip:   2.72 kB
-dist/assets/ProBookings-4LgG-dDz.js             7.47 kB │ gzip:   3.06 kB
+dist/assets/ProfessionalBridge-DgHZif5d.js      2.19 kB │ gzip:   1.14 kB
+dist/assets/VerificationModal-BqzjBlmu.js       4.82 kB │ gzip:   1.86 kB
+dist/assets/ProLayout-DjxvGiOH.js               4.90 kB │ gzip:   1.82 kB
+dist/assets/DogDetailPage-CTuwOd_O.js           5.31 kB │ gzip:   1.96 kB
+dist/assets/ProAnalytics-CSLRhEO7.js            5.41 kB │ gzip:   2.11 kB
+dist/assets/OwnerBookings-Br25ZWrT.js           5.66 kB │ gzip:   2.29 kB
+dist/assets/BreedPage-D1QkfJoM.js               6.55 kB │ gzip:   2.24 kB
+dist/assets/FciGroupPage-VYS0zWww.js            7.47 kB │ gzip:   2.71 kB
+dist/assets/ProBookings-BqzoeoRa.js             7.50 kB │ gzip:   3.08 kB
 dist/assets/fciGroups-BHmHcsg7.js               7.55 kB │ gzip:   2.69 kB
-dist/assets/ProCRM-q7HWNFo_.js                  8.49 kB │ gzip:   2.76 kB
-dist/assets/SearchCard-CuAWG7fn.js              8.64 kB │ gzip:   3.44 kB
-dist/assets/BreederGuidePage-cA-v5C97.js        9.53 kB │ gzip:   3.46 kB
-dist/assets/ImparaHomePage-BEK6WUIh.js         10.01 kB │ gzip:   3.84 kB
-dist/assets/ProDashboard-Rw-7UWtO.js           10.90 kB │ gzip:   3.63 kB
-dist/assets/AuthPages-CzYonc7J.js              11.54 kB │ gzip:   3.59 kB
-dist/assets/BookingMessageInbox-DKZAPCOv.js    11.81 kB │ gzip:   4.19 kB
-dist/assets/AdminDashboard-DL4yDNMs.js         13.63 kB │ gzip:   4.08 kB
-dist/assets/DogsPage-UyTX0yjS.js               14.15 kB │ gzip:   4.58 kB
-dist/assets/BecomeProPage-DA0STad4.js          14.35 kB │ gzip:   4.48 kB
-dist/assets/OwnerDashboard-DX0oNxEe.js         14.48 kB │ gzip:   4.81 kB
-dist/assets/ProCalendar-BR7agy9b.js            15.66 kB │ gzip:   5.44 kB
-dist/assets/HomePage-D0ygy06L.js               16.59 kB │ gzip:   5.13 kB
-dist/assets/LegalPages-fPx-1Bfs.js             21.71 kB │ gzip:   6.87 kB
-dist/assets/SearchPage-xEQV9eVL.js             22.30 kB │ gzip:   7.07 kB
-dist/assets/ImparaLessonPage-BKOlVNly.js       22.30 kB │ gzip:   8.02 kB
-dist/assets/PassesPage-BA24hreH.js             23.25 kB │ gzip:   6.98 kB
-dist/assets/ProfessionalProfile-fDXIcF-G.js    29.05 kB │ gzip:   8.41 kB
-dist/assets/BeforeDogPage-lQ0R2QDY.js          31.79 kB │ gzip:   9.74 kB
-dist/assets/ContinuityPage-B5SX1h0k.js         37.85 kB │ gzip:  10.50 kB
-dist/assets/ProSettings-BFMUV1Ca.js            57.59 kB │ gzip:  15.49 kB
-dist/assets/impara-B-NYfy7-.js                 58.66 kB │ gzip:  18.93 kB
-dist/assets/index-D_tqivCU.js                 390.07 kB │ gzip: 111.05 kB
-✓ built in 3.78s
+dist/assets/ProCRM-ClaQuERr.js                  8.52 kB │ gzip:   2.78 kB
+dist/assets/SearchCard-DBGY3aUz.js              8.64 kB │ gzip:   3.44 kB
+dist/assets/BreederGuidePage-D06Si9SY.js        9.53 kB │ gzip:   3.46 kB
+dist/assets/ImparaHomePage-C2dupzEU.js         10.01 kB │ gzip:   3.84 kB
+dist/assets/PassesPage-B2N9cX13.js             10.23 kB │ gzip:   3.38 kB
+dist/assets/ProDashboard-CIFczG7Y.js           10.93 kB │ gzip:   3.65 kB
+dist/assets/AuthPages-CvZGbfgs.js              11.54 kB │ gzip:   3.59 kB
+dist/assets/BookingMessageInbox-B5qk7Pts.js    11.81 kB │ gzip:   4.19 kB
+dist/assets/PassDialogs-BiDeIvTg.js            13.35 kB │ gzip:   4.52 kB
+dist/assets/AdminDashboard-pCQghMeb.js         13.63 kB │ gzip:   4.08 kB
+dist/assets/DogsPage-sLLzlFFH.js               14.15 kB │ gzip:   4.58 kB
+dist/assets/BecomeProPage-RCdTb4Tz.js          14.35 kB │ gzip:   4.48 kB
+dist/assets/OwnerDashboard-DBAzKOoS.js         14.67 kB │ gzip:   4.83 kB
+dist/assets/ProCalendar-DQ9MsQPw.js            15.66 kB │ gzip:   5.44 kB
+dist/assets/HomePage-CRHw_BYZ.js               16.59 kB │ gzip:   5.13 kB
+dist/assets/LegalPages-DnSRqRKr.js             21.71 kB │ gzip:   6.87 kB
+dist/assets/SearchPage-odMdQp8P.js             22.30 kB │ gzip:   7.07 kB
+dist/assets/ImparaLessonPage-CiKL7Cno.js       22.30 kB │ gzip:   8.03 kB
+dist/assets/SubscriptionsPage-Dc2L4JRt.js      23.28 kB │ gzip:   7.15 kB
+dist/assets/ProfessionalProfile-hTPxB-wM.js    29.05 kB │ gzip:   8.41 kB
+dist/assets/BeforeDogPage-DUIbXwAk.js          31.79 kB │ gzip:   9.74 kB
+dist/assets/ContinuityPage-HPXUpAGu.js         37.88 kB │ gzip:  10.52 kB
+dist/assets/ProSettings-GkfPQE9U.js            57.62 kB │ gzip:  15.50 kB
+dist/assets/impara-BwlDNNYy.js                 58.66 kB │ gzip:  18.93 kB
+dist/assets/index-Bk01ym1B.js                 390.42 kB │ gzip: 111.13 kB
+✓ built in 4.34s
 ```

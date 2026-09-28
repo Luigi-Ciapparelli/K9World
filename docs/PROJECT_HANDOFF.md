@@ -839,3 +839,13 @@ privilegiate: [SUPABASE_PRIVATE_API_V2.md](SUPABASE_PRIVATE_API_V2.md). Implemen
 Test isolati superati; database online non dichiarato aggiornato. L'avviso
 password compromesse richiede una configurazione Auth, disponibile da Pro.
 Le future migrazioni devono rispettare questo confine e l'ordine descritto.
+
+<!-- professional-subscriptions-v1 -->
+## Abbonamenti professionali — 28 settembre 2026
+
+Nuovo incremento: piani settimanali, quindicinali o mensili, primo periodo,
+rinnovi confermati, lezioni e storni per periodo, chiusura, annullamento e vista
+proprietario. Specifica, limiti e rilascio: `docs/PROFESSIONAL_SUBSCRIPTIONS_V1.md`.
+Base verificata: `f7d94f4`. Preparato e testato in ambiente isolato; migrazione
+`20260928120000_professional_subscriptions.sql` da applicare prima del frontend.
+Nessun pagamento automatico. Non dichiarare online finché non è confermato.

@@ -61,3 +61,13 @@ storico, storni e vista proprietario. Specifica e stato verifiche:
 Preparato localmente su base `db2e010`; nuova migration da testare nel WSL
 e applicare prima del frontend. Nessuna pubblicazione online attestata qui.
 Abbonamenti, tessere e campagne rimangono i prossimi strumenti da ripristinare.
+
+<!-- professional-subscriptions-v1 -->
+## Abbonamenti professionali — 28 settembre 2026
+
+Nuovo incremento: piani settimanali, quindicinali o mensili, primo periodo,
+rinnovi confermati, lezioni e storni per periodo, chiusura, annullamento e vista
+proprietario. Specifica, limiti e rilascio: `docs/PROFESSIONAL_SUBSCRIPTIONS_V1.md`.
+Base verificata: `f7d94f4`. Preparato e testato in ambiente isolato; migrazione
+`20260928120000_professional_subscriptions.sql` da applicare prima del frontend.
+Nessun pagamento automatico. Non dichiarare online finché non è confermato.

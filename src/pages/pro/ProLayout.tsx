@@ -1,6 +1,6 @@
 import { continuityEnabled } from '../../lib/continuity';
 import { ReactNode, useState } from 'react';
-import { LayoutDashboard, Calendar, CalendarDays, Package, Users, BarChart3, Settings, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Calendar, CalendarDays, Package, RefreshCw, Users, BarChart3, Settings, Menu, X } from 'lucide-react';
 import { useRouter } from '../../lib/RouterContext';
 import { useAuth } from '../../lib/AuthContext';
 
@@ -13,6 +13,7 @@ export function ProLayout({ children, active }: { children: ReactNode; active: s
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/pro' },
     { id: 'bookings', label: 'Richieste', icon: Calendar, path: '/pro/bookings' },
     { id: 'calendar', label: 'Calendario', icon: CalendarDays, path: '/pro/calendar' },
+    { id: 'subscriptions', label: 'Abbonamenti', icon: RefreshCw, path: '/pro/subscriptions' },
     { id: 'passes', label: 'Pacchetti', icon: Package, path: '/pro/passes' },
     ...(continuityEnabled ? [{ id: 'archive', label: 'Relazioni e archivio', icon: Users, path: '/pro/archive' }] : []),
     { id: 'crm', label: 'Clienti', icon: Users, path: '/pro/crm' },

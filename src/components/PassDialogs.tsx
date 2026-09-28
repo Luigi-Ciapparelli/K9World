@@ -110,10 +110,10 @@ export function UsePassDialog({ pack, onClose, onSaved }: { pack: ClientPass; on
     </fieldset></form>
   </PassDialog>;
 }
-export function PassReasonDialog({ pack, event, onClose, onSaved }: { pack: ClientPass; event?: PassEvent; onClose: () => void; onSaved: () => void }) {
+export function PassReasonDialog({ pack, event, period = false, onClose, onSaved }: { pack: ClientPass; event?: PassEvent; period?: boolean; onClose: () => void; onSaved: () => void }) {
   const [reason, setReason] = useState(''); const { busy, error, run } = usePassMutation(onSaved);
-  return <PassDialog title={event ? 'Storna una lezione' : 'Annulla pacchetto'} busy={busy} onClose={onClose}>
-    <p className="mb-4">{event ? 'La lezione torna disponibile e lo storico conserva la rettifica.' : 'Il cliente non potrà più utilizzare le lezioni residue. Il pacchetto rimane nello storico; nessun rimborso viene eseguito.'}</p>
+  return <PassDialog title={event ? 'Storna una lezione' : period ? 'Annulla periodo' : 'Annulla pacchetto'} busy={busy} onClose={onClose}>
+    <p className="mb-4">{event ? 'La lezione torna disponibile e lo storico conserva la rettifica.' : `Il cliente non potrà più utilizzare le lezioni residue. ${period ? 'Il periodo' : 'Il pacchetto'} rimane nello storico; nessun rimborso viene eseguito.`}</p>
     <form onSubmit={e => { e.preventDefault(); void run(event ? 'reverse_pass_use' : 'cancel_own_client_pass', event ? { p_use_id: event.id, p_reason: reason.trim() } : { p_id: pack.id, p_version: pack.version, p_reason: reason.trim() }, !!event); }}><fieldset disabled={busy} className="space-y-4">
       <label className="block">Motivo visibile al cliente<textarea className={inputClass} value={reason} onChange={e => setReason(e.target.value)} minLength={3} maxLength={300} required rows={3} /></label>
       {error && <PassAlert>{error}</PassAlert>}<button className={passButton}>{busy ? 'Salvataggio…' : event ? 'Conferma storno' : 'Conferma annullamento'}</button>
