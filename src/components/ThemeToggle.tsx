@@ -27,6 +27,7 @@ export function ThemeToggle() {
                 : 'text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800'
             }`}
             aria-pressed={active}
+            aria-label={`Tema ${option.label.toLowerCase()}`}
           >
             <Icon className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">{option.label}</span>

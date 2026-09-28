@@ -849,3 +849,12 @@ proprietario. Specifica, limiti e rilascio: `docs/PROFESSIONAL_SUBSCRIPTIONS_V1.
 Base verificata: `f7d94f4`. Preparato e testato in ambiente isolato; migrazione
 `20260928120000_professional_subscriptions.sql` da applicare prima del frontend.
 Nessun pagamento automatico. Non dichiarare online finché non è confermato.
+
+## Home e navigazione — revisione del 28 settembre 2026
+
+Menu desktop a pulsanti, ricerca addestratore diretta, servizi operativi,
+anteprima Impara, Prima del cane e spazi distinti per sport e professionisti.
+Rimossi dalla Home i blocchi editoriali ripetitivi segnalati da Luigi.
+Specifica, verifiche e limiti: [HOME_NAVIGATION_V2.md](HOME_NAVIGATION_V2.md).
+Solo frontend; nessuna nuova migrazione. Base `ff721ce`; deployment da
+identificare con il commit del rilascio prima di dichiararlo Ready.

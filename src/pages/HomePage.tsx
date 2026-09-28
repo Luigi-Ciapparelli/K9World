@@ -1,285 +1,153 @@
-import { useEffect } from 'react';
-import {
-  ArrowRight,
-  BookOpen,
-  Compass,
-  ExternalLink,
-  Search,
-  ShieldCheck,
-} from 'lucide-react';
-import { TraceMark } from '../components/design/TraceMark';
-import { ImpactProof } from '../components/home/ImpactProof';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { ArrowRight, BookOpen, Check, ChevronRight, Compass, GraduationCap, Home, MapPin, Search, Trophy, Footprints, Scissors, User, Clock3 } from 'lucide-react';
+import { RouteLink } from '../components/RouteLink';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
+import { cityLabel, loadItalianCities, normalizeCitySearch, type ItalianCity } from '../lib/italianCities';
 
-type PathCardProps = {
-  number: string;
-  title: string;
-  text: string;
-  cta: string;
-  onClick: () => void;
-  icon: typeof Compass;
-};
-
-function PathCard({ number, title, text, cta, onClick, icon: Icon }: PathCardProps) {
-  return (
-    <button type="button" onClick={onClick} className="pc-card pc-card-interactive group w-full text-left p-6 md:p-7">
-      <div className="flex items-start justify-between gap-5">
-        <div>
-          <div className="pc-number">{number}</div>
-          <h3 className="pc-display text-2xl md:text-3xl font-semibold text-[var(--pc-ink-950)] mt-3">{title}</h3>
-        </div>
-        <div className="w-11 h-11 rounded-xl bg-[var(--pc-forest-100)] text-[var(--pc-forest-900)] flex items-center justify-center shrink-0">
-          <Icon className="w-5 h-5" />
-        </div>
-      </div>
-      <p className="text-[var(--pc-muted-600)] leading-7 mt-4 max-w-xl">{text}</p>
-      <span className="inline-flex items-center gap-2 text-sm font-bold text-[var(--pc-forest-900)] mt-6">
-        {cta}<ArrowRight className="w-4 h-4 transition group-hover:translate-x-1" />
-      </span>
-    </button>
-  );
-}
-
-// ECOSYSTEM_PASS_V1
-function PublicHomePage() {
+function HomeProfessionalSearch() {
   const { navigate } = useRouter();
+  const [address, setAddress] = useState('');
+  const [cities, setCities] = useState<ItalianCity[]>([]);
+
+  useEffect(() => {
+    let current = true;
+    loadItalianCities().then(data => { if (current) setCities(data); }).catch(() => { /* Free-text search remains available. */ });
+    return () => { current = false; };
+  }, []);
+
+  const suggestions = useMemo(() => {
+    const needle = normalizeCitySearch(address);
+    return needle.length < 2 ? [] : cities.filter(city => normalizeCitySearch(cityLabel(city)).includes(needle)).slice(0, 8);
+  }, [address, cities]);
+
+  const search = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const params = new URLSearchParams({ type: 'trainer' });
+    const value = address.trim();
+    if (value) {
+      params.set('address', value);
+      const matches = cities.filter(city => normalizeCitySearch(cityLabel(city)) === normalizeCitySearch(value) || normalizeCitySearch(city.name) === normalizeCitySearch(value));
+      if (matches.length === 1) {
+        params.set('address', cityLabel(matches[0]));
+        params.set('lat', String(matches[0].lat));
+        params.set('lng', String(matches[0].lng));
+      }
+    }
+    navigate(`/search?${params}`);
+  };
 
   return (
-    <div className="min-h-screen bg-[var(--pc-bone-50)] text-[var(--pc-ink-950)]">
-      <section className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 lg:py-28">
-          <div className="grid lg:grid-cols-[1.12fr_0.88fr] gap-10 lg:gap-16 items-center">
-            <div>
-              <div className="flex items-center gap-4">
-                <TraceMark className="text-[var(--pc-forest-700)]" />
-                <span className="pc-kicker">PortaleCinofilo · Italia</span>
-              </div>
-              <h1 className="pc-display text-[clamp(2.8rem,6.5vw,5rem)] leading-[0.98] font-semibold mt-7 max-w-4xl">
-                Conosci meglio il cane. Costruisci un binomio più consapevole.
-              </h1>
-              <p className="pc-lead pc-reading mt-7">
-                Dalla scelta alla vita quotidiana, PortaleCinofilo ti aiuta a capire bisogni e comportamento, trovare professionisti competenti e costruire con loro un percorso che continui nel tempo.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 mt-8">
-                <button
-                  type="button"
-                  onClick={() => navigate('/search?type=trainer&source=home&topic=binomio&intent=professional-support')}
-                  className="pc-btn pc-btn-primary"
-                >
-                  Trova aiuto per il cane <ArrowRight className="w-4 h-4" />
-                </button>
-                <button type="button" onClick={() => navigate('/impara')} className="pc-btn pc-btn-secondary">
-                  Impara a conoscere il cane
-                </button>
-              </div>
-              <button
-                type="button"
-                onClick={() => navigate('/prima-del-cane')}
-                className="mt-4 text-sm font-bold text-[var(--pc-forest-900)] underline underline-offset-4"
-              >
-                Stai pensando di prendere un cane? Parti da qui
-              </button>
-              <p className="text-sm text-[var(--pc-muted-600)] mt-5 max-w-2xl leading-6">
-                Nessun account obbligatorio per imparare o iniziare il percorso. La registrazione serve quando vuoi salvare dati, sincronizzare progressi o prenotare.
-              </p>
-            </div>
-
-            <div className="pc-field-grid border border-[var(--pc-line)] rounded-[24px] p-6 md:p-8">
-              <p className="pc-kicker">La scelta parte dalla realtà</p>
-              <h2 className="pc-display text-3xl md:text-4xl font-semibold mt-3">Non da una fotografia.</h2>
-              <div className="mt-8 space-y-3">
-                {[
-                  ['Tempo quotidiano', 'Quanto puoi esserci davvero'],
-                  ['Solitudine', 'Quanto resterà solo abitualmente'],
-                  ['Attività', 'Che vita vuoi condividere'],
-                  ['Famiglia', 'Persone e animali già presenti'],
-                  ['Gestione', 'Quanta complessità puoi sostenere'],
-                ].map(([label, value], index) => (
-                  <div key={label} className="bg-[rgba(255,254,250,0.92)] border border-[var(--pc-line)] rounded-xl p-4 flex items-start gap-4">
-                    <span className="pc-number mt-0.5">0{index + 1}</span>
-                    <div><div className="font-bold">{label}</div><div className="text-sm text-[var(--pc-muted-600)] mt-1">{value}</div></div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center gap-3 mt-7 text-[var(--pc-forest-700)]">
-                <TraceMark /><span className="text-sm font-bold">profilo → gruppi → razze → scelta</span>
-              </div>
-            </div>
-          </div>
+    <div className="pc-home-search" aria-labelledby="home-search-title">
+      <div className="pc-home-search-heading">
+        <span className="pc-home-search-icon"><Search size={25} aria-hidden="true" /></span>
+        <p>UN PROFESSIONISTA AL TUO FIANCO</p>
+        <h2 id="home-search-title">Un aiuto concreto,<br />vicino a te.</h2>
+        <p className="pc-home-search-intro">Educazione, passeggiate, vita in casa. Trova un addestratore con cui costruire il vostro percorso.</p>
+      </div>
+      <form onSubmit={search} className="pc-home-search-form">
+        <label htmlFor="home-city">Dove cerchi?<span>Facoltativo</span></label>
+        <div className="pc-home-city-field">
+          <MapPin size={19} aria-hidden="true" />
+          <input id="home-city" name="address" value={address} onChange={event => setAddress(event.target.value)} list="home-city-options" autoComplete="off" placeholder="Città o zona, ad esempio Rimini" />
+          <datalist id="home-city-options">{suggestions.map(city => <option key={city.code} value={cityLabel(city)} />)}</datalist>
         </div>
-      </section>
-
-      <section className="pc-surface-dark">
-        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
-          <div className="grid lg:grid-cols-[0.72fr_1.28fr] gap-10 lg:gap-16 items-start">
-            <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#c9d8cf]">Perché questa scelta conta</p>
-              <div className="pc-display text-6xl md:text-7xl font-semibold text-white mt-4">&gt; 2 su 10</div>
-              <p className="text-sm text-[#c9d8cf] mt-3">cani entrati nei canili rifugio dei comuni osservati</p>
-            </div>
-            <div className="max-w-3xl">
-              <h2 className="pc-display text-3xl md:text-5xl font-semibold leading-tight">Una scelta dura anni. Vale la pena farla bene.</h2>
-              <p className="text-[#dbe5df] text-lg leading-8 mt-5">
-                Nel 2025, nei canili rifugio dei 221 comuni mappati da Legambiente, oltre due cani su dieci tra quelli entrati — circa 3.000 — non risultavano adottati, restituiti ai proprietari o inseriti come cani di quartiere.
-              </p>
-              <p className="text-sm text-[#b9c8bf] leading-6 mt-4">
-                Questo dato non dimostra che una scelta di razza sbagliata sia la causa. Mostra perché prevenzione, compatibilità e gestione responsabile meritano attenzione.
-              </p>
-              <div className="flex flex-wrap gap-3 mt-7">
-                <button type="button" onClick={() => navigate('/prima-del-cane')} className="pc-btn pc-btn-inverse">
-                  Inizia dalla tua situazione <ArrowRight className="w-4 h-4" />
-                </button>
-                <a href="https://www.legambiente.it/attivita-scientifiche/animali-in-citta" target="_blank" rel="noreferrer" className="pc-btn border border-white/25 text-white hover:bg-white/10">
-                  Fonte e contesto <ExternalLink className="w-4 h-4" />
-                </a>
-              </div>
-              <p className="text-xs text-[#9fb0a6] mt-4">Legambiente · Animali in Città 2026 · dati riferiti a 221 comuni</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
-        <div className="max-w-3xl">
-          <p className="pc-kicker">Dalla scelta alla vita insieme</p>
-          <h2 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Capire meglio il cane cambia il modo in cui vivete insieme.</h2>
-          <p className="pc-lead mt-5">
-            Prima di scegliere, mentre impari e durante il lavoro con un professionista, ogni passaggio dovrebbe aiutarti a prendere decisioni migliori per il cane e per il vostro binomio.
-          </p>
-        </div>
-        <div className="grid lg:grid-cols-3 gap-4 mt-10">
-          <PathCard number="01" title="Prima del cane" text="Valuta con realismo tempo, ambiente, aspettative e responsabilità. Poi confronta il quadro con un professionista prima della scelta." cta="Prepara la scelta" icon={Compass} onClick={() => navigate('/prima-del-cane')} />
-          <PathCard number="02" title="Impara e osserva" text="Conosci bisogni, comunicazione e routine per osservare meglio il cane e arrivare più preparato al confronto professionale." cta="Costruisci le basi" icon={BookOpen} onClick={() => navigate('/impara')} />
-          <PathCard number="03" title="Lavora con un professionista" text="Scegli in base a competenze, esperienza e contesto. Il valore nasce dal percorso che costruite sul binomio, non da una singola prenotazione." cta="Trova aiuto per il cane" icon={Search} onClick={() => navigate('/search?type=trainer&source=home&topic=binomio&intent=professional-support')} />
-        </div>
-      </section>
-
-      <section className="max-w-7xl mx-auto px-6 pb-16" aria-labelledby="home-sport-title">
-        <div className="rounded-3xl bg-[var(--pc-forest-900)] text-white p-7 md:p-10 grid md:grid-cols-[1fr_auto] items-center gap-6">
-          <div>
-            <p className="text-xs uppercase tracking-widest font-bold text-emerald-200">Per chi cerca un percorso sportivo</p>
-            <h2 id="home-sport-title" className="pc-display text-3xl md:text-4xl font-semibold mt-3">Sport cinofili</h2>
-            <p className="mt-4 max-w-2xl text-emerald-50 leading-7">Obedience, Agility, IGP e altre discipline: trova un addestratore per l’attività che vuoi praticare con il tuo cane.</p>
-          </div>
-          <button type="button" onClick={() => navigate('/sport')} className="pc-btn pc-btn-inverse">Esplora gli sport <ArrowRight className="w-4 h-4" /></button>
-        </div>
-      </section>
-
-      <section className="pc-evidence-surface border-y border-[#cedde1]">
-        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
-          <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16">
-            <div>
-              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--pc-evidence-700)]">Evidence layer</p>
-              <h2 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Non devi crederci sulla parola.</h2>
-              <p className="text-[var(--pc-muted-600)] text-lg leading-8 mt-5 max-w-xl">
-                Le affermazioni importanti devono poter essere controllate. Fonte, contesto e limiti fanno parte del contenuto.
-              </p>
-            </div>
-            <div className="space-y-3">
-              {[
-                ['Dati con contesto', 'Anno, popolazione osservata e limiti prima del numero.'],
-                ['Metodo dichiarato', 'Distinguiamo ricerca, fonte ufficiale, sintesi editoriale e approcci professionali.'],
-                ['Limiti espliciti', 'Quando i dati non permettono una conclusione, PortaleCinofilo non la inventa.'],
-              ].map(([title, text]) => (
-                <div key={title} className="bg-[var(--pc-paper)] border border-[#cedde1] rounded-2xl p-5 flex gap-4">
-                  <ShieldCheck className="w-5 h-5 text-[var(--pc-evidence-700)] shrink-0 mt-0.5" />
-                  <div><h3 className="font-bold">{title}</h3><p className="text-sm text-[var(--pc-muted-600)] leading-6 mt-1">{text}</p></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
-        <div className="grid lg:grid-cols-[1fr_0.9fr] gap-10 lg:gap-16 items-center">
-          <div>
-            <p className="pc-kicker">Impara</p>
-            <h2 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Possedere un cane non significa conoscerlo.</h2>
-            <p className="pc-lead mt-5 max-w-2xl">
-              Lo Stage 1 parte dalle fondamenta e arriva all’osservazione pratica. Il progresso non premia lo scrolling: studio, attività e verifica hanno pesi diversi.
-            </p>
-            <button type="button" onClick={() => navigate('/impara')} className="pc-btn pc-btn-primary mt-7">Entra in Impara <ArrowRight className="w-4 h-4" /></button>
-          </div>
-          <div className="pc-card p-6 md:p-8">
-            <p className="pc-number">ESEMPIO DI PROGRESSIONE</p>
-            <div className="mt-6 space-y-5">
-              {[
-                ['○', 'Da conoscere', 'Il concetto non è ancora stato affrontato.', 'text-[var(--pc-muted-600)]'],
-                ['◐', 'Appreso', 'Hai studiato e completato l’attività prevista.', 'text-[var(--pc-ochre-900)]'],
-                ['✓', 'Verificato', 'Hai dimostrato di aver capito con una verifica.', 'text-[var(--pc-forest-700)]'],
-              ].map(([symbol, title, text, color]) => (
-                <div key={title} className="flex gap-4"><div className={`text-2xl font-bold ${color}`}>{symbol}</div><div><div className="font-bold">{title}</div><div className="text-sm text-[var(--pc-muted-600)] leading-6 mt-1">{text}</div></div></div>
-              ))}
-            </div>
-            <div className="pc-rule my-6" />
-            <div className="flex items-center gap-3 text-sm font-bold text-[var(--pc-forest-900)]"><TraceMark /> comprendi → applica → verifica</div>
-          </div>
-        </div>
-      </section>
-
-            <ImpactProof />
-
-      <section className="pc-surface-dark">
-        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
-          <div className="max-w-4xl">
-            <TraceMark className="text-[var(--pc-ochre-500)]" />
-            <h2 className="pc-display text-4xl md:text-6xl font-semibold mt-5">Il cane non può scegliere la famiglia in cui vivrà. Tu puoi scegliere meglio.</h2>
-            <p className="text-[#c9d8cf] text-lg leading-8 mt-5 max-w-2xl">Il primo passo non è trovare la razza più bella. È capire quale vita sei davvero in grado di condividere.</p>
-            <button type="button" onClick={() => navigate('/prima-del-cane')} className="pc-btn pc-btn-inverse mt-8">Inizia Prima del cane <ArrowRight className="w-4 h-4" /></button>
-          </div>
-        </div>
-      </section>
+        <button type="submit" className="pc-entry-button pc-entry-primary">Trova un addestratore <ArrowRight size={19} aria-hidden="true" /></button>
+        <p className="pc-home-search-note">Esplora i profili senza registrarti.</p>
+      </form>
+      <div className="pc-home-search-foot"><Check size={16} aria-hidden="true" /> Esperienza, servizi e qualifiche nei profili</div>
     </div>
   );
 }
 
-// RETURNING_USER_ENTRY_V1
-// La home editoriale resta pubblica. Gli utenti autenticati vanno alla loro area operativa.
-export function HomePage() {
-  const auth = useAuth();
-  const { navigate } = useRouter();
+const everydayServices = [
+  { type: 'boarding', title: 'Pensioni', icon: Home },
+  { type: 'sitter', title: 'Pet sitting', icon: User },
+  { type: 'walker', title: 'Passeggiate', icon: Footprints },
+  { type: 'groomer', title: 'Toelettatura', icon: Scissors },
+];
 
-  const user = auth.user;
-  const profile = auth.profile;
-  const authLoading = Boolean(
-    (auth as any).loading ||
-    (auth as any).initializing ||
-    (auth as any).loadingAuth
-  );
+const starterLessons = [
+  { slug: 'bisogni-recupero', number: '01', title: 'Di cosa ha bisogno il tuo cane?', detail: 'Riposo, attività e una giornata equilibrata.', duration: '9 min' },
+  { slug: 'routine-sicurezza-autonomia', number: '02', title: 'Una quotidianità che funziona', detail: 'Routine, sicurezza e autonomia, passo dopo passo.', duration: '9 min' },
+  { slug: 'osservazione-timing-marker', number: '03', title: 'Come impara un cane', detail: 'Osservazione, clicker e un semplice esercizio di shaping.', duration: '12 min' },
+];
 
-  useEffect(() => {
-    if (authLoading || !user || !profile?.role) return;
-
-    if (profile.role === 'professional') {
-      navigate('/pro');
-      return;
-    }
-
-    if (profile.role === 'admin') {
-      navigate('/admin');
-      return;
-    }
-
-    navigate('/owner');
-  }, [authLoading, user, profile?.role, navigate]);
-
-  if (authLoading || user) {
-    return (
-      <div className="min-h-[calc(100vh-4rem)] bg-[var(--pc-bone-50)] flex items-center justify-center px-6">
-        <div className="text-center max-w-md">
-          <div className="mx-auto w-10 h-10 rounded-full border-2 border-[var(--pc-line)] border-t-[var(--pc-forest-900)] animate-spin" />
-          <p className="mt-4 font-semibold text-[var(--pc-ink-950)]">
-            Apro la tua area...
-          </p>
-          <p className="text-sm text-[var(--pc-muted-600)] mt-1">
-            Ti portiamo direttamente agli strumenti che usi ogni giorno.
-          </p>
+function PublicHomePage() {
+  return (
+    <main className="pc-home" id="main-content">
+      <section className="pc-home-hero pc-entry-container" aria-labelledby="home-title">
+        <div className="pc-home-introduction">
+          <p className="pc-home-eyebrow"><span aria-hidden="true" /> DALLA PARTE DEL VOSTRO BINOMIO</p>
+          <h1 id="home-title">Vivere bene,<br /><em>insieme al tuo cane.</em></h1>
+          <p className="pc-home-lead">Impara a capirlo, trova il supporto giusto e costruisci una relazione che cresce ogni giorno.</p>
+          <p className="pc-home-description">La cultura cinofila di base è gratuita. I professionisti ti aiutano a metterla in pratica nella vostra vita insieme.</p>
+          <RouteLink to="/impara" className="pc-entry-button pc-entry-secondary"><BookOpen size={19} aria-hidden="true" /> Inizia a conoscere il cane <ArrowRight size={18} aria-hidden="true" /></RouteLink>
+          <span className="pc-home-free-note">Lezioni, attività pratiche e strumenti per osservare.</span>
         </div>
-      </div>
-    );
-  }
+        <HomeProfessionalSearch />
+      </section>
 
+      <section className="pc-home-services pc-entry-container" aria-label="Servizi per la vita quotidiana" id="services">
+        <div><strong>Un aiuto nella vita quotidiana</strong><span>Trova il servizio di cui hai bisogno.</span></div>
+        <div className="pc-home-service-links">
+          {everydayServices.map(({ type, title, icon: Icon }) => <RouteLink key={type} to={`/search?type=${type}`}><Icon size={20} aria-hidden="true" /><span>{title}</span><ChevronRight size={15} aria-hidden="true" /></RouteLink>)}
+        </div>
+      </section>
+
+      <section className="pc-home-learning pc-entry-container" aria-labelledby="home-learning-title">
+        <div className="pc-home-lessons">
+          <div className="pc-home-section-heading">
+            <div><p className="pc-home-eyebrow">IMPARA · GRATUITO E APERTO A TUTTI</p><h2 id="home-learning-title">Capirlo cambia<br />il vostro modo di stare insieme.</h2></div>
+          </div>
+          <p className="pc-home-section-copy">Parti da una domanda concreta. Ogni lezione unisce spiegazioni semplici, esempi e un’attività da provare.</p>
+          <div className="pc-home-lesson-list">
+            {starterLessons.map(lesson => <RouteLink key={lesson.slug} to={`/impara/stage-1/${lesson.slug}`} className="pc-home-lesson">
+              <span className="pc-home-lesson-number" aria-hidden="true">{lesson.number}</span>
+              <span className="pc-home-lesson-text"><strong>{lesson.title}</strong><span>{lesson.detail}</span></span>
+              <span className="pc-home-lesson-duration"><Clock3 size={13} aria-hidden="true" />{lesson.duration}</span><ArrowRight size={18} aria-hidden="true" />
+            </RouteLink>)}
+          </div>
+          <RouteLink to="/impara" className="pc-entry-text-link">Scopri tutto il percorso Impara <ArrowRight size={17} aria-hidden="true" /></RouteLink>
+        </div>
+        <aside className="pc-home-before" aria-labelledby="home-before-title">
+          <Compass size={32} strokeWidth={1.5} aria-hidden="true" />
+          <p className="pc-home-eyebrow">PRIMA DI PRENDERE UN CANE</p>
+          <h2 id="home-before-title">Il vostro percorso<br />inizia dalla scelta.</h2>
+          <p>Tempo, abitudini, spazi e aspettative: parti dalla tua vita per capire quale cane potresti accogliere.</p>
+          <ul><li><Check size={16} aria-hidden="true" /> Rifletti sulla tua quotidianità</li><li><Check size={16} aria-hidden="true" /> Conosci bisogni e differenze</li><li><Check size={16} aria-hidden="true" /> Preparati al confronto con un professionista</li></ul>
+          <RouteLink to="/prima-del-cane" className="pc-entry-button pc-entry-secondary">Prepara la tua scelta <ArrowRight size={17} aria-hidden="true" /></RouteLink>
+        </aside>
+      </section>
+
+      <section className="pc-home-specialists pc-entry-container" aria-label="Percorsi sportivi e area professionisti">
+        <div className="pc-home-sport" aria-labelledby="home-sport-title">
+          <div className="pc-home-sport-label"><Trophy size={21} aria-hidden="true" /><span>UN’AREA DEDICATA ALLO SPORT</span></div>
+          <h2 id="home-sport-title">Una passione.<br />Una disciplina. Un binomio.</h2>
+          <p>Obedience, Agility, IGP e altre discipline: cerca un addestratore per lo sport che vuoi praticare insieme al tuo cane.</p>
+          <RouteLink to="/sport" className="pc-entry-button pc-entry-inverse">Esplora gli sport cinofili <ArrowRight size={18} aria-hidden="true" /></RouteLink>
+        </div>
+        <div className="pc-home-pro" aria-labelledby="home-pro-title">
+          <GraduationCap size={31} strokeWidth={1.5} aria-hidden="true" />
+          <p className="pc-home-eyebrow">PER I PROFESSIONISTI</p>
+          <h2 id="home-pro-title">Il tuo lavoro,<br />con la continuità che merita.</h2>
+          <p>Presenta le tue competenze. Gestisci richieste, appuntamenti e percorsi con i cani che segui, in un’unica area.</p>
+          <RouteLink to="/become-a-pro" className="pc-entry-text-link">Scopri l’area professionisti <ArrowRight size={18} aria-hidden="true" /></RouteLink>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+// Returning users keep their existing direct access to the operational area.
+export function HomePage() {
+  const { user, profile, loading } = useAuth();
+  const { navigate } = useRouter();
+  useEffect(() => {
+    if (loading || !user || !profile?.role) return;
+    navigate(profile.role === 'professional' ? '/pro' : profile.role === 'admin' ? '/admin' : '/owner');
+  }, [loading, user, profile?.role, navigate]);
+
+  if (loading || user) return <div className="min-h-[calc(100vh-4rem)] bg-[var(--pc-bone-50)] flex items-center justify-center px-6"><div className="text-center max-w-md" role="status"><div className="mx-auto w-10 h-10 rounded-full border-2 border-[var(--pc-line)] border-t-[var(--pc-forest-900)] animate-spin" /><p className="mt-4 font-semibold text-[var(--pc-ink-950)]">Apro la tua area…</p></div></div>;
   return <PublicHomePage />;
 }

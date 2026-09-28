@@ -1,0 +1,208 @@
+/* Public entry: scoped colors keep changes out of operational screens. */
+.pc-site-header, .pc-home {
+  --entry-bg: #f7f5ee; --entry-paper: #fffefa; --entry-ink: #182b21;
+  --entry-muted: #59695e; --entry-line: #dce2d8; --entry-soft: #edf1e8;
+  --entry-accent: #315b3d; --entry-ochre: #e7bc60; color: var(--entry-ink);
+}
+html.dark .pc-site-header, html.dark .pc-home {
+  --entry-bg: #131e18; --entry-paper: #1d2b22; --entry-ink: #f3f1e8;
+  --entry-muted: #b9c4b9; --entry-line: #3b4a3e; --entry-soft: #29392c;
+  --entry-accent: #c5dbb9;
+}
+.pc-entry-container { width: min(1248px, calc(100% - 80px)); margin-inline: auto; }
+.pc-site-header { position: sticky; top: 0; z-index: 40; background: var(--entry-paper); border-bottom: 1px solid var(--entry-line); }
+.pc-header-top { min-height: 82px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.pc-brand { display: inline-flex; align-items: center; gap: 11px; flex-shrink: 0; color: var(--entry-ink); }
+.pc-brand img { width: 40px; height: 40px; object-fit: contain; }
+html.dark .pc-brand img { filter: brightness(0) invert(.95); }
+.pc-brand > span { font-size: 23px; font-weight: 780; letter-spacing: -.8px; line-height: 1.15; }
+.pc-brand small { display: block; font-size: 10px; font-weight: 500; letter-spacing: .2px; color: var(--entry-muted); margin-top: 6px; }
+.pc-header-utilities { display: flex; align-items: center; gap: 14px; }
+.pc-pro-link, .pc-account-link, .pc-login-link, .pc-register-link { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 12px; border-radius: 9px; font-size: 13px; font-weight: 650; line-height: 1.4; }
+.pc-pro-link { border: 1px solid var(--entry-line); }
+.pc-pro-link:hover, .pc-account-link:hover, .pc-login-link:hover { background: var(--entry-soft); }
+.pc-account-link { max-width: 185px; }
+.pc-account-link span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pc-register-link { background: #214c33; color: #fff; border: 1px solid #214c33; padding-inline: 17px; }
+.pc-register-link:hover { background: #316b48; }
+.pc-icon-button { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9px; }
+.pc-icon-button:hover { background: var(--entry-soft); }
+.pc-primary-nav { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 10px; padding-bottom: 13px; }
+.pc-nav-tile { min-height: 47px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; border: 1px solid var(--entry-line); border-radius: 10px; background: var(--entry-soft); color: var(--entry-ink); font-size: 14px; font-weight: 700; padding: 10px 14px; transition: background-color 150ms ease, border-color 150ms ease; }
+.pc-nav-tile:hover { border-color: var(--entry-accent); background: var(--entry-paper); }
+.pc-nav-help { background: #214c33; color: white; border-color: #214c33; }
+.pc-nav-help:hover { background: #316b48; color: white; border-color: #316b48; }
+.pc-nav-sport { background: transparent; }
+.pc-nav-sport svg { color: #99732a; }
+html.dark .pc-nav-sport svg { color: #e7bc60; }
+.pc-nav-tile.is-current { box-shadow: inset 0 -3px 0 var(--entry-ochre); border-color: var(--entry-accent); }
+.pc-services-nav { position: relative; }
+.pc-service-dropdown { position: absolute; right: 0; top: calc(100% + 8px); width: 320px; background: var(--entry-paper); border: 1px solid var(--entry-line); border-radius: 14px; padding: 7px; box-shadow: 0 15px 35px #152c2226; }
+.pc-service-link { display: flex; align-items: center; gap: 14px; padding: 13px; border-radius: 8px; }
+.pc-service-link:hover { background: var(--entry-soft); }
+.pc-service-link strong { display: block; font-size: 14px; }
+.pc-service-link small { display: block; color: var(--entry-muted); margin-top: 2px; font-size: 12px; }
+.pc-chevron-open { transform: rotate(180deg); }
+.pc-mobile-controls, .pc-mobile-extras { display: none; }
+.pc-verification-notice { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 20px; color: #6f4e13; background: #f9eed1; border-top: 1px solid #e8d398; font-size: 13px; }
+.pc-home { background: var(--entry-bg); padding-bottom: 80px; }
+.pc-home-hero { display: grid; grid-template-columns: 1.17fr 1fr; align-items: center; gap: clamp(40px, 5vw, 80px); padding-block: 62px 48px; }
+.pc-home-eyebrow { display: flex; align-items: center; gap: 10px; color: var(--entry-accent); font-size: 10px; font-weight: 800; letter-spacing: 1.6px; line-height: 1.7; }
+.pc-home-eyebrow > span { width: 7px; height: 7px; border-radius: 50%; background: #b38a39; }
+.pc-home h1, .pc-home h2 { font-family: var(--pc-font-display); letter-spacing: -.045em; text-wrap: balance; }
+.pc-home h1 { font-size: clamp(46px, 4.4vw, 65px); line-height: 1.08; font-weight: 550; margin-top: 19px; }
+.pc-home h1 em { font-style: normal; color: var(--entry-accent); }
+.pc-home-lead { font-size: 20px; line-height: 1.6; max-width: 490px; margin-top: 23px; }
+.pc-home-description { font-size: 15px; line-height: 1.75; color: var(--entry-muted); max-width: 465px; margin-top: 13px; }
+.pc-entry-button { min-height: 49px; display: inline-flex; align-items: center; justify-content: center; gap: 11px; padding: 13px 19px; border-radius: 10px; font-size: 14px; font-weight: 750; line-height: 1.5; transition: background-color 150ms ease, border-color 150ms ease; }
+.pc-entry-primary { background: #214c33; border: 1px solid #214c33; color: white; }
+.pc-entry-primary:hover { background: #316b48; border-color: #316b48; }
+.pc-entry-secondary { border: 1px solid var(--entry-accent); color: var(--entry-ink); background: var(--entry-paper); }
+.pc-entry-secondary:hover { background: var(--entry-soft); }
+.pc-entry-inverse { background: #f6f0df; color: #193626; border: 1px solid #f6f0df; }
+.pc-entry-inverse:hover { background: white; }
+.pc-home-introduction > .pc-entry-button { margin-top: 26px; }
+.pc-home-free-note { display: block; margin-top: 12px; color: var(--entry-muted); font-size: 12px; }
+.pc-home-search { border: 1px solid var(--entry-line); border-radius: 20px; background: var(--entry-paper); box-shadow: 0 16px 45px #203d2710; }
+.pc-home-search-heading { position: relative; padding: 29px 31px 22px; border-bottom: 1px solid var(--entry-line); background: var(--entry-soft); border-radius: 19px 19px 0 0; }
+.pc-home-search-heading > p:first-of-type { font-size: 10px; letter-spacing: 1.4px; font-weight: 800; color: var(--entry-accent); padding-right: 35px; }
+.pc-home-search-icon { position: absolute; top: 27px; right: 27px; color: var(--entry-accent); }
+.pc-home-search-heading h2 { font-size: 35px; font-weight: 550; line-height: 1.15; margin-top: 17px; }
+.pc-home-search-intro { font-size: 14px; line-height: 1.7; color: var(--entry-muted); margin-top: 13px; max-width: 335px; }
+.pc-home-search-form { padding: 24px 31px 16px; }
+.pc-home-search-form label { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 750; margin-bottom: 9px; }
+.pc-home-search-form label span { color: var(--entry-muted); font-size: 11px; font-weight: 500; }
+.pc-home-city-field { position: relative; }
+.pc-home-city-field > svg { position: absolute; left: 14px; top: 15px; color: var(--entry-muted); pointer-events: none; }
+.pc-home .pc-home-city-field input { width: 100%; height: 50px; padding: 10px 12px 10px 42px; border: 1px solid var(--entry-line); border-radius: 9px; background: var(--entry-paper); color: var(--entry-ink); font-size: 14px; }
+.pc-home-city-field input::placeholder { color: var(--entry-muted); opacity: 1; }
+.pc-home-search-form .pc-entry-button { width: 100%; margin-top: 13px; }
+.pc-home-search-form .pc-entry-button svg { margin-left: auto; }
+.pc-home-search-note { text-align: center; font-size: 11px; color: var(--entry-muted); margin-top: 13px; }
+.pc-home-search-foot { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 20px; border-top: 1px solid var(--entry-line); color: var(--entry-muted); font-size: 11px; }
+.pc-home-services { display: grid; grid-template-columns: 1fr 2.05fr; align-items: center; gap: 22px; padding: 24px 0; border-top: 1px solid var(--entry-line); border-bottom: 1px solid var(--entry-line); }
+.pc-home-services > div { min-width: 0; }
+.pc-home-services > div > strong { display: block; font-size: 14px; }
+.pc-home-services > div > span { display: block; font-size: 12px; color: var(--entry-muted); margin-top: 4px; }
+.pc-home-service-links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.pc-home-service-links a { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 49px; border: 1px solid var(--entry-line); border-radius: 10px; font-size: 12px; font-weight: 650; background: var(--entry-paper); }
+.pc-home-service-links a:hover { border-color: var(--entry-accent); background: var(--entry-soft); }
+.pc-home-service-links a > svg:last-child { width: 12px; }
+.pc-home-learning { display: grid; grid-template-columns: 1.35fr .8fr; gap: clamp(36px, 6vw, 92px); padding-block: 72px; }
+.pc-home-section-heading h2 { font-size: 36px; line-height: 1.18; font-weight: 550; margin-top: 13px; }
+.pc-home-section-copy { color: var(--entry-muted); font-size: 14px; line-height: 1.7; max-width: 550px; margin-top: 16px; }
+.pc-home-lesson-list { margin-top: 25px; border-top: 1px solid var(--entry-line); }
+.pc-home-lesson { display: flex; align-items: center; gap: 15px; padding: 19px 0; border-bottom: 1px solid var(--entry-line); }
+.pc-home-lesson:hover .pc-home-lesson-text strong { text-decoration: underline; text-underline-offset: 4px; }
+.pc-home-lesson-number { font-size: 11px; color: var(--entry-accent); font-weight: 700; flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--entry-soft); display: grid; place-items: center; }
+.pc-home-lesson-text { flex: 1; }
+.pc-home-lesson-text strong { display: block; font-size: 15px; font-weight: 700; }
+.pc-home-lesson-text > span { display: block; font-size: 12px; color: var(--entry-muted); margin-top: 4px; line-height: 1.6; }
+.pc-home-lesson-duration { display: flex; align-items: center; gap: 5px; flex-shrink: 0; font-size: 10px; color: var(--entry-muted); }
+.pc-home-lesson > svg { flex-shrink: 0; color: var(--entry-accent); }
+.pc-entry-text-link { display: inline-flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 750; min-height: 44px; margin-top: 13px; color: var(--entry-accent); }
+.pc-entry-text-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.pc-home-before { background: var(--entry-soft); border: 1px solid var(--entry-line); border-radius: 17px; padding: 31px; align-self: stretch; }
+.pc-home-before > svg { color: var(--entry-accent); margin-bottom: 25px; }
+.pc-home-before h2 { font-size: 31px; line-height: 1.2; margin-top: 10px; }
+.pc-home-before > p:not(.pc-home-eyebrow) { color: var(--entry-muted); font-size: 14px; line-height: 1.75; margin-top: 16px; }
+.pc-home-before ul { margin-top: 22px; }
+.pc-home-before li { display: flex; align-items: flex-start; gap: 9px; font-size: 12px; line-height: 1.6; margin-top: 10px; }
+.pc-home-before li svg { flex-shrink: 0; margin-top: 2px; }
+.pc-home-before .pc-entry-button { margin-top: 25px; width: 100%; font-size: 13px; }
+.pc-home-specialists { display: grid; grid-template-columns: 1.35fr .8fr; gap: 22px; }
+.pc-home-sport { padding: 37px 40px; background: #183e2b; color: #f7f5ee; border-radius: 18px; }
+.pc-home-sport-label { display: flex; align-items: center; gap: 11px; color: #e7bc60; font-size: 10px; font-weight: 750; letter-spacing: 1.5px; }
+.pc-home-sport h2 { font-size: 37px; line-height: 1.2; margin-top: 20px; }
+.pc-home-sport p { max-width: 485px; font-size: 14px; line-height: 1.8; margin-top: 18px; color: #cddcd1; }
+.pc-home-sport .pc-entry-button { margin-top: 26px; }
+.pc-home-pro { padding: 34px; background: var(--entry-paper); border: 1px solid var(--entry-line); border-radius: 18px; }
+.pc-home-pro > svg { color: var(--entry-accent); margin-bottom: 20px; }
+.pc-home-pro h2 { font-size: 30px; line-height: 1.2; margin-top: 13px; }
+.pc-home-pro > p:not(.pc-home-eyebrow) { color: var(--entry-muted); font-size: 14px; line-height: 1.8; margin-top: 16px; }
+.pc-home-pro .pc-entry-text-link { margin-top: 20px; }
+@media (max-width: 1100px) {
+  .pc-entry-container { width: calc(100% - 48px); }
+  .pc-header-utilities { gap: 7px; }
+  .pc-header-utilities .pc-pro-link { font-size: 12px; padding-inline: 8px; }
+  .pc-header-utilities .pc-pro-link svg { display: none; }
+  .pc-brand > span { font-size: 21px; }
+  .pc-brand img { width: 34px; height: 34px; }
+  .pc-home-hero { gap: 36px; }
+  .pc-home-service-links a { gap: 6px; font-size: 11px; }
+  .pc-home-service-links a > svg:last-child { display: none; }
+  .pc-home-learning { gap: 32px; }
+}
+@media (max-width: 1023px) {
+  .pc-header-top { min-height: 70px; }
+  .pc-header-utilities { display: none; }
+  .pc-mobile-controls { display: flex; align-items: center; gap: 8px; }
+  .pc-mobile-account { min-height: 44px; display: inline-flex; align-items: center; padding: 8px; font-size: 13px; font-weight: 650; }
+  .pc-primary-nav { display: none; }
+  .pc-site-header.is-open .pc-primary-nav { display: grid; grid-template-columns: 1fr; gap: 8px; padding-block: 10px 20px; max-height: calc(100dvh - 100px); overflow-y: auto; }
+  .pc-nav-tile { justify-content: flex-start; min-height: 49px; padding-inline: 17px; }
+  .pc-nav-tile > svg:last-child:not(:first-child) { margin-left: auto; }
+  .pc-mobile-extras { display: grid; gap: 10px; border-top: 1px solid var(--entry-line); margin-top: 9px; padding-top: 17px; }
+  .pc-mobile-extras .pc-pro-link, .pc-mobile-extras .pc-account-link { justify-content: flex-start; max-width: none; min-height: 45px; }
+  .pc-mobile-theme { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 3px 4px; font-size: 12px; color: var(--entry-muted); }
+  .pc-service-dropdown { position: static; width: 100%; margin-top: 7px; box-shadow: none; }
+  .pc-home h1 { font-size: 48px; }
+  .pc-home-lead { font-size: 18px; }
+  .pc-home-hero { gap: 28px; grid-template-columns: 1.05fr 1fr; }
+  .pc-home-search-heading { padding: 24px; }
+  .pc-home-search-heading h2 { font-size: 30px; }
+  .pc-home-search-icon { display: none; }
+  .pc-home-search-heading > p:first-of-type { padding-right: 0; }
+  .pc-home-search-form { padding-inline: 24px; }
+  .pc-home-services { grid-template-columns: 1fr; gap: 16px; }
+  .pc-home-services > div:first-child { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .pc-home-service-links a { font-size: 13px; }
+  .pc-home-learning, .pc-home-specialists { grid-template-columns: 1.15fr 1fr; gap: 22px; }
+  .pc-home-before, .pc-home-pro, .pc-home-sport { padding: 26px; }
+  .pc-home-lesson-duration { display: none; }
+}
+@media (max-width: 767px) {
+  .pc-entry-container { width: calc(100% - 36px); }
+  .pc-brand > span { font-size: 20px; }
+  .pc-brand small { display: none; }
+  .pc-brand img { width: 32px; height: 32px; }
+  .pc-home { padding-bottom: 40px; }
+  .pc-home-hero { grid-template-columns: 1fr; padding-block: 35px 30px; gap: 29px; }
+  .pc-home h1 { font-size: clamp(38px, 9vw, 55px); margin-top: 16px; }
+  .pc-home-lead { margin-top: 18px; font-size: 17px; max-width: 540px; }
+  .pc-home-description { font-size: 14px; max-width: 530px; }
+  .pc-home-eyebrow { font-size: 9px; letter-spacing: 1.3px; }
+  .pc-home-introduction > .pc-entry-button { margin-top: 20px; }
+  .pc-home-free-note { font-size: 11px; }
+  .pc-home-search-heading { padding: 24px; }
+  .pc-home-search-heading h2 { font-size: 31px; }
+  .pc-home-search-heading h2 br { display: none; }
+  .pc-home-search-intro { max-width: 510px; }
+  .pc-home-search-form { padding: 20px 24px 15px; }
+  .pc-home-services { padding-block: 22px; }
+  .pc-home-services > div:first-child { display: block; }
+  .pc-home-service-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pc-home-service-links a { min-height: 48px; font-size: 12px; }
+  .pc-home-service-links a > svg:last-child { display: block; margin-left: auto; }
+  .pc-home-service-links a { justify-content: flex-start; padding-inline: 13px; }
+  .pc-home-learning { grid-template-columns: 1fr; gap: 31px; padding-block: 40px; }
+  .pc-home-section-heading h2 { font-size: 32px; }
+  .pc-home-lesson { gap: 11px; padding-block: 17px; }
+  .pc-home-lesson-text strong { font-size: 14px; }
+  .pc-home-before { padding: 25px; }
+  .pc-home-before > svg { margin-bottom: 18px; }
+  .pc-home-specialists { grid-template-columns: 1fr; gap: 18px; }
+  .pc-home-sport h2 { font-size: 33px; }
+}
+@media (max-width: 360px) {
+  .pc-entry-container { width: calc(100% - 28px); }
+  .pc-brand { gap: 7px; }
+  .pc-brand > span { font-size: 18px; }
+  .pc-brand img { width: 27px; height: 27px; }
+  .pc-header-top { gap: 5px; }
+  .pc-mobile-controls { gap: 0; }
+  .pc-home .pc-entry-button { font-size: 12px; padding-inline: 13px; gap: 8px; }
+  .pc-home-search-heading, .pc-home-search-form { padding-inline: 19px; }
+  .pc-home-search-foot { font-size: 10px; }
+  .pc-home-service-links a > svg:last-child { display: none; }
+}

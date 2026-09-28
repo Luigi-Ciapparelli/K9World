@@ -1,5 +1,14 @@
 # CURRENT STATE — PawConnect / Portalecinofilo
 
+## Checkpoint UI manuale — 28 settembre 2026
+
+Revisione Home/navigazione su base GitHub `ff721ce`. Codice, criteri e verifiche:
+[HOME_NAVIGATION_V2.md](HOME_NAVIGATION_V2.md). TypeScript, build, ESLint mirato
+e prove browser isolate superati. Nessuna migrazione introdotta o eseguita.
+Lo snapshot automatico seguente è precedente a questo incremento; la sua
+storia migrazioni non è stata riletta online durante la revisione frontend.
+Deployment del nuovo frontend da identificare prima di dichiararlo Ready.
+
 > Auto-generated repository snapshot. Generated: `2026-09-28T16:39:13+02:00`
 
 This file records the **implemented state**, not future plans.

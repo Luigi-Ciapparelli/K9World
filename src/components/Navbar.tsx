@@ -1,116 +1,118 @@
-import { useState } from 'react';
-import { LogOut, User, AlertCircle, Menu, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { AlertCircle, BookOpen, ChevronDown, GraduationCap, Home, LogOut, Menu, Scissors, Search, Trophy, User, X, Footprints } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
+import { RouteLink } from './RouteLink';
 import { ThemeToggle } from './ThemeToggle';
+import '../public-entry.css';
+
+const services = [
+  { type: 'boarding', title: 'Pensioni', description: 'Un posto dove soggiornare', icon: Home },
+  { type: 'sitter', title: 'Pet sitting', description: 'Compagnia e cura a domicilio', icon: User },
+  { type: 'walker', title: 'Passeggiate', description: 'Un aiuto nelle uscite quotidiane', icon: Footprints },
+  { type: 'groomer', title: 'Toelettatura', description: 'Igiene e cura del mantello', icon: Scissors },
+];
 
 export function Navbar() {
   const { user, profile, signOut } = useAuth();
-  const { navigate } = useRouter();
+  const { path, navigate } = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const header = useRef<HTMLElement>(null);
+  const serviceMenu = useRef<HTMLDivElement>(null);
+  const serviceButton = useRef<HTMLButtonElement>(null);
+  const mobileButton = useRef<HTMLButtonElement>(null);
+  const basePath = path.split('?')[0];
+  const serviceType = new URLSearchParams(path.split('?')[1]).get('type') || 'trainer';
+  const onServices = basePath === '/search' && serviceType !== 'trainer';
+  const dashboard = profile?.role === 'admin' ? '/admin' : profile?.role === 'professional' ? '/pro' : '/owner';
+  const close = () => { setMobileOpen(false); setServicesOpen(false); };
 
-  const handleDashboard = () => {
-    if (profile?.role === 'admin') navigate('/admin');
-    else if (profile?.role === 'professional') navigate('/pro');
-    else navigate('/owner');
-    setMobileOpen(false);
-  };
+  useEffect(close, [path]);
+  useEffect(() => {
+    if (!mobileOpen && !servicesOpen) return;
+    const outside = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!header.current?.contains(target)) close();
+      else if (!serviceMenu.current?.contains(target)) setServicesOpen(false);
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      if (servicesOpen) { setServicesOpen(false); serviceButton.current?.focus(); }
+      else { setMobileOpen(false); mobileButton.current?.focus(); }
+    };
+    document.addEventListener('pointerdown', outside);
+    document.addEventListener('keydown', escape);
+    return () => {
+      document.removeEventListener('pointerdown', outside);
+      document.removeEventListener('keydown', escape);
+    };
+  }, [mobileOpen, servicesOpen]);
 
-  const go = (p: string) => {
-    navigate(p);
-    setMobileOpen(false);
-  };
-
-  const needsVerification = user && profile && !profile.email_verified;
+  const leave = async () => { await signOut(); close(); navigate('/'); };
+  const links = [
+    { to: '/search?type=trainer', label: 'Trova aiuto per il cane', icon: Search, active: basePath === '/search' && !onServices, kind: 'help' },
+    { to: '/impara', label: 'Impara', icon: BookOpen, active: basePath.startsWith('/impara') || basePath === '/prima-del-cane', kind: 'learn' },
+    { to: '/sport', label: 'Sport cinofili', icon: Trophy, active: basePath === '/sport', kind: 'sport' },
+  ];
 
   return (
-    <nav className="sticky top-0 z-40 bg-white border-b border-stone-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <button onClick={() => go('/')} className="flex items-center gap-2 group">
-          <img src="/brand/portalecinofilo-mark.png" alt="" aria-hidden="true" className="w-8 h-8 object-contain" />
-          <span className="text-xl font-bold text-stone-900">PortaleCinofilo</span>
-        </button>
-
-        <div className="hidden xl:flex items-center gap-4 text-sm text-stone-700">
-          <button onClick={() => go('/impara')} className="hover:text-emerald-600 transition">Impara</button>
-          <button onClick={() => go('/search?type=trainer')} className="hover:text-emerald-600 transition">Trova aiuto per il cane</button>
-          <button onClick={() => go('/sport')} className="hover:text-emerald-600 transition">Sport cinofili</button>
-          <button onClick={() => go('/become-a-pro')} className="hover:text-emerald-600 transition">Diventa professionista</button>
-          <button onClick={() => go('/?section=services')} className="hover:text-emerald-600 transition">Servizi</button>
-        </div>
-
-        <div className="hidden xl:flex items-center gap-3">
+    <header ref={header} className={`pc-site-header${mobileOpen ? ' is-open' : ''}`}>
+      <div className="pc-header-top pc-entry-container">
+        <RouteLink to="/" className="pc-brand" aria-label="PortaleCinofilo, pagina iniziale" onClick={close}>
+          <img src="/brand/portalecinofilo-mark.png" alt="" width="40" height="40" />
+          <span>PortaleCinofilo<small>Conoscere. Capire. Vivere insieme.</small></span>
+        </RouteLink>
+        <div className="pc-header-utilities">
           <ThemeToggle />
-          {user ? (
-            <>
-              <button onClick={handleDashboard} className="text-sm text-stone-700 hover:text-emerald-600 flex items-center gap-1.5">
-                <User className="w-4 h-4" /> {profile?.full_name || 'Dashboard'}
-              </button>
-              <button onClick={async () => { await signOut(); go('/'); }} className="text-stone-500 hover:text-stone-900" title="Esci">
-                <LogOut className="w-4 h-4" />
-              </button>
-            </>
-          ) : (
-            <>
-              <button onClick={() => go('/signin')} className="text-sm text-stone-700 hover:text-emerald-600 transition">Accedi</button>
-              <button onClick={() => go('/signup')} className="text-sm bg-emerald-600 text-white px-4 py-2 rounded-full hover:bg-emerald-700 transition">Registrati</button>
-            </>
-          )}
+          <RouteLink to="/become-a-pro" className="pc-pro-link" aria-current={basePath === '/become-a-pro' ? 'page' : undefined}>
+            <GraduationCap size={17} aria-hidden="true" /> Per i professionisti
+          </RouteLink>
+          {user ? <>
+            <RouteLink to={dashboard} className="pc-account-link"><User size={17} aria-hidden="true" /><span>{profile?.full_name || 'La tua area'}</span></RouteLink>
+            <button type="button" onClick={leave} className="pc-icon-button" aria-label="Esci dall’account"><LogOut size={19} /></button>
+          </> : <>
+            <RouteLink to="/signin" className="pc-login-link">Accedi</RouteLink>
+            <RouteLink to="/signup" className="pc-register-link">Registrati</RouteLink>
+          </>}
         </div>
-
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="xl:hidden p-2 -mr-2 text-stone-700 hover:text-emerald-600"
-          aria-label={mobileOpen ? "Chiudi menu" : "Apri menu"}
-          aria-expanded={mobileOpen}
-        >
-          {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="pc-mobile-controls">
+          <RouteLink to={user ? dashboard : '/signin'} className="pc-mobile-account" aria-label={user ? 'Apri la tua area' : 'Accedi'}>
+            {user ? <User size={20} /> : 'Accedi'}
+          </RouteLink>
+          <button ref={mobileButton} type="button" className="pc-icon-button" onClick={() => { setMobileOpen(!mobileOpen); setServicesOpen(false); }} aria-label={mobileOpen ? 'Chiudi menu' : 'Apri menu'} aria-expanded={mobileOpen} aria-controls="pc-primary-navigation">
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
-
-      {mobileOpen && (
-        <div className="xl:hidden border-t border-stone-200 bg-white">
-          <div className="px-4 py-3 flex flex-col gap-1 text-sm">
-            <button onClick={() => go('/impara')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Impara</button>
-            <button onClick={() => go('/search?type=trainer')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Trova aiuto per il cane</button>
-            <button onClick={() => go('/sport')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Sport cinofili</button>
-            <button onClick={() => go('/become-a-pro')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Diventa professionista</button>
-            <button onClick={() => go('/?section=services')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Servizi</button>
-            <div className="px-3 py-2">
-              <ThemeToggle />
-            </div>
-            <div className="h-px bg-stone-200 my-2" />
-            {user ? (
-              <>
-                <button onClick={handleDashboard} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700 flex items-center gap-2">
-                  <User className="w-4 h-4" /> {profile?.full_name || 'Dashboard'}
-                </button>
-                <button onClick={async () => { await signOut(); go('/'); }} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700 flex items-center gap-2">
-                  <LogOut className="w-4 h-4" /> Esci
-                </button>
-              </>
-            ) : (
-              <>
-                <button onClick={() => go('/signin')} className="text-left px-3 py-2.5 rounded-lg hover:bg-stone-50 text-stone-700">Accedi</button>
-                <button onClick={() => go('/signup')} className="text-left px-3 py-2.5 rounded-lg bg-emerald-600 text-white font-semibold text-center hover:bg-emerald-700">Registrati</button>
-              </>
-            )}
-          </div>
+      <nav id="pc-primary-navigation" aria-label="Navigazione principale" className="pc-primary-nav pc-entry-container">
+        {links.map(({ to, label, icon: Icon, active, kind }) => (
+          <RouteLink key={to} to={to} onClick={close} className={`pc-nav-tile pc-nav-${kind}${active ? ' is-current' : ''}`} aria-current={active ? 'page' : undefined}>
+            <Icon size={19} aria-hidden="true" /><span>{label}</span>
+          </RouteLink>
+        ))}
+        <div className="pc-services-nav" ref={serviceMenu}>
+          <button ref={serviceButton} type="button" className={`pc-nav-tile${onServices ? ' is-current' : ''}`} aria-expanded={servicesOpen} aria-controls="pc-service-links" onClick={() => setServicesOpen(!servicesOpen)}>
+            <Home size={19} aria-hidden="true" /><span>Servizi per il cane</span><ChevronDown size={16} className={servicesOpen ? 'pc-chevron-open' : ''} aria-hidden="true" />
+          </button>
+          {servicesOpen && <div id="pc-service-links" className="pc-service-dropdown">
+            {services.map(({ type, title, description, icon: Icon }) => <RouteLink key={type} to={`/search?type=${type}`} onClick={close} className="pc-service-link">
+              <Icon size={20} aria-hidden="true" /><span><strong>{title}</strong><small>{description}</small></span>
+            </RouteLink>)}
+          </div>}
         </div>
-      )}
-
-      {needsVerification && (
-        <button
-          onClick={handleDashboard}
-          className="w-full bg-amber-50 border-t border-amber-200 text-amber-800 text-xs sm:text-sm py-2 px-4 flex items-center justify-center gap-2 hover:bg-amber-100 transition"
-        >
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
-          <span>
-            Conferma la tua email per attivare le prenotazioni.
-          </span>
-          <span className="font-semibold underline hidden sm:inline">Apri dashboard</span>
-        </button>
-      )}
-    </nav>
+        <div className="pc-mobile-extras">
+          <RouteLink to="/become-a-pro" onClick={close} className="pc-pro-link"><GraduationCap size={18} aria-hidden="true" /> Per i professionisti</RouteLink>
+          {user ? <>
+            <RouteLink to={dashboard} onClick={close} className="pc-account-link"><User size={18} aria-hidden="true" /> {profile?.full_name || 'La tua area'}</RouteLink>
+            <button type="button" onClick={leave} className="pc-pro-link"><LogOut size={18} aria-hidden="true" /> Esci</button>
+          </> : <RouteLink to="/signup" onClick={close} className="pc-register-link">Crea il tuo account</RouteLink>}
+          <div className="pc-mobile-theme"><span>Aspetto</span><ThemeToggle /></div>
+        </div>
+      </nav>
+      {user && profile && !profile.email_verified && <RouteLink to={dashboard} className="pc-verification-notice">
+        <AlertCircle size={16} aria-hidden="true" /><span>Conferma la tua email per attivare le prenotazioni.</span>
+      </RouteLink>}
+    </header>
   );
 }

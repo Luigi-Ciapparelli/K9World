@@ -1434,3 +1434,15 @@ autonomo e facoltativo; soltanto lì compaiono disciplina e risultati sportivi.
 Il proprietario non deve fare un passaggio aggiuntivo per contattare o prenotare
 un professionista nel percorso normale. Nel pannello professionista, invece,
 due selettori indipendenti decidono in quali elenchi comparire.
+
+## 40. Home orientata alle azioni del proprietario — 28 settembre 2026
+
+La Home deve comunicare il valore della cultura cinofila gratuita e portare
+subito a imparare o trovare aiuto. Menu riconoscibile anche su desktop, azioni
+concrete e destinazioni chiare. Evitare blocchi editoriali/statistici autonomi
+fra più serie di inviti alle stesse pagine: fonti e metodo appartengono ai
+contenuti di approfondimento e alle verifiche pertinenti.
+Sport resta un ingresso autonomo e facoltativo; il percorso quotidiano non
+richiede una scelta di modalità. Prima del cane serve chi deve ancora scegliere;
+i professionisti hanno un ingresso distinto dai bisogni del proprietario.
+Implementazione e limiti: [HOME_NAVIGATION_V2.md](HOME_NAVIGATION_V2.md).

@@ -20,7 +20,7 @@ export function Footer() {
                 src="/brand/portalecinofilo-mark.png"
                 alt=""
                 aria-hidden="true"
-                className="w-9 h-9 object-contain"
+                className="w-9 h-9 object-contain brightness-0 invert"
               />
               <span className="text-xl font-semibold tracking-tight">PortaleCinofilo</span>
             </button>
