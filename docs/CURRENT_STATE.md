@@ -1,43 +1,6 @@
-# Checkpoint Impara: shaping — 27 settembre 2026
-
-Base GitHub verificata: `1e8cbb3`, Impara v3 presente su `origin/main`.
-Preparato il laboratorio con cane e piattaforma e completate le basi
-dell’apprendimento. Specifica corrente: [IMPARA_SHAPING_V1.md](IMPARA_SHAPING_V1.md).
-Incremento verificato in copia isolata; nessuna modifica ai servizi remoti.
-Il ripristino degli strumenti professionali resta il prossimo lavoro richiesto.
-I checkpoint seguenti sono storici e non attestano lo stato del deployment.
-
----
-
-# Checkpoint Impara — 27 settembre 2026
-
-Base corrente esaminata: `fa43378` su `origin/main`. Lavoro Impara v3 implementato
-e verificato in copia isolata; rilascio remoto non dichiarato. Vedi
-[IMPARA_RELEASE_V3.md](IMPARA_RELEASE_V3.md) per funzionalità e verifiche.
-Nessuna migration o modifica ai servizi remoti. Il report seguente è storico:
-non usarlo per dedurre lo stato del sito senza controllare Git e deployment.
-
----
-
-# Checkpoint locale — Sport cinofili, 26 settembre 2026
-
-Base GitHub verificata: `f8d476669fa30e22192285d68df67a4c8808e006`.
-Implementati catalogo, ricerca Sport separata e visibilità professionista.
-Riferimento corrente: [SPORT_SEARCH_RELEASE_V1.md](SPORT_SEARCH_RELEASE_V1.md).
-Test TypeScript/build e SQL con schema completo superati in ambiente isolato.
-La nuova migrazione `20260926220000_separate_sport_search.sql` e il frontend
-non sono dichiarati applicati/pubblicati online. Il nuovo verifier e ranking
-per disciplina restano da implementare.
-
-Il report seguente è uno **snapshot storico**. Rigenerarlo con
-`scripts/update_project_state.py` nel repository collegato a Supabase dopo
-l’applicazione e il commit di questo incremento.
-
----
-
 # CURRENT STATE — PawConnect / Portalecinofilo
 
-> Auto-generated repository snapshot. Generated: `2026-09-14T13:31:24+02:00`
+> Auto-generated repository snapshot. Generated: `2026-09-28T10:31:54+02:00`
 
 This file records the **implemented state**, not future plans.
 If it conflicts with code, Git history or migrations, inspect the repository directly and regenerate it.
@@ -53,7 +16,7 @@ git branch --show-current
 Exit code: `0`
 
 ```text
-signup-dog-profile
+main
 ```
 
 ## Working tree
@@ -68,18 +31,31 @@ Exit code: `0`
 
 ```text
 M START_HERE.md
- M docs/PROFESSIONAL_CONTINUITY_MEDIA.md
+ M docs/CURRENT_STATE.md
  M docs/PROFESSIONAL_OPERATIONS_NEXT.md
  M docs/PROJECT_HANDOFF.md
- M src/pages/continuity/ContinuityPage.tsx
+ M docs/SUPABASE_AUDIT_FIXES_V1.md
+ M src/App.tsx
+ M src/pages/owner/OwnerDashboard.tsx
+ M src/pages/pro/ProLayout.tsx
  M supabase/.temp/cli-latest
-?? docs/CONTINUITY_SHARING_V1.md
-?? scripts/tests/test_continuity_sharing.py
-?? src/components/ContinuitySharingCommon.tsx
-?? src/components/OwnerContinuitySharing.tsx
-?? src/components/ProfessionalContinuitySharing.tsx
-?? src/lib/continuitySharing.ts
-?? supabase/migrations/20260914112404_selected_professional_continuity.sql
+?? docs/PROFESSIONAL_PASSES_V1.md
+?? docs/SUPABASE_PRIVATE_API_V2.md
+?? scripts/audit/
+?? scripts/tests/__pycache__/
+?? scripts/tests/private_api_assertions.sql
+?? scripts/tests/private_api_before.sql
+?? scripts/tests/private_api_lint_assertions.sql
+?? scripts/tests/professional_passes_assertions.sql
+?? scripts/tests/professional_passes_fixture.sql
+?? scripts/tests/test_private_api_boundary.py
+?? scripts/tests/test_professional_passes.py
+?? scripts/tests/test_professional_passes_ui.mjs
+?? src/components/PassDialogs.tsx
+?? src/lib/professionalPasses.ts
+?? src/pages/PassesPage.tsx
+?? supabase/migrations/20260927170000_restore_professional_passes.sql
+?? supabase/migrations/20260928100000_private_api_boundary.sql
 ```
 
 ## Recent commits
@@ -93,7 +69,21 @@ git log --oneline --decorate -n 30
 Exit code: `0`
 
 ```text
-82eb5ac (HEAD -> signup-dog-profile, origin/signup-dog-profile, origin/main, origin/HEAD, main) Add private booking messages and automatic professional replies
+db2e010 (HEAD -> main, origin/main, origin/HEAD) Record applied Supabase privilege and RLS fixes
+5725b5e Teach shaping with platform timing lab and learning foundations
+1e8cbb3 Restore Impara lessons activities progress and timing lab
+fa43378 Add discipline-specific sport merit verification foundation
+8d1baf9 Separate canine sports search and professional visibility
+f8d4766 Clarify separate sports search experience
+1559768 Define discipline-based professional search and merit
+bae0798 Use official PortaleCinofilo contact email
+3adcf5d Add public contact phone and remove unused import
+f1966ae (origin/mvp-acquisition-01, mvp-acquisition-01) Turn professional signup into MVP acquisition landing
+54caa74 (origin/mvp-launch-legal-brand, mvp-launch-legal-brand) Prepare MVP legal and brand launch foundation
+378b230 (origin/ecosystem-pass-v1, ecosystem-pass-v1) Add professional merit and Working-Dog verification
+5f1ee90 Document PortaleCinofilo product direction
+6cc448a (origin/signup-dog-profile, signup-dog-profile) Add selected professional continuity sharing and revocable access
+82eb5ac (backup-production-before-sharing-20260914112404) Add private booking messages and automatic professional replies
 a712352 (backup-production-before-booking-messages) Add professional calendar service colors and unavailability
 427ff8d (backup-production-before-calendar-v1) Add private professional continuity and invitation flow
 6d69285 Add continuity integration tests against complete migration history
@@ -109,20 +99,6 @@ a8414f3 Polish professional profile and booking request modal
 bbc2231 (backup-production-before-booking-fixes) Update project state snapshot
 a2edde0 Refine professional dashboard and booking actions
 472b4ee Refine owner dashboard and fix booking summaries
-3b9a021 Refine public home and returning user entry
-6770dd3 Introduce PortaleCinofilo design system v2
-b1681c4 Rebrand Italian experience as PortaleCinofilo
-a044eb9 Upgrade Impara with practical learning and clicker lab
-31bfb82 Upgrade pre dog compatibility guidance
-60926a3 Secure public professional services API
-d8e6730 Polish professional search flow for MVP
-994aa13 Polish homepage for MVP launch
-de5cde6 Remove unused professional beta pages
-af3c723 Add deterministic project continuity system
-52406ab Update project continuity documentation
-17b2a89 Define learning and credential core
-e0edbc8 Define person dog relationship model
-da24e91 Add project continuity handoff
 ```
 
 ## Supabase migration history
@@ -136,48 +112,57 @@ npx supabase migration list
 Exit code: `0`
 
 ```text
-Local            | Remote           | Time (UTC)            
+Local            | Remote           | Time (UTC)
   ------------------|------------------|-----------------------
-   `20260417230919` | `20260417230919` | `2026-04-17 23:09:19` 
-   `20260417233753` | `20260417233753` | `2026-04-17 23:37:53` 
-   `20260504163000` | `20260504163000` | `2026-05-04 16:30:00` 
-   `20260504170000` | `20260504170000` | `2026-05-04 17:00:00` 
-   `20260504230000` | `20260504230000` | `2026-05-04 23:00:00` 
-   `20260506120000` | `20260506120000` | `2026-05-06 12:00:00` 
-   `20260506130000` | `20260506130000` | `2026-05-06 13:00:00` 
-   `20260506133000` | `20260506133000` | `2026-05-06 13:30:00` 
-   `20260512223000` | `20260512223000` | `2026-05-12 22:30:00` 
-   `20260909003000` | `20260909003000` | `2026-09-09 00:30:00` 
-   `20260909014500` | `20260909014500` | `2026-09-09 01:45:00` 
-   `20260909180000` | `20260909180000` | `2026-09-09 18:00:00` 
-   `20260909183000` | `20260909183000` | `2026-09-09 18:30:00` 
-   `20260909190000` | `20260909190000` | `2026-09-09 19:00:00` 
-   `20260909193000` | `20260909193000` | `2026-09-09 19:30:00` 
-   `20260909200000` | `20260909200000` | `2026-09-09 20:00:00` 
-   `20260909210000` | `20260909210000` | `2026-09-09 21:00:00` 
-   `20260909213000` | `20260909213000` | `2026-09-09 21:30:00` 
-   `20260909220000` | `20260909220000` | `2026-09-09 22:00:00` 
-   `20260909223000` | `20260909223000` | `2026-09-09 22:30:00` 
-   `20260909230000` | `20260909230000` | `2026-09-09 23:00:00` 
-   `20260910120000` | `20260910120000` | `2026-09-10 12:00:00` 
-   `20260910123000` | `20260910123000` | `2026-09-10 12:30:00` 
-   `20260910130000` | `20260910130000` | `2026-09-10 13:00:00` 
-   `20260910133000` | `20260910133000` | `2026-09-10 13:30:00` 
-   `20260910153329` | `20260910153329` | `2026-09-10 15:33:29` 
-   `20260910185620` | `20260910185620` | `2026-09-10 18:56:20` 
-   `20260910201921` | `20260910201921` | `2026-09-10 20:19:21` 
-   `20260910205118` | `20260910205118` | `2026-09-10 20:51:18` 
-   `20260911010021` | `20260911010021` | `2026-09-11 01:00:21` 
-   `20260911010056` | `20260911010056` | `2026-09-11 01:00:56` 
-   `20260911014731` | `20260911014731` | `2026-09-11 01:47:31` 
-   `20260911023829` | `20260911023829` | `2026-09-11 02:38:29` 
-   `20260911023856` | `20260911023856` | `2026-09-11 02:38:56` 
-   `20260912013839` | `20260912013839` | `2026-09-12 01:38:39` 
-   `20260912223818` | `20260912223818` | `2026-09-12 22:38:18` 
-   `20260913121224` | `20260913121224` | `2026-09-13 12:12:24` 
-   `20260913191311` | `20260913191311` | `2026-09-13 19:13:11` 
-   `20260914013218` | `20260914013218` | `2026-09-14 01:32:18` 
-   `20260914112404` | `20260914112404` | `2026-09-14 11:24:04` 
+   `20260417230919` | `20260417230919` | `2026-04-17 23:09:19`
+   `20260417233753` | `20260417233753` | `2026-04-17 23:37:53`
+   `20260504163000` | `20260504163000` | `2026-05-04 16:30:00`
+   `20260504170000` | `20260504170000` | `2026-05-04 17:00:00`
+   `20260504230000` | `20260504230000` | `2026-05-04 23:00:00`
+   `20260506120000` | `20260506120000` | `2026-05-06 12:00:00`
+   `20260506130000` | `20260506130000` | `2026-05-06 13:00:00`
+   `20260506133000` | `20260506133000` | `2026-05-06 13:30:00`
+   `20260512223000` | `20260512223000` | `2026-05-12 22:30:00`
+   `20260909003000` | `20260909003000` | `2026-09-09 00:30:00`
+   `20260909014500` | `20260909014500` | `2026-09-09 01:45:00`
+   `20260909180000` | `20260909180000` | `2026-09-09 18:00:00`
+   `20260909183000` | `20260909183000` | `2026-09-09 18:30:00`
+   `20260909190000` | `20260909190000` | `2026-09-09 19:00:00`
+   `20260909193000` | `20260909193000` | `2026-09-09 19:30:00`
+   `20260909200000` | `20260909200000` | `2026-09-09 20:00:00`
+   `20260909210000` | `20260909210000` | `2026-09-09 21:00:00`
+   `20260909213000` | `20260909213000` | `2026-09-09 21:30:00`
+   `20260909220000` | `20260909220000` | `2026-09-09 22:00:00`
+   `20260909223000` | `20260909223000` | `2026-09-09 22:30:00`
+   `20260909230000` | `20260909230000` | `2026-09-09 23:00:00`
+   `20260910120000` | `20260910120000` | `2026-09-10 12:00:00`
+   `20260910123000` | `20260910123000` | `2026-09-10 12:30:00`
+   `20260910130000` | `20260910130000` | `2026-09-10 13:00:00`
+   `20260910133000` | `20260910133000` | `2026-09-10 13:30:00`
+   `20260910153329` | `20260910153329` | `2026-09-10 15:33:29`
+   `20260910185620` | `20260910185620` | `2026-09-10 18:56:20`
+   `20260910201921` | `20260910201921` | `2026-09-10 20:19:21`
+   `20260910205118` | `20260910205118` | `2026-09-10 20:51:18`
+   `20260911010021` | `20260911010021` | `2026-09-11 01:00:21`
+   `20260911010056` | `20260911010056` | `2026-09-11 01:00:56`
+   `20260911014731` | `20260911014731` | `2026-09-11 01:47:31`
+   `20260911023829` | `20260911023829` | `2026-09-11 02:38:29`
+   `20260911023856` | `20260911023856` | `2026-09-11 02:38:56`
+   `20260912013839` | `20260912013839` | `2026-09-12 01:38:39`
+   `20260912223818` | `20260912223818` | `2026-09-12 22:38:18`
+   `20260913121224` | `20260913121224` | `2026-09-13 12:12:24`
+   `20260913191311` | `20260913191311` | `2026-09-13 19:13:11`
+   `20260914013218` | `20260914013218` | `2026-09-14 01:32:18`
+   `20260914112404` | `20260914112404` | `2026-09-14 11:24:04`
+   `20260914203000` | `20260914203000` | `2026-09-14 20:30:00`
+   `20260914212000` | `20260914212000` | `2026-09-14 21:20:00`
+   `20260914223000` | `20260914223000` | `2026-09-14 22:30:00`
+   `20260914234000` | `20260914234000` | `2026-09-14 23:40:00`
+   `20260915002000` | `20260915002000` | `2026-09-15 00:20:00`
+   `20260926220000` | `20260926220000` | `2026-09-26 22:00:00`
+   `20260927131000` | `20260927131000` | `2026-09-27 13:10:00`
+   `20260927170000` | `20260927170000` | `2026-09-27 17:00:00`
+   `20260928100000` | `20260928100000` | `2026-09-28 10:00:00`
 
 
 Initialising login role...
@@ -215,96 +200,80 @@ Exit code: `0`
 
 vite v5.4.21 building for production...
 transforming...
-✓ 1572 modules transformed.
+✓ 1586 modules transformed.
 rendering chunks...
 computing gzip size...
-dist/index.html                                 1.53 kB │ gzip:   0.61 kB
-dist/assets/index-BbniOVwp.css                 48.49 kB │ gzip:   9.46 kB
-dist/assets/check-C_-zpepf.js                   0.29 kB │ gzip:   0.24 kB
-dist/assets/activity-C1Wd4Kpi.js                0.31 kB │ gzip:   0.25 kB
+dist/index.html                                 1.56 kB │ gzip:   0.61 kB
+dist/assets/impara-XUiVz4k1.css                16.78 kB │ gzip:   4.04 kB
+dist/assets/index-rgeshr4i.css                 54.33 kB │ gzip:  10.74 kB
+dist/assets/check-CHX5MT32.js                   0.29 kB │ gzip:   0.24 kB
+dist/assets/activity-DAUKfO8f.js                0.31 kB │ gzip:   0.25 kB
 dist/assets/fciBreeds-DhDJr-DH.js               0.31 kB │ gzip:   0.25 kB
-dist/assets/plus-DCApVvJj.js                    0.32 kB │ gzip:   0.25 kB
-dist/assets/arrow-left-CBCajpL4.js              0.33 kB │ gzip:   0.26 kB
-dist/assets/arrow-right-DixB27vl.js             0.33 kB │ gzip:   0.26 kB
-dist/assets/search-BGCRB0uW.js                  0.34 kB │ gzip:   0.27 kB
-dist/assets/check-circle-2-CxPDyBtH.js          0.34 kB │ gzip:   0.27 kB
-dist/assets/clock-DrXuKsi1.js                   0.35 kB │ gzip:   0.27 kB
-dist/assets/clock-3-sPklVow2.js                 0.35 kB │ gzip:   0.27 kB
-dist/assets/map-pin-DzaGeIgq.js                 0.37 kB │ gzip:   0.29 kB
-dist/assets/lock-DMobMsFx.js                    0.38 kB │ gzip:   0.29 kB
-dist/assets/star-BU5FMWen.js                    0.38 kB │ gzip:   0.29 kB
-dist/assets/home-DRzzMinp.js                    0.38 kB │ gzip:   0.29 kB
-dist/assets/book-open-BpictC9P.js               0.39 kB │ gzip:   0.29 kB
-dist/assets/bar-chart-3-CbXWYsKO.js             0.40 kB │ gzip:   0.29 kB
-dist/assets/heart-B1JL7wt8.js                   0.41 kB │ gzip:   0.31 kB
-dist/assets/external-link-CExbmoPG.js           0.42 kB │ gzip:   0.30 kB
-dist/assets/calendar-ztb8VsD5.js                0.43 kB │ gzip:   0.30 kB
-dist/assets/alert-triangle-BobJAgIi.js          0.43 kB │ gzip:   0.31 kB
-dist/assets/users-DNa95ubc.js                   0.47 kB │ gzip:   0.32 kB
-dist/assets/badge-check-DNCF7_vs.js             0.48 kB │ gzip:   0.31 kB
-dist/assets/graduation-cap-Be8r66oY.js          0.50 kB │ gzip:   0.35 kB
-dist/assets/phone-CpNduHFn.js                   0.56 kB │ gzip:   0.36 kB
-dist/assets/calendar-days-tVIW8tVX.js           0.66 kB │ gzip:   0.37 kB
-dist/assets/target-DovVeRQd.js                  0.71 kB │ gzip:   0.35 kB
-dist/assets/dog-VvoLs90P.js                     0.89 kB │ gzip:   0.53 kB
-dist/assets/DogPhoto-DbjrgmoF.js                1.19 kB │ gzip:   0.71 kB
-dist/assets/bookingMessages-5ooHUGjE.js         1.47 kB │ gzip:   0.81 kB
+dist/assets/plus-zEzqn0ri.js                    0.32 kB │ gzip:   0.25 kB
+dist/assets/arrow-left-C052OCJ1.js              0.33 kB │ gzip:   0.26 kB
+dist/assets/arrow-right-qf54T_tB.js             0.33 kB │ gzip:   0.27 kB
+dist/assets/search-BCWdLMDE.js                  0.34 kB │ gzip:   0.27 kB
+dist/assets/check-circle-2-BswJn2vZ.js          0.34 kB │ gzip:   0.27 kB
+dist/assets/clock-Db0N-Stv.js                   0.35 kB │ gzip:   0.27 kB
+dist/assets/rotate-ccw-CoHQQ_Ja.js              0.37 kB │ gzip:   0.29 kB
+dist/assets/map-pin-Lf57Pxf1.js                 0.37 kB │ gzip:   0.29 kB
+dist/assets/star-5FrSu9yI.js                    0.38 kB │ gzip:   0.29 kB
+dist/assets/book-open-DO9izhX5.js               0.39 kB │ gzip:   0.29 kB
+dist/assets/bar-chart-3-D4kTaW7H.js             0.40 kB │ gzip:   0.29 kB
+dist/assets/heart-CKWnx33O.js                   0.41 kB │ gzip:   0.31 kB
+dist/assets/external-link-BLd-gl_u.js           0.42 kB │ gzip:   0.30 kB
+dist/assets/upload-DUL8n69j.js                  0.43 kB │ gzip:   0.32 kB
+dist/assets/calendar-5HeScRCU.js                0.43 kB │ gzip:   0.30 kB
+dist/assets/alert-triangle-BRKyOLSj.js          0.43 kB │ gzip:   0.31 kB
+dist/assets/users-DW22vHTb.js                   0.47 kB │ gzip:   0.32 kB
+dist/assets/badge-check-B-h9_PWe.js             0.48 kB │ gzip:   0.31 kB
+dist/assets/sportSearch-OQXAGqnQ.js             0.49 kB │ gzip:   0.34 kB
+dist/assets/refresh-cw-D4Lb2lhG.js              0.49 kB │ gzip:   0.33 kB
+dist/assets/file-text-DXhjpXv_.js               0.50 kB │ gzip:   0.32 kB
+dist/assets/paw-print-MNjKP7j9.js               0.51 kB │ gzip:   0.35 kB
+dist/assets/trash-2-B3gbkCy5.js                 0.53 kB │ gzip:   0.35 kB
+dist/assets/scale-CDbTHQDQ.js                   0.53 kB │ gzip:   0.34 kB
+dist/assets/phone-XzqzDkPp.js                   0.56 kB │ gzip:   0.36 kB
+dist/assets/medal-CkKXQtrI.js                   0.60 kB │ gzip:   0.39 kB
+dist/assets/calendar-days-BOgpgesT.js           0.66 kB │ gzip:   0.37 kB
+dist/assets/target-DjwuwA_U.js                  0.70 kB │ gzip:   0.31 kB
+dist/assets/home-BH5hUmnm.js                    0.83 kB │ gzip:   0.43 kB
+dist/assets/trophy-Oc9-TAgs.js                  0.95 kB │ gzip:   0.47 kB
+dist/assets/DogPhoto-DwhGbaa3.js                1.19 kB │ gzip:   0.71 kB
+dist/assets/bookingMessages-CtX5JQhX.js         1.47 kB │ gzip:   0.81 kB
 dist/assets/professionalCalendar-CiVuepea.js    1.96 kB │ gzip:   0.90 kB
-dist/assets/ProLayout-BxZxkYva.js               4.24 kB │ gzip:   1.63 kB
-dist/assets/VerificationModal-DFnl9fkS.js       4.82 kB │ gzip:   1.86 kB
-dist/assets/ProAnalytics-BXUVO1jx.js            5.38 kB │ gzip:   2.10 kB
-dist/assets/OwnerBookings-B3ux3sXf.js           5.69 kB │ gzip:   2.31 kB
-dist/assets/DogDetailPage-CwiQvrej.js           5.72 kB │ gzip:   2.18 kB
-dist/assets/BreedPage-f25wS4Iw.js               6.51 kB │ gzip:   2.22 kB
-dist/assets/SearchCard-CBdjaRmp.js              7.10 kB │ gzip:   2.91 kB
-dist/assets/FciGroupPage-Bzl4hg4i.js            7.43 kB │ gzip:   2.69 kB
-dist/assets/ProBookings-Y5GaDHiO.js             7.50 kB │ gzip:   3.07 kB
+dist/assets/ProfessionalBridge-DMZ_Oa0o.js      2.19 kB │ gzip:   1.14 kB
+dist/assets/ProLayout-CGrUJerp.js               4.78 kB │ gzip:   1.77 kB
+dist/assets/VerificationModal-WnLhqoWL.js       4.82 kB │ gzip:   1.86 kB
+dist/assets/DogDetailPage-CyCL4FJt.js           5.31 kB │ gzip:   1.96 kB
+dist/assets/ProAnalytics-DbI9kkYQ.js            5.38 kB │ gzip:   2.09 kB
+dist/assets/OwnerBookings-DATpTp1-.js           5.66 kB │ gzip:   2.30 kB
+dist/assets/BreedPage-EfYUQ1Pq.js               6.55 kB │ gzip:   2.24 kB
+dist/assets/FciGroupPage-Dv0D2OWi.js            7.47 kB │ gzip:   2.72 kB
+dist/assets/ProBookings-4LgG-dDz.js             7.47 kB │ gzip:   3.06 kB
 dist/assets/fciGroups-BHmHcsg7.js               7.55 kB │ gzip:   2.69 kB
-dist/assets/ImparaHomePage-COWhtHBa.js          7.82 kB │ gzip:   2.74 kB
-dist/assets/AdminDashboard-AhuVxmTU.js          8.02 kB │ gzip:   2.25 kB
-dist/assets/SearchPage-CliBfnZV.js              8.15 kB │ gzip:   3.38 kB
-dist/assets/ProCRM-CS6GQNyE.js                  8.49 kB │ gzip:   2.76 kB
-dist/assets/LegalPages-hTPKFxie.js              8.74 kB │ gzip:   2.98 kB
-dist/assets/BreederGuidePage-B3O1xY7A.js        9.53 kB │ gzip:   3.46 kB
-dist/assets/BecomeProPage-BGL00F4B.js          10.16 kB │ gzip:   3.20 kB
-dist/assets/ProDashboard-DCBqzgBe.js           10.90 kB │ gzip:   3.63 kB
-dist/assets/AuthPages-CtvvZf2e.js              11.21 kB │ gzip:   3.38 kB
-dist/assets/BookingMessageInbox-CSYgUCoQ.js    11.81 kB │ gzip:   4.19 kB
-dist/assets/OwnerDashboard-LFhPhRX5.js         13.49 kB │ gzip:   4.27 kB
-dist/assets/DogsPage-DTB7sh9_.js               14.58 kB │ gzip:   4.71 kB
-dist/assets/HomePage-Bot5xolJ.js               15.20 kB │ gzip:   4.79 kB
-dist/assets/ProCalendar-gIR_9Bts.js            16.07 kB │ gzip:   5.55 kB
-dist/assets/ImparaLessonPage-DDjs1bVs.js       17.95 kB │ gzip:   5.23 kB
-dist/assets/ProfessionalProfile-CEYF3ja0.js    23.52 kB │ gzip:   6.87 kB
-dist/assets/ProSettings-BBguZkBG.js            27.53 kB │ gzip:   7.97 kB
-dist/assets/imparaContent-DIr_gzCv.js          29.42 kB │ gzip:   9.28 kB
-dist/assets/BeforeDogPage-DS6NdJ7u.js          30.03 kB │ gzip:   9.15 kB
-dist/assets/ContinuityPage-sF-_qRz-.js         37.85 kB │ gzip:  10.50 kB
-dist/assets/index--9v3aMO9.js                 388.14 kB │ gzip: 110.47 kB
-✓ built in 3.68s
+dist/assets/ProCRM-q7HWNFo_.js                  8.49 kB │ gzip:   2.76 kB
+dist/assets/SearchCard-CuAWG7fn.js              8.64 kB │ gzip:   3.44 kB
+dist/assets/BreederGuidePage-cA-v5C97.js        9.53 kB │ gzip:   3.46 kB
+dist/assets/ImparaHomePage-BEK6WUIh.js         10.01 kB │ gzip:   3.84 kB
+dist/assets/ProDashboard-Rw-7UWtO.js           10.90 kB │ gzip:   3.63 kB
+dist/assets/AuthPages-CzYonc7J.js              11.54 kB │ gzip:   3.59 kB
+dist/assets/BookingMessageInbox-DKZAPCOv.js    11.81 kB │ gzip:   4.19 kB
+dist/assets/AdminDashboard-DL4yDNMs.js         13.63 kB │ gzip:   4.08 kB
+dist/assets/DogsPage-UyTX0yjS.js               14.15 kB │ gzip:   4.58 kB
+dist/assets/BecomeProPage-DA0STad4.js          14.35 kB │ gzip:   4.48 kB
+dist/assets/OwnerDashboard-DX0oNxEe.js         14.48 kB │ gzip:   4.81 kB
+dist/assets/ProCalendar-BR7agy9b.js            15.66 kB │ gzip:   5.44 kB
+dist/assets/HomePage-D0ygy06L.js               16.59 kB │ gzip:   5.13 kB
+dist/assets/LegalPages-fPx-1Bfs.js             21.71 kB │ gzip:   6.87 kB
+dist/assets/SearchPage-xEQV9eVL.js             22.30 kB │ gzip:   7.07 kB
+dist/assets/ImparaLessonPage-BKOlVNly.js       22.30 kB │ gzip:   8.02 kB
+dist/assets/PassesPage-BA24hreH.js             23.25 kB │ gzip:   6.98 kB
+dist/assets/ProfessionalProfile-fDXIcF-G.js    29.05 kB │ gzip:   8.41 kB
+dist/assets/BeforeDogPage-lQ0R2QDY.js          31.79 kB │ gzip:   9.74 kB
+dist/assets/ContinuityPage-B5SX1h0k.js         37.85 kB │ gzip:  10.50 kB
+dist/assets/ProSettings-BFMUV1Ca.js            57.59 kB │ gzip:  15.49 kB
+dist/assets/impara-B-NYfy7-.js                 58.66 kB │ gzip:  18.93 kB
+dist/assets/index-D_tqivCU.js                 390.07 kB │ gzip: 111.05 kB
+✓ built in 3.78s
 ```
-
-
-
-## Checkpoint merito per disciplina — 26 settembre 2026
-
-Base GitHub letta: `8d1baf9`. Preparati motore server non collegato a endpoint,
-criteri editoriali V2, 69 controlli sintetici e proposta SQL per invalidare
-verifiche dopo modifica dell'evidenza. Proposta e regressioni superate su
-PostgreSQL WASM con 46 migrazioni ricostruite; Auth/Storage simulati.
-Nessun accesso al database online, deploy o nuovo badge verificato nel browser.
-Parser Working-Dog collegato all'Edge Function e testato con una fixture basata
-sul risultato reale fornito di Valentina Balli; accesso live e autorizzazione del
-provider restano da verificare. Dettagli: `docs/SPORT_MERIT_AND_VERIFICATION_V2.md`.
-
-
-## Audit Supabase — migrazione applicata il 27 settembre 2026
-
-Permessi client ridotti, controlli RLS ottimizzati e quattro policy duplicate
-eliminate. Corretta anche una divergenza fra ricostruzione Git e policy online.
-Test nativi superati su 46 migrazioni precedenti più la nuova. L’utente ha
-confermato l’applicazione online il 27 settembre 2026: `Finished supabase db push`.
-Questo checkpoint registra il rilascio; i controlli applicativi dopo il rilascio
-non sono ancora documentati. Ambito e avvisi intenzionali:
-[SUPABASE_AUDIT_FIXES_V1.md](SUPABASE_AUDIT_FIXES_V1.md).
-Gli strumenti professionali da ripristinare rimangono il prossimo blocco.

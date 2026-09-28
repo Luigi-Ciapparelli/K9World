@@ -145,3 +145,24 @@ Questo checkpoint registra il rilascio; i controlli applicativi dopo il rilascio
 non sono ancora documentati. Ambito e avvisi intenzionali:
 [SUPABASE_AUDIT_FIXES_V1.md](docs/SUPABASE_AUDIT_FIXES_V1.md).
 Gli strumenti professionali da ripristinare rimangono il prossimo blocco.
+
+
+## Ripristino strumenti: pacchetti di lezioni — 27 settembre 2026
+
+Primo incremento completo: modelli, assegnazioni, lezioni residue, scadenze,
+storico, storni e vista proprietario. Specifica e stato verifiche:
+[PROFESSIONAL_PASSES_V1.md](docs/PROFESSIONAL_PASSES_V1.md).
+Preparato localmente su base `db2e010`; nuova migration da testare nel WSL
+e applicare prima del frontend. Nessuna pubblicazione online attestata qui.
+Abbonamenti, tessere e campagne rimangono i prossimi strumenti da ripristinare.
+
+
+<!-- supabase-private-api-v2 -->
+## Confine API Supabase — 28 settembre 2026
+
+Nuova correzione per i tre ERROR sulle viste e i 58 WARN sulle funzioni
+privilegiate: [SUPABASE_PRIVATE_API_V2.md](docs/SUPABASE_PRIVATE_API_V2.md). Implementazioni interne in
+`pc_private`, API pubbliche invoker con contratti e controlli preservati.
+Test isolati superati; database online non dichiarato aggiornato. L'avviso
+password compromesse richiede una configurazione Auth, disponibile da Pro.
+Le future migrazioni devono rispettare questo confine e l'ordine descritto.

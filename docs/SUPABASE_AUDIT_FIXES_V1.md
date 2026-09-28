@@ -115,3 +115,14 @@ equivalenza. La migrazione non era stata applicata online: resta lo stesso file,
 senza creare una seconda migrazione o riscrivere la storia applicata.
 Verifica PGlite ripetuta e test nativi dell’utente superati dopo la correzione.
 Successivamente il dry-run e l’applicazione online sono stati completati.
+
+
+<!-- supabase-private-api-v2 -->
+## Confine API Supabase — 28 settembre 2026
+
+Nuova correzione per i tre ERROR sulle viste e i 58 WARN sulle funzioni
+privilegiate: [SUPABASE_PRIVATE_API_V2.md](SUPABASE_PRIVATE_API_V2.md). Implementazioni interne in
+`pc_private`, API pubbliche invoker con contratti e controlli preservati.
+Test isolati superati; database online non dichiarato aggiornato. L'avviso
+password compromesse richiede una configurazione Auth, disponibile da Pro.
+Le future migrazioni devono rispettare questo confine e l'ordine descritto.

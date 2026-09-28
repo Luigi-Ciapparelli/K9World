@@ -51,3 +51,13 @@ Incremento successivo al calendario `a712352`: conversazioni fra i partecipanti,
 ## Continuità condivisa fra professionisti
 
 Revisioni scelte dall’autore e concessioni del proprietario a destinatari specifici, con durata e revoca. Riferimento: `docs/CONTINUITY_SHARING_V1.md`. PostgreSQL nativo: regressioni e sette casi concorrenti superati dall’utente il 14 settembre 2026. Incremento preparato localmente; applicare la nuova migrazione prima del frontend e registrare l’esito del rilascio. Archivio originale conservato; media e compressione restano nel passo successivo.
+
+
+## Ripristino strumenti: pacchetti di lezioni — 27 settembre 2026
+
+Primo incremento completo: modelli, assegnazioni, lezioni residue, scadenze,
+storico, storni e vista proprietario. Specifica e stato verifiche:
+[PROFESSIONAL_PASSES_V1.md](PROFESSIONAL_PASSES_V1.md).
+Preparato localmente su base `db2e010`; nuova migration da testare nel WSL
+e applicare prima del frontend. Nessuna pubblicazione online attestata qui.
+Abbonamenti, tessere e campagne rimangono i prossimi strumenti da ripristinare.

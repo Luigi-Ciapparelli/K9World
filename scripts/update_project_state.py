@@ -47,5 +47,6 @@ parts = [
     make_section("Production build", ["npm", "run", "build"], 300),
 ]
 
-OUT.write_text("".join(parts), encoding="utf-8")
+snapshot = "\n".join(line.rstrip() for line in "".join(parts).splitlines()).rstrip() + "\n"
+OUT.write_text(snapshot, encoding="utf-8")
 print(f"Updated {OUT.relative_to(ROOT)}")

@@ -1,0 +1,101 @@
+BEGIN;
+CREATE FUNCTION pg_temp.u(n integer) RETURNS uuid LANGUAGE sql IMMUTABLE AS $$ SELECT ('d0000000-0000-0000-0000-'||lpad(n::text,12,'0'))::uuid $$;
+CREATE FUNCTION pg_temp.ok(value boolean, msg text) RETURNS void LANGUAGE plpgsql AS $$ BEGIN IF value IS DISTINCT FROM true THEN RAISE EXCEPTION 'TEST FAILED: %',msg; END IF; END $$;
+CREATE FUNCTION pg_temp.err(query text, expected text) RETURNS void LANGUAGE plpgsql AS $$
+BEGIN BEGIN EXECUTE query; EXCEPTION WHEN OTHERS THEN
+ IF SQLSTATE=expected THEN RETURN; END IF; RAISE EXCEPTION 'Unexpected % (expected %): %',SQLSTATE,expected,SQLERRM;
+END; RAISE EXCEPTION 'Expected error %: %',expected,query; END $$;
+GRANT EXECUTE ON FUNCTION pg_temp.u(integer),pg_temp.ok(boolean,text),pg_temp.err(text,text) TO authenticated,anon;
+SELECT pg_temp.ok((SELECT lifecycle='legacy' AND remaining_uses=7 AND total_uses_snapshot IS NULL AND name_snapshot='Vecchia beta' FROM public.client_passes WHERE id=pg_temp.u(400)), 'legacy data preserved, no inferred credit');
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub',pg_temp.u(1)::text,true);
+SELECT public.save_own_pass_template(pg_temp.u(301),0,pg_temp.u(101),'Due lezioni','Percorso',2,50,30);
+SELECT public.save_own_pass_template(pg_temp.u(301),0,pg_temp.u(101),'Due lezioni','Percorso',2,50,30);
+SELECT pg_temp.ok((SELECT count(*)=2 FROM public.list_own_pass_templates()),'template retry idempotent');
+SELECT pg_temp.err($q$SELECT public.save_own_pass_template(pg_temp.u(302),0,pg_temp.u(102),'No','',2,50,30)$q$,'22023');
+SELECT pg_temp.err($q$SELECT public.save_own_pass_template(pg_temp.u(302),0,pg_temp.u(101),'No','',0,50,30)$q$,'22023');
+SELECT pg_temp.err($q$SELECT public.save_own_pass_template(pg_temp.u(302),0,pg_temp.u(101),'No','',2,'NaN',30)$q$,'22023');
+SELECT public.issue_client_pass(pg_temp.u(401),pg_temp.u(301),pg_temp.u(11));
+SELECT public.issue_client_pass(pg_temp.u(401),pg_temp.u(301),pg_temp.u(11));
+SELECT pg_temp.ok((SELECT count(*)=2 FROM public.list_my_client_passes(true)),'issue retry no duplicate');
+SELECT pg_temp.err($q$SELECT public.issue_client_pass(pg_temp.u(401),pg_temp.u(301),pg_temp.u(12))$q$,'22023');
+SELECT pg_temp.err($q$SELECT public.issue_client_pass(pg_temp.u(405),pg_temp.u(301),pg_temp.u(13))$q$,'42501');
+SELECT public.save_own_pass_template(pg_temp.u(301),1,pg_temp.u(101),'Tre lezioni','Modificato',3,120,60);
+SELECT pg_temp.ok((SELECT name='Due lezioni' AND total_uses=2 AND price=50 AND remaining_uses=2 FROM public.list_my_client_passes(true) WHERE id=pg_temp.u(401)),'assigned terms remain immutable');
+SELECT pg_temp.err($q$SELECT public.save_own_pass_template(pg_temp.u(301),1,pg_temp.u(101),'Stale','',5,130,60)$q$,'40001');
+SELECT public.set_own_pass_template_active(pg_temp.u(301),2,false);
+SELECT pg_temp.err($q$SELECT public.issue_client_pass(pg_temp.u(405),pg_temp.u(301),pg_temp.u(11))$q$,'PAP05');
+SELECT public.issue_client_pass(pg_temp.u(401),pg_temp.u(301),pg_temp.u(11));
+RESET ROLE;
+UPDATE public.client_passes SET purchased_at=now()-interval '1 day' WHERE id=pg_temp.u(401);
+SET LOCAL ROLE authenticated;
+SELECT pg_temp.ok((SELECT count(*)=1 FROM public.list_pass_eligible_bookings(pg_temp.u(401))),'only matching completed booking');
+SELECT pg_temp.err($q$SELECT public.record_pass_use(pg_temp.u(501),pg_temp.u(401),pg_temp.u(202))$q$,'22023');
+SELECT pg_temp.err($q$SELECT public.record_pass_use(pg_temp.u(501),pg_temp.u(401),pg_temp.u(203))$q$,'22023');
+SELECT pg_temp.err($q$SELECT public.record_pass_use(pg_temp.u(501),pg_temp.u(401),pg_temp.u(204))$q$,'22023');
+SELECT pg_temp.err($q$SELECT public.record_pass_use(pg_temp.u(501),pg_temp.u(401),null,now()+interval '1 hour','Futuro')$q$,'PAP02');
+SELECT pg_temp.err($q$SELECT public.record_pass_use(pg_temp.u(501),pg_temp.u(401),null,now()-interval '2 days','Troppo presto')$q$,'PAP02');
+SELECT public.record_pass_use(pg_temp.u(501),pg_temp.u(401),pg_temp.u(201));
+SELECT public.record_pass_use(pg_temp.u(501),pg_temp.u(401),pg_temp.u(201));
+SELECT pg_temp.ok((SELECT remaining_uses=1 FROM public.list_my_client_passes(true) WHERE id=pg_temp.u(401)),'one debit on retry; archived template still usable');
+SELECT pg_temp.err($q$SELECT public.record_pass_use(pg_temp.u(502),pg_temp.u(401),pg_temp.u(201))$q$,'PAP03');
+SELECT public.record_pass_use(pg_temp.u(502),pg_temp.u(401),null,now()-interval '10 minutes','Lezione al campo');
+SELECT public.record_pass_use(pg_temp.u(502),pg_temp.u(401),null,now()-interval '10 minutes','Lezione al campo');
+SELECT pg_temp.ok((SELECT state='exhausted' AND remaining_uses=0 FROM public.list_my_client_passes(true) WHERE id=pg_temp.u(401)),'zero credit exhausted');
+SELECT pg_temp.err($q$SELECT public.record_pass_use(pg_temp.u(503),pg_temp.u(401),null,now(),'Troppi crediti')$q$,'PAP01');
+SELECT pg_temp.err($q$SELECT public.record_pass_use(pg_temp.u(503),pg_temp.u(400),null,now(),'Legacy')$q$,'PAP01');
+SELECT set_config('request.jwt.claim.sub',pg_temp.u(2)::text,true);
+SELECT pg_temp.ok((SELECT count(*)=0 FROM public.list_own_pass_templates()),'other professional no templates');
+SELECT pg_temp.ok((SELECT count(*)=0 FROM public.list_my_client_passes(true)),'other professional no client packs');
+SELECT pg_temp.err($q$SELECT public.get_client_pass_events(pg_temp.u(401))$q$,'42501');
+SELECT pg_temp.err($q$SELECT public.record_pass_use(pg_temp.u(503),pg_temp.u(401),null,now(),'Intrusione')$q$,'42501');
+SELECT set_config('request.jwt.claim.sub',pg_temp.u(11)::text,true);
+SELECT pg_temp.ok((SELECT count(*)=2 FROM public.list_my_client_passes()),'owner sees own packs');
+SELECT pg_temp.ok((SELECT count(*)=2 FROM public.get_client_pass_events(pg_temp.u(401))),'owner sees own ledger');
+SELECT pg_temp.err($q$SELECT public.issue_client_pass(pg_temp.u(402),pg_temp.u(301),pg_temp.u(11))$q$,'42501');
+SELECT pg_temp.err($q$SELECT public.reverse_pass_use(pg_temp.u(503),pg_temp.u(501),'Owner mutation')$q$,'42501');
+SELECT set_config('request.jwt.claim.sub',pg_temp.u(12)::text,true);
+SELECT pg_temp.ok((SELECT count(*)=0 FROM public.list_my_client_passes()),'other owner no packs');
+SELECT pg_temp.err($q$SELECT public.get_client_pass_events(pg_temp.u(401))$q$,'42501');
+SELECT set_config('request.jwt.claim.sub',pg_temp.u(1)::text,true);
+SELECT public.reverse_pass_use(pg_temp.u(503),pg_temp.u(501),'Prenotazione registrata per errore');
+SELECT public.reverse_pass_use(pg_temp.u(503),pg_temp.u(501),'Prenotazione registrata per errore');
+SELECT pg_temp.ok((SELECT remaining_uses=1 FROM public.list_my_client_passes(true) WHERE id=pg_temp.u(401)),'reversal retry restores only one credit');
+SELECT pg_temp.err($q$SELECT public.reverse_pass_use(pg_temp.u(504),pg_temp.u(501),'Secondo storno')$q$,'PAP04');
+SELECT pg_temp.ok((SELECT count(*)=3 FROM public.get_client_pass_events(pg_temp.u(401))),'immutable use and separate reversal');
+SELECT pg_temp.ok((SELECT count(*)=1 FROM public.list_pass_eligible_bookings(pg_temp.u(401))),'reversed booking eligible again');
+SELECT public.set_own_pass_template_active(pg_temp.u(301),3,true);
+SELECT public.issue_client_pass(pg_temp.u(402),pg_temp.u(301),pg_temp.u(11));
+RESET ROLE;
+UPDATE public.client_passes SET purchased_at=now()-interval '40 days',expires_at=now()-interval '10 days' WHERE id=pg_temp.u(402);
+SET LOCAL ROLE authenticated;
+SELECT pg_temp.ok((SELECT state='expired' FROM public.list_my_client_passes(true) WHERE id=pg_temp.u(402)),'expired state');
+SELECT pg_temp.err($q$SELECT public.record_pass_use(pg_temp.u(505),pg_temp.u(402),null,now(),'Fuori periodo')$q$,'PAP02');
+SELECT public.record_pass_use(pg_temp.u(505),pg_temp.u(402),null,now()-interval '20 days','Registrazione tardiva di lezione valida');
+SELECT pg_temp.err($q$SELECT public.cancel_own_client_pass(pg_temp.u(401),1,'Versione obsoleta')$q$,'40001');
+SELECT public.cancel_own_client_pass(id,version,'Percorso interrotto') FROM public.list_my_client_passes(true) WHERE id=pg_temp.u(401);
+SELECT pg_temp.err($q$SELECT public.record_pass_use(pg_temp.u(506),pg_temp.u(401),null,now(),'Dopo annullamento')$q$,'PAP01');
+SELECT pg_temp.ok((SELECT state='cancelled' AND cancellation_reason='Percorso interrotto' FROM public.list_my_client_passes(true) WHERE id=pg_temp.u(401)),'cancel retains balance and reason');
+RESET ROLE;
+DO $$ DECLARE t text; r text; p text; fn record; BEGIN
+ FOREACH t IN ARRAY ARRAY['passes','client_passes','pass_usage_events'] LOOP
+  PERFORM pg_temp.ok((SELECT relrowsecurity FROM pg_class WHERE oid=('public.'||t)::regclass),'RLS '||t);
+  FOREACH r IN ARRAY ARRAY['anon','authenticated'] LOOP
+   FOREACH p IN ARRAY ARRAY['SELECT','INSERT','UPDATE','DELETE','TRUNCATE','REFERENCES','TRIGGER'] LOOP
+    PERFORM pg_temp.ok(NOT has_table_privilege(r,'public.'||t,p),'no direct privilege '||r||t||p);
+   END LOOP;
+  END LOOP;
+ END LOOP;
+ FOR fn IN SELECT oid,proname FROM pg_proc WHERE pronamespace='public'::regnamespace AND proname IN
+  ('pass_professional_actor','list_own_pass_templates','save_own_pass_template','set_own_pass_template_active','issue_client_pass','list_my_client_passes','get_client_pass_events','list_pass_eligible_bookings','record_pass_use','reverse_pass_use','cancel_own_client_pass') LOOP
+  PERFORM pg_temp.ok(NOT has_function_privilege('anon',fn.oid,'EXECUTE'),'anon RPC '||fn.proname);
+  PERFORM pg_temp.ok(has_function_privilege('authenticated',fn.oid,'EXECUTE')=(fn.proname<>'pass_professional_actor'),'RPC boundary '||fn.proname);
+ END LOOP;
+END $$;
+SET LOCAL ROLE anon;
+SELECT pg_temp.err($q$SELECT public.list_my_client_passes()$q$,'42501');
+RESET ROLE;
+-- Existing account-deletion cascade must not become blocked by the new ledger.
+DELETE FROM auth.users WHERE id=pg_temp.u(1);
+SELECT pg_temp.ok(NOT EXISTS(SELECT 1 FROM public.client_passes WHERE professional_id=pg_temp.u(1)),'account cascade remains compatible');
+ROLLBACK;
