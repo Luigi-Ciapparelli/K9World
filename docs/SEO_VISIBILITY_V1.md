@@ -99,6 +99,28 @@ Poi in Google Search Console, nella proprietà del dominio verificata:
 Se la proprietà non è già verificata, il titolare deve completare la verifica
 del dominio; nessun codice DNS è stato creato o assunto in questo intervento.
 
+## Verifica Google Search Console — 29 settembre 2026
+
+SEO pubblicato su GitHub nel commit `2cfc932`. La Home pubblica è stata
+ricontrollata: risponde 200 e contiene l'HTML SEO generato.
+
+Luigi ha fornito il meta tag del proprio account Google. È stato aggiunto
+all'`head` di `index.html`, fuori dal blocco sostituito dal generatore SEO;
+rimane quindi nell'HTML pubblicato, senza dipendere da JavaScript. Non è un
+tracker né una credenziale segreta: serve a dimostrare il controllo del sito.
+Non rimuoverlo dopo la verifica, né sostituire eventuali token di altri titolari.
+
+La proprietà corretta da aggiungere è di tipo **Prefisso URL**:
+`https://www.portalecinofilo.com/`. Luigi aveva indicato `/sitemap.xml/` come
+proprietà: quella riguarda un percorso diverso e non rappresenta l'intero sito.
+Dopo il deployment di questo tag, selezionare **Tag HTML** e premere **Verifica**.
+Poi inviare `sitemap.xml` nella sezione **Sitemap** della proprietà corretta.
+Il file `google105ba6469d75c570.html` fornito dall'utente è un metodo alternativo;
+questo incremento usa esclusivamente il meta tag.
+
+Il riscontro del tag sul sito e l'esito della verifica Google restano da
+confermare dopo la pubblicazione; la presenza del tag locale non li dimostra.
+
 ## Riferimenti tecnici
 
 - [Google: JavaScript SEO](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics)
