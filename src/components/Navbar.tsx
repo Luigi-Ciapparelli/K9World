@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AlertCircle, BookOpen, GraduationCap, Home, LogOut, Menu, Search, Trophy, User, X } from 'lucide-react';
+import { AlertCircle, BookOpen, GraduationCap, LogOut, Menu, Search, Trophy, User, X } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
 import { RouteLink } from './RouteLink';
@@ -13,8 +13,6 @@ export function Navbar() {
   const header = useRef<HTMLElement>(null);
   const mobileButton = useRef<HTMLButtonElement>(null);
   const basePath = path.split('?')[0];
-  const serviceType = new URLSearchParams(path.split('?')[1]).get('type');
-  const onServices = basePath === '/search' && serviceType !== 'trainer';
   const dashboard = profile?.role === 'admin' ? '/admin' : profile?.role === 'professional' ? '/pro' : '/owner';
   const close = () => setMobileOpen(false);
 
@@ -40,10 +38,9 @@ export function Navbar() {
 
   const leave = async () => { await signOut(); close(); navigate('/'); };
   const links = [
-    { to: '/search?type=trainer', label: 'Trova aiuto per il cane', icon: Search, active: basePath === '/search' && !onServices, kind: 'help' },
+    { to: '/search?type=trainer', label: 'Trova aiuto per il cane', icon: Search, active: basePath === '/search', kind: 'help' },
     { to: '/impara', label: 'Impara', icon: BookOpen, active: basePath.startsWith('/impara') || basePath === '/prima-del-cane', kind: 'learn' },
     { to: '/sport', label: 'Sport cinofili', icon: Trophy, active: basePath === '/sport', kind: 'sport' },
-    { to: '/search', label: 'Servizi', icon: Home, active: onServices, kind: 'services' },
   ];
 
   return (

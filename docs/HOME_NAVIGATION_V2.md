@@ -1,41 +1,45 @@
-# Home e navigazione — correzione del 28 settembre 2026
+# Home e navigazione — revisione visiva del 29 settembre 2026
 
-## Feedback vincolante di Luigi
+## Richiesta corrente di Luigi
 
-Il rilascio `c5285ca` è stato caricato su GitHub dall’utente. Luigi ha approvato
-lo stile dei pulsanti superiori ma ha rifiutato il resto della revisione Home:
-troppi blocchi ripetevano le destinazioni già raggiungibili dal menu.
-La richiesta attuale è rifinire lo stile e riprendere l’identità precedente,
-senza aggiungere moduli, menu secondari o riquadri promozionali ridondanti.
-Questa correzione sostituisce le decisioni Home descritte in precedenza qui.
+Base `c75d0c1`, dopo la correzione dei blocchi duplicati. Conservare i pulsanti
+superiori apprezzati e rendere lo stile più moderno con contenuti visivi
+pertinenti. Servizi e Trova aiuto per il cane non devono essere due ingressi.
+Questa specifica sostituisce le precedenti decisioni su questa Home.
 
-## Intervento
+## Comportamento implementato
 
-- Pulsanti superiori, account e ingresso professionisti mantenuti.
-- `Servizi` è un link semplice a `/search`, la ricerca esistente con selettore
-  delle categorie. Eliminata la tendina dal menu principale.
-- Eliminati il modulo di ricerca nella Home, la riga di servizi quotidiani,
-  il blocco promozionale professionisti e gli altri rimandi ripetuti al menu.
-- Ripreso il titolo precedente: «Conosci meglio il cane. Costruisci un binomio
-  più consapevole.» La prima parte è il titolo, la seconda il sottotitolo.
-- Composizione editoriale con caratteri e colori del progetto, spaziature
-  regolari, un riquadro sintetico sui bisogni quotidiani e tre testi brevi
-  non interattivi. Questi testi non sono nuove funzioni né passaggi obbligatori.
-- Un solo collegamento nel corpo Home: Prima del cane, assente dal menu
-  principale. Nessun ripristino di Evidence layer o dei grandi blocchi statistici.
-- Sport resta una destinazione autonoma del menu. La ricerca ordinaria apre
-  direttamente gli addestratori senza chiedere di scegliere una modalità.
-- Homepage pubblica e rimandi owner/pro/admin conservati.
+- Tre voci principali: **Trova aiuto per il cane** verde (ricerca diretta
+  `/search?type=trainer`), **Impara**, **Sport cinofili**. Rimossa Servizi.
+- Account, tema e ingresso professionisti restano nel menu delle utilità.
+- Hero verde con titolo sans, immagine illustrativa responsive e compressa.
+- Movimento lento della foto con comando pausa/ripresa; nessun movimento
+  quando il dispositivo richiede di ridurlo.
+- Anteprima animata dello shaping di 12 secondi, facoltativa. Video e poster
+  vengono richiesti solo aprendo la finestra. Nessun player esterno o tracker.
+- Controlli video nativi, chiusura con Escape o pulsante, ripristino del focus,
+  pausa quando la scheda viene nascosta, descrizione completa testuale.
+- Avvio del video dopo apertura; con riduzione movimento parte in pausa.
+- Restano tre brevi principi non interattivi e il richiamo Prima del cane.
+  Nessun nuovo elenco servizi, search form, Evidence layer o blocco pro.
+- Home pubblica e rimandi autenticati owner/pro/admin conservati.
 
-## Verifiche e rilascio
+## Media e limiti
 
-Base esaminata: `c5285ca`. Solo Navbar, Home, CSS dedicato e documentazione.
-TypeScript, build con continuità attiva, ESLint sui due componenti e diff check
-superati. Chromium con API simulate: percorsi dei pulsanti, menu mobile ed
-Escape, assenza dei blocchi rimossi, nessuno sconfinamento da 320 a 1920 px,
-tema scuro e rimandi ai tre ruoli. Anteprime ispezionate.
+Foto generata e identificata come immagine illustrativa; non è una foto di un
+professionista reale. Il video è un’animazione tratta dal DogScene della lezione
+Impara, non una ripresa reale. File, pesi e provenienza in
+[HOME_MEDIA_ASSETS.md](HOME_MEDIA_ASSETS.md). La lezione non viene modificata.
 
-Nessun database o dato online modificato. Nessuna migrazione necessaria.
-Correzione preparata per applicazione dal WSL dell’utente tramite installer
-con verifica dei file, backup, build e pubblicazione opzionale. Non dichiararla
-online senza il nuovo commit dell’utente e il deployment Vercel Ready.
+## Verifica e rilascio
+
+TypeScript, build con continuità attiva, ESLint mirato e diff check.
+Browser Chromium isolato con API simulate: menu e link, 320–1920 px senza
+sconfinamenti, tema scuro, immagine caricata, video riproducibile di 12 secondi
+solo dopo apertura, riduzione movimento, pausa, chiusura e focus.
+Anteprime desktop, mobile, scuro e finestra video ispezionate.
+
+Nessuna migrazione, API o dato online modificato. La pubblicazione avviene dal
+repository WSL dell’utente tramite installer con controllo hash, backup,
+TypeScript/build e commit/push dei soli file dell’incremento. Il nuovo frontend
+non va dichiarato online fino a push e deployment Ready confermati.

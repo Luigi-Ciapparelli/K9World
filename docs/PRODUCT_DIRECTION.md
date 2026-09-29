@@ -1435,18 +1435,24 @@ Il proprietario non deve fare un passaggio aggiuntivo per contattare o prenotare
 un professionista nel percorso normale. Nel pannello professionista, invece,
 due selettori indipendenti decidono in quali elenchi comparire.
 
-## 40. Home e stile: correzione vincolante — 28 settembre 2026
+## 40. Home e stile: indicazioni vincolanti — 29 settembre 2026
 
-Luigi ha approvato i pulsanti del menu ma rifiutato la Home del commit `c5285ca`.
-Il lavoro stilistico deve preservare il messaggio del progetto e la familiarità
-della versione precedente. Non aggiungere sezioni che ripetano le destinazioni
-del menu: niente modulo ricerca in Home, tendina Servizi, elenco dei servizi
-quotidiani o riquadro promozionale professionisti.
+Luigi ha approvato i pulsanti superiori, poi richiesto di unificare Servizi e
+Trova aiuto per il cane. La navigazione principale contiene solo **Trova aiuto
+per il cane** (verde, `/search?type=trainer`), **Impara** e **Sport cinofili**.
+Account e ingresso professionisti restano nelle utilità del menu.
+Nessuna scelta preliminare tra quotidiano e sport per il normale proprietario.
 
-Usare gerarchia tipografica, spazi, colore e allineamenti. Niente nuovi strumenti
-come pretesto per una revisione grafica. Gli approfondimenti restano nelle
-rispettive pagine; evitare Evidence layer e statistiche interposte agli ingressi.
-Sport è riconoscibile nel menu e resta facoltativo. Il normale proprietario arriva
-subito alla ricerca per gestione quotidiana, senza passaggi intermedi.
-Prima del cane può avere un solo richiamo nella Home perché non duplica il menu.
+La Home deve essere visivamente moderna e legata al cane e all’addestramento:
+immagini pertinenti, brevi video o animazioni, gerarchia tipografica forte e
+movimento leggero. Media compressi, caricamento del video su richiesta, pausa
+del movimento e rispetto di prefers-reduced-motion. Distinguere una scena
+illustrativa dalle riprese e dalle testimonianze di persone reali.
+
+Non aggiungere sezioni che ripetano il menu: niente modulo ricerca in Home,
+tendina Servizi, elenco dei servizi quotidiani o riquadro promozionale
+professionisti. Evitare Evidence layer e statistiche interposte agli ingressi.
+Prima del cane può mantenere un solo richiamo perché non duplica il menu.
+L’anteprima dello shaping è un esempio facoltativo collegato alla lezione
+esistente, non un passaggio necessario per cercare un professionista.
 Specifica e stato: [HOME_NAVIGATION_V2.md](HOME_NAVIGATION_V2.md).

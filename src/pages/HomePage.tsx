@@ -1,15 +1,9 @@
 import { useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { RouteLink } from '../components/RouteLink';
+import { HomeVisual } from '../components/home/HomeVisual';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
-
-const everydayNeeds = [
-  ['Tempo', 'Presenza e attenzione, ogni giorno.'],
-  ['Equilibrio', 'Riposo, movimento e attività adatte.'],
-  ['Comunicazione', 'Imparare a leggere ciò che esprime.'],
-  ['Ambiente', 'Una vita compatibile con i suoi bisogni.'],
-];
 
 function PublicHomePage() {
   return (
@@ -17,27 +11,12 @@ function PublicHomePage() {
       <section className="pc-home-editorial pc-entry-container" aria-labelledby="home-title">
         <div className="pc-home-story">
           <p className="pc-home-eyebrow"><span aria-hidden="true" /> PortaleCinofilo · Italia</p>
-          <h1 id="home-title">Conosci meglio<br /><em>il cane.</em></h1>
+          <h1 id="home-title">Conosci<br /> meglio <em>il cane.</em></h1>
           <p className="pc-home-purpose">Costruisci un binomio più consapevole.</p>
           <p className="pc-home-intro">Dalla scelta alla vita quotidiana, PortaleCinofilo ti aiuta a capire bisogni e comportamento, trovare professionisti competenti e costruire con loro un percorso che continui nel tempo.</p>
           <p className="pc-home-access">Cultura cinofila di base gratuita, aperta a tutti.</p>
         </div>
-        <aside className="pc-home-notebook" aria-labelledby="home-everyday-title">
-          <div className="pc-home-notebook-heading">
-            <span className="pc-home-notebook-mark" aria-hidden="true">PC</span>
-            <p>La vita insieme<br /><strong>parte da qui.</strong></p>
-          </div>
-          <h2 id="home-everyday-title" className="sr-only">Conoscere il cane nella vita quotidiana</h2>
-          <ol>
-            {everydayNeeds.map(([title, description], index) => (
-              <li key={title}>
-                <span className="pc-home-index" aria-hidden="true">0{index + 1}</span>
-                <div><h3>{title}</h3><p>{description}</p></div>
-              </li>
-            ))}
-          </ol>
-          <p className="pc-home-notebook-foot">Ogni cane è un individuo. Il percorso si costruisce sul vostro binomio.</p>
-        </aside>
+        <HomeVisual />
       </section>
 
       <section className="pc-home-principles pc-entry-container" aria-label="Il percorso di conoscenza">

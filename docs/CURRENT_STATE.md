@@ -1,14 +1,17 @@
 # CURRENT STATE — PawConnect / Portalecinofilo
 
-## Correzione Home dopo il feedback — 28 settembre 2026
+## Home con media e navigazione unificata — 29 settembre 2026
 
-Base: `c5285ca`, confermata su origin/main. Approvati solo i pulsanti superiori
-del precedente incremento. La nuova correzione elimina moduli, tendine e blocchi
-che duplicavano il menu; riprende il messaggio precedente e ne rifinisce lo stile.
-Specifica corrente: [HOME_NAVIGATION_V2.md](HOME_NAVIGATION_V2.md). Le descrizioni precedenti della Home
-sono storiche. Preparazione locale verificata; pubblicazione di questa correzione
-ancora da registrare. Nessuna migrazione o modifica al database.
-
+Base GitHub esaminata: `c75d0c1`. Luigi ha chiesto di eliminare la voce Servizi
+perché duplicava Trova aiuto per il cane: resta il pulsante verde che apre
+subito `/search?type=trainer`. Impara e Sport cinofili rimangono separati.
+La Home usa un’immagine illustrativa compressa, tipografia sans più netta,
+movimento disattivabile e una breve animazione dello shaping aperta su richiesta.
+Specifica corrente: [HOME_NAVIGATION_V2.md](HOME_NAVIGATION_V2.md).
+Provenienza dei media: [HOME_MEDIA_ASSETS.md](HOME_MEDIA_ASSETS.md).
+Verifiche locali frontend; nessuna migrazione necessaria. Pubblicazione di
+questo incremento ancora da registrare con commit e deployment Vercel Ready.
+Le descrizioni precedenti della Home sono storiche.
 
 ## Checkpoint UI manuale — 28 settembre 2026
 
