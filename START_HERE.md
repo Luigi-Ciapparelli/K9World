@@ -1,5 +1,16 @@
 # START HERE — PawConnect / Portalecinofilo
 
+## Primo contatto proprietario/professionista — 29 settembre 2026
+
+Base GitHub verificata: `4c951a9` (recupero password già su main).
+Corretto il rientro alla richiesta dopo accesso/registrazione: si conserva
+soltanto il profilo pubblico scelto, con destinazione limitata a `/p/UUID`.
+L'invio della richiesta resta un'azione esplicita del proprietario.
+Aggiunto Aggiorna richieste nell'elenco professionale.
+Specifica e limiti del collaudo: [BOOKING_ENTRY_V1.md](docs/BOOKING_ENTRY_V1.md).
+Questo incremento frontend resta da pubblicare; nessuna migration.
+Consegna email e collaudo privato online restano da confermare.
+
 ## Recupero password — 29 settembre 2026
 
 Base GitHub verificata: `e999041`; le correzioni di ingresso professionisti

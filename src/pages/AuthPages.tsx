@@ -4,6 +4,7 @@ import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
 import type { ProfessionalType, Role } from '../lib/types';
 import { loadFciBreeds, normalizeBreedSearch, type FciBreed } from '../lib/fciBreeds';
+import { bookingAuthPath, bookingDestination } from '../lib/bookingEntry';
 
 export function SignInPage() {
   const [email, setEmail] = useState('');
@@ -11,7 +12,8 @@ export function SignInPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
-  const { navigate } = useRouter();
+  const { navigate, path } = useRouter();
+  const destination = bookingDestination(path);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +25,7 @@ export function SignInPage() {
         setError(error);
         return;
       }
-      navigate(role === 'admin' ? '/admin' : role === 'professional' ? '/pro' : '/owner');
+      navigate(role === 'admin' ? '/admin' : role === 'professional' ? '/pro' : destination || '/owner');
     } catch {
       setError('Accesso non riuscito. Controlla la connessione e riprova.');
     } finally {
@@ -32,7 +34,7 @@ export function SignInPage() {
   };
 
   return (
-    <AuthFrame title="Bentornato" subtitle="Accedi al tuo account PortaleCinofilo">
+    <AuthFrame title="Bentornato" subtitle={destination ? 'Accedi per continuare la richiesta al professionista scelto.' : 'Accedi al tuo account PortaleCinofilo'}>
       <form onSubmit={submit} className="space-y-4">
         <Field icon={<Mail className="w-4 h-4" />} type="email" placeholder="Email" value={email} onChange={setEmail} autoComplete="username" required />
         <Field icon={<Lock className="w-4 h-4" />} type="password" placeholder="Password" value={password} onChange={setPassword} autoComplete="current-password" required />
@@ -42,7 +44,7 @@ export function SignInPage() {
           {loading ? 'Accesso...' : 'Accedi'}
         </button>
         <p className="text-sm text-stone-600 text-center">
-          Non hai un account? <button type="button" onClick={() => navigate('/signup')} className="text-emerald-700 font-semibold">Registrati</button>
+          Non hai un account? <button type="button" onClick={() => navigate(bookingAuthPath('signup', destination))} className="text-emerald-700 font-semibold">Registrati</button>
         </p>
       </form>
     </AuthFrame>
@@ -70,7 +72,8 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signUp } = useAuth();
-  const { navigate } = useRouter();
+  const { navigate, path } = useRouter();
+  const destination = bookingDestination(path);
 
   useEffect(() => {
     loadFciBreeds()
@@ -157,11 +160,11 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
 
       if (needsEmailConfirmation) {
         alert('Account creato. Controlla la tua email per confermare l’indirizzo, poi accedi a PortaleCinofilo.');
-        navigate('/signin');
+        navigate(bookingAuthPath('signin', role === 'owner' ? destination : null));
         return;
       }
 
-      navigate(role === 'professional' ? '/pro/settings' : '/owner');
+      navigate(role === 'professional' ? '/pro/settings' : destination || '/owner');
     } catch {
       setError('Registrazione non confermata. Controlla la connessione e riprova. Se hai già ricevuto l’email di conferma, usa Accedi.');
     } finally {
@@ -179,7 +182,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
             Continua
           </button>
           <p className="text-sm text-stone-600 text-center">
-            Hai già un account? <button type="button" onClick={() => navigate('/signin')} className="text-emerald-700 font-semibold">Accedi</button>
+            Hai già un account? <button type="button" onClick={() => navigate(bookingAuthPath('signin', destination))} className="text-emerald-700 font-semibold">Accedi</button>
           </p>
         </div>
       </AuthFrame>

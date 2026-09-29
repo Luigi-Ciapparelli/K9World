@@ -18,6 +18,7 @@ import { PublicBookingAvailability } from '../components/PublicBookingAvailabili
 import { bookingAvailabilityError } from '../lib/professionalCalendar';
 import { readJourneyContext } from '../lib/journeyContext';
 import { readBrowserRoute } from '../lib/routeUrls';
+import { bookingAuthPath } from '../lib/bookingEntry';
 import { JourneyContextNotice } from '../components/ecosystem/ProfessionalBridge';
 
 // ECOSYSTEM_PASS_V1
@@ -35,6 +36,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
   const [reviewsError, setReviewsError] = useState(false);
   const [dogsLoadError, setDogsLoadError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
+  const resumedBooking = useRef('');
 
   const { user, profile } = useAuth();
   const { navigate } = useRouter();
@@ -121,6 +123,14 @@ export function ProfessionalProfile({ id }: { id: string }) {
   }, [id, user?.id, profile?.role, reloadKey]);
 
   useEffect(() => {
+    const key = `${id}:${user?.id}`;
+    if (new URLSearchParams(profileQuery).get('booking') !== '1' || !user || profile?.role !== 'owner'
+      || loadingProfile || profileError || servicesError || dogsLoadError || pro?.id !== id || !services.length || resumedBooking.current === key) return;
+    resumedBooking.current = key;
+    setShowBook(true);
+  }, [id, user, profile?.role, profileQuery, loadingProfile, profileError, servicesError, dogsLoadError, pro, services.length]);
+
+  useEffect(() => {
     if (loadingProfile) return;
     let active = true;
     void import('../seo/metadata').then(({ applyPageMetadata, pageMetadata }) => {
@@ -198,7 +208,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
   const isVerified = !!profile?.email_verified;
 
   const onBookClick = () => {
-    if (!user) return navigate('/signin');
+    if (!user) return navigate(bookingAuthPath('signin', `/p/${id}?booking=1`));
     if (profile?.role !== 'owner' || servicesError || dogsLoadError || !services.length) return;
     setShowBook(true);
   };

@@ -116,7 +116,8 @@ correggere gli ostacoli ricorrenti prima di allargare gli inviti.
 ## Esito online da completare dopo il rilascio
 
 - Correzioni ingresso professionisti presenti su GitHub main: `e999041`.
-- Recupero password: nuovo incremento da pubblicare; deployment da registrare.
+- Recupero password presente su GitHub main: `4c951a9`; consegna email reale da confermare.
+- Rientro alla prenotazione e prova browser completa: BOOKING_ENTRY_V1.md; nuovo incremento da pubblicare.
 - Nuova iscrizione e conferma email reali: da registrare.
 - Prima richiesta, risposta e calendario reali: da registrare.
 - Contenuti dei profili scelti per gli inviti: da rivedere con i titolari.

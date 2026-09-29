@@ -103,7 +103,10 @@ export function ProBookings() {
     <ProLayout active="bookings">
       <div className="px-4 sm:px-6 py-8 max-w-6xl mx-auto text-[var(--pc-ink-950)]">
         <p className="pc-kicker">La tua attività</p>
-        <h1 className="pc-display text-3xl sm:text-4xl font-semibold mt-2">Richieste e prenotazioni</h1>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="pc-display text-3xl sm:text-4xl font-semibold mt-2">Richieste e prenotazioni</h1>
+          <button type="button" disabled={loading || busyId !== null} onClick={reload} className="text-sm font-semibold underline disabled:opacity-50">Aggiorna richieste</button>
+        </div>
         <p className="text-[var(--pc-muted-600)] mt-3 mb-6">Prima le richieste in attesa, poi gli appuntamenti accettati e lo storico. In ogni gruppo, le date più vicine all’inizio dell’elenco.</p>
 
         <div aria-label="Filtra per stato" className="flex flex-wrap gap-2 mb-4">

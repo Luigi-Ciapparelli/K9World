@@ -144,7 +144,8 @@ function AppShell() {
     ? new URLSearchParams(path.split('?')[1])
     : new URLSearchParams();
 
-  const signupRole = queryParams.get('role') === 'professional' ? 'professional' : undefined;
+  const signupRole = queryParams.get('role') === 'professional' ? 'professional'
+    : queryParams.get('role') === 'owner' ? 'owner' : undefined;
 
   const isAdminRoute = basePath === '/admin' || basePath.startsWith('/admin/');
   const isProRoute = basePath === '/pro' || basePath.startsWith('/pro/');
