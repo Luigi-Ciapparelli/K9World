@@ -7,15 +7,15 @@ import {
   PawPrint,
   ShieldCheck,
 } from 'lucide-react';
-import { loadFciBreeds } from '../lib/fciBreeds';
+import { loadFciBreeds, type FciBreed } from '../lib/fciBreeds';
+import { RouteLink } from '../components/RouteLink';
 import { FCI_GROUP_CONTENT } from '../lib/fciGroups';
 import { useRouter } from '../lib/RouterContext';
 
-export function BreedPage({ slug }: { slug: string }) {
-  type FciBreed = Awaited<ReturnType<typeof loadFciBreeds>>[number];
+export function BreedPage({ slug, initialBreed }: { slug: string; initialBreed?: FciBreed }) {
   const { navigate } = useRouter();
-  const [breed, setBreed] = useState<FciBreed | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [breed, setBreed] = useState<FciBreed | null>(initialBreed || null);
+  const [loading, setLoading] = useState(!initialBreed);
 
   useEffect(() => {
     loadFciBreeds()
@@ -84,14 +84,13 @@ export function BreedPage({ slug }: { slug: string }) {
               <h1 className="text-3xl md:text-5xl font-bold text-stone-900 mt-1 tracking-tight">
                 {breed.name}
               </h1>
-              <button
-                type="button"
-                onClick={() => navigate(`/gruppi-fci/${breed.fciGroup}`)}
+              <RouteLink
+                to={`/gruppi-fci/${breed.fciGroup}`}
                 className="inline-flex items-center gap-2 text-stone-600 hover:text-emerald-700 mt-3"
               >
                 Gruppo FCI {breed.fciGroup} · {breed.fciGroupName}
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </RouteLink>
             </div>
           </div>
 

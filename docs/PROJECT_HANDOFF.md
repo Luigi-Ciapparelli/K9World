@@ -1,5 +1,16 @@
 # PawConnect / Portalecinofilo — Project Handoff
 
+## SEO e accessibilità ai motori — 29 settembre 2026
+
+Base GitHub verificata: `5bfe88b`; il precedente profilo guidato è già su main.
+URL pubblici senza hash, HTML generato dagli stessi componenti React, 395
+pagine pubbliche (391 nella sitemap), titoli e descrizioni specifici, dati
+strutturati, robots.txt e 404. Link privati e frammenti Auth compatibili.
+Specifica, limiti e istruzioni Search Console: [SEO_VISIBILITY_V1.md](SEO_VISIBILITY_V1.md).
+Nessuna migrazione o accesso al database online. Test frontend e browser
+isolati; pubblicazione di questo incremento e Vercel Ready da confermare.
+I checkpoint sottostanti descrivono momenti precedenti.
+
 ## Profilo e strumenti professionali guidati — 29 settembre 2026
 
 Base corrente GitHub: `b512eb9`, comprensiva della Home con media richiesta da Luigi.

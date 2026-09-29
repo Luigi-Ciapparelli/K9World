@@ -81,6 +81,7 @@ let memory: LearningProgress | undefined;
 let available = true;
 export const storageAvailable = () => available;
 export function readProgress(): LearningProgress {
+  if (typeof window === 'undefined') return emptyProgress();
   try {
     if (!available && memory) return memory;
     const saved = window.localStorage.getItem(PROGRESS_KEY);

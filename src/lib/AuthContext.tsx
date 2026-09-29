@@ -35,7 +35,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(typeof window !== 'undefined');
 
   const loadProfile = async (userId: string): Promise<Profile | null> => {
     const { data, error } = await supabase

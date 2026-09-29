@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/services", "destination": "/search?type=trainer", "permanent": true },
+    { "source": "/become-a-pro", "destination": "/become-pro", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/p/:id", "destination": "/profile-shell" },
+    { "source": "/pro/:path*", "destination": "/app-shell" },
+    { "source": "/owner/:path*", "destination": "/app-shell" },
+    { "source": "/admin/:path*", "destination": "/app-shell" },
+    { "source": "/signin", "destination": "/app-shell" },
+    { "source": "/signup", "destination": "/app-shell" }
+  ],
+  "headers": [
+    { "source": "/pro/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
+    { "source": "/owner/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
+    { "source": "/admin/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
+    { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+  ]
+}

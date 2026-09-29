@@ -9,17 +9,17 @@ import {
   ArrowRight,
   Search,
 } from 'lucide-react';
-import { loadFciBreeds } from '../lib/fciBreeds';
+import { loadFciBreeds, type FciBreed } from '../lib/fciBreeds';
+import { RouteLink } from '../components/RouteLink';
 import { FCI_GROUP_CONTENT } from '../lib/fciGroups';
 import { useRouter } from '../lib/RouterContext';
 
-export function FciGroupPage({ group }: { group: number }) {
+export function FciGroupPage({ group, initialBreeds }: { group: number; initialBreeds?: FciBreed[] }) {
   const { navigate } = useRouter();
-  const [groupName, setGroupName] = useState('');
-  type FciBreed = Awaited<ReturnType<typeof loadFciBreeds>>[number];
-  const [breeds, setBreeds] = useState<FciBreed[]>([]);
+  const [groupName, setGroupName] = useState(initialBreeds?.[0]?.fciGroupName || '');
+  const [breeds, setBreeds] = useState<FciBreed[]>(initialBreeds || []);
   const [breedQuery, setBreedQuery] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialBreeds);
 
   const content = FCI_GROUP_CONTENT[group];
 
@@ -171,10 +171,9 @@ export function FciGroupPage({ group }: { group: number }) {
 
           <div className="mt-5 grid md:grid-cols-2 gap-3">
             {filteredBreeds.map((breed) => (
-              <button
+              <RouteLink
                 key={breed.slug}
-                type="button"
-                onClick={() => navigate(`/razze/${breed.slug}`)}
+                to={`/razze/${breed.slug}`}
                 className="group flex items-center justify-between gap-4 text-left rounded-2xl border border-stone-200 p-4 hover:border-emerald-300 hover:bg-emerald-50/40 transition"
               >
                 <div>
@@ -184,7 +183,7 @@ export function FciGroupPage({ group }: { group: number }) {
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 shrink-0 text-stone-400 group-hover:text-emerald-700 group-hover:translate-x-1 transition" />
-              </button>
+              </RouteLink>
             ))}
           </div>
 

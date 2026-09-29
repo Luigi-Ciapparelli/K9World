@@ -21,6 +21,7 @@ function applyTheme(theme: ThemeMode) {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeMode>(() => {
+    if (typeof window === 'undefined') return 'system';
     const saved = localStorage.getItem('pawconnect-theme');
 
     if (saved === 'light' || saved === 'dark' || saved === 'system') {

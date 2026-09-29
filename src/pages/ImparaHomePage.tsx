@@ -3,6 +3,7 @@ import { ArrowRight, BookOpen, Check, Clock3, Download, Leaf, NotebookPen, Searc
 import { STAGE_1_LESSONS, STAGE_1_MODULES } from '../lib/imparaContent';
 import { downloadText, emptyProgress, lessonStatus, normalizeProgress, notebookText } from '../lib/imparaProgress';
 import { useImparaProgress } from '../lib/useImparaProgress';
+import { RouteLink } from '../components/RouteLink';
 import { useRouter } from '../lib/RouterContext';
 import '../impara.css';
 
@@ -60,11 +61,11 @@ export function ImparaHomePage() {
           const lessons=matches.filter(l=>l.moduleId===module.id);if(!lessons.length)return null;
           return <section className="im-module" key={module.id} aria-labelledby={`module-${module.id}`}>
             <div className="im-module-title"><span className="im-number">0{module.order}</span><div><h3 id={`module-${module.id}`}>{module.title}</h3><p>{module.description}</p></div></div>
-            <div className="im-lessons-grid">{lessons.map(l=>{const status=lessonStatus(l,progress);return <button key={l.slug} className={`im-lesson-card ${status.complete?'complete':''}`} onClick={()=>go(l.slug)}>
+            <div className="im-lessons-grid">{lessons.map(l=>{const status=lessonStatus(l,progress);return <RouteLink to={`/impara/stage-1/${l.slug}`} key={l.slug} className={`im-lesson-card ${status.complete?'complete':''}`} >
               <div className="im-card-top"><span className="im-eyebrow">LEZIONE {String(l.order).padStart(2,'0')}</span><span className={`im-status ${status.complete?'done':''}`}>{status.complete?<><Check size={14}/>Completata</>:status.started?'In corso':'Da iniziare'}</span></div>
               <h4>{l.title}</h4><p>{l.summary}</p>
               <div className="im-card-bottom"><span><Clock3 size={15}/>{l.durationMinutes} min + pratica</span><span>{status.complete?'Ripassa':'Apri lezione'}<ArrowRight size={17}/></span></div>
-            </button>;})}</div>
+            </RouteLink>;})}</div>
           </section>;
         })}
       </section>

@@ -45,7 +45,7 @@ function ShapingPreview({ onClose, reducedMotion }: { onClose: () => void; reduc
 
 export function HomeVisual() {
   const previewButtonRef = useRef<HTMLButtonElement>(null);
-  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [reducedMotion, setReducedMotion] = useState(() => typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [paused, setPaused] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
 

@@ -17,6 +17,7 @@ import { VerificationModal } from '../components/VerificationModal';
 import { PublicBookingAvailability } from '../components/PublicBookingAvailability';
 import { bookingAvailabilityError } from '../lib/professionalCalendar';
 import { readJourneyContext } from '../lib/journeyContext';
+import { readBrowserRoute } from '../lib/routeUrls';
 import { JourneyContextNotice } from '../components/ecosystem/ProfessionalBridge';
 
 // ECOSYSTEM_PASS_V1
@@ -39,7 +40,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
   const { navigate } = useRouter();
 
   const journey = readJourneyContext();
-  const profileQuery = window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '';
+  const profileQuery = readBrowserRoute().split('?')[1] || '';
   const searchBase = new URLSearchParams(profileQuery).get('context') === 'sport' ? '/sport' : '/search';
   const returnToSearch = profileQuery ? `${searchBase}?${profileQuery}` : searchBase;
   useEffect(() => {
@@ -118,6 +119,18 @@ export function ProfessionalProfile({ id }: { id: string }) {
     void load();
     return () => { active = false; };
   }, [id, user?.id, profile?.role, reloadKey]);
+
+  useEffect(() => {
+    if (loadingProfile) return;
+    let active = true;
+    void import('../seo/metadata').then(({ applyPageMetadata, pageMetadata }) => {
+      if (!active) return;
+      const page = pageMetadata(`/p/${id}`);
+      if (!pro || profileError) applyPageMetadata({ ...page, title: 'Profilo non disponibile | PortaleCinofilo', index: false });
+      else if (pro.id === id) applyPageMetadata({ ...page, title: `${pro.display_name}${pro.zone_text ? ` · ${pro.zone_text}` : ''} | PortaleCinofilo`, description: String(pro.bio || `Profilo, servizi e competenze di ${pro.display_name} su PortaleCinofilo.`).slice(0, 180) });
+    });
+    return () => { active = false; };
+  }, [id, pro, profileError, loadingProfile]);
 
   if (loadingProfile) {
     return (

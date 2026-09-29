@@ -1,3 +1,4 @@
+import { readBrowserRoute } from './routeUrls';
 export type JourneySource = 'home' | 'impara' | 'before-dog' | 'breed' | 'search';
 
 export type JourneyContext = {
@@ -13,7 +14,7 @@ function clean(value: string | null, maxLength = 80): string | undefined {
   return normalized || undefined;
 }
 
-export function readJourneyContext(hash = window.location.hash): JourneyContext {
+export function readJourneyContext(hash = readBrowserRoute()): JourneyContext {
   const query = hash.includes('?') ? hash.split('?')[1] : '';
   const params = new URLSearchParams(query);
   const rawSource = clean(params.get('source'), 32);

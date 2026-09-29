@@ -1,5 +1,6 @@
 import type { AnchorHTMLAttributes, MouseEvent } from 'react';
 import { useRouter } from '../lib/RouterContext';
+import { routeHref } from '../lib/routeUrls';
 
 type Props = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & { to: string };
 
@@ -12,5 +13,5 @@ export function RouteLink({ to, onClick, ...props }: Props) {
     event.preventDefault();
     navigate(to);
   };
-  return <a {...props} href={`#${to}`} onClick={follow} />;
+  return <a {...props} href={routeHref(to)} onClick={follow} />;
 }

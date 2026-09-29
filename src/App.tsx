@@ -6,6 +6,8 @@ import { Chatbot } from './components/Chatbot';
 import { Footer } from './components/Footer';
 import { continuityEnabled } from './lib/continuity';
 import { ThemeProvider } from './lib/ThemeContext';
+import { PageMetadata } from './components/PageMetadata';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 const HomePage = lazy(() =>
   import('./pages/HomePage').then((module) => ({ default: module.HomePage }))
@@ -232,7 +234,7 @@ function AppShell() {
   else if (basePath === '/pro/crm') content = <ProCRM />;
   else if (basePath === '/pro/analytics') content = <ProAnalytics />;
   else if (basePath === '/pro/settings') content = <ProSettings />;
-  else content = <HomePage />;
+  else content = <NotFoundPage />;
 
   const showFooter =
     !basePath.startsWith('/owner') &&
@@ -262,6 +264,7 @@ function App() {
     <AuthProvider>
   <ThemeProvider>
     <RouterProvider>
+      <PageMetadata />
       <AppShell />
     </RouterProvider>
   </ThemeProvider>

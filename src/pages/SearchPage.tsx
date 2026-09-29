@@ -18,6 +18,7 @@ import { useRouter } from '../lib/RouterContext';
 import { SearchCard } from '../components/SearchCard';
 import { findSupportedCity } from '../lib/locations';
 import { SERVICE_CATEGORIES } from '../lib/serviceCategories';
+import { RouteLink } from '../components/RouteLink';
 import { readJourneyContext } from '../lib/journeyContext';
 import { JourneyContextNotice } from '../components/ecosystem/ProfessionalBridge';
 
@@ -112,7 +113,7 @@ function initials(name: string): string {
 
 // ECOSYSTEM_PASS_V1
 export function SearchPage({ sport = false }: { sport?: boolean }) {
-  const { path, navigate } = useRouter();
+  const { path } = useRouter();
   const [pros, setPros] = useState<ProResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [maxPrice, setMaxPrice] = useState(200);
@@ -663,14 +664,13 @@ export function SearchPage({ sport = false }: { sport?: boolean }) {
                                 </p>
                               </div>
 
-                              <button
-                                type="button"
-                                onClick={() => { const params = new URLSearchParams(qs); if (sport) params.set('context', 'sport'); else params.delete('context'); navigate('/p/' + pro.id + (params.toString() ? `?${params}` : '')); }}
+                              <RouteLink
+                                to={(() => { const params = new URLSearchParams(qs); if (sport) params.set('context', 'sport'); else params.delete('context'); return '/p/' + pro.id + (params.toString() ? `?${params}` : ''); })()}
                                 className="pc-btn pc-btn-primary w-full sm:w-auto lg:w-full justify-center group/cta"
                               >
                                 Vedi profilo e competenze
                                 <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/cta:translate-x-1" />
-                              </button>
+                              </RouteLink>
                             </div>
                           </div>
                         </div>

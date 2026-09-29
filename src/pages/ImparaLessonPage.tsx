@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2, Clock3, Download,
 import { STAGE_1_LESSONS, getStage1Lesson, type ImparaActivity, type ImparaLesson } from '../lib/imparaContent';
 import { downloadText, labPassed, learningKey, lessonStatus, notebookText, passScore, scoreQuiz, type ActivityDraft } from '../lib/imparaProgress';
 import { useImparaProgress } from '../lib/useImparaProgress';
+import { RouteLink } from '../components/RouteLink';
 import { useRouter } from '../lib/RouterContext';
 import { TimingLab } from '../components/impara/TimingLab';
 import '../impara.css';
@@ -43,7 +44,7 @@ function Lesson({lesson}:{lesson:ImparaLesson}) {
           <nav className="im-tabs" aria-label="Passaggi della lezione">{tabs.map((item,i)=><button key={item.id} aria-current={tab===item.id?'step':undefined} className={tab===item.id?'active':''} onClick={()=>switchTab(item.id)}><span>{item.done?<Check size={15}/>:i+1}</span>{item.label}</button>)}</nav>
           {tab==='read' && <section aria-label="Lettura">
             {lesson.sublessons.map((sub,i)=>{const key=learningKey(lesson.slug,sub.id);const read=progress.studied.includes(key);return <article className="im-reading" key={sub.id}><p className="im-eyebrow">{i+1} / {lesson.sublessons.length}</p><h2>{sub.title}</h2>{sub.paragraphs.map(p=><p key={p}>{p}</p>)}<div className="im-example"><span className="im-eyebrow">NELLA VITA QUOTIDIANA</span><p>{sub.example}</p></div><p className="im-prompt"><strong>Fermati un momento.</strong> {sub.tryThis}</p><button className={`im-read-button ${read?'done':''}`} aria-pressed={read} onClick={()=>update(p=>({...p,studied:read?p.studied.filter(k=>k!==key):[...p.studied,key]}))}><CheckCircle2 size={18}/>{read?'Lettura completata':'Ho letto questa parte'}</button></article>;})}
-            <div className="im-panel im-sources"><h3>Per approfondire</h3><p>Riferimenti di supporto, in lingua originale. Gli esempi e le attività sono elaborati da PortaleCinofilo.</p>{lesson.sources.map(s=><a key={s.url} href={s.url} target="_blank" rel="noreferrer">{s.label}<ExternalLink size={14}/></a>)}{lesson.links?.map(link=><button className="im-link" key={link.path} onClick={()=>navigate(link.path)}>{link.label}<ArrowRight size={15}/></button>)}</div>
+            <div className="im-panel im-sources"><h3>Per approfondire</h3><p>Riferimenti di supporto, in lingua originale. Gli esempi e le attività sono elaborati da PortaleCinofilo.</p>{lesson.sources.map(s=><a key={s.url} href={s.url} target="_blank" rel="noreferrer">{s.label}<ExternalLink size={14}/></a>)}{lesson.links?.map(link=><RouteLink className="im-link" key={link.path} to={link.path}>{link.label}<ArrowRight size={15}/></RouteLink>)}</div>
             <div className="im-step-end"><span>{readingsDone?'Lettura completata. Ora prova ad applicarla.':`${lesson.sublessons.length-status.studied} parti ancora da segnare come lette.`}</span><button className="im-button" onClick={()=>switchTab('practice')}>Passa alla pratica<ArrowRight size={17}/></button></div>
           </section>}
           {tab==='practice' && <section aria-label="Attività pratiche"><div className="im-panel im-practice-intro"><p className="im-eyebrow">IL TUO QUADERNO</p><h2>Osserva. Scrivi. Scegli un passo.</h2><p>Usa una situazione quotidiana tranquilla. Se non hai ancora un cane, lavora sul caso qui sotto e indicalo nei tuoi appunti. Non provocare una reazione per completare l’esercizio.</p><details><summary>{lesson.caseStudy.title}</summary><p>{lesson.caseStudy.text}</p></details><p className="im-small">Gli appunti vengono salvati solo in questo browser. Evita dati personali che non servono all’osservazione.</p></div>
@@ -64,7 +65,7 @@ function Lesson({lesson}:{lesson:ImparaLesson}) {
             </form>}
             <p className="im-small">Questa autoverifica non conferisce una qualifica né certifica competenze pratiche.</p>
           </section>}
-          <div className="im-lesson-navigation"><button className="im-link" onClick={()=>lesson.order>1?navigate(`/impara/stage-1/${STAGE_1_LESSONS[lesson.order-2].slug}`):navigate('/impara')}><ArrowLeft size={16}/>{lesson.order>1?'Lezione precedente':'Il percorso'}</button>{next?<button className="im-link" onClick={()=>navigate(`/impara/stage-1/${next.slug}`)}>Lezione successiva<ArrowRight size={16}/></button>:<button className="im-link" onClick={()=>navigate('/impara')}>Riepilogo percorso<BookOpen size={16}/></button>}</div>
+          <div className="im-lesson-navigation"><button className="im-link" onClick={()=>lesson.order>1?navigate(`/impara/stage-1/${STAGE_1_LESSONS[lesson.order-2].slug}`):navigate('/impara')}><ArrowLeft size={16}/>{lesson.order>1?'Lezione precedente':'Il percorso'}</button>{next?<RouteLink className="im-link" to={`/impara/stage-1/${next.slug}`}>Lezione successiva<ArrowRight size={16}/></RouteLink>:<button className="im-link" onClick={()=>navigate('/impara')}>Riepilogo percorso<BookOpen size={16}/></button>}</div>
         </div>
       </div>
     </div>
