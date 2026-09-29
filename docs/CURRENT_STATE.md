@@ -1,5 +1,15 @@
 # CURRENT STATE — PawConnect / Portalecinofilo
 
+## Recupero password — 29 settembre 2026
+
+Base GitHub verificata: `e999041`; le correzioni di ingresso professionisti
+sono già su main. Aggiunti richiesta email, nuova password e gestione link
+scaduti, con ripresa dopo ricarica e controllo dell'account prima del cambio.
+Nessuna migration. Configurazione Redirect URLs di Supabase e consegna email
+reale da verificare al rilascio: [PASSWORD_RECOVERY_V1.md](PASSWORD_RECOVERY_V1.md).
+Il collaudo automatico usa API simulate e non invia email. Questo incremento
+resta da pubblicare. I checkpoint sottostanti sono storici.
+
 ## Ingresso professionisti e prima beta accompagnata — 29 settembre 2026
 
 Base remota riletta: `0d113db` (`main`), dopo `2cfc932` (SEO) e

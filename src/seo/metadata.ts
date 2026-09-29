@@ -29,6 +29,7 @@ export const PUBLIC_PAGES = pages;
 const byPath = new Map(pages.map(page => [page.path, page]));
 export function pageMetadata(route: string): PageMeta {
   const [path, query = ''] = normalizeRoute(route).split('?');
+  if (path === '/forgot-password' || path === '/reset-password') return { path, title: `${path === '/forgot-password' ? 'Recupera la password' : 'Nuova password'} | PortaleCinofilo`, description: 'Recupera l’accesso al tuo account PortaleCinofilo.', index: false };
   if (privateRoute(path)) return { path, title: 'Area personale | PortaleCinofilo', description: 'Accedi alla tua area personale su PortaleCinofilo.', index: false };
   const known = byPath.get(path);
   if (known) {

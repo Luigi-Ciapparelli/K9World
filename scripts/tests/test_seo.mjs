@@ -60,7 +60,7 @@ try{
  const nojs=await browser.newContext({javaScriptEnabled:false});const staticPage=await nojs.newPage();await staticPage.goto(base+href);assert.ok(await staticPage.locator('h1').textContent());assert.ok(await staticPage.locator('a[href="/impara"]').count());await nojs.close();
  console.log('OK: vecchi link hash, URL puliti, ricarica, avanti/indietro, metadati, profilo pubblico, 404 e lettura senza JavaScript. API simulate.');
  // Shared router: reuse the existing meaningful profile-save and unsaved-draft regressions.
- for (const test of ['test_professional_guided_ui.mjs', 'test_professional_signup_ui.mjs']) {
+ for (const test of ['test_professional_guided_ui.mjs', 'test_professional_signup_ui.mjs', 'test_password_recovery_ui.mjs']) {
   await new Promise((resolve,reject)=>{const child=spawn(process.execPath,[`scripts/tests/${test}`],{stdio:'inherit',env:{...process.env,PC_TEST_BASE_URL:base,PC_SCREENSHOTS:''}});child.on('exit',code=>code===0?resolve():reject(new Error(`${test} failed`)));});
  }
 }finally{await browser?.close();await new Promise(resolve=>server.close(resolve));}

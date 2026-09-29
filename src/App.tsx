@@ -1,4 +1,4 @@
-import { lazy, Suspense, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, type ReactNode } from 'react';
 import { AuthProvider, useAuth } from './lib/AuthContext';
 import { RouterProvider, useRouter } from './lib/RouterContext';
 import { Navbar } from './components/Navbar';
@@ -8,6 +8,10 @@ import { continuityEnabled } from './lib/continuity';
 import { ThemeProvider } from './lib/ThemeContext';
 import { PageMetadata } from './components/PageMetadata';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { usePasswordRecovery } from './lib/passwordRecovery';
+
+const ForgotPasswordPage = lazy(() => import('./pages/PasswordRecoveryPages').then(module => ({ default: module.ForgotPasswordPage })));
+const ResetPasswordPage = lazy(() => import('./pages/PasswordRecoveryPages').then(module => ({ default: module.ResetPasswordPage })));
 
 const HomePage = lazy(() =>
   import('./pages/HomePage').then((module) => ({ default: module.HomePage }))
@@ -129,8 +133,13 @@ const ContinuityPage = lazy(() => import('./pages/continuity/ContinuityPage').th
 function AppShell() {
   const { path, navigate } = useRouter();
   const { user, profile, loading } = useAuth();
+  const recovery = usePasswordRecovery();
 
   const basePath = path.split('?')[0];
+  useEffect(() => {
+    // Leave the original callback URL untouched until Supabase has consumed it.
+    if ((recovery.status === 'ready' || recovery.status === 'invalid') && basePath !== '/reset-password') navigate('/reset-password');
+  }, [recovery.status, basePath, navigate]);
   const queryParams = path.includes('?')
     ? new URLSearchParams(path.split('?')[1])
     : new URLSearchParams();
@@ -148,6 +157,12 @@ function AppShell() {
       : profile?.role === 'professional'
         ? '/pro'
         : '/owner';
+
+  if (basePath === '/forgot-password' || basePath === '/reset-password' || recovery.status !== 'idle') {
+    return <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p role="status">Caricamento…</p></div>}>
+      {basePath === '/forgot-password' && recovery.status === 'idle' ? <ForgotPasswordPage /> : <ResetPasswordPage />}
+    </Suspense>;
+  }
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center bg-stone-50"><div className="text-stone-500">Loading...</div></div>;

@@ -36,6 +36,7 @@ export function SignInPage() {
       <form onSubmit={submit} className="space-y-4">
         <Field icon={<Mail className="w-4 h-4" />} type="email" placeholder="Email" value={email} onChange={setEmail} autoComplete="username" required />
         <Field icon={<Lock className="w-4 h-4" />} type="password" placeholder="Password" value={password} onChange={setPassword} autoComplete="current-password" required />
+        <button type="button" onClick={() => navigate('/forgot-password')} className="text-sm font-semibold text-emerald-700 underline underline-offset-4">Password dimenticata?</button>
         {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}
         <button disabled={loading} className="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition disabled:opacity-50">
           {loading ? 'Accesso...' : 'Accedi'}
@@ -401,7 +402,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
   );
 }
 
-function AuthFrame({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
+export function AuthFrame({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-6 py-12 bg-stone-50">
       <div className="max-w-md w-full">

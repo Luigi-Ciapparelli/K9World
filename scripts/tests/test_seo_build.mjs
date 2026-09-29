@@ -25,4 +25,12 @@ const impara=await fs.readFile(path.join(dist,'impara.html'),'utf8');assert.ok((
 for(const name of ['privacy','terms','cookies','professional-terms','404','app-shell']) assert.match(await fs.readFile(path.join(dist,`${name}.html`),'utf8'),/noindex/);
 assert.match(await fs.readFile(path.join(dist,'robots.txt'),'utf8'),/Sitemap: https:\/\/www.portalecinofilo.com\/sitemap.xml/);
 assert.ok(!config.rewrites.some(rule=>rule.source==='/(.*)' || rule.source==='/:path*'),'Unknown paths must remain 404');
+for (const route of ['/forgot-password', '/reset-password']) {
+ assert.ok(!urls.some(url=>new URL(url).pathname===route));
+ assert.ok(config.rewrites.some(rule=>rule.source===route && rule.destination==='/app-shell'));
+ const headers=config.headers.find(rule=>rule.source===route)?.headers;
+ assert.ok(headers?.some(h=>h.key==='X-Robots-Tag' && h.value==='noindex, nofollow'));
+ assert.ok(headers?.some(h=>h.key==='Cache-Control' && h.value==='no-store'));
+ assert.ok(headers?.some(h=>h.key==='Referrer-Policy' && h.value==='no-referrer'));
+}
 console.log(`OK: ${urls.length} URL canonici, HTML con contenuto, otto lezioni, JSON-LD, link, sitemap ed esclusione delle aree personali.`);

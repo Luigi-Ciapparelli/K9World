@@ -99,9 +99,9 @@ correggere gli ostacoli ricorrenti prima di allargare gli inviti.
 
 ## Limiti da non nascondere
 
-- Il recupero password autonomo non risulta implementato in AuthPages/App a
-  questa base. È il prossimo intervento sull'accesso, da completare prima di
-  un'apertura ampia. L'assistenza non deve mai chiedere la password.
+- Il recupero password è implementato nel successivo incremento descritto in
+  [PASSWORD_RECOVERY_V1.md](PASSWORD_RECOVERY_V1.md). Restano configurazione
+  del redirect, pubblicazione e prova email reale. Non chiedere password in chat.
 - Mancano in questa verifica le prove reali di consegna email e dei flussi
   privati/Storage: completare il breve collaudo sopra, non dichiararle superate.
 - Le strutture usano un account referente: non promettere accessi separati
@@ -115,7 +115,8 @@ correggere gli ostacoli ricorrenti prima di allargare gli inviti.
 
 ## Esito online da completare dopo il rilascio
 
-- Commit/deployment di queste correzioni: da registrare.
+- Correzioni ingresso professionisti presenti su GitHub main: `e999041`.
+- Recupero password: nuovo incremento da pubblicare; deployment da registrare.
 - Nuova iscrizione e conferma email reali: da registrare.
 - Prima richiesta, risposta e calendario reali: da registrare.
 - Contenuti dei profili scelti per gli inviti: da rivedere con i titolari.

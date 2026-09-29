@@ -13,7 +13,7 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  if (/^\/(?:api|pro|owner|admin|signin|signup|app-shell)(?:\/|\.|$)/.test(url.pathname)) return;
+  if (/^\/(?:api|pro|owner|admin|signin|signup|forgot-password|reset-password|app-shell)(?:\/|\.|$)/.test(url.pathname)) return;
   if (request.mode === 'navigate') {
     event.respondWith(fetch(request).catch(async () => (await caches.match('/offline.html')) || new Response('Sei offline.', { status: 503 })));
     return;
