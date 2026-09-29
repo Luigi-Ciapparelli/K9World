@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useUnsavedChanges } from '../lib/RouterContext';
 import { supabase } from '../lib/supabase';
 import { useSportDisciplines, type ProfessionalSearchModes } from '../lib/sportSearch';
 
@@ -9,6 +10,8 @@ export function ProfessionalSearchSettings() {
   const [loadError, setLoadError] = useState('');
   const [saveError, setSaveError] = useState('');
   const [saved, setSaved] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  useUnsavedChanges(dirty);
   const [saving, setSaving] = useState(false);
   const inFlight = useRef(false);
   const [attempt, setAttempt] = useState(0);
@@ -34,7 +37,7 @@ export function ProfessionalSearchSettings() {
   }, [attempt]);
 
   const change = (next: ProfessionalSearchModes) => {
-    setModes(next); setSaved(false); setSaveError('');
+    setModes(next); setDirty(true); setSaved(false); setSaveError('');
   };
   const save = async () => {
     if (!modes || inFlight.current) return;
@@ -51,7 +54,7 @@ export function ProfessionalSearchSettings() {
         p_discipline_ids: modes.discipline_ids,
       });
       if (error) throw error;
-      if (mounted.current) { setModes(data); setSaved(true); }
+      if (mounted.current) { setModes(data); setSaved(true); setDirty(false); }
     } catch {
       if (mounted.current) setSaveError('Salvataggio non confermato. Riprova; le tue scelte sono ancora qui.');
     } finally {

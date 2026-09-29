@@ -1,5 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { Plus, Save } from 'lucide-react';
+import { useUnsavedChanges } from '../lib/RouterContext';
 import { supabase } from '../lib/supabase';
 import { serviceColor } from '../lib/professionalCalendar';
 
@@ -49,8 +50,13 @@ function ServiceEditor({ initial, onSaved, onCancel }: { initial: Service; onSav
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const lock = useRef(false);
+  const [stage, setStage] = useState(0);
+  const initialValue = { ...initial, calendar_color: serviceColor(initial.calendar_color), price: String(initial.price ?? 0), duration_minutes: String(initial.duration_minutes || 60) };
+  const dirty = JSON.stringify(value) !== JSON.stringify(initialValue);
+  useUnsavedChanges(dirty || busy);
   const save = async (event: FormEvent) => {
     event.preventDefault();
+    if (stage < 2) { setStage(stage + 1); return; }
     if (lock.current) return;
     lock.current = true; setBusy(true); setError('');
     try {
@@ -68,24 +74,27 @@ function ServiceEditor({ initial, onSaved, onCancel }: { initial: Service; onSav
   };
   const patch = (part: Partial<typeof value>) => setValue((current) => ({ ...current, ...part }));
   return <form onSubmit={save} className="rounded-2xl border border-stone-300 bg-stone-50 p-4">
+    <div className="pg-mini-steps" aria-label="Passaggi del servizio">{['Cosa offri', 'Prezzo e durata', 'Controlla e salva'].map((label, i) => <span key={label} aria-current={stage === i ? 'step' : undefined}>{i + 1}. {label}</span>)}</div>
     <fieldset disabled={busy} className="grid gap-4 sm:grid-cols-2 disabled:opacity-60">
-      <label className="text-sm font-semibold sm:col-span-2">Nome del servizio<input autoFocus required maxLength={120} value={value.name} onChange={(e) => patch({ name: e.target.value })} className={field} /></label>
+      {stage === 0 && <><label className="text-sm font-semibold sm:col-span-2">Nome del servizio<input autoFocus required maxLength={120} value={value.name} onChange={(e) => patch({ name: e.target.value })} className={field} /></label>
       <label className="text-sm font-semibold">Categoria<select value={value.service_type} onChange={(e) => {
         const selected = categories.find(([id]) => id === e.target.value);
         patch({ service_type: e.target.value, calendar_color: selected?.[2] || value.calendar_color });
       }} className={field}>
         {!categories.some(([id]) => id === value.service_type) && <option value={value.service_type}>{value.service_type}</option>}
         {categories.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
-      </select></label>
-      <label className="text-sm font-semibold">Colore nel calendario<input type="color" value={value.calendar_color} onChange={(e) => patch({ calendar_color: e.target.value })} className="mt-1 block h-11 w-full cursor-pointer rounded-xl border border-stone-300 bg-white p-1" /></label>
-      <label className="text-sm font-semibold">Prezzo per prenotazione (€)<input type="number" required min="0" max="100000" step="0.01" value={value.price} onChange={(e) => patch({ price: e.target.value })} className={field} /></label>
+      </select></label></>}
+      {stage === 2 && <label className="text-sm font-semibold">Colore nel calendario<input type="color" value={value.calendar_color} onChange={(e) => patch({ calendar_color: e.target.value })} className="mt-1 block h-11 w-full cursor-pointer rounded-xl border border-stone-300 bg-white p-1" /></label>}
+      {stage === 1 && <><label className="text-sm font-semibold">Prezzo per prenotazione (€)<input type="number" required min="0" max="100000" step="0.01" value={value.price} onChange={(e) => patch({ price: e.target.value })} className={field} /></label>
       <label className="text-sm font-semibold">Durata occupata nel calendario (minuti)<input type="number" required min="1" max="525600" step="1" value={value.duration_minutes} onChange={(e) => patch({ duration_minutes: e.target.value })} className={field} /></label>
-      <label className="text-sm font-semibold">Tipo di durata<select value={value.duration_kind} onChange={(e) => patch({ duration_kind: e.target.value })} className={field}><option value="hourly">Orario</option><option value="daily">Giornaliero</option><option value="variable">Variabile</option></select></label>
-      <label className="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" checked={value.active} onChange={(e) => patch({ active: e.target.checked })} />Servizio attivo</label>
-      <p className="text-xs text-stone-600 sm:col-span-2">Per 24 ore indica 1440 minuti. Il prezzo si riferisce all’intera durata indicata.</p>
+      <label className="text-sm font-semibold">Tipo di durata<select value={value.duration_kind} onChange={(e) => patch({ duration_kind: e.target.value })} className={field}><option value="hourly">Orario</option><option value="daily">Giornaliero</option><option value="variable">Variabile</option></select></label></>}
+      {stage === 2 && <><label className="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" checked={value.active} onChange={(e) => patch({ active: e.target.checked })} />Servizio attivo</label>
+      <p className="text-sm sm:col-span-2"><strong>{value.name}</strong> · {Number(value.price).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} · {value.duration_minutes} minuti</p></>}
+      {stage === 1 && <p className="text-xs text-stone-600 sm:col-span-2">Per 24 ore indica 1440 minuti. Il prezzo si riferisce all’intera durata indicata.</p>}
     </fieldset>
     {error && <p role="alert" className="mt-3 text-sm text-rose-700">{error}</p>}
-    <div className="mt-4 flex flex-wrap gap-3"><button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-xl bg-emerald-800 px-4 py-2 font-semibold text-white disabled:opacity-60"><Save className="h-4 w-4" />{busy ? 'Salvataggio…' : 'Salva servizio'}</button>
-      <button type="button" disabled={busy} onClick={onCancel} className="rounded-xl border border-stone-300 px-4 py-2 font-semibold">Chiudi</button></div>
+    <div className="mt-4 flex flex-wrap gap-3"><button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-xl bg-emerald-800 px-4 py-2 font-semibold text-white disabled:opacity-60"><Save className="h-4 w-4" />{busy ? 'Salvataggio…' : stage < 2 ? 'Continua' : 'Salva servizio'}</button>
+      {stage > 0 && <button type="button" disabled={busy} onClick={() => setStage(stage - 1)} className="pg-secondary">Indietro</button>}
+      <button type="button" disabled={busy} onClick={() => { if (!dirty || window.confirm('Chiudere senza salvare il servizio?')) onCancel(); }} className="rounded-xl border border-stone-300 px-4 py-2 font-semibold">Chiudi</button></div>
   </form>;
 }

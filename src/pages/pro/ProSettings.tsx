@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import {
   Save,
+  ArrowLeft,
+  ArrowRight,
+  Check,
   Mail,
   Phone,
   BadgeCheck,
@@ -16,9 +19,13 @@ import {
   Plus,
   Trophy,
 } from 'lucide-react';
+import { loadItalianCities, cityLabel, normalizeCitySearch, type ItalianCity } from '../../lib/italianCities';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
 import { VerificationModal } from '../../components/VerificationModal';
+import { useRouter, useUnsavedChanges } from '../../lib/RouterContext';
+import { ProSetupOverview } from '../../components/ProSetupOverview';
+import { setupSteps, setupPath, parseSetupStep, profileStepFields } from '../../lib/proSetup';
 import { ProLayout } from './ProLayout';
 import { CalendarServices } from '../../components/CalendarServices';
 import { ProfessionalSearchSettings } from '../../components/ProfessionalSearchSettings';
@@ -122,14 +129,26 @@ function isWorkingDogUrl(value: string) {
   }
 }
 
+type ProfessionalSettings = {
+  [key: string]: unknown;
+  id: string; professional_type: string; listing_type: string; bio: string; zone_text: string;
+  latitude?: number | null; longitude?: number | null; coverage_radius_km: number; starting_price: number;
+  business_name?: string | null; main_contact_name?: string | null; team_size?: number;
+  vat_number?: string | null; website_url?: string | null; instagram_url?: string | null; cover_photo_url?: string | null;
+  experience_start_year?: number | null; qualification_summary?: string | null; insurance_summary?: string | null;
+  experience_verification_status?: string; approval_status?: string; approved?: boolean; admin_notes?: string | null; rejection_reason?: string | null;
+};
+type BookingRules = { [key: string]: unknown; min_lead_hours: number; cancellation_hours: number; min_duration_minutes: number; max_duration_minutes: number; buffer_minutes: number };
+type SettingsService = { id: string; name: string; service_type: string; price: number | string; duration_minutes: number; duration_kind: string; calendar_color?: string; active: boolean };
+
 type ApprovalStatus = 'pending' | 'approved' | 'rejected';
 
 const PROFESSIONAL_TYPES = [
   { value: 'walker', label: 'Dog walker' },
-  { value: 'trainer', label: 'Trainer / Educator' },
-  { value: 'boarding', label: 'Boarding' },
+  { value: 'trainer', label: 'Educatore / addestratore' },
+  { value: 'boarding', label: 'Pensione' },
   { value: 'sitter', label: 'Pet sitter' },
-  { value: 'groomer', label: 'Groomer' },
+  { value: 'groomer', label: 'Toelettatore' },
 ];
 
 const CITY_COORDINATES: Record<string, { latitude: number; longitude: number }> = {
@@ -178,9 +197,25 @@ function professionalBrandingObjectPath(url: string | null | undefined) {
 
 export function ProSettings() {
   const { user, profile, refreshProfile } = useAuth();
-  const [pro, setPro] = useState<any>(null);
-  const [services, setServices] = useState<any[]>([]);
-  const [rules, setRules] = useState<any>(null);
+  const { path, navigate } = useRouter();
+  const step = parseSetupStep(path);
+  const currentStep = setupSteps.find(item => item.id === step);
+  const [savedState, setSavedState] = useState<{ pro: ProfessionalSettings; rules: BookingRules; name: string } | null>(null);
+  const [cities, setCities] = useState<ItalianCity[]>([]);
+  const [cityError, setCityError] = useState('');
+  const [cityAttempt, setCityAttempt] = useState(0);
+  const [loadError, setLoadError] = useState('');
+  const [saveMessage, setSaveMessage] = useState('');
+  const [saveError, setSaveError] = useState('');
+  const [credentialFormOpen, setCredentialFormOpen] = useState(false);
+  const [credentialStage, setCredentialStage] = useState(0);
+  const saveLock = useRef(false);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  const [pro, setPro] = useState<ProfessionalSettings | null>(null);
+  const [profileExists, setProfileExists] = useState(false);
+  const [services, setServices] = useState<SettingsService[]>([]);
+  const [rules, setRules] = useState<BookingRules | null>(null);
   const [name, setName] = useState(profile?.full_name || '');
   const [verifying, setVerifying] = useState<'email' | 'phone' | null>(null);
   const [loadingData, setLoadingData] = useState(true);
@@ -200,34 +235,30 @@ export function ProSettings() {
   const [workingDogBusy, setWorkingDogBusy] = useState(false);
   const [workingDogNotice, setWorkingDogNotice] = useState('');
 
-  const load = async () => {
-    if (!user) return;
+  const userId = user?.id;
+  const initialName = useRef(profile?.full_name || '');
+  initialName.current = profile?.full_name || '';
+  const load = useCallback(async () => {
+    if (!userId) return;
 
     setLoadingData(true);
 
     const [p, s, r] = await Promise.all([
-      supabase.from('professionals').select('*').eq('id', user.id).maybeSingle(),
-      supabase.from('services').select('*').eq('professional_id', user.id).order('created_at', { ascending: false }),
-      supabase.from('booking_rules').select('*').eq('professional_id', user.id).maybeSingle(),
+      supabase.from('professionals').select('*').eq('id', userId).maybeSingle(),
+      supabase.from('services').select('*').eq('professional_id', userId).order('created_at', { ascending: false }),
+      supabase.from('booking_rules').select('*').eq('professional_id', userId).maybeSingle(),
     ]);
 
-    if (p.error) {
-      console.error('Professionista settings load error:', p.error);
-      alert(p.error.message);
+    if (p.error || s.error || r.error) {
+      setLoadError('Non riesco a leggere i dati del profilo. Riprova prima di modificarli.');
+      setLoadingData(false);
+      return;
     }
-
-    if (s.error) {
-      console.error('Services load error:', s.error);
-      alert(s.error.message);
-    }
-
-    if (r.error) {
-      console.error('Booking rules load error:', r.error);
-    }
-
-    setPro(
+    setLoadError('');
+    setProfileExists(Boolean(p.data));
+    const loadedPro = (
       p.data || {
-        id: user.id,
+        id: userId,
         professional_type: 'walker',
         bio: '',
         zone_text: '',
@@ -254,7 +285,7 @@ export function ProSettings() {
     );
 
     setServices(s.data || []);
-    setRules(
+    const loadedRules = (
       r.data || {
         min_lead_hours: 4,
         cancellation_hours: 24,
@@ -264,14 +295,14 @@ export function ProSettings() {
       }
     );
 
+    setPro(loadedPro);
+    setRules(loadedRules);
+    setName(initialName.current);
+    setSavedState({ pro: loadedPro, rules: loadedRules, name: initialName.current });
     setLoadingData(false);
-  };
+  }, [userId]);
 
-  useEffect(() => {
-    if (!user) return;
-    setName(profile?.full_name || '');
-    load();
-  }, [user, profile?.full_name]);
+  useEffect(() => { void load(); }, [load]);
 
 
   const selectBrandingFile = (file: File) => {
@@ -401,8 +432,8 @@ export function ProSettings() {
 
 
 
-  const loadCredentials = async () => {
-    if (!user) {
+  const loadCredentials = useCallback(async () => {
+    if (!userId) {
       setCredentials([]);
       setWorkingDogIdentity(null);
       return;
@@ -416,7 +447,7 @@ export function ProSettings() {
         .select(
           'id, professional_id, credential_type, title, issuer_name, issued_at, discipline, achievement, description, external_url, document_path, dog_name, event_name, event_scope, placement, score_text, source_provider, verification_method, source_verified_at, source_checked_at, verification_note, is_public, verification_status'
         )
-        .eq('professional_id', user.id)
+        .eq('professional_id', userId)
         .order('issued_at', { ascending: false, nullsFirst: false })
         .order('created_at', { ascending: false }),
 
@@ -425,7 +456,7 @@ export function ProSettings() {
         .select(
           'id, provider, profile_url, external_display_name, verification_status, verification_method, verified_at, last_checked_at, verification_note'
         )
-        .eq('professional_id', user.id)
+        .eq('professional_id', userId)
         .eq('provider', 'working_dog')
         .maybeSingle(),
     ]);
@@ -447,12 +478,9 @@ export function ProSettings() {
     }
 
     setCredentialsLoading(false);
-  };
+  }, [userId]);
 
-  useEffect(() => {
-    if (!user) return;
-    void loadCredentials();
-  }, [user?.id]);
+  useEffect(() => { if (step === 'credentials') void loadCredentials(); }, [loadCredentials, step]);
 
   const connectWorkingDog = async () => {
     if (!user || workingDogBusy) return;
@@ -673,6 +701,8 @@ export function ProSettings() {
       }
 
       setCredentialDraft(EMPTY_CREDENTIAL);
+      setCredentialFormOpen(false);
+      setCredentialStage(0);
       setCredentialFile(null);
       setCredentialNotice(
         hasEvidence
@@ -735,130 +765,88 @@ export function ProSettings() {
     }
   };
 
-  const saveProfile = async () => {
-    if (!user || !pro) return;
+  const profileDirty = Boolean(savedState && (name !== savedState.name || Object.values(profileStepFields).flat().some(key => JSON.stringify(pro?.[key]) !== JSON.stringify(savedState.pro?.[key])) || JSON.stringify(rules) !== JSON.stringify(savedState.rules)));
+  const evidenceDirty = JSON.stringify(credentialDraft) !== JSON.stringify(EMPTY_CREDENTIAL) || Boolean(credentialFile);
+  useUnsavedChanges(profileDirty || evidenceDirty || Boolean(brandingFile) || workingDogProfileUrl !== (workingDogIdentity?.profile_url || '') || saving || brandingBusy || credentialBusy || workingDogBusy, '/pro/settings');
 
-    setSaving(true);
+  useEffect(() => {
+    setSaveMessage(''); setSaveError('');
+    if (step) headingRef.current?.focus({ preventScroll: true });
+  }, [step]);
 
-    const city = findCityCoordinates(pro.zone_text || '');
+  useEffect(() => {
+    if (step !== 'area') return;
+    let active = true;
+    setCityError('');
+    void loadItalianCities().then(rows => { if (active) setCities(rows); }).catch(() => { if (active) setCityError('Elenco comuni non disponibile. Riprova per cambiare zona.'); });
+    return () => { active = false; };
+  }, [step, cityAttempt]);
 
-    const currentYear = new Date().getFullYear();
-    const parsedExperienceStartYear =
-      pro.experience_start_year === null ||
-      pro.experience_start_year === undefined ||
-      String(pro.experience_start_year).trim() === ''
-        ? null
-        : Number(pro.experience_start_year);
+  const goNext = () => {
+    const base = setupSteps.filter(item => item.group === 'base');
+    const index = base.findIndex(item => item.id === step);
+    navigate(index >= 0 && index < base.length - 1 ? setupPath(base[index + 1].id) : setupPath());
+  };
 
-    if (
-      parsedExperienceStartYear !== null &&
-      (!Number.isInteger(parsedExperienceStartYear) ||
-        parsedExperienceStartYear < 1950 ||
-        parsedExperienceStartYear > currentYear)
-    ) {
-      setSaving(false);
-      alert(`Inserisci un anno di inizio compreso tra 1950 e ${currentYear}.`);
-      return;
-    }
-
-    const normalizedExperienceStartYear = parsedExperienceStartYear;
-
-    const professionalPayload = {
-      professional_type: pro.professional_type || 'walker',
-      bio: pro.bio || '',
-      zone_text: pro.zone_text || '',
-      latitude: city?.latitude ?? pro.latitude ?? null,
-      longitude: city?.longitude ?? pro.longitude ?? null,
-      coverage_radius_km: Number(pro.coverage_radius_km) || 10,
-      starting_price: Number(pro.starting_price) || 0,
-      cover_photo_url:
-        (pro.listing_type || 'individual') === 'individual'
-          ? null
-          : pro.cover_photo_url || null,
-      business_name:
-        (pro.listing_type || 'individual') === 'individual'
-          ? null
-          : pro.business_name || null,
-      vat_number: pro.vat_number || null,
-      website_url: pro.website_url || null,
-      instagram_url: pro.instagram_url || null,
-      experience_start_year: normalizedExperienceStartYear,
-      qualification_summary: pro.qualification_summary || null,
-      insurance_summary: pro.insurance_summary || null,
-      listing_type: pro.listing_type || 'individual',
-      main_contact_name:
-        (pro.listing_type || 'individual') === 'individual'
-          ? null
-          : pro.main_contact_name || null,
-      has_facility: !!pro.has_facility,
-      facility_description: pro.facility_description || null,
-      team_size:
-        (pro.listing_type || 'individual') === 'individual'
-          ? 1
-          : Number(pro.team_size) || 1,
-      updated_at: new Date().toISOString(),
-    };
-
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .update({ full_name: name })
-      .eq('id', user.id);
-
-    if (profileError) {
-      setSaving(false);
-      alert(profileError.message);
-      return;
-    }
-
-    const { data: existingProfessionista, error: existingProfessionistaError } = await supabase
-      .from('professionals')
-      .select('id')
-      .eq('id', user.id)
-      .maybeSingle();
-
-    if (existingProfessionistaError) {
-      setSaving(false);
-      alert(existingProfessionistaError.message);
-      return;
-    }
-
-    const professionalResult = existingProfessionista
-      ? await supabase
-          .from('professionals')
-          .update(professionalPayload)
-          .eq('id', user.id)
-      : await supabase
-          .from('professionals')
-          .insert({
-            id: user.id,
-            ...professionalPayload,
-          });
-
-    const professionalError = professionalResult.error;
-
-    if (professionalError) {
-      setSaving(false);
-      alert(professionalError.message);
-      return;
-    }
-
-    if (rules) {
-      const { error: rulesError } = await supabase
-        .from('booking_rules')
-        .upsert({ ...rules, professional_id: user.id });
-
-      if (rulesError) {
-        setSaving(false);
-        alert(rulesError.message);
-        return;
+  const saveProfile = async (continueAfter = false) => {
+    if (!user || !pro || !rules || !step || !savedState || saveLock.current) return;
+    saveLock.current = true; setSaving(true); setSaveError(''); setSaveMessage('');
+    try {
+      if (step === 'rules') {
+        const values = ['min_lead_hours', 'cancellation_hours', 'min_duration_minutes', 'max_duration_minutes', 'buffer_minutes'];
+        if (values.some(key => !Number.isFinite(Number(rules[key])) || Number(rules[key]) < 0) || Number(rules.min_duration_minutes) < 1 || Number(rules.max_duration_minutes) < Number(rules.min_duration_minutes)) throw new Error('Controlla i tempi: usa numeri positivi e una durata massima non inferiore alla minima.');
+        const payload = Object.fromEntries(values.map(key => [key, Number(rules[key])]));
+        const { error } = await supabase.from('booking_rules').upsert({ ...payload, professional_id: user.id });
+        if (error) throw error;
+        setSavedState(current => current && ({ ...current, rules: { ...rules } }));
+      } else {
+        const fields = profileStepFields[step];
+        if (!fields) return;
+        const payload = Object.fromEntries(fields.map(key => [key, pro[key] ?? null]));
+        if (step === 'identity') {
+          if (!name.trim()) throw new Error('Inserisci il tuo nome.');
+          if (pro.listing_type !== 'individual' && !String(pro.business_name || '').trim()) throw new Error('Inserisci il nome dell’attività.');
+          if (pro.listing_type === 'individual') { payload.business_name = null; payload.main_contact_name = null; payload.team_size = 1; }
+        }
+        if (step === 'area') {
+          if (!String(pro.zone_text || '').trim()) throw new Error('Indica la zona in cui lavori.');
+          if (!Number.isFinite(Number(pro.coverage_radius_km)) || Number(pro.coverage_radius_km) < 1 || !Number.isFinite(Number(pro.starting_price)) || Number(pro.starting_price) < 0) throw new Error('Controlla raggio di copertura e prezzo.');
+          const normalized = normalizeCitySearch(pro.zone_text || '');
+          const matches = cities.filter(city => normalizeCitySearch(cityLabel(city)) === normalized || normalizeCitySearch(city.name) === normalized);
+          const selected = matches.length === 1 ? matches[0] : null;
+          const legacyCity = findCityCoordinates(pro.zone_text || '');
+          const unchanged = pro.zone_text === savedState.pro.zone_text;
+          const latitude = selected?.lat ?? legacyCity?.latitude ?? (unchanged ? pro.latitude : null);
+          const longitude = selected?.lng ?? legacyCity?.longitude ?? (unchanged ? pro.longitude : null);
+          if (latitude == null || longitude == null) throw new Error('Scegli un comune dall’elenco, indicando anche la provincia se ci sono omonimi.');
+          payload.latitude = latitude; payload.longitude = longitude;
+        }
+        if (step === 'story' && !String(pro.bio || '').trim()) throw new Error('Scrivi una breve presentazione del tuo lavoro.');
+        if (step === 'experience') {
+          const value = pro.experience_start_year == null ? null : Number(pro.experience_start_year);
+          if (value !== null && (!Number.isInteger(value) || value < 1950 || value > new Date().getFullYear())) throw new Error('Controlla l’anno di inizio dell’attività.');
+          payload.experience_start_year = value;
+        }
+        const { data: existing, error: readError } = await supabase.from('professionals').select('id').eq('id', user.id).maybeSingle();
+        if (readError) throw readError;
+        const result = existing
+          ? await supabase.from('professionals').update({ ...payload, updated_at: new Date().toISOString() }).eq('id', user.id)
+          : await supabase.from('professionals').insert({ id: user.id, professional_type: pro.professional_type || 'walker', listing_type: pro.listing_type || 'individual', ...payload });
+        if (result.error) throw result.error;
+        setProfileExists(true);
+        if (step === 'identity') {
+          const { error } = await supabase.from('profiles').update({ full_name: name.trim() }).eq('id', user.id);
+          if (error) throw error;
+        }
+        setPro(current => current && ({ ...current, ...payload }));
+        setSavedState(current => current && ({ ...current, pro: { ...current.pro, ...payload }, name: step === 'identity' ? name.trim() : current.name }));
+        if (step === 'identity') { setName(name.trim()); await refreshProfile(); }
       }
-    }
-
-    await refreshProfile();
-    await load();
-
-    setSaving(false);
-    alert('Profile saved. Admin approval status is unchanged.');
+      setSaveMessage('Modifiche salvate. Puoi riprendere da qui anche in un secondo momento.');
+      if (continueAfter) goNext();
+    } catch (error) {
+      setSaveError(error && typeof error === 'object' && 'message' in error ? String(error.message) : 'Salvataggio non confermato. Riprova: i dati inseriti sono ancora qui.');
+    } finally { saveLock.current = false; setSaving(false); }
   };
 
   const brandingImage = brandingPreview || profile?.avatar_url || '';
@@ -866,33 +854,120 @@ export function ProSettings() {
 
   const isIndividualProfile = (pro?.listing_type || 'individual') === 'individual';
 
-  if (loadingData || !pro || !rules) {
-    return (
-      <ProLayout active="settings">
-        <div className="p-8">Loading...</div>
-      </ProLayout>
-    );
-  }
+  if (loadError) return <ProLayout active="settings"><div className="pg-shell"><p role="alert">{loadError}</p><button className="pg-primary" onClick={() => void load()}>Riprova</button></div></ProLayout>;
+  if (loadingData || !pro || !rules || !savedState) return <ProLayout active="settings"><div className="pg-shell" role="status">Carico il tuo percorso…</div></ProLayout>;
 
-  return (
-    <ProLayout active="settings">
-      <div className="p-8 max-w-5xl">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-stone-900">Professionista profile</h1>
-          <p className="text-stone-600 mt-1">
-            Complete your profile so admins can verify you and clients can trust your services.
-          </p>
-        </div>
+  return <ProLayout active="settings"><div className="pg-shell">
+    {!step ? <ProSetupOverview name={savedState.name} pro={profileExists ? savedState.pro : null} services={services} onOpen={id => navigate(setupPath(id))} /> : <>
+      <button className="pg-back" disabled={saving || brandingBusy || credentialBusy || workingDogBusy} onClick={() => navigate(setupPath())}><ArrowLeft size={16} /> Il tuo percorso</button>
+      <div className="pg-editor-layout">
+        <nav className="pg-step-nav" aria-label="Passaggi del profilo">{setupSteps.map((item, i) => <button key={item.id} disabled={saving || brandingBusy || credentialBusy || workingDogBusy} aria-current={step === item.id ? 'step' : undefined} onClick={() => navigate(setupPath(item.id))}><span>{String(i + 1).padStart(2, '0')}</span>{item.short}</button>)}</nav>
+        <section className="pg-editor-content">
+          <header className="pg-editor-heading"><span className="pg-eyebrow">{currentStep?.group === 'base' ? 'LE BASI DEL PROFILO' : 'CURA IL TUO PROFILO'}</span><h1 ref={headingRef} tabIndex={-1}>{currentStep?.label}</h1><p>{currentStep?.description}</p></header>
+          <div key={step} className="pg-panel-enter">
+            <fieldset disabled={saving} className="pg-fields">
+              {step === 'identity' && <>
+<Section title="Come vuoi presentarti">          <Field label="Nome e cognome" value={name} onChange={setName} />
 
-        <ApprovalBox
-          status={(pro.approval_status || 'pending') as ApprovalStatus}
-          approved={!!pro.approved}
-          adminNotes={pro.admin_notes}
-          rejectionReason={pro.rejection_reason}
-        />
+          <div>
+            <label className="text-sm font-semibold text-stone-700">Tipo profilo</label>
+            <select
+              value={pro.listing_type || 'individual'}
+              onChange={(e) => setPro({ ...pro, listing_type: e.target.value })}
+              className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
+            >
+              <option value="individual">Professionista individuale</option>
+              <option value="business">Attività professionale</option>
+              <option value="center">Centro cinofilo</option>
+              <option value="boarding_facility">Pensione / struttura</option>
+            </select>
+            <p className="text-xs text-stone-500 mt-1">
+              Se scegli Professionista individuale, il profilo pubblico usa il tuo nome:
+              i campi da organizzazione vengono nascosti e ignorati.
+            </p>
+          </div>
 
-        <ProfessionalSearchSettings key={user?.id} />
+          {!isIndividualProfile && (
+            <>
+              <div className="grid md:grid-cols-2 gap-3">
+                <Field
+                  label="Referente principale"
+                  value={pro.main_contact_name || ''}
+                  onChange={(v) => setPro({ ...pro, main_contact_name: v })}
+                />
+                <Field
+                  label="Numero persone nel team"
+                  type="number"
+                  value={String(pro.team_size ?? 1)}
+                  onChange={(v) => setPro({ ...pro, team_size: Number(v) })}
+                />
+              </div>
 
+              <Field
+                label="Nome attività / struttura"
+                value={pro.business_name || ''}
+                onChange={(v) => setPro({ ...pro, business_name: v })}
+              />
+            </>
+          )}
+
+          <Field
+            label="Partita IVA / identificativo fiscale professionale"
+            value={pro.vat_number || ''}
+            onChange={(v) => setPro({ ...pro, vat_number: v })}
+          />
+
+          <div>
+            <label className="text-sm font-semibold text-stone-700">Attività principale</label>
+            <select
+              value={pro.professional_type || 'walker'}
+              onChange={(e) => setPro({ ...pro, professional_type: e.target.value })}
+              className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
+            >
+              {PROFESSIONAL_TYPES.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+</Section>              </>}
+              {step === 'area' && <>
+<Section title="La tua zona di lavoro">          <div className="grid md:grid-cols-3 gap-3">
+            <label className="text-sm font-semibold text-stone-700">Comune o zona
+              <input list="professional-city-options" value={pro.zone_text || ''} onChange={event => setPro({ ...pro, zone_text: event.target.value })} placeholder="Es. Rimini (RN)" className="mt-1 border w-full" />
+              <datalist id="professional-city-options">{cities.filter(city => normalizeCitySearch(cityLabel(city)).includes(normalizeCitySearch(pro.zone_text || ''))).slice(0, 20).map(city => <option key={city.code} value={cityLabel(city)} />)}</datalist>
+            </label>
+            {cityError && <p role="status">{cityError} <button className="underline" onClick={() => setCityAttempt(value => value + 1)}>Riprova</button></p>}
+            <Field
+              label="Raggio di copertura (km)"
+              type="number"
+              value={String(pro.coverage_radius_km ?? 10)}
+              onChange={(v) => setPro({ ...pro, coverage_radius_km: Number(v) })}
+            />
+            <Field
+              label="Prezzo indicativo da (€)"
+              type="number"
+              value={String(pro.starting_price ?? 0)}
+              onChange={(v) => setPro({ ...pro, starting_price: Number(v) })}
+            />
+          </div>
+
+</Section>              </>}
+              {step === 'story' && <>
+<Section title="Cosa troveranno i clienti">          <div>
+            <label className="text-sm font-semibold text-stone-700">Bio</label>
+            <textarea
+              value={pro.bio || ''}
+              onChange={(e) => setPro({ ...pro, bio: e.target.value })}
+              rows={4}
+              className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
+              placeholder="Racconta chi aiuti, come lavori e cosa può aspettarsi il proprietario."
+            />
+          </div>
+</Section>              </>}
+              {step === 'appearance' && <>
         <section className="pc-card relative overflow-hidden mb-5">
           <div
             aria-hidden="true"
@@ -991,82 +1066,14 @@ export function ProSettings() {
           </div>
         </section>
 
-        <Section title="Account verification">
-          <VerifyLine
-            icon={<Mail className="w-4 h-4" />}
-            label="Email"
-            value={profile?.email || ''}
-            verified={profile?.email_verified || false}
-            onVerify={() => setVerifying('email')}
-          />
-          <VerifyLine
-            icon={<Phone className="w-4 h-4" />}
-            label="Phone"
-            value={profile?.phone || ''}
-            verified={profile?.phone_verified || false}
-            onVerify={() => setVerifying('phone')}
-          />
-        </Section>
-
-        <Section title="Business details">
-          <Field label="Full name" value={name} onChange={setName} />
-
-          <div>
-            <label className="text-sm font-semibold text-stone-700">Tipo profilo</label>
-            <select
-              value={pro.listing_type || 'individual'}
-              onChange={(e) => setPro({ ...pro, listing_type: e.target.value })}
-              className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
-            >
-              <option value="individual">Professionista individuale</option>
-              <option value="business">Attività professionale</option>
-              <option value="center">Centro cinofilo</option>
-              <option value="boarding_facility">Pensione / struttura</option>
-            </select>
-            <p className="text-xs text-stone-500 mt-1">
-              Se scegli Professionista individuale, il profilo pubblico usa il tuo nome:
-              i campi da organizzazione vengono nascosti e ignorati.
-            </p>
-          </div>
-
-          {!isIndividualProfile && (
-            <>
-              <div className="grid md:grid-cols-2 gap-3">
-                <Field
-                  label="Referente principale"
-                  value={pro.main_contact_name || ''}
-                  onChange={(v) => setPro({ ...pro, main_contact_name: v })}
-                />
-                <Field
-                  label="Numero persone nel team"
-                  type="number"
-                  value={String(pro.team_size ?? 1)}
-                  onChange={(v) => setPro({ ...pro, team_size: Number(v) })}
-                />
-              </div>
-
-              <Field
-                label="Nome attività / struttura"
-                value={pro.business_name || ''}
-                onChange={(v) => setPro({ ...pro, business_name: v })}
-              />
-            </>
-          )}
-
-          <Field
-            label="Partita IVA / identificativo fiscale professionale"
-            value={pro.vat_number || ''}
-            onChange={(v) => setPro({ ...pro, vat_number: v })}
-          />
-
-          <div className="grid md:grid-cols-2 gap-3">
+<Section title="I tuoi collegamenti">          <div className="grid md:grid-cols-2 gap-3">
             <Field
-              label="Website URL"
+              label="Sito web"
               value={pro.website_url || ''}
               onChange={(v) => setPro({ ...pro, website_url: v })}
             />
             <Field
-              label="Instagram URL"
+              label="Profilo Instagram"
               value={pro.instagram_url || ''}
               onChange={(v) => setPro({ ...pro, instagram_url: v })}
             />
@@ -1085,58 +1092,74 @@ export function ProSettings() {
               </p>
             </div>
           )}
-        </Section>
+</Section>              </>}
+              {step === 'experience' && <>
+                  <section className="pc-card p-6 md:p-7 mb-5">
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_220px] gap-6 lg:items-end">
+            <div>
+              <p className="pc-kicker">Esperienza professionale</p>
+              <h2 className="pc-display text-2xl md:text-3xl font-semibold text-[var(--pc-ink-950)] mt-2">
+                Anno di inizio dell’attività professionale
+              </h2>
+              <p className="text-[var(--pc-muted-600)] leading-7 mt-3 max-w-2xl">
+                PortaleCinofilo calcola gli anni di esperienza da questo anno.
+                Non inseriamo più un numero di anni statico che diventa obsoleto col tempo.
+              </p>
 
-        <Section title="Public profile">
-          <div>
-            <label className="text-sm font-semibold text-stone-700">Professionista type</label>
-            <select
-              value={pro.professional_type || 'walker'}
-              onChange={(e) => setPro({ ...pro, professional_type: e.target.value })}
-              className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
-            >
-              {PROFESSIONAL_TYPES.map((type) => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              ))}
-            </select>
+              <div className="flex flex-wrap gap-2 mt-4 text-xs font-bold">
+                <span className="rounded-full bg-[var(--pc-bone-50)] px-3 py-1.5 text-[var(--pc-ink-800)]">
+                  Dato dichiarato dal professionista
+                </span>
+                {pro.experience_verification_status === 'verified' ? (
+                  <span className="rounded-full bg-[var(--pc-evidence-100)] px-3 py-1.5 text-[var(--pc-evidence-700)]">
+                    Esperienza verificata
+                  </span>
+                ) : (
+                  <span className="rounded-full border border-[var(--pc-line)] px-3 py-1.5 text-[var(--pc-muted-600)]">
+                    Verifica documentale non completata
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="experience-start-year"
+                className="block text-sm font-bold text-[var(--pc-ink-950)]"
+              >
+                Anno di inizio
+              </label>
+              <input
+                id="experience-start-year"
+                type="number"
+                inputMode="numeric"
+                min="1950"
+                max={new Date().getFullYear()}
+                placeholder="es. 2018"
+                value={pro.experience_start_year ?? ''}
+                onChange={(event) =>
+                  setPro({
+                    ...pro,
+                    experience_start_year:
+                      event.target.value === '' ? null : Number(event.target.value),
+                  })
+                }
+                className="mt-2 w-full rounded-xl border border-[var(--pc-line)] bg-white px-4 py-3 text-[var(--pc-ink-950)] focus:border-[var(--pc-forest-700)] focus:outline-none focus:ring-2 focus:ring-[var(--pc-forest-100)]"
+              />
+
+              {typeof pro.experience_start_year === 'number' &&
+                pro.experience_start_year >= 1950 &&
+                pro.experience_start_year <= new Date().getFullYear() && (
+                  <p className="mt-2 text-sm font-semibold text-[var(--pc-forest-900)]">
+                    {Math.max(0, new Date().getFullYear() - pro.experience_start_year)} anni di esperienza
+                    calcolati automaticamente
+                  </p>
+                )}
+            </div>
           </div>
+        </section>
 
-          <div className="grid md:grid-cols-3 gap-3">
-            <Field
-              label="Zone / area, e.g. Rimini"
-              value={pro.zone_text || ''}
-              onChange={(v) => setPro({ ...pro, zone_text: v })}
-            />
-            <Field
-              label="Coverage radius (km)"
-              type="number"
-              value={String(pro.coverage_radius_km ?? 10)}
-              onChange={(v) => setPro({ ...pro, coverage_radius_km: Number(v) })}
-            />
-            <Field
-              label="Starting price (€)"
-              type="number"
-              value={String(pro.starting_price ?? 0)}
-              onChange={(v) => setPro({ ...pro, starting_price: Number(v) })}
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-semibold text-stone-700">Bio</label>
-            <textarea
-              value={pro.bio || ''}
-              onChange={(e) => setPro({ ...pro, bio: e.target.value })}
-              rows={4}
-              className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
-              placeholder="Tell clients who you are, your experience, and what kind of dogs you work with."
-            />
-          </div>
-        </Section>
-
-        <Section title="Experience and verification details">
-          <div>
+<Section title="Formazione e documenti">          <div>
             <label className="text-sm font-semibold text-stone-700">
               Sintesi formazione / qualifiche
             </label>
@@ -1166,6 +1189,9 @@ export function ProSettings() {
             />
           </div>
 
+</Section>              </>}
+              {step === 'credentials' && <>
+<details className="pg-provider"><summary>Collega Working-Dog <span>Facoltativo, per chi pratica sport</span></summary>
           <div className="rounded-2xl border border-[var(--pc-line)] bg-[var(--pc-evidence-100)] p-5 md:p-6">
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
               <div>
@@ -1228,6 +1254,7 @@ export function ProSettings() {
             </p>
           </div>
 
+</details>
           <div className="rounded-2xl border border-[var(--pc-line)] bg-[var(--pc-bone-50)] p-5 md:p-6">
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
               <div>
@@ -1247,7 +1274,10 @@ export function ProSettings() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4 mt-6">
+            {!credentialFormOpen ? <button className="pg-primary mt-5" onClick={() => { setCredentialFormOpen(true); setCredentialStage(0); }}><Plus size={18} /> Aggiungi attestato o risultato</button> : <div className="pg-evidence-editor">
+              <div className="pg-mini-steps" aria-label="Passaggi della nuova evidenza">{['Dati principali', 'Dettagli', 'Fonte e visibilità'].map((label, i) => <span key={label} aria-current={i === credentialStage ? 'step' : undefined}>{i + 1}. {label}</span>)}</div>
+              <fieldset disabled={credentialBusy} className="grid md:grid-cols-2 gap-4 mt-5">
+              {credentialStage === 0 && <>
               <label className="text-sm font-semibold text-stone-700">
                 Tipo evidenza
                 <select
@@ -1299,6 +1329,8 @@ export function ProSettings() {
                 />
               </label>
 
+              </>}
+              {credentialStage === 1 && <>
               {(credentialDraft.credential_type === 'sport_result' ||
                 credentialDraft.credential_type === 'official_test') ? (
                 <>
@@ -1432,6 +1464,8 @@ export function ProSettings() {
                 </>
               )}
 
+              </>}
+              {credentialStage === 2 && <>
               <div className="md:col-span-2">
                 <Field
                   label="Working-Dog / fonte ufficiale URL"
@@ -1499,8 +1533,9 @@ export function ProSettings() {
                   Mostra questa voce nel profilo pubblico
                 </label>
               </div>
-            </div>
-
+              </>}
+              </fieldset>
+              {credentialStage === 2 && <>
             <div className="flex flex-wrap items-center gap-3 mt-5">
               <button
                 type="button"
@@ -1516,6 +1551,11 @@ export function ProSettings() {
                 PDF/JPG/PNG/WebP · max 10 MB
               </span>
             </div>
+
+              </>}
+              <div className="pg-editor-actions"><button type="button" disabled={credentialBusy} className="pg-secondary" onClick={() => credentialStage > 0 ? setCredentialStage(credentialStage - 1) : setCredentialFormOpen(false)}>{credentialStage > 0 ? 'Indietro' : 'Chiudi bozza'}</button>
+              {credentialStage < 2 && <button className="pg-primary" disabled={credentialBusy || (credentialStage === 0 && !credentialDraft.title.trim())} onClick={() => setCredentialStage(credentialStage + 1)}>Continua <ArrowRight size={16} /></button>}</div>
+            </div>}
 
             {credentialNotice && (
               <p role="status" className="mt-3 text-sm font-semibold text-[var(--pc-ink-800)]">
@@ -1627,109 +1667,42 @@ export function ProSettings() {
               )}
             </div>
           </div>
-        </Section>
-
-        <Section title="Servizi e colori del calendario">
-                  <section className="pc-card p-6 md:p-7 mb-5">
-          <div className="grid lg:grid-cols-[minmax(0,1fr)_220px] gap-6 lg:items-end">
-            <div>
-              <p className="pc-kicker">Esperienza professionale</p>
-              <h2 className="pc-display text-2xl md:text-3xl font-semibold text-[var(--pc-ink-950)] mt-2">
-                Anno di inizio dell’attività professionale
-              </h2>
-              <p className="text-[var(--pc-muted-600)] leading-7 mt-3 max-w-2xl">
-                PortaleCinofilo calcola gli anni di esperienza da questo anno.
-                Non inseriamo più un numero di anni statico che diventa obsoleto col tempo.
-              </p>
-
-              <div className="flex flex-wrap gap-2 mt-4 text-xs font-bold">
-                <span className="rounded-full bg-[var(--pc-bone-50)] px-3 py-1.5 text-[var(--pc-ink-800)]">
-                  Dato dichiarato dal professionista
-                </span>
-                {pro.experience_verification_status === 'verified' ? (
-                  <span className="rounded-full bg-[var(--pc-evidence-100)] px-3 py-1.5 text-[var(--pc-evidence-700)]">
-                    Esperienza verificata
-                  </span>
-                ) : (
-                  <span className="rounded-full border border-[var(--pc-line)] px-3 py-1.5 text-[var(--pc-muted-600)]">
-                    Verifica documentale non completata
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="experience-start-year"
-                className="block text-sm font-bold text-[var(--pc-ink-950)]"
-              >
-                Anno di inizio
-              </label>
-              <input
-                id="experience-start-year"
-                type="number"
-                inputMode="numeric"
-                min="1950"
-                max={new Date().getFullYear()}
-                placeholder="es. 2018"
-                value={pro.experience_start_year ?? ''}
-                onChange={(event) =>
-                  setPro({
-                    ...pro,
-                    experience_start_year:
-                      event.target.value === '' ? null : Number(event.target.value),
-                  })
-                }
-                className="mt-2 w-full rounded-xl border border-[var(--pc-line)] bg-white px-4 py-3 text-[var(--pc-ink-950)] focus:border-[var(--pc-forest-700)] focus:outline-none focus:ring-2 focus:ring-[var(--pc-forest-100)]"
-              />
-
-              {typeof pro.experience_start_year === 'number' &&
-                pro.experience_start_year >= 1950 &&
-                pro.experience_start_year <= new Date().getFullYear() && (
-                  <p className="mt-2 text-sm font-semibold text-[var(--pc-forest-900)]">
-                    {Math.max(0, new Date().getFullYear() - pro.experience_start_year)} anni di esperienza
-                    calcolati automaticamente
-                  </p>
-                )}
-            </div>
-          </div>
-        </section>
-
-        <CalendarServices key={user?.id} services={services} onChange={setServices} />
-        </Section>
-
-        <Section title="Messaggi e risposte automatiche">
-          <ProfessionalReplyTemplates key={user?.id} />
-        </Section>
-
-        <Section title="Booking rules">
+              </>}
+              {step === 'services' && <>
+<CalendarServices key={user?.id} services={services} onChange={setServices} />              </>}
+              {step === 'visibility' && <>
+<ProfessionalSearchSettings key={user?.id} />              </>}
+              {step === 'replies' && <>
+<ProfessionalReplyTemplates key={user?.id} />              </>}
+              {step === 'rules' && <>
+        <Section title="Tempi delle prenotazioni">
           <div className="grid md:grid-cols-2 gap-3">
             <Field
-              label="Min lead time (hours)"
+              label="Anticipo minimo (ore)"
               type="number"
               value={String(rules.min_lead_hours)}
               onChange={(v) => setRules({ ...rules, min_lead_hours: Number(v) })}
             />
             <Field
-              label="Cancellation window (hours)"
+              label="Termine cancellazione (ore)"
               type="number"
               value={String(rules.cancellation_hours)}
               onChange={(v) => setRules({ ...rules, cancellation_hours: Number(v) })}
             />
             <Field
-              label="Min duration (min)"
+              label="Durata minima (minuti)"
               type="number"
               value={String(rules.min_duration_minutes)}
               onChange={(v) => setRules({ ...rules, min_duration_minutes: Number(v) })}
             />
             <Field
-              label="Max duration (min)"
+              label="Durata massima (minuti)"
               type="number"
               value={String(rules.max_duration_minutes)}
               onChange={(v) => setRules({ ...rules, max_duration_minutes: Number(v) })}
             />
             <Field
-              label="Buffer between bookings (min)"
+              label="Pausa tra appuntamenti (minuti)"
               type="number"
               value={String(rules.buffer_minutes)}
               onChange={(v) => setRules({ ...rules, buffer_minutes: Number(v) })}
@@ -1737,27 +1710,39 @@ export function ProSettings() {
           </div>
         </Section>
 
-        <button
-          type="button"
-          onClick={saveProfile}
-          disabled={saving}
-          className="px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold flex items-center gap-2 disabled:opacity-60"
-        >
-          <Save className="w-4 h-4" />
-          {saving ? 'Saving...' : 'Save professional profile'}
-        </button>
-      </div>
+              </>}
+              {step === 'verification' && <>
+<ApprovalBox status={(pro.approval_status || "pending") as ApprovalStatus} approved={!!pro.approved} adminNotes={pro.admin_notes} rejectionReason={pro.rejection_reason} />        <Section title="Verifica dei contatti">
+          <VerifyLine
+            icon={<Mail className="w-4 h-4" />}
+            label="Email"
+            value={profile?.email || ''}
+            verified={profile?.email_verified || false}
+            onVerify={() => setVerifying('email')}
+          />
+          <VerifyLine
+            icon={<Phone className="w-4 h-4" />}
+            label="Telefono"
+            value={profile?.phone || ''}
+            verified={profile?.phone_verified || false}
+            onVerify={() => setVerifying('phone')}
+          />
+        </Section>
 
-      {verifying && (
-        <VerificationModal
-          type={verifying}
-          target={verifying === 'email' ? profile?.email || '' : profile?.phone || ''}
-          onClose={() => setVerifying(null)}
-          onVerified={() => setVerifying(null)}
-        />
-      )}
-    </ProLayout>
-  );
+              </>}
+            </fieldset>
+          </div>
+          {saveError && <p role="alert" className="pg-error">{saveError}</p>}
+          {saveMessage && <p role="status" className="pg-success"><Check size={18} /> {saveMessage}</p>}
+          <footer className="pg-editor-footer">
+            {profileStepFields[step] || step === 'rules' ? <><button className="pg-primary" disabled={saving} onClick={() => void saveProfile(true)}>{saving ? 'Salvataggio…' : currentStep?.group === 'base' ? 'Salva e continua' : 'Salva e torna al percorso'}<ArrowRight size={16} /></button><button className="pg-secondary" disabled={saving} onClick={() => void saveProfile()}><Save size={16} /> Salva</button><span>Salva questo passaggio prima di uscire.</span></> : <button className="pg-secondary" onClick={goNext}>Torna al percorso <ArrowRight size={16} /></button>}
+          </footer>
+        </section>
+      </div>
+    </>}
+  </div>
+  {verifying && <VerificationModal type={verifying} target={verifying === 'email' ? profile?.email || '' : profile?.phone || ''} onClose={() => setVerifying(null)} onVerified={() => setVerifying(null)} />}
+  </ProLayout>;
 }
 
 function ApprovalBox({
@@ -1776,11 +1761,11 @@ function ApprovalBox({
       <div className="mb-5 bg-emerald-50 border border-emerald-200 rounded-2xl p-5 flex gap-3">
         <ShieldCheck className="w-5 h-5 text-emerald-700 mt-0.5" />
         <div>
-          <div className="font-bold text-emerald-900">Approved</div>
+          <div className="font-bold text-emerald-900">Approvato</div>
           <p className="text-sm text-emerald-800 mt-1">
-            Your profile is visible in public search results.
+            L’approvazione è confermata. La comparsa nelle ricerche dipende anche dai servizi attivi e dalle tue preferenze.
           </p>
-          {adminNotes && <p className="text-xs text-emerald-700 mt-2">Admin note: {adminNotes}</p>}
+          {adminNotes && <p className="text-xs text-emerald-700 mt-2">Nota amministrazione: {adminNotes}</p>}
         </div>
       </div>
     );
@@ -1791,12 +1776,12 @@ function ApprovalBox({
       <div className="mb-5 bg-rose-50 border border-rose-200 rounded-2xl p-5 flex gap-3">
         <AlertTriangle className="w-5 h-5 text-rose-700 mt-0.5" />
         <div>
-          <div className="font-bold text-rose-900">Rejected</div>
+          <div className="font-bold text-rose-900">Da rivedere</div>
           <p className="text-sm text-rose-800 mt-1">
-            Your profile is not visible. Update your details and contact the admin for review.
+            Aggiorna le informazioni richieste e contatta l’amministrazione per una nuova revisione.
           </p>
-          {rejectionReason && <p className="text-xs text-rose-700 mt-2">Reason: {rejectionReason}</p>}
-          {adminNotes && <p className="text-xs text-rose-700 mt-1">Admin note: {adminNotes}</p>}
+          {rejectionReason && <p className="text-xs text-rose-700 mt-2">Motivo: {rejectionReason}</p>}
+          {adminNotes && <p className="text-xs text-rose-700 mt-1">Nota amministrazione: {adminNotes}</p>}
         </div>
       </div>
     );
@@ -1806,11 +1791,11 @@ function ApprovalBox({
     <div className="mb-5 bg-amber-50 border border-amber-200 rounded-2xl p-5 flex gap-3">
       <Clock className="w-5 h-5 text-amber-700 mt-0.5" />
       <div>
-        <div className="font-bold text-amber-900">Pending admin approval</div>
+        <div className="font-bold text-amber-900">In attesa di approvazione</div>
         <p className="text-sm text-amber-800 mt-1">
-          Complete your profile. An admin must approve you before clients can find you in search.
+          Completa le informazioni essenziali. L’amministrazione deve approvare il profilo prima che sia disponibile nella ricerca.
         </p>
-        {adminNotes && <p className="text-xs text-amber-700 mt-2">Admin note: {adminNotes}</p>}
+        {adminNotes && <p className="text-xs text-amber-700 mt-2">Nota amministrazione: {adminNotes}</p>}
       </div>
     </div>
   );
@@ -1835,12 +1820,12 @@ function VerifyLine({
         <div className="text-stone-500">{icon}</div>
         <div>
           <div className="font-semibold text-stone-900">{label}</div>
-          <div className="text-xs text-stone-500">{value || 'Not set'}</div>
+          <div className="text-xs text-stone-500">{value || 'Non indicato'}</div>
         </div>
       </div>
       {verified ? (
         <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full flex items-center gap-1 font-semibold">
-          <BadgeCheck className="w-3 h-3" /> Verified
+          <BadgeCheck className="w-3 h-3" /> Verificato
         </span>
       ) : (
         <button
@@ -1849,7 +1834,7 @@ function VerifyLine({
           disabled={!value}
           className="text-xs bg-amber-500 text-white hover:bg-amber-600 px-3 py-1 rounded-full font-semibold disabled:opacity-50"
         >
-          Verify now
+          Verifica
         </button>
       )}
     </div>
@@ -1858,7 +1843,7 @@ function VerifyLine({
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-stone-200 p-6 mb-5">
+    <div className="pg-form-section">
       <h2 className="text-lg font-bold text-stone-900 mb-4">{title}</h2>
       <div className="space-y-3">{children}</div>
     </div>
@@ -1876,10 +1861,12 @@ function Field({
   onChange: (v: string) => void;
   type?: string;
 }) {
+  const id = useId();
   return (
     <div>
-      <label className="text-sm font-semibold text-stone-700">{label}</label>
+      <label htmlFor={id} className="text-sm font-semibold text-stone-700">{label}</label>
       <input
+        id={id}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}

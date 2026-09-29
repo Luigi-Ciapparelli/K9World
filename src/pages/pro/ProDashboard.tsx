@@ -130,6 +130,7 @@ export function ProDashboard() {
           <h1 className="pc-display text-4xl md:text-5xl font-semibold mt-2">{firstName ? `Ciao, ${firstName}.` : 'La tua area professionale'}</h1>
           <p className="text-[var(--pc-muted-600)] text-lg mt-3">Gestisci le richieste e organizza il lavoro con clienti e cani.</p>
         </header>
+        <button className="pg-dashboard-entry" onClick={() => navigate('/pro/settings')}><span><strong>Il tuo profilo, un passo alla volta.</strong><small>Completa le basi e scopri gli strumenti con una guida.</small></span><span>Apri il percorso <ArrowRight size={18} /></span></button>
 
         {notice && <p role={notice.error ? 'alert' : 'status'} className="pc-card p-4 mb-5 text-sm">{notice.text}</p>}
         <BookingMessageInbox professional />

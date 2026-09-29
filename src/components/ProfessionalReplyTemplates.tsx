@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { useUnsavedChanges } from '../lib/RouterContext';
 import { supabase } from '../lib/supabase';
 import { templateEvents, type ReplyTemplate } from '../lib/bookingMessages';
 
@@ -71,6 +72,8 @@ function TemplateEditor({ initial, onClose, onSaved }: { initial: ReplyTemplate;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const lock = useRef(false);
+  const dirty = JSON.stringify(draft) !== JSON.stringify(initial);
+  useUnsavedChanges(dirty || busy);
   const save = async (event: FormEvent) => {
     event.preventDefault();
     if (lock.current) return;
@@ -94,6 +97,6 @@ function TemplateEditor({ initial, onClose, onSaved }: { initial: ReplyTemplate;
       {draft.automatic_event && <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">Salvando, questo testo verrà inviato automaticamente nella conversazione al verificarsi dell’evento scelto. Sostituisce l’eventuale altro modello assegnato allo stesso evento. Le prenotazioni precedenti non ricevono invii retroattivi.</p>}
     </fieldset>
     {error && <p role="alert" className="text-sm text-rose-700">{error}</p>}
-    <div className="flex gap-2"><button type="submit" disabled={busy} className="rounded-xl bg-emerald-800 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">{busy ? 'Salvataggio…' : 'Salva modello'}</button><button type="button" disabled={busy} onClick={onClose} className={button}>Chiudi</button></div>
+    <div className="flex gap-2"><button type="submit" disabled={busy} className="rounded-xl bg-emerald-800 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">{busy ? 'Salvataggio…' : 'Salva modello'}</button><button type="button" disabled={busy} onClick={() => { if (!dirty || window.confirm('Chiudere senza salvare il modello?')) onClose(); }} className={button}>Chiudi</button></div>
   </form>;
 }

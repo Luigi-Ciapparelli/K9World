@@ -1,100 +1,42 @@
 import { continuityEnabled } from '../../lib/continuity';
-import { ReactNode, useState } from 'react';
-import { LayoutDashboard, Calendar, CalendarDays, Package, RefreshCw, Users, BarChart3, Settings, Menu, X } from 'lucide-react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
+import { LayoutDashboard, Calendar, CalendarDays, Package, RefreshCw, Users, BarChart3, Compass, Menu, X, ArrowUpRight } from 'lucide-react';
 import { useRouter } from '../../lib/RouterContext';
 import { useAuth } from '../../lib/AuthContext';
+import { ProToolGuide } from '../../components/ProToolGuide';
+import '../../professional-workspace.css';
 
 export function ProLayout({ children, active }: { children: ReactNode; active: string }) {
   const { navigate } = useRouter();
   const { profile } = useAuth();
   const [open, setOpen] = useState(false);
-
+  const menuRef = useRef<HTMLButtonElement>(null);
   const nav = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/pro' },
-    { id: 'bookings', label: 'Richieste', icon: Calendar, path: '/pro/bookings' },
+    { id: 'dashboard', label: 'La tua giornata', icon: LayoutDashboard, path: '/pro', group: 'IL TUO LAVORO' },
+    { id: 'bookings', label: 'Richieste e messaggi', icon: Calendar, path: '/pro/bookings' },
     { id: 'calendar', label: 'Calendario', icon: CalendarDays, path: '/pro/calendar' },
-    { id: 'subscriptions', label: 'Abbonamenti', icon: RefreshCw, path: '/pro/subscriptions' },
-    { id: 'passes', label: 'Pacchetti', icon: Package, path: '/pro/passes' },
+    { id: 'crm', label: 'Clienti', icon: Users, path: '/pro/crm', group: 'I PERCORSI DEI CLIENTI' },
     ...(continuityEnabled ? [{ id: 'archive', label: 'Relazioni e archivio', icon: Users, path: '/pro/archive' }] : []),
-    { id: 'crm', label: 'Clienti', icon: Users, path: '/pro/crm' },
+    { id: 'passes', label: 'Pacchetti', icon: Package, path: '/pro/passes' },
+    { id: 'subscriptions', label: 'Abbonamenti', icon: RefreshCw, path: '/pro/subscriptions' },
+    { id: 'settings', label: 'Profilo guidato', icon: Compass, path: '/pro/settings', group: 'LA TUA PRESENZA' },
     { id: 'analytics', label: 'Statistiche', icon: BarChart3, path: '/pro/analytics' },
-    { id: 'settings', label: 'Profilo e servizi', icon: Settings, path: '/pro/settings' },
   ];
-
-  const activeLabel = nav.find((n) => n.id === active)?.label || 'Area professionista';
-
-  const handleNav = (path: string) => {
-    navigate(path);
-    setOpen(false);
-  };
-
-  return (
-    <div className="bg-stone-50 min-h-[calc(100vh-4rem)] md:grid md:grid-cols-[240px_1fr]">
-      <div className="md:hidden sticky top-16 z-30 bg-white border-b border-stone-200 px-4 py-3 flex items-center justify-between">
-        <div>
-          <div className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">Area professionista</div>
-          <div className="text-sm font-semibold text-stone-900">{activeLabel}</div>
-        </div>
-        <button
-          onClick={() => setOpen(!open)}
-          className="p-2 -mr-2 text-stone-700"
-          aria-label="Toggle menu"
-        >
-          {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-      </div>
-
-      {open && (
-        <div
-          className="md:hidden fixed inset-0 bg-stone-900/40 z-40"
-          onClick={() => setOpen(false)}
-        />
-      )}
-
-      <aside
-        className={`
-          fixed md:static top-0 left-0 z-50 md:z-auto
-          h-full md:h-auto w-72 md:w-auto
-          bg-white border-r border-stone-200 py-6 px-3
-          md:min-h-[calc(100vh-4rem)]
-          transform transition-transform duration-200
-          ${open ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0
-          overflow-y-auto
-        `}
-      >
-        <div className="px-3 mb-6 flex items-center justify-between md:block">
-          <div>
-            <div className="text-xs font-bold text-stone-500 uppercase tracking-wider">Area professionista</div>
-            <div className="text-sm font-semibold text-stone-900 mt-1">{profile?.full_name}</div>
-          </div>
-          <button
-            onClick={() => setOpen(false)}
-            className="md:hidden p-1 text-stone-500"
-            aria-label="Close menu"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-        <nav className="space-y-1">
-          {nav.map((n) => {
-            const Icon = n.icon;
-            const isActive = active === n.id;
-            return (
-              <button
-                key={n.id}
-                onClick={() => handleNav(n.path)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition ${
-                  isActive ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-stone-700 hover:bg-stone-50'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                {n.label}
-              </button>
-            );
-          })}
-        </nav>
-      </aside>
-      <main className="min-w-0">{children}</main>
-    </div>
-  );
+  useEffect(() => {
+    if (!open) return;
+    const keydown = (event: KeyboardEvent) => { if (event.key === 'Escape') { setOpen(false); menuRef.current?.focus(); } };
+    window.addEventListener('keydown', keydown);
+    return () => window.removeEventListener('keydown', keydown);
+  }, [open]);
+  const handleNav = (path: string) => { navigate(path); setOpen(false); };
+  return <div className="pg-workspace">
+    <div className="pg-mobile-bar"><span>{nav.find(item => item.id === active)?.label || 'Area professionista'}</span><button ref={menuRef} onClick={() => setOpen(!open)} aria-label={open ? 'Chiudi menu professionista' : 'Apri menu professionista'} aria-expanded={open} aria-controls="professional-navigation"><Menu size={21} /></button></div>
+    {open && <button className="pg-menu-overlay" aria-label="Chiudi menu professionista" onClick={() => { setOpen(false); menuRef.current?.focus(); }} />}
+    <aside id="professional-navigation" className={`pg-sidebar ${open ? 'is-open' : ''}`}>
+      <div className="pg-sidebar-identity"><span className="pg-avatar">{profile?.full_name?.trim().slice(0, 1) || 'P'}</span><div><small>AREA PROFESSIONISTA</small><strong>{profile?.full_name || 'Il tuo spazio'}</strong></div><button className="pg-close-mobile" aria-label="Chiudi navigazione" onClick={() => { setOpen(false); menuRef.current?.focus(); }}><X size={20} /></button></div>
+      <nav aria-label="Navigazione professionista">{nav.map(item => { const Icon = item.icon; return <div key={item.id}>{'group' in item && item.group && <p className="pg-nav-group">{item.group}</p>}<button className={active === item.id ? 'is-active' : ''} aria-current={active === item.id ? 'page' : undefined} onClick={() => handleNav(item.path)}><Icon size={18} /><span>{item.label}</span></button></div>; })}</nav>
+      <button className="pg-sidebar-help" onClick={() => handleNav('/pro/settings')}><Compass size={20} /><span>Da dove cominciare?<small>Costruisci il tuo percorso</small></span><ArrowUpRight size={17} /></button>
+    </aside>
+    <main className="pg-workspace-main"><ProToolGuide />{children}</main>
+  </div>;
 }

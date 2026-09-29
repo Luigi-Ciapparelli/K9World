@@ -1,5 +1,16 @@
 # PawConnect / Portalecinofilo — Project Handoff
 
+## Profilo e strumenti professionali guidati — 29 settembre 2026
+
+Base corrente GitHub: `b512eb9`, comprensiva della Home con media richiesta da Luigi.
+Nuovo incremento frontend: **Profilo guidato**, quattro attività di base con
+progressi sui dati salvati, schermate separate, servizi e attestati in tre passi,
+guide dentro gli strumenti, menu raggruppato e protezione delle bozze.
+Specifica e limiti: [PROFESSIONAL_GUIDED_WORKSPACE_V1.md](PROFESSIONAL_GUIDED_WORKSPACE_V1.md).
+TypeScript, build e prove browser con API simulate superati. Nessuna migration.
+Codice pronto da applicare/pubblicare; commit remoto e Vercel Ready di questo
+incremento non ancora osservati. I checkpoint sottostanti restano storici.
+
 ## Home con media e navigazione unificata — 29 settembre 2026
 
 Base GitHub esaminata: `c75d0c1`. Luigi ha chiesto di eliminare la voce Servizi
