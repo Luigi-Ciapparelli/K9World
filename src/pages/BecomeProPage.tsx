@@ -21,37 +21,37 @@ const valuePoints = [
   },
   {
     icon: <Medal />,
-    title: 'Merito distinguibile',
+    title: 'Competenze leggibili',
     text: 'Dichiarato, verificato e risultato sportivo non vengono confusi. Le fonti e gli stati di verifica restano espliciti.',
   },
   {
     icon: <MessageCircle />,
-    title: 'Richieste più chiare',
-    text: 'Il proprietario arriva dal profilo e invia una richiesta contestualizzata invece di disperdere tutto tra messaggi e social.',
+    title: 'Richieste e messaggi nello stesso posto',
+    text: 'Leggi il nome del proprietario, il cane e le note della richiesta. Rispondi nella conversazione e decidi se accettare l’appuntamento.',
   },
   {
     icon: <CalendarCheck />,
-    title: 'Continuità nel tempo',
-    text: 'PortaleCinofilo è pensato per evolvere verso storico, CRM e continuità tra cane, proprietario e professionista.',
+    title: 'Un calendario per il tuo lavoro',
+    text: 'Consulta gli appuntamenti, distingui i servizi per colore e indica i periodi in cui non sei disponibile.',
   },
 ];
 
 const steps = [
   {
     title: 'Entra nella beta',
-    text: 'Crei l’account professionista e compili il profilo con i dati che servono davvero.',
+    text: 'Scegli l’attività principale, inserisci i contatti del referente e conferma l’email.',
   },
   {
-    title: 'Costruisci credibilità',
-    text: 'Aggiungi esperienza, servizi, qualifiche, risultati e fonti. Le verifiche restano distinte dalle semplici dichiarazioni.',
+    title: 'Prepara le quattro basi',
+    text: 'Il profilo guidato ti accompagna: identità, zona, presentazione e primo servizio. Foto e competenze si possono aggiungere dopo.',
   },
   {
     title: 'Diventa trovabile',
-    text: 'Il profilo entra nella ricerca quando è approvato e coerente con i requisiti della piattaforma.',
+    text: 'L’amministrazione controlla il profilo prima della pubblicazione. Servizi attivi, zona e preferenze determinano dove compari nella ricerca.',
   },
   {
     title: 'Ricevi richieste',
-    text: 'Gestisci le richieste dal pannello professionista senza comprare una posizione migliore nel ranking.',
+    text: 'Leggi le note, rispondi e conferma gli appuntamenti. Le guide del pannello ti aiutano a provare una funzione alla volta.',
   },
 ];
 
@@ -78,6 +78,10 @@ const faqs = [
     a: 'No. Il profilo deve essere completato e approvato prima di essere mostrato pubblicamente.',
   },
   {
+    q: 'Posso iscrivere un centro o una struttura?',
+    a: 'Sì. Crea un account professionista con nome e contatti del referente. In Profilo guidato → Identità scegli centro, azienda o struttura di pensione e inserisci il nome dell’attività. In questa fase il profilo è gestito da un singolo account.',
+  },
+  {
     q: 'Devo avere risultati sportivi?',
     a: 'No. I risultati sportivi contano quando pertinenti, ma PortaleCinofilo distingue servizi, esperienza, formazione, qualifiche e carriera senza ridurre tutto alla competizione.',
   },
@@ -102,14 +106,14 @@ export function BecomeProPage() {
             <div className="pc-kicker mb-5">PortaleCinofilo · Beta professionisti</div>
 
             <h1 className="pc-display text-4xl md:text-6xl leading-[1.02] max-w-4xl">
-              Fatti trovare per quello che sai realmente fare,
-              <span className="block text-[#235B40]">non per quanto paghi.</span>
+              Fai conoscere il tuo lavoro.
+              <span className="block text-[#235B40]">Organizza il primo contatto.</span>
             </h1>
 
             <p className="text-lg md:text-xl text-[#536058] mt-6 max-w-2xl leading-relaxed">
-              Stiamo selezionando il primo gruppo di professionisti della Romagna.
-              La beta è gratuita: profilo strutturato, competenze distinguibili, richieste
-              ordinate e ranking non acquistabile.
+              Per addestratori, centri cinofili e strutture: un profilo pubblico,
+              richieste con informazioni sul cane, messaggi e calendario.
+              La beta è gratuita per il primo gruppo, a partire dalla Romagna.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mt-8">
@@ -122,13 +126,12 @@ export function BecomeProPage() {
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <button
-                type="button"
-                onClick={() => navigate('/ranking')}
+              <a
+                href="mailto:info@portalecinofilo.com?subject=Primi%20passi%20nella%20beta"
                 className="inline-flex items-center justify-center rounded-full border border-[#AEB8B0] bg-[#FFFEFA] px-6 py-3.5 font-semibold text-[#18211C] hover:border-[#163D2A] transition"
               >
-                Come funziona il ranking
-              </button>
+                Scrivici per iniziare
+              </a>
             </div>
 
             <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#657168]">
@@ -207,9 +210,9 @@ export function BecomeProPage() {
               La posizione in classifica non è in vendita.
             </h2>
             <p className="text-[#C5CEC8] text-lg mt-5 leading-relaxed">
-              Un eventuale abbonamento futuro potrà offrire CRM, calendario, continuità,
-              analytics e strumenti professionali. Non potrà comprare una qualifica,
-              una verifica o una posizione meritocratica migliore.
+              Calendario, messaggi, rubrica clienti, pacchetti e abbonamenti alle lezioni
+              sono già disponibili nel pannello. Eventuali piani a pagamento futuri
+              saranno separati dai criteri di verifica e di ranking.
             </p>
 
             <button
@@ -228,8 +231,8 @@ export function BecomeProPage() {
               text="Significa che il profilo può essere pubblicato."
             />
             <DarkCard
-              title="Professionista verificato"
-              text="Indica il completamento del processo previsto per il profilo."
+              title="Informazione dichiarata"
+              text="È inserita dal professionista. Non equivale a una verifica indipendente."
             />
             <DarkCard
               title="Qualifica verificata"
@@ -248,10 +251,10 @@ export function BecomeProPage() {
           <div>
             <div className="pc-kicker">Come funziona</div>
             <h2 className="pc-display text-3xl md:text-4xl mt-3">
-              Quattro passaggi, senza burocrazia finta.
+              Un profilo pronto, un passo alla volta.
             </h2>
             <p className="text-[#5D6961] mt-4">
-              Il controllo serve a rendere la rete credibile, non a riempire il profilo di badge.
+              Comincia dall’essenziale. Le sezioni si salvano separatamente e puoi riprendere il lavoro quando vuoi.
             </p>
           </div>
 
@@ -302,8 +305,8 @@ export function BecomeProPage() {
             <div className="mt-6 rounded-2xl bg-[#FFFEFA] border border-[#C8D7CC] p-5">
               <div className="font-semibold">Il futuro modello Pro</div>
               <p className="text-sm text-[#5D6961] mt-2">
-                Se il modello funziona, la monetizzazione sarà orientata a strumenti professionali
-                come CRM, calendario, continuità e automazioni. Non alla vendita del ranking.
+                Gli strumenti attuali si possono usare nella beta gratuita. Eventuali piani futuri
+                avranno condizioni comunicate prima dell’adesione; non compreranno posizioni nel ranking.
               </p>
             </div>
           </div>
@@ -335,11 +338,11 @@ export function BecomeProPage() {
               Primo gruppo PortaleCinofilo
             </div>
             <h2 className="pc-display text-3xl md:text-4xl mt-3">
-              Se il tuo lavoro merita di essere capito, rendiamolo visibile bene.
+              Proviamolo sul lavoro di ogni giorno.
             </h2>
             <p className="text-[#D6E0D9] mt-3 max-w-2xl">
-              Crea il profilo professionista. Durante la beta possiamo seguire manualmente
-              i primi ingressi per costruire una rete locale credibile.
+              Crea il profilo e il primo servizio. Poi dicci cosa ti aiuta e cosa ti rallenta:
+              il riscontro dei primi professionisti guiderà i prossimi miglioramenti.
             </p>
           </div>
 

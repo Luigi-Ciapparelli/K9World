@@ -8,7 +8,7 @@ assert.ok(['127.0.0.1', 'localhost'].includes(new URL(base).hostname), 'Use a lo
 const OUT=process.env.PC_SCREENSHOTS;
 if (OUT) await fs.mkdir(OUT, {recursive:true});
 const uid='d0000000-0000-0000-0000-000000000001';const errors=[];
-async function setup(width=1440, theme='light') {
+async function setup(width=1440, theme='light', approval='approved') {
  const context=await browser.newContext({viewport:{width,height:1000},serviceWorkers:'block'});
  await context.addInitScript(({uid,theme})=>{
   localStorage.setItem('pawconnect-theme',theme);
@@ -16,7 +16,7 @@ async function setup(width=1440, theme='light') {
  },{uid,theme});
  const writes=[];let fail=false;let failLoad=false;
  let profile={id:uid,full_name:'Elena Rossi',role:'professional',email:'test@example.invalid',email_verified:true,phone_verified:false,avatar_url:''};
- let pro={id:uid,professional_type:'trainer',listing_type:'individual',bio:'',zone_text:'Rimini',latitude:44.0678,longitude:12.5695,coverage_radius_km:20,starting_price:25,approved:true,approval_status:'approved',team_size:1};
+ let pro={id:uid,professional_type:'trainer',listing_type:'individual',bio:'',zone_text:'Rimini',latitude:44.0678,longitude:12.5695,coverage_radius_km:20,starting_price:25,approved:approval==='approved',approval_status:approval,team_size:1};
  let rules={min_lead_hours:4,cancellation_hours:24,min_duration_minutes:30,max_duration_minutes:480,buffer_minutes:15};
  let services=[];let credentials=[];
  await context.route('**/*.supabase.co/**',async route=>{
@@ -52,6 +52,7 @@ try {
  const t=await setup();const {page,context,writes}=t;
  await page.goto(base+'#/pro/settings');await page.getByRole('heading',{name:'Un passo alla volta. Il tuo lavoro prende forma.'}).waitFor();
  assert.equal(await page.locator('progress').getAttribute('value'),'2');
+ assert.equal(await page.getByRole('link',{name:'Apri profilo pubblico'}).getAttribute('href'),`/p/${uid}`);
  assert.equal(await page.locator('main input,main textarea,main select').count(),0);
  if(OUT) await page.screenshot({path:OUT+'/PortaleCinofilo_percorso_professionista.png',fullPage:true,animations:'disabled'});
  await page.getByRole('button',{name:'Continua il profilo',exact:true}).click();
@@ -108,6 +109,14 @@ try {
   await context.close();
  }
  const dark=await setup(1440,'dark');await dark.page.goto(base+'#/pro/settings');await dark.page.locator('progress').waitFor();if(OUT) await dark.page.screenshot({path:OUT+'/PortaleCinofilo_percorso_scuro.png',fullPage:true,animations:'disabled'});await dark.context.close();
+ for(const state of ['pending','rejected']) {
+  const t=await setup(390,'light',state);await t.page.goto(base+'#/pro/settings');await t.page.locator('progress').waitFor();
+  assert.equal(await t.page.getByRole('link',{name:'Apri profilo pubblico'}).count(),0);
+  assert.ok(await t.page.getByText(state==='pending'?'Profilo in attesa di approvazione':'Profilo da rivedere',{exact:true}).isVisible());
+  assert.ok(await t.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Approval notice mobile overflow');
+  await t.page.getByRole('button',{name:'Vedi stato e verifiche',exact:true}).click();await t.page.waitForURL(/step=verification/);
+  await t.context.close();
+ }
  const unavailable=await setup();unavailable.failLoad();await unavailable.page.goto(base+'#/pro/settings');await unavailable.page.getByRole('alert').waitFor();assert.equal(await unavailable.page.locator('progress').count(),0);await unavailable.context.close();
  assert.deepEqual(errors,[]);
  console.log('OK: dati persistiti e progressi reali, salvataggio per sezione, errori e retry, servizio in tre passi senza duplicati, protezione bozze, guide senza scritture, attestati, responsive e stato di errore. API simulate; nessun dato online modificato.');

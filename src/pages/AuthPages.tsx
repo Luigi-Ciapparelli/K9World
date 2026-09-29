@@ -17,35 +17,28 @@ export function SignInPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    const { error, role } = await signIn(email, password);
-    setLoading(false);
-
-    if (error) {
-      setError(error);
-      return;
+    try {
+      const { error, role } = await signIn(email.trim(), password);
+      if (error) {
+        setError(error);
+        return;
+      }
+      navigate(role === 'admin' ? '/admin' : role === 'professional' ? '/pro' : '/owner');
+    } catch {
+      setError('Accesso non riuscito. Controlla la connessione e riprova.');
+    } finally {
+      setLoading(false);
     }
-
-    if (role === 'admin') {
-      navigate('/admin');
-      return;
-    }
-
-    if (role === 'professional') {
-      navigate('/pro');
-      return;
-    }
-
-    navigate('/owner');
   };
 
   return (
     <AuthFrame title="Bentornato" subtitle="Accedi al tuo account PortaleCinofilo">
       <form onSubmit={submit} className="space-y-4">
-        <Field icon={<Mail className="w-4 h-4" />} type="email" placeholder="Email" value={email} onChange={setEmail} />
-        <Field icon={<Lock className="w-4 h-4" />} type="password" placeholder="Password" value={password} onChange={setPassword} />
-        {error && <p className="text-sm text-rose-600">{error}</p>}
+        <Field icon={<Mail className="w-4 h-4" />} type="email" placeholder="Email" value={email} onChange={setEmail} autoComplete="username" required />
+        <Field icon={<Lock className="w-4 h-4" />} type="password" placeholder="Password" value={password} onChange={setPassword} autoComplete="current-password" required />
+        {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}
         <button disabled={loading} className="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition disabled:opacity-50">
-          {loading ? 'Signing in...' : 'Accedi'}
+          {loading ? 'Accesso...' : 'Accedi'}
         </button>
         <p className="text-sm text-stone-600 text-center">
           Non hai un account? <button type="button" onClick={() => navigate('/signup')} className="text-emerald-700 font-semibold">Registrati</button>
@@ -58,7 +51,7 @@ export function SignInPage() {
 export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
   const [step, setStep] = useState<1 | 2 | 3>(defaultRole ? 2 : 1);
   const [role, setRole] = useState<Role>(defaultRole || 'owner');
-  const [professionalType, setProfessionalType] = useState<ProfessionalType>('walker');
+  const [professionalType, setProfessionalType] = useState<ProfessionalType | ''>('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -106,8 +99,13 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
     e.preventDefault();
     setError('');
 
-    if (!email || !password || !fullName || !phone) {
+    if (!email.trim() || !password || !fullName.trim() || !phone.trim()) {
       setError('Tutti i campi sono obbligatori');
+      return;
+    }
+
+    if (role === 'professional' && !professionalType) {
+      setError('Scegli la tua attività principale.');
       return;
     }
 
@@ -132,38 +130,42 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
 
     setLoading(true);
 
-    const { error, needsEmailConfirmation } = await signUp({
-      email,
-      password,
-      fullName,
-      phone,
-      role,
-      professionalType,
-      dogName,
-      dogBreed,
-      dogBirthDate,
-      dogWeight,
-      dogBreedSlug: selectedBreed?.slug,
-      dogFciGroup: selectedBreed?.fciGroup,
-      dogVaccinated,
-      dogReactive,
-      dogNotes,
-    });
+    try {
+      const { error, needsEmailConfirmation } = await signUp({
+        email: email.trim(),
+        password,
+        fullName: fullName.trim(),
+        phone: phone.trim(),
+        role,
+        professionalType: professionalType || undefined,
+        dogName,
+        dogBreed,
+        dogBirthDate,
+        dogWeight,
+        dogBreedSlug: selectedBreed?.slug,
+        dogFciGroup: selectedBreed?.fciGroup,
+        dogVaccinated,
+        dogReactive,
+        dogNotes,
+      });
 
-    setLoading(false);
+      if (error) {
+        setError(error);
+        return;
+      }
 
-    if (error) {
-      setError(error);
-      return;
+      if (needsEmailConfirmation) {
+        alert('Account creato. Controlla la tua email per confermare l’indirizzo, poi accedi a PortaleCinofilo.');
+        navigate('/signin');
+        return;
+      }
+
+      navigate(role === 'professional' ? '/pro/settings' : '/owner');
+    } catch {
+      setError('Registrazione non confermata. Controlla la connessione e riprova. Se hai già ricevuto l’email di conferma, usa Accedi.');
+    } finally {
+      setLoading(false);
     }
-
-    if (needsEmailConfirmation) {
-      alert('Account creato. Controlla la tua email per confermare l’indirizzo, poi accedi a PortaleCinofilo.');
-      navigate('/signin');
-      return;
-    }
-
-    navigate(role === 'professional' ? '/pro' : '/owner');
   };
 
   if (step === 1) {
@@ -172,15 +174,6 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
         <div className="space-y-3">
           <RoleCard active={role === 'owner'} onClick={() => setRole('owner')} title="Sono proprietario di un cane" subtitle="Voglio trovare servizi affidabili per il mio cane" />
           <RoleCard active={role === 'professional'} onClick={() => setRole('professional')} title="Sono un professionista" subtitle="Voglio offrire servizi e ricevere richieste" />
-          {role === 'professional' && (
-            <div className="grid grid-cols-2 gap-2 pt-2">
-              {(['walker','sitter','trainer','groomer','boarding'] as ProfessionalType[]).map((t) => (
-                <button key={t} onClick={() => setProfessionalType(t)} className={`py-2 rounded-lg text-sm capitalize border ${professionalType === t ? 'border-emerald-600 bg-emerald-50 text-emerald-700' : 'border-stone-200 text-stone-600'}`}>
-                  {t}
-                </button>
-              ))}
-            </div>
-          )}
           <button onClick={() => setStep(2)} className="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition mt-4">
             Continua
           </button>
@@ -351,7 +344,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
             />
           </div>
 
-          {error && <p className="text-sm text-rose-600">{error}</p>}
+          {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}
 
           <div className="flex gap-3">
             <button
@@ -375,20 +368,32 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
   }
 
   return (
-    <AuthFrame title="Crea il tuo account" subtitle="Verifichiamo email e telefono per aumentare la sicurezza">
+    <AuthFrame title={role === 'professional' ? 'Inizia il tuo profilo professionale' : 'Crea il tuo account'} subtitle={role === 'professional' ? 'Per addestratori, centri cinofili e strutture.' : 'Il primo passo per trovare aiuto per il tuo cane.'}>
       <form onSubmit={submit} className="space-y-4">
-        <Field icon={<User className="w-4 h-4" />} placeholder="Nome e cognome" value={fullName} onChange={setFullName} />
-        <Field icon={<Mail className="w-4 h-4" />} type="email" placeholder="Email" value={email} onChange={setEmail} />
-        <Field icon={<Phone className="w-4 h-4" />} type="tel" placeholder="Telefono" value={phone} onChange={setPhone} />
-        <Field icon={<Lock className="w-4 h-4" />} type="password" placeholder="Password" value={password} onChange={setPassword} />
+        {role === 'professional' && <div>
+          <label htmlFor="signup-activity" className="block text-sm font-semibold text-stone-700 mb-2">Attività principale</label>
+          <select id="signup-activity" value={professionalType} onChange={event => setProfessionalType(event.target.value as ProfessionalType | '')} required aria-describedby="signup-activity-help" className="w-full min-w-0 border border-stone-300 rounded-xl px-3 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <option value="" disabled>Scegli la tua attività</option>
+            <option value="trainer">Educazione e addestramento</option>
+            <option value="boarding">Pensione per cani</option>
+            <option value="sitter">Dog sitter</option>
+            <option value="walker">Passeggiate con il cane</option>
+            <option value="groomer">Toelettatura</option>
+          </select>
+          <p id="signup-activity-help" className="mt-2 text-xs text-stone-600">Scegli l’attività prevalente. Nel profilo guidato potrai indicare il nome del centro o della struttura e aggiungere i servizi offerti.</p>
+        </div>}
+        <Field icon={<User className="w-4 h-4" />} placeholder={role === 'professional' ? 'Nome e cognome del referente' : 'Nome e cognome'} value={fullName} onChange={setFullName} autoComplete="name" required />
+        <Field icon={<Mail className="w-4 h-4" />} type="email" placeholder="Email" value={email} onChange={setEmail} autoComplete="email" required />
+        <Field icon={<Phone className="w-4 h-4" />} type="tel" placeholder="Telefono" value={phone} onChange={setPhone} autoComplete="tel" required />
+        <Field icon={<Lock className="w-4 h-4" />} type="password" placeholder="Password" value={password} onChange={setPassword} autoComplete="new-password" required />
         <div className="flex items-center gap-2 text-xs text-stone-600 bg-amber-50 p-3 rounded-lg border border-amber-100">
-          <Check className="w-4 h-4 text-amber-600" /> Dopo la registrazione potrai verificare email e telefono.
+          <Check className="w-4 h-4 text-amber-600 shrink-0" /> Usa un’email che puoi consultare: servirà per confermare l’account.
         </div>
-        {error && <p className="text-sm text-rose-600">{error}</p>}
+        {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}
         <div className="flex gap-3">
           <button type="button" onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl border border-stone-300 font-semibold">Indietro</button>
           <button disabled={loading} className="flex-1 bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition disabled:opacity-50">
-            {loading ? 'Creazione...' : 'Crea account'}
+            {loading ? 'Creazione...' : role === 'owner' ? 'Continua: il tuo cane' : 'Crea account'}
           </button>
         </div>
       </form>
@@ -411,18 +416,23 @@ function AuthFrame({ title, subtitle, children }: { title: string; subtitle: str
   );
 }
 
-function Field({ icon, type = 'text', placeholder, value, onChange }: { icon: React.ReactNode; type?: string; placeholder: string; value: string; onChange: (v: string) => void }) {
+function Field({ icon, type = 'text', placeholder, value, onChange, autoComplete, required = false }: { icon: React.ReactNode; type?: string; placeholder: string; value: string; onChange: (v: string) => void; autoComplete?: string; required?: boolean }) {
   return (
-    <div className="relative">
-      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">{icon}</div>
+    <label className="block text-sm font-semibold text-stone-700">
+      <span className="block mb-2">{placeholder}</span>
+      <span className="relative block font-normal">
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" aria-hidden="true">{icon}</span>
       <input
         type={type}
         placeholder={placeholder}
+        autoComplete={autoComplete}
+        required={required}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full pl-10 pr-3 py-3 border border-stone-300 rounded-xl text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100"
       />
-    </div>
+      </span>
+    </label>
   );
 }
 

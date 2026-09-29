@@ -13,6 +13,8 @@ export function ProSetupOverview({ name, pro, services, onOpen }: { name: string
   const base = setupSteps.filter(step => step.group === 'base');
   const count = Object.values(completed).filter(Boolean).length;
   const next = base.find(step => !completed[step.id]);
+  const approved = pro?.approved === true && pro?.approval_status === 'approved';
+  const rejected = pro?.approval_status === 'rejected';
   const explored = user ? readExploredTools(user.id) : [];
   const tours = toolTours.filter(tool => tool.id !== 'archive' || continuityEnabled);
   const icons = [UserRound, MapPin, FileText, Package];
@@ -25,7 +27,12 @@ export function ProSetupOverview({ name, pro, services, onOpen }: { name: string
     </header>
     <div className="pg-tabs" role="tablist" aria-label="Il tuo percorso" onKeyDown={event => { if (event.key === "ArrowRight" || event.key === "ArrowLeft") { event.preventDefault(); const next = tab === "profile" ? "tools" : "profile"; setTab(next); document.getElementById(`pg-${next}-tab`)?.focus(); } }}><button id="pg-profile-tab" role="tab" tabIndex={tab === 'profile' ? 0 : -1} aria-selected={tab === 'profile'} aria-controls="pg-profile-panel" onClick={() => setTab('profile')}>01 <span>Costruisci il profilo</span></button><button id="pg-tools-tab" role="tab" tabIndex={tab === 'tools' ? 0 : -1} aria-selected={tab === 'tools'} aria-controls="pg-tools-panel" onClick={() => setTab('tools')}>02 <span>Esplora gli strumenti</span></button></div>
     {tab === 'profile' ? <section id="pg-profile-panel" role="tabpanel" aria-labelledby="pg-profile-tab" className="pg-panel-enter">
-      <div className="pg-section-heading"><div><h2>Le basi, senza complicazioni.</h2><p>Ogni passaggio si salva separatamente. Puoi aprirli nell’ordine che preferisci.</p></div>{user && <a href={`/p/${user.id}`} target="_blank" rel="noreferrer" className="pg-text-link">Apri profilo pubblico <ArrowRight size={16} /></a>}</div>
+      <div className="pg-section-heading"><div><h2>Le basi, senza complicazioni.</h2><p>Ogni passaggio si salva separatamente. Puoi aprirli nell’ordine che preferisci.</p></div>{user && approved && <a href={`/p/${user.id}`} target="_blank" rel="noreferrer" className="pg-text-link">Apri profilo pubblico <ArrowRight size={16} /></a>}</div>
+      <div className="pg-approval-notice" role="status">
+        <strong>{approved ? 'Profilo approvato' : rejected ? 'Profilo da rivedere' : 'Profilo in attesa di approvazione'}</strong>
+        <p>{approved ? 'Per comparire nella ricerca controlla zona, servizi attivi e preferenze di visibilità.' : rejected ? 'Apri le verifiche per leggere le indicazioni ricevute e aggiornare il profilo.' : 'Completa i quattro passaggi di base. Il profilo sarà pubblico dopo il controllo dell’amministrazione; salvare i dati non lo pubblica automaticamente.'}</p>
+        <button type="button" className="pg-text-link" onClick={() => onOpen(approved ? 'visibility' : 'verification')}>{approved ? 'Controlla la visibilità' : 'Vedi stato e verifiche'} <ArrowRight size={16} /></button>
+      </div>
       <div className="pg-task-list">{base.map((step, index) => { const Icon = icons[index]; const done = completed[step.id]; return <button key={step.id} className={`pg-task ${done ? 'is-done' : ''}`} onClick={() => onOpen(step.id)}><span className="pg-task-icon">{done ? <Check size={22} /> : <Icon size={22} />}</span><span className="pg-task-copy"><strong>{step.label}</strong><span>{step.description}</span></span><span className="pg-task-status">{done ? 'Completato' : 'Da completare'}</span><ArrowRight size={18} aria-hidden="true" /></button>; })}</div>
       <p className="pg-footnote">L’avanzamento indica i dati salvati. L’approvazione del profilo e le verifiche delle competenze restano separate.</p>
       <div className="pg-section-heading"><div><h2>Rendilo tuo.</h2><p>Immagine, competenze e preferenze: scegli cosa curare adesso.</p></div><Camera size={24} aria-hidden="true" /></div>

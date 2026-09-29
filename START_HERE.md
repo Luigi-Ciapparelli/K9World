@@ -1,5 +1,21 @@
 # START HERE — PawConnect / Portalecinofilo
 
+## Ingresso professionisti e prima beta accompagnata — 29 settembre 2026
+
+Base remota riletta: `0d113db` (`main`), dopo `2cfc932` (SEO) e
+`5bfe88b` (profilo guidato). Luigi conferma Search Console verificata e sitemap
+inserita. Home, ricerca, profilo e ingresso professionisti osservati online.
+Questo supera gli stati di pubblicazione ancora incerti nei checkpoint storici.
+
+Corretto nell'incremento corrente l'ingresso diretto che assegnava `walker`
+senza scelta; attività obbligatoria, modulo accessibile, stato approvazione
+in panoramica e pagina professionisti allineata alle funzioni presenti.
+TypeScript, build e test browser isolati superati. Nessuna migration.
+Dettagli, prove reali ancora da completare e piano d'invito:
+[PILOT_READINESS_V1.md](docs/PILOT_READINESS_V1.md).
+Bozze: [PILOT_INVITATIONS.md](docs/PILOT_INVITATIONS.md).
+Questo incremento resta da applicare/pubblicare; nessun invito inviato.
+
 ## SEO e accessibilità ai motori — 29 settembre 2026
 
 Base GitHub verificata: `5bfe88b`; il precedente profilo guidato è già su main.

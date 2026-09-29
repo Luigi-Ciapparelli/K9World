@@ -58,6 +58,9 @@
 .pg-task-copy > span { display:block; color:var(--pg-muted); font-size:11px; line-height:1.6; margin-top:4px; }
 .pg-task-status { font-size:9px; color:var(--pg-muted); border-radius:99px; background:#a8b59615; padding:5px 9px; white-space:nowrap; }
 .pg-task.is-done .pg-task-status { color:var(--pg-green); }
+.pg-approval-notice { border:1px solid var(--pg-line); border-left:3px solid var(--pg-green); border-radius:12px; padding:16px 20px; margin-bottom:18px; background:var(--pg-paper); }
+.pg-approval-notice strong { font-size:14px; }
+.pg-approval-notice p { font-size:13px; color:var(--pg-muted); line-height:1.65; margin:6px 0 10px; }
 .pg-footnote { color:var(--pg-muted); font-size:10px; line-height:1.75; margin-top:15px; }
 .pg-extra-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
 .pg-extra-grid button { padding:18px; border:1px solid var(--pg-line); border-radius:14px; text-align:left; }
