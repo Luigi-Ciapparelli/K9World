@@ -10,6 +10,8 @@ import { PageMetadata } from './components/PageMetadata';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { usePasswordRecovery } from './lib/passwordRecovery';
 
+const AccountContactsPage = lazy(() => import('./pages/AccountContactsPage').then(module => ({ default: module.AccountContactsPage })));
+
 const ForgotPasswordPage = lazy(() => import('./pages/PasswordRecoveryPages').then(module => ({ default: module.ForgotPasswordPage })));
 const ResetPasswordPage = lazy(() => import('./pages/PasswordRecoveryPages').then(module => ({ default: module.ResetPasswordPage })));
 
@@ -150,7 +152,8 @@ function AppShell() {
   const isAdminRoute = basePath === '/admin' || basePath.startsWith('/admin/');
   const isProRoute = basePath === '/pro' || basePath.startsWith('/pro/');
   const isOwnerRoute = basePath === '/owner' || basePath.startsWith('/owner/');
-  const isProtectedRoute = isAdminRoute || isProRoute || isOwnerRoute;
+  const isAccountRoute = basePath === '/account/contacts';
+  const isProtectedRoute = isAdminRoute || isProRoute || isOwnerRoute || isAccountRoute;
 
   const roleHome =
     profile?.role === 'admin'
@@ -189,7 +192,7 @@ function AppShell() {
     const canAccessOwner =
       isOwnerRoute && (profile.role === 'owner' || profile.role === 'admin');
 
-    if (!canAccessAdmin && !canAccessPro && !canAccessOwner) {
+    if (!canAccessAdmin && !canAccessPro && !canAccessOwner && !isAccountRoute) {
       navigate(roleHome);
       return null;
     }
@@ -230,6 +233,7 @@ function AppShell() {
   else if (basePath === '/professional-terms') content = <ProfessionalTermsPage />;
   else if (basePath === '/ranking') content = <RankingPage />;
   else if (basePath === '/contact') content = <ContactPage />;
+  else if (basePath === '/account/contacts') content = <AccountContactsPage />;
   else if (basePath === '/admin') content = <AdminDashboard />;
   else if (basePath === '/owner') content = <OwnerDashboard />;
   else if (basePath === '/owner/relationships' && continuityEnabled) content = <ContinuityPage professional={false} />;

@@ -7,13 +7,13 @@ export function normalizeRoute(value: string) {
   return path + (query ? `?${query}` : '');
 }
 export function privateRoute(path: string) {
-  return /^\/(?:owner|pro|admin)(?:\/|$)/.test(path.split('?')[0]) || /^\/(?:signin|signup|forgot-password|reset-password)$/.test(path.split('?')[0]);
+  return /^\/(?:owner|pro|admin|account)(?:\/|$)/.test(path.split('?')[0]) || /^\/(?:signin|signup|forgot-password|reset-password)$/.test(path.split('?')[0]);
 }
 export function routeHref(path: string) {
   const safe = normalizeRoute(path);
   if (!safe.startsWith('/') || safe.startsWith('//')) return '/';
   // Keep the fragment available for the Supabase email callback.
-  if (/^\/(?:forgot-password|reset-password)$/.test(safe.split('?')[0])) return safe;
+  if (/^\/(?:forgot-password|reset-password|account\/contacts)$/.test(safe.split('?')[0])) return safe;
   return privateRoute(safe) ? `/#${safe}` : safe;
 }
 export function readBrowserRoute() {

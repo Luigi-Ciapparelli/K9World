@@ -31,7 +31,7 @@ export function Footer() {
 
             <div className="inline-flex items-center gap-2 mt-5 rounded-full border border-[#235B40] bg-[#163D2A]/70 px-4 py-2 text-sm text-[#E4EEE7]">
               <ShieldCheck className="w-4 h-4" />
-              Beta locale · Romagna
+              Cultura cinofila accessibile
             </div>
           </div>
 
@@ -94,7 +94,7 @@ export function Footer() {
 
         <div className="border-t border-[#2E3932] mt-8 pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-xs text-[#859189]">
           <p>© 2026 PortaleCinofilo · Luigi Ciapparelli. Tutti i diritti riservati.</p>
-          <p>Versione beta · nessun pay-to-rank · nessun pagamento gestito dalla piattaforma.</p>
+          <p>Formazione di base gratuita · pagamenti delle prestazioni concordati direttamente.</p>
         </div>
       </div>
     </footer>

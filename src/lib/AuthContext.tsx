@@ -139,6 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email,
       password,
       options: {
+        emailRedirectTo: window.location.origin + '/account/contacts',
         data: {
           pawconnect_onboarding_version: '1',
           full_name: fullName,

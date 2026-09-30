@@ -1,5 +1,14 @@
 # AI Continuity Protocol
 
+## Recapiti — regola introdotta il 30 settembre 2026
+
+Prima di modificare verifica, email o telefono leggere `ACCOUNT_CONTACTS_V1.md`.
+Non confondere `auth.users.email_confirmed_at` con prova di ricezione quando
+Auth usa autoconferma. Non ripristinare codici di sviluppo o scritture dirette
+dei flag. Il cambio recapito deve rispettare la conferma dell'altro recapito
+verificato e del nuovo, anche lato server. Registrare separatamente configurazione
+SMTP/SMS, migration, funzioni Edge, frontend e collaudo reale.
+
 This repository must be sufficient for a new ChatGPT account, developer or collaborator to reconstruct both:
 
 1. what PawConnect is meant to become;

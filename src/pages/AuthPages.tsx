@@ -5,12 +5,15 @@ import { useRouter } from '../lib/RouterContext';
 import type { ProfessionalType, Role } from '../lib/types';
 import { loadFciBreeds, normalizeBreedSearch, type FciBreed } from '../lib/fciBreeds';
 import { bookingAuthPath, bookingDestination } from '../lib/bookingEntry';
+import { supabase } from '../lib/supabase';
 
 export function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [confirmationInfo, setConfirmationInfo] = useState('');
+  const [resending, setResending] = useState(false);
   const { signIn } = useAuth();
   const { navigate, path } = useRouter();
   const destination = bookingDestination(path);
@@ -46,6 +49,19 @@ export function SignInPage() {
         <p className="text-sm text-stone-600 text-center">
           Non hai un account? <button type="button" onClick={() => navigate(bookingAuthPath('signup', destination))} className="text-emerald-700 font-semibold">Registrati</button>
         </p>
+        <div className="border-t border-stone-200 pt-4 text-sm text-stone-600">
+          <p>Non hai ricevuto la conferma? Inserisci la tua email nel campo sopra.</p>
+          <button type="button" disabled={resending || !email.trim()} className="mt-2 font-semibold text-emerald-700 underline disabled:opacity-50" onClick={async () => {
+            if (resending) return;
+            setResending(true); setConfirmationInfo('');
+            try {
+              const result = await supabase.auth.resend({ type:'signup', email:email.trim(), options:{emailRedirectTo:window.location.origin+'/account/contacts'} });
+              setConfirmationInfo(result.error ? 'Invio non riuscito. Attendi un minuto e riprova; se persiste, contatta info@portalecinofilo.com.' : 'Se l’indirizzo è in attesa di conferma, riceverai una nuova email. Controlla anche lo spam.');
+            } catch { setConfirmationInfo('Invio non confermato. Controlla la connessione e riprova.'); }
+            finally { setResending(false); }
+          }}>{resending ? 'Invio in corso…' : 'Reinvia email di conferma'}</button>
+          {confirmationInfo && <p role="status" className="mt-2">{confirmationInfo}</p>}
+        </div>
       </form>
     </AuthFrame>
   );

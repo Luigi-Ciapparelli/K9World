@@ -16,9 +16,11 @@
     { "source": "/signin", "destination": "/app-shell" },
     { "source": "/signup", "destination": "/app-shell" },
     { "source": "/forgot-password", "destination": "/app-shell" },
-    { "source": "/reset-password", "destination": "/app-shell" }
+    { "source": "/reset-password", "destination": "/app-shell" },
+    { "source": "/account/:path*", "destination": "/app-shell" }
   ],
   "headers": [
+    { "source": "/account/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }, { "key": "Referrer-Policy", "value": "no-referrer" }] },
     { "source": "/forgot-password", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }, { "key": "Referrer-Policy", "value": "no-referrer" }] },
     { "source": "/reset-password", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }, { "key": "Referrer-Policy", "value": "no-referrer" }] },
     { "source": "/pro/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },

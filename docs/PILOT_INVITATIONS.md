@@ -1,5 +1,7 @@
 # Inviti per la beta accompagnata
 
+> Documento storico. Per il lancio corrente usare [LAUNCH_READINESS_V1.md](LAUNCH_READINESS_V1.md) e [LAUNCH_COPY_V1.md](LAUNCH_COPY_V1.md). La richiesta aggiornata di Luigi esclude le etichette pubbliche beta/MVP.
+
 Bozze da personalizzare e inviare individualmente, dopo i controlli indicati in
 [PILOT_READINESS_V1.md](PILOT_READINESS_V1.md). Nessun messaggio inviato
 automaticamente. Non pubblicare destinatari o risposte nel repository.

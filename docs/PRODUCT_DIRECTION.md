@@ -1,6 +1,15 @@
 # PortaleCinofilo — Product Direction
 
-_Last updated: 2026-09-26_
+_Last updated: 2026-09-30_
+
+## Lancio corrente
+
+Inviti personali ai primi professionisti e strutture, con costi contenuti.
+Nessuna etichetta pubblica beta/MVP; funzioni e limiti concreti sempre espliciti.
+Email verificata, SMS spenti per default, nessun acquisto Twilio o campagna
+pubblicitaria. Formazione di base gratuita; eventuali futuri piani professionali
+con adesione distinta, senza ranking a pagamento. Riferimenti operativi:
+[LAUNCH_READINESS_V1.md](LAUNCH_READINESS_V1.md) e [LAUNCH_COPY_V1.md](LAUNCH_COPY_V1.md).
 
 ## 1. Missione
 

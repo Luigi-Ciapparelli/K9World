@@ -1727,6 +1727,7 @@ export function ProSettings() {
             verified={profile?.phone_verified || false}
             onVerify={() => setVerifying('phone')}
           />
+        <button type="button" onClick={() => navigate('/account/contacts')} className="mt-4 rounded-xl border border-emerald-700 px-4 py-3 font-semibold text-emerald-800">Modifica email o telefono</button>
         </Section>
 
               </>}

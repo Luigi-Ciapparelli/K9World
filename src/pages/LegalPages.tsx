@@ -14,14 +14,14 @@ export function PrivacyPage() {
   return (
     <LegalLayout
       title="Privacy Policy"
-      subtitle="Come PortaleCinofilo tratta i dati personali durante la fase beta."
+      subtitle="Come PortaleCinofilo tratta i dati personali."
       icon={<ShieldCheck className="w-7 h-7" />}
     >
       <VersionStamp />
 
       <Section title="1. Titolare del trattamento">
         <p>
-          Il titolare del trattamento per la fase beta è <strong>Luigi Ciapparelli</strong>,
+          Il titolare del trattamento è <strong>Luigi Ciapparelli</strong>,
           che gestisce PortaleCinofilo come persona fisica.
         </p>
         <p className="mt-2">
@@ -86,7 +86,8 @@ export function PrivacyPage() {
         <p>
           PortaleCinofilo utilizza fornitori tecnici per hosting, database, autenticazione,
           sicurezza e distribuzione dell'applicazione. Nella configurazione attuale rientrano
-          servizi come Vercel e Supabase. I fornitori trattano i dati nella misura necessaria
+          Vercel per il sito, Supabase per dati e autenticazione e Resend per le email
+          di servizio, incluse conferma account e recupero password. I fornitori trattano i dati nella misura necessaria
           all'erogazione dei rispettivi servizi.
         </p>
         <p className="mt-3">
@@ -144,7 +145,7 @@ export function CookiePage() {
   return (
     <LegalLayout
       title="Cookie e tecnologie locali"
-      subtitle="Una configurazione beta deliberatamente semplice e priva di profilazione pubblicitaria."
+      subtitle="Come vengono utilizzati cookie e tecnologie di memorizzazione."
       icon={<Cookie className="w-7 h-7" />}
     >
       <VersionStamp />
@@ -157,9 +158,9 @@ export function CookiePage() {
         </p>
       </Section>
 
-      <Section title="2. Niente profilazione pubblicitaria nella beta">
+      <Section title="2. Nessuna profilazione pubblicitaria">
         <p>
-          Nella configurazione attuale della beta PortaleCinofilo non integra strumenti di profilazione
+          Nella configurazione attuale PortaleCinofilo non integra strumenti di profilazione
           pubblicitaria, retargeting o tracking cross-site come Meta Pixel, TikTok Pixel o analoghi.
         </p>
       </Section>
@@ -187,7 +188,7 @@ export function TermsPage() {
   return (
     <LegalLayout
       title="Termini di utilizzo"
-      subtitle="Regole essenziali per proprietari e visitatori della beta PortaleCinofilo."
+      subtitle="Regole essenziali per proprietari e visitatori di PortaleCinofilo."
       icon={<FileText className="w-7 h-7" />}
     >
       <VersionStamp />
@@ -215,7 +216,7 @@ export function TermsPage() {
 
       <Section title="3. Richieste, accordi e pagamenti">
         <p>
-          Nella beta le funzioni di richiesta o prenotazione servono principalmente a mettere in
+          Le funzioni di richiesta o prenotazione servono principalmente a mettere in
           contatto proprietario e professionista e a gestirne lo stato operativo. PortaleCinofilo
           non incassa attualmente pagamenti per la prestazione professionale.
         </p>
@@ -268,9 +269,9 @@ export function TermsPage() {
         </p>
       </Section>
 
-      <Section title="8. Beta e disponibilità">
+      <Section title="8. Aggiornamenti e disponibilità">
         <p>
-          PortaleCinofilo è in fase beta: funzioni e processi possono evolvere. Correzioni, manutenzione
+          Le funzioni e i processi di PortaleCinofilo possono evolvere. Correzioni, manutenzione
           o esigenze di sicurezza possono rendere temporaneamente indisponibili parti del servizio.
         </p>
       </Section>
@@ -377,7 +378,7 @@ export function ProfessionalTermsPage() {
           <a className="font-semibold underline" href={`mailto:${CONTACT_EMAIL}`}>
             {CONTACT_EMAIL}
           </a>
-          . Durante la beta le contestazioni possono essere gestite manualmente.
+          . Le contestazioni vengono attualmente gestite manualmente.
         </p>
       </Section>
     </LegalLayout>
@@ -440,7 +441,7 @@ export function ContactPage() {
   return (
     <LegalLayout
       title="Contatti"
-      subtitle="Informazioni, candidature, assistenza e segnalazioni sulla beta."
+      subtitle="Informazioni, iscrizioni, assistenza e segnalazioni."
       icon={<Mail className="w-7 h-7" />}
     >
       <div className="grid md:grid-cols-2 gap-5">
@@ -465,9 +466,10 @@ export function ContactPage() {
           </a>
         </InfoCard>
 
-        <InfoCard title="Area beta">
+        <InfoCard title="Primi passi">
           <p className="text-[#3F4943]">
-            PortaleCinofilo sta preparando la beta locale in Romagna prima dell'espansione nazionale.
+            Stiamo costruendo la rete dei professionisti, a partire dalla Romagna.
+            Scrivici per ricevere aiuto nella creazione del tuo profilo o nel primo utilizzo.
           </p>
         </InfoCard>
 
@@ -508,7 +510,7 @@ function LegalLayout({
             {icon}
           </div>
           <p className="uppercase tracking-[0.22em] text-xs font-semibold text-[#D5A33A] mb-3">
-            PortaleCinofilo · Beta
+            PortaleCinofilo
           </p>
           <h1 className="text-4xl md:text-5xl font-bold">{title}</h1>
           <p className="text-[#D7DED8] mt-3 text-lg">{subtitle}</p>
@@ -529,9 +531,9 @@ function VersionStamp() {
     <div className="mb-8 rounded-2xl border border-[#D5A33A]/30 bg-[#D5A33A]/10 p-4 flex gap-3 text-[#58451A]">
       <AlertTriangle className="w-5 h-5 mt-0.5 shrink-0" />
       <div>
-        <div className="font-bold">Versione beta</div>
+        <div className="font-bold">Informazioni sul servizio</div>
         <p className="text-sm mt-1">
-          Ultima revisione: 15 settembre 2026. I testi saranno sottoposti a revisione professionale
+          Ultimo aggiornamento: 30 settembre 2026. I testi saranno sottoposti a revisione professionale
           prima della monetizzazione o del lancio commerciale su larga scala.
         </p>
       </div>

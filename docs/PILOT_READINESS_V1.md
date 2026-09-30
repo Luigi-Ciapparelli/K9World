@@ -1,5 +1,7 @@
 # Primo gruppo di professionisti — 29 settembre 2026
 
+> Documento storico. Per il lancio corrente usare [LAUNCH_READINESS_V1.md](LAUNCH_READINESS_V1.md) e [LAUNCH_COPY_V1.md](LAUNCH_COPY_V1.md). La richiesta aggiornata di Luigi esclude le etichette pubbliche beta/MVP.
+
 ## Stato e decisione proposta
 
 Base letta da GitHub: `0d113db` su `main`. Comprende Home con media,

@@ -38,7 +38,7 @@ const valuePoints = [
 
 const steps = [
   {
-    title: 'Entra nella beta',
+    title: 'Crea il tuo profilo',
     text: 'Scegli l’attività principale, inserisci i contatti del referente e conferma l’email.',
   },
   {
@@ -66,8 +66,8 @@ const requirements = [
 
 const faqs = [
   {
-    q: 'Quanto costa entrare nella beta?',
-    a: 'Per il primo gruppo di professionisti la beta è gratuita. L’obiettivo adesso è validare il servizio, costruire una rete credibile e generare relazioni reali.',
+    q: 'Quanto costa iscriversi?',
+    a: 'L’iscrizione e gli strumenti attualmente disponibili sono gratuiti. Non chiediamo una carta di pagamento. Eventuali servizi a pagamento futuri avranno condizioni da accettare separatamente: nessun passaggio automatico a un piano a pagamento.',
   },
   {
     q: 'Pagando posso comparire più in alto?',
@@ -91,7 +91,7 @@ const faqs = [
   },
   {
     q: 'PortaleCinofilo incassa il pagamento del cliente?',
-    a: 'Non nella beta. La piattaforma facilita ricerca e richiesta; il pagamento della prestazione resta fuori dal portale in questa fase.',
+    a: 'No. La piattaforma facilita ricerca, richieste e organizzazione del lavoro. Il prezzo della prestazione e il pagamento si concordano direttamente con il cliente, fuori dal portale.',
   },
 ];
 
@@ -103,7 +103,7 @@ export function BecomeProPage() {
       <section className="border-b border-[#D8D5CC] bg-[#FFFEFA]">
         <div className="max-w-7xl mx-auto px-6 py-16 lg:py-20 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
           <div>
-            <div className="pc-kicker mb-5">PortaleCinofilo · Beta professionisti</div>
+            <div className="pc-kicker mb-5">PortaleCinofilo · Per addestratori e strutture</div>
 
             <h1 className="pc-display text-4xl md:text-6xl leading-[1.02] max-w-4xl">
               Fai conoscere il tuo lavoro.
@@ -113,7 +113,7 @@ export function BecomeProPage() {
             <p className="text-lg md:text-xl text-[#536058] mt-6 max-w-2xl leading-relaxed">
               Per addestratori, centri cinofili e strutture: un profilo pubblico,
               richieste con informazioni sul cane, messaggi e calendario.
-              La beta è gratuita per il primo gruppo, a partire dalla Romagna.
+              Crea gratuitamente il tuo profilo e gestisci il lavoro in un unico posto.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mt-8">
@@ -122,12 +122,12 @@ export function BecomeProPage() {
                 onClick={() => navigate('/signup?role=professional')}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[#163D2A] px-6 py-3.5 font-semibold text-white hover:bg-[#235B40] transition"
               >
-                Entra nella beta
+                Crea il tuo profilo
                 <ArrowRight className="w-4 h-4" />
               </button>
 
               <a
-                href="mailto:info@portalecinofilo.com?subject=Primi%20passi%20nella%20beta"
+                href="mailto:info@portalecinofilo.com?subject=Il%20mio%20profilo%20su%20PortaleCinofilo"
                 className="inline-flex items-center justify-center rounded-full border border-[#AEB8B0] bg-[#FFFEFA] px-6 py-3.5 font-semibold text-[#18211C] hover:border-[#163D2A] transition"
               >
                 Scrivici per iniziare
@@ -137,11 +137,11 @@ export function BecomeProPage() {
             <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#657168]">
               <span className="inline-flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-[#235B40]" />
-                Beta gratuita
+                Iscrizione gratuita · nessuna carta
               </span>
               <span className="inline-flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-[#235B40]" />
-                Nessun pay-to-rank
+                Posizioni non acquistabili
               </span>
               <span className="inline-flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-[#235B40]" />
@@ -163,7 +163,7 @@ export function BecomeProPage() {
                 <MicroProof
                   icon={<Users />}
                   title="Primo gruppo locale"
-                  text="Non stiamo importando migliaia di profili vuoti."
+                  text="Una rete in costruzione, con supporto diretto nei primi passi."
                 />
                 <MicroProof
                   icon={<Briefcase />}
@@ -180,7 +180,7 @@ export function BecomeProPage() {
         <div className="max-w-3xl mb-9">
           <div className="pc-kicker">Perché esserci adesso</div>
           <h2 className="pc-display text-3xl md:text-5xl mt-3">
-            Non un'altra vetrina. Un posto in cui il lavoro professionale resta riconoscibile.
+            Il tuo lavoro, dal primo contatto agli appuntamenti.
           </h2>
           <p className="text-[#5D6961] mt-5 text-lg">
             PortaleCinofilo nasce per distinguere ciò che è dichiarato da ciò che è verificato,
@@ -293,20 +293,22 @@ export function BecomeProPage() {
           <div className="rounded-3xl border border-[#C8D7CC] bg-[#E4EEE7] p-6 md:p-8">
             <div className="flex items-center gap-3">
               <Sparkles className="w-6 h-6 text-[#163D2A]" />
-              <h2 className="text-2xl font-bold">Perché la beta è gratuita</h2>
+              <h2 className="text-2xl font-bold">Inizia senza costi di iscrizione</h2>
             </div>
 
             <p className="text-[#425047] mt-5 text-lg leading-relaxed">
-              Prima di vendere strumenti vogliamo dimostrare che PortaleCinofilo genera valore reale:
-              proprietari che trovano il professionista giusto, richieste che ricevono risposta e
-              professionisti che tornano a usare il portale.
+              Stiamo costruendo la rete dei primi professionisti, a partire dalla Romagna.
+              Puoi presentare la tua attività e usare gli strumenti disponibili gratuitamente.
+              L’iscrizione non garantisce un numero di richieste: ti aiutiamo a preparare un profilo
+              chiaro e a gestire i contatti che ricevi.
             </p>
 
             <div className="mt-6 rounded-2xl bg-[#FFFEFA] border border-[#C8D7CC] p-5">
               <div className="font-semibold">Il futuro modello Pro</div>
               <p className="text-sm text-[#5D6961] mt-2">
-                Gli strumenti attuali si possono usare nella beta gratuita. Eventuali piani futuri
-                avranno condizioni comunicate prima dell’adesione; non compreranno posizioni nel ranking.
+                Eventuali strumenti a pagamento saranno una scelta esplicita, con prezzi e condizioni
+                comunicati prima dell’adesione. Non daranno posizioni migliori nella ricerca.
+                La formazione di base per i proprietari resterà gratuita.
               </p>
             </div>
           </div>
@@ -351,7 +353,7 @@ export function BecomeProPage() {
             onClick={() => navigate('/signup?role=professional')}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FFFEFA] text-[#163D2A] px-6 py-3.5 font-bold hover:bg-[#F5F1E7] transition shrink-0"
           >
-            Entra nella beta
+            Crea il tuo profilo
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>

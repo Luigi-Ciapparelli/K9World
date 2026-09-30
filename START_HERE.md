@@ -1,5 +1,42 @@
 # START HERE — PawConnect / Portalecinofilo
 
+## Lancio con costi contenuti — 30 settembre 2026
+
+Decisione di Luigi: arrivare agli inviti senza nuovi servizi a pagamento e
+senza presentare il prodotto come “beta” o “MVP”. Verifica SMS disattivata
+per default e controlli UI coerenti; conferma email e prenotazioni disponibili
+senza telefono verificato. Le regole SQL di cambio recapito restano invariate.
+Pagina professionisti, footer e informazioni pubbliche aggiornati; iscrizione
+attualmente gratuita, futura adesione a pagamento solo esplicita.
+
+Luigi ha confermato registrazione e recupero password reali, ricezione email
+in inbox e ritorno al dominio .com. Ultima diagnosi fornita: auto-conferma
+email false, telefono false; nomi dei secret Resend presenti. Questo supera
+la precedente osservazione di auto-conferma attiva. SMTP funzionante non
+prova da solo l'invio del nuovo codice Edge: resta un controllo reale finale.
+
+Base remota riletta: `49f22f7`. Recapiti e rilascio corrente preparati, non
+ancora pubblicati da questo ambiente. Nessuna email di marketing inviata,
+nessun servizio acquistato. Piano operativo: [LAUNCH_READINESS_V1.md](docs/LAUNCH_READINESS_V1.md).
+Testi pronti: [LAUNCH_COPY_V1.md](docs/LAUNCH_COPY_V1.md).
+Questi documenti hanno precedenza sui checkpoint storici e sugli inviti beta.
+
+## Verifica e modifica recapiti — 30 settembre 2026
+
+Base remota riletta: `49f22f7`; recupero password e percorso prenotazione sono
+su GitHub. Causa email osservata online: `mailer_autoconfirm: true`.
+Aggiunta pagina Email e telefono e conferma incrociata con codice al nuovo
+recapito e all'altro già verificato. Rimossa la verifica di sviluppo; flag
+collegati a prove server, API interne protette e sincronizzazione email Auth.
+Specifica, effetto sugli account autoconfermati, configurazioni richieste e
+sequenza di rilascio: [ACCOUNT_CONTACTS_V1.md](docs/ACCOUNT_CONTACTS_V1.md).
+Nuova migration preparata, funzioni Edge e frontend da pubblicare dopo aver
+configurato la consegna. Nessuna modifica o invio online in questo intervento.
+Test SQL su 50 migration precedenti e nuova migration, handler con provider
+simulati, TypeScript e UI recapiti mobile/desktop superati. Prova reale Auth,
+SMTP/SMS e concorrenza multi-connessione restano da completare.
+I checkpoint sottostanti sono storici.
+
 ## Primo contatto proprietario/professionista — 29 settembre 2026
 
 Base GitHub verificata: `4c951a9` (recupero password già su main).

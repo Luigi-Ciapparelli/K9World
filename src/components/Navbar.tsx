@@ -57,6 +57,7 @@ export function Navbar() {
           </RouteLink>
           {user ? <>
             <RouteLink to={dashboard} className="pc-account-link"><User size={17} aria-hidden="true" /><span>{profile?.full_name || 'La tua area'}</span></RouteLink>
+            <RouteLink to="/account/contacts" className="pc-login-link">Recapiti</RouteLink>
             <button type="button" onClick={leave} className="pc-icon-button" aria-label="Esci dall’account"><LogOut size={19} /></button>
           </> : <>
             <RouteLink to="/signin" className="pc-login-link">Accedi</RouteLink>
@@ -82,12 +83,13 @@ export function Navbar() {
           <RouteLink to="/become-a-pro" onClick={close} className="pc-pro-link"><GraduationCap size={18} aria-hidden="true" /> Per i professionisti</RouteLink>
           {user ? <>
             <RouteLink to={dashboard} onClick={close} className="pc-account-link"><User size={18} aria-hidden="true" /> {profile?.full_name || 'La tua area'}</RouteLink>
+            <RouteLink to="/account/contacts" onClick={close} className="pc-pro-link">Email e telefono</RouteLink>
             <button type="button" onClick={leave} className="pc-pro-link"><LogOut size={18} aria-hidden="true" /> Esci</button>
           </> : <RouteLink to="/signup" onClick={close} className="pc-register-link">Crea il tuo account</RouteLink>}
           <div className="pc-mobile-theme"><span>Aspetto</span><ThemeToggle /></div>
         </div>
       </nav>
-      {user && profile && !profile.email_verified && <RouteLink to={dashboard} className="pc-verification-notice">
+      {user && profile && !profile.email_verified && <RouteLink to="/account/contacts" className="pc-verification-notice">
         <AlertCircle size={16} aria-hidden="true" /><span>Conferma la tua email per attivare le prenotazioni.</span>
       </RouteLink>}
     </header>

@@ -39,7 +39,15 @@ try {
     const t = await setup(width);
     // Same entry link used by invitations, not the generic role selection.
     await t.page.goto(base + '/become-pro');
-    await t.page.getByRole('button', { name: 'Entra nella beta', exact: true }).first().click();
+    await t.page.getByRole('button', { name: 'Crea il tuo profilo', exact: true }).first().waitFor();
+    assert.doesNotMatch(await t.page.locator('body').innerText(), /\b(beta|mvp)\b/i);
+    await t.page.getByText('Iscrizione gratuita · nessuna carta', { exact: false }).waitFor();
+    assert.ok(await t.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Professional landing overflow');
+    if (process.env.PC_SCREENSHOTS) {
+      await fs.mkdir(process.env.PC_SCREENSHOTS, { recursive: true });
+      await t.page.screenshot({ path: `${process.env.PC_SCREENSHOTS}/professionisti-${width}.png`, fullPage: true });
+    }
+    await t.page.getByRole('button', { name: 'Crea il tuo profilo', exact: true }).first().click();
     await t.page.getByRole('heading', { name: 'Inizia il tuo profilo professionale' }).waitFor();
     await details(t.page);
     const select = t.page.getByLabel('Attività principale', { exact: true });
