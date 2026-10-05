@@ -45,6 +45,15 @@ export function withJourneyContext(path: string, context: JourneyContext): strin
 }
 
 export function journeyPresentation(context: JourneyContext) {
+  if (context.source === 'home' && context.topic === 'scelta-responsabile') {
+    return {
+      kicker: 'Prima di accogliere un cane',
+      title: 'Scegli il cane insieme a un professionista.',
+      text:
+        'Confrontati su abitudini, aspettative e bisogni del cane. Chiedi al professionista se offre consulenze prima della scelta: non occorre avere già un cane per iniziare a informarsi.',
+    };
+  }
+
   if (context.source === 'before-dog') {
     return {
       kicker: 'Continui da Prima del cane',

@@ -1,5 +1,24 @@
 # START HERE — PawConnect / Portalecinofilo
 
+## Home statica e percorso facoltativo — 5 ottobre 2026
+
+Ultima indicazione di Luigi: conservare titolo e composizione della proposta,
+sostituire l'animazione con un'immagine statica del portone attraversato dal cane.
+La precedente proposta animata è stata vista soltanto in anteprima e non
+installata. Anche l'ipotesi di sostituire la home con la ricerca è superata.
+
+Test di scelta → Impara → scelta del cane insieme a un addestratore → supporto
+nella propria zona. Tutte le tappe sono liberamente accessibili. Chi ha già
+un cane accede direttamente alla ricerca dal primo blocco. Sport e navigazione
+approvata restano distinti e invariati. Testo principale aggiornato con la frase
+richiesta «per vivere felici e sereni la vostra relazione».
+
+Base remota: `599e152`. TypeScript, build, verifica SEO e browser desktop/mobile
+superati con API simulate. Anteprime ricavate dall'interfaccia reale. Nessuna
+migration. Preparato l'aggiornamento, non pubblicato da questo ambiente; il push
+richiede le credenziali GitHub presenti nel computer di Luigi.
+Specifiche, collaudo e rilascio: [HOME_PORTAL_V1.md](docs/HOME_PORTAL_V1.md).
+
 ## Lancio con costi contenuti — 30 settembre 2026
 
 Decisione di Luigi: arrivare agli inviti senza nuovi servizi a pagamento e

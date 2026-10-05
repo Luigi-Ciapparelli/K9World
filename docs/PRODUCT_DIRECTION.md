@@ -1,6 +1,31 @@
 # PortaleCinofilo — Product Direction
 
-_Last updated: 2026-09-30_
+## Direzione home aggiornata — 5 ottobre 2026
+
+La decisione finale di Luigi conserva «Apri la porta al suo mondo» e la
+composizione a due colonne; il cane attraversa un portone già aperto in una
+sola immagine statica. Niente animazione, introduzione da saltare o scroll
+obbligatorio. La precedente proposta animata non è stata installata.
+
+Il percorso consigliato è: test di scelta → Impara → confronto con un
+addestratore prima di scegliere il cane → addestratore nella propria zona.
+Ogni tappa è accessibile direttamente, senza iscrizione o completamento delle
+precedenti. La maggioranza degli utenti può avere già un cane: l'accesso diretto
+alla ricerca deve rimanere evidente nel primo blocco e nella navigazione.
+Sport mantiene il suo ingresso distinto. Specifiche: [HOME_PORTAL_V1.md](HOME_PORTAL_V1.md).
+
+## Orizzonte imprenditoriale dichiarato — 5 ottobre 2026
+
+Luigi vuole prima rendere il portale utile, utilizzato e sostenibile, poi
+svilupparne una versione internazionale. Nell'orizzonte successivo considera
+un proprio centro e allevamento e una rete di strutture organizzate, anche
+in franchising. È una direzione futura, non una funzione disponibile né una
+rete già esistente. Non pubblicizzare centri «ufficiali» o riconoscimenti
+non ancora istituiti. Restano prioritarie l'utilità per il proprietario,
+la formazione di base gratuita e l'adesione esplicita a eventuali servizi
+professionali a pagamento. Questa visione non autorizza spese o impegni.
+
+_Last updated: 2026-10-05_
 
 ## Lancio corrente
 

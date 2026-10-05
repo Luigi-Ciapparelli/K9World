@@ -1,33 +1,60 @@
 import { useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, BookOpen, Compass, HeartHandshake, MapPin } from 'lucide-react';
 import { RouteLink } from '../components/RouteLink';
-import { HomeVisual } from '../components/home/HomeVisual';
+import { PortalEntrance } from '../components/home/PortalEntrance';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
+import '../portal-home.css';
+
+const journey = [
+  { title: 'Parti dalla scelta', text: 'La tua vita, le tue abitudini e i bisogni del cane: il test ti aiuta a orientarti.', action: 'Fai il test di scelta', to: '/prima-del-cane', icon: Compass },
+  { title: 'Impara a capirlo', text: 'Scopri come comunica, come impara e di cosa ha bisogno per stare bene.', action: 'Esplora Impara', to: '/impara', icon: BookOpen },
+  { title: 'Scegli con un addestratore', text: 'Prima di accogliere un cane, confrontati con un professionista per sceglierlo insieme.', action: 'Trova chi ti accompagna', to: '/search?type=trainer&source=home&topic=scelta-responsabile&intent=choose-dog', icon: HeartHandshake },
+  { title: 'Crescete insieme', text: 'Trova un addestratore nella tua zona per costruire la vostra relazione, giorno dopo giorno.', action: 'Cerca nella tua zona', to: '/search?type=trainer', icon: MapPin },
+];
 
 function PublicHomePage() {
   return (
-    <main className="pc-home" id="main-content">
-      <section className="pc-home-editorial pc-entry-container" aria-labelledby="home-title">
-        <div className="pc-home-story">
-          <p className="pc-home-eyebrow"><span aria-hidden="true" /> PortaleCinofilo · Italia</p>
-          <h1 id="home-title">Conosci<br /> meglio <em>il cane.</em></h1>
-          <p className="pc-home-purpose">Costruisci un binomio più consapevole.</p>
-          <p className="pc-home-intro">Dalla scelta alla vita quotidiana, PortaleCinofilo ti aiuta a capire bisogni e comportamento, trovare professionisti competenti e costruire con loro un percorso che continui nel tempo.</p>
-          <p className="pc-home-access">Cultura cinofila di base gratuita, aperta a tutti.</p>
+    <main className="pc-portal-home" id="main-content">
+      <section className="pc-portal-hero pc-entry-container" aria-labelledby="home-title">
+        <div className="pc-portal-copy">
+          <p className="pc-portal-eyebrow"><span aria-hidden="true" /> Cultura cinofila, aperta a tutti</p>
+          <h1 id="home-title">Apri la porta<br />al suo <em>mondo.</em></h1>
+          <p className="pc-portal-description">Conosci i suoi bisogni, scopri come impara e trova il professionista adatto a voi per vivere felici e sereni la vostra relazione.</p>
+          <div className="pc-portal-actions">
+            <div>
+              <p>Stai pensando a un cane?</p>
+              <RouteLink to="/prima-del-cane" className="pc-portal-primary">Fai il test di scelta <ArrowRight size={17} aria-hidden="true" /></RouteLink>
+            </div>
+            <div>
+              <p>Hai già un cane?</p>
+              <RouteLink to="/search?type=trainer" className="pc-portal-secondary">Trova un addestratore <ArrowRight size={17} aria-hidden="true" /></RouteLink>
+            </div>
+          </div>
+          <p className="pc-portal-free">Il test e le lezioni sono gratuiti, senza iscrizione.</p>
         </div>
-        <HomeVisual />
+        <PortalEntrance />
       </section>
-
-      <section className="pc-home-principles pc-entry-container" aria-label="Il percorso di conoscenza">
-        <div><span aria-hidden="true">01</span><h2>Comprendere.</h2><p>Conoscere i bisogni e il modo in cui il cane apprende.</p></div>
-        <div><span aria-hidden="true">02</span><h2>Osservare.</h2><p>Leggere il comportamento nella vostra vita quotidiana.</p></div>
-        <div><span aria-hidden="true">03</span><h2>Costruire insieme.</h2><p>Trasformare la conoscenza in un percorso, con il supporto professionale quando serve.</p></div>
-      </section>
-
-      <section className="pc-home-before-strip pc-entry-container" aria-labelledby="home-before-title">
-        <div><h2 id="home-before-title">Stai pensando di prendere un cane?</h2><p>Parti dal tempo, dalle abitudini e dalla vita che puoi condividere.</p></div>
-        <RouteLink to="/prima-del-cane" className="pc-home-before-link">Prima del cane <ArrowRight size={18} aria-hidden="true" /></RouteLink>
+      <section className="pc-journey pc-entry-container" aria-labelledby="journey-title">
+        <div className="pc-journey-heading">
+          <div>
+            <p className="pc-portal-eyebrow">Una relazione si costruisce</p>
+            <h2 id="journey-title">Dalla scelta alla vita insieme.</h2>
+          </div>
+          <p>Un percorso consigliato, al tuo ritmo.<br /><strong>Puoi partire dalla tappa che ti serve.</strong></p>
+        </div>
+        <ol className="pc-journey-steps">
+          {journey.map(({ title, text, action, to, icon: Icon }, index) => (
+            <li key={to}>
+              <RouteLink to={to} className="pc-journey-step">
+                <div className="pc-journey-marker" aria-hidden="true"><span>0{index + 1}</span><Icon size={22} strokeWidth={1.5} /></div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+                <span className="pc-journey-action">{action}<ArrowRight size={16} aria-hidden="true" /></span>
+              </RouteLink>
+            </li>
+          ))}
+        </ol>
       </section>
     </main>
   );
