@@ -1,5 +1,28 @@
 # PortaleCinofilo — Product Direction
 
+## Modello sostenibile e priorità operative — 6 ottobre 2026
+
+La visione di Luigi è un portale gratuito, utile e sostenibile, seguito da
+espansione internazionale e, quando provato economicamente, un sistema di
+centri, allevamento, franchising e immobili. È un percorso per tappe: il successo
+digitale non certifica la redditività di una struttura fisica.
+
+Il piano proposto concentra il primo lancio su un territorio, sull'uso reale
+e sulla validazione di nuovi servizi professionali facoltativi. Pubblicità,
+sponsor e affiliazioni sono possibilità da valutare con dati, trasparenza e
+corretto inquadramento dell'attività; nessuna tariffa o campagna è attivata.
+Formazione di base e ricerca restano gratuite; ranking, approvazioni e risultati
+sportivi non si acquistano. Gli strumenti oggi gratuiti non diventano
+abbonamenti automaticamente.
+
+Leggere [BUSINESS_ROADMAP_V1.md](BUSINESS_ROADMAP_V1.md),
+[FUNDING_SCREENING_2026_10.md](FUNDING_SCREENING_2026_10.md) e
+[SOCIAL_LAUNCH_30_DAYS_V1.md](SOCIAL_LAUNCH_30_DAYS_V1.md).
+Le cifre nei piani sono ipotesi o massimali condizionati, non ricavi o contributi
+acquisiti. La situazione fiscale/personale non va inventata né salvata su Git.
+Questo aggiornamento integra la missione esistente; non sostituisce le scelte
+sulla home, sull'accesso semplice dei proprietari o sulla separazione Sport.
+
 ## Direzione home aggiornata — 5 ottobre 2026
 
 La decisione finale di Luigi conserva «Apri la porta al suo mondo» e la

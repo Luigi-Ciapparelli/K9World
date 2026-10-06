@@ -1,5 +1,19 @@
 # AI Continuity Protocol
 
+## Impresa e comunicazione — regola introdotta il 6 ottobre 2026
+
+Prima di proporre monetizzazione, finanziamenti o rete di centri leggere:
+`BUSINESS_ROADMAP_V1.md`, `FUNDING_SCREENING_2026_10.md` e
+`SOCIAL_LAUNCH_30_DAYS_V1.md`. Separare sempre decisioni di Luigi, ipotesi
+commerciali, funzioni rilasciate, risultati misurati e domande approvate.
+Rileggere fonti ufficiali per stato dei bandi e requisiti prima di suggerire
+aperture, pagamenti o impegni. Un massimale non è un contributo ottenuto.
+La documentazione pubblica non deve contenere redditi, stato occupazionale
+dettagliato, documenti fiscali, elenchi privati di contatti o credenziali.
+I piani non costituiscono autorizzazione a inviare comunicazioni o spendere.
+La formazione di base e la ricerca restano gratuite; nessun pagamento compra
+merito o approvazione; nuove offerte richiedono adesione esplicita.
+
 ## Recapiti — regola introdotta il 30 settembre 2026
 
 Prima di modificare verifica, email o telefono leggere `ACCOUNT_CONTACTS_V1.md`.

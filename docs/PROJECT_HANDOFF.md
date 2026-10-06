@@ -1,5 +1,34 @@
 # PawConnect / Portalecinofilo — Project Handoff
 
+## Impresa, ricavi e sviluppo della rete — 6 ottobre 2026
+
+GitHub `main` riletto al commit `431713d508219392d0b657e9abd961537ddc8ae0`:
+la home statica e l'orizzonte imprenditoriale sono già nel repository remoto.
+Questo supera i precedenti checkpoint che li descrivevano solo come preparati;
+lo stato del deployment Vercel non è stato verificato in questo intervento.
+
+Luigi conferma il primo post Instagram; Facebook, LinkedIn e TikTok non hanno
+ancora contenuti. Richiede un piano per mantenere il portale gratuito, generare
+ricavi, valutare fondi e arrivare in seguito a un'attività internazionale con
+centri, eventuale allevamento, franchising e componente immobiliare.
+
+Preparato un aggiornamento solo documentale. Nuovi riferimenti:
+- [Piano d'impresa e tappe](BUSINESS_ROADMAP_V1.md).
+- [Finanziamenti verificati e requisiti da chiarire](FUNDING_SCREENING_2026_10.md).
+- [Piano social e prime bozze](SOCIAL_LAUNCH_30_DAYS_V1.md).
+
+Distinguere direzione richiesta e proposte: prezzi, soglie di utilizzatori e
+calendario sono ipotesi operative, non tariffe attive né risultati raggiunti.
+Non comprare ranking o badge; non vendere archivi privati; nuovi servizi a
+pagamento solo con adesione esplicita. Nessun ricavo o finanziamento garantito.
+Autoimpiego Centro-Nord richiede prima una verifica personale e dei tempi di
+avvio. I dati personali per l'ammissibilità restano fuori dal Git pubblico.
+
+Nessun codice, database, account, campagna o contratto modificato. Nessun invito
+inviato. Aggiornamento preparato su base `431713d`; verificare commit e push prima
+di dichiarare pubblicate queste nuove direttive. Il collaudo tecnico precedente
+rimane storico: questo checkpoint non attesta nuove prove su servizi online.
+
 ## Home statica e percorso facoltativo — 5 ottobre 2026
 
 Ultima indicazione di Luigi: conservare titolo e composizione della proposta,
