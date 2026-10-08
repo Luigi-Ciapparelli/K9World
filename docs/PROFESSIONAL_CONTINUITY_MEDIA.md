@@ -1,5 +1,15 @@
 # Storico professionale del cane, note e media — architettura v1
 
+## Esportazione richiesta — aggiornamento dell'8 ottobre 2026
+
+Luigi richiede lo storico del cane scaricabile: dati, dove è stato, chi lo ha
+seguito, attività e note, con revisioni e allegati autorizzati. L'esistenza
+della funzione è ora una direzione approvata; formati, quote, modalità e
+permessi di download restano da progettare. Non esportare automaticamente
+appunti privati altrui e non equiparare il permesso di lettura al download.
+Specifiche: [FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
+Solo documentazione; nessuna esportazione, nuova API o pipeline media creata.
+
 Stato: decisione di prodotto approvata in chat; proposta tecnica da verificare sul codice e sul database prima delle migration. Questo documento non implementa funzionalità né descrive tabelle già esistenti.
 
 Baseline Git verificata: 9b23833, main e signup-dog-profile allineati, working tree pulito. Profilo pubblico e prenotazioni sono stati verificati dall'utente in produzione. La nuova fase riguarda lo storico professionale, non le note inviate dal proprietario con una prenotazione.
@@ -167,7 +177,7 @@ Usare account e cani di test separati: autore A, nuovo professionista B, profess
 
 ## 13. Decisioni ancora aperte
 
-Le seguenti sono proposte tecniche, non decisioni già approvate: durata delle concessioni/link, criteri di finalizzazione delle note, gestione del cambio proprietario, periodo di conservazione degli originali, limiti e quote, codec/provider di elaborazione, esportazione/download, procedure straordinarie di assistenza, obiettivi backup e recupero.
+Le seguenti sono proposte tecniche, non decisioni già approvate: durata delle concessioni/link, criteri di finalizzazione delle note, gestione del cambio proprietario, periodo di conservazione degli originali, limiti e quote, codec/provider di elaborazione, formati e modalità/permessi di esportazione e download, procedure straordinarie di assistenza, obiettivi backup e recupero. Il requisito di rendere scaricabile lo storico autorizzato è stato approvato il 7 ottobre 2026; non è più da decidere se prevederlo.
 
 Risolverle prima della rispettiva implementazione, con opzioni concrete. Non iniziare nuove migration solo perché i nomi concettuali sono elencati qui.
 

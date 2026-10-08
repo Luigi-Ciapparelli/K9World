@@ -1,5 +1,15 @@
 # Home — un portone statico e un percorso aperto
 
+## Distinzione dalla campagna video — 8 ottobre 2026
+
+Il nuovo concept di cani e proprietari che attraversano un portale riguarda
+una campagna social futura con Higgsfield, non una nuova home animata.
+La home statica resta confermata. La futura navigazione con Esposizioni e
+la ricerca quotidiana limitata ad Addestratori/Pensioni sono descritte in
+[FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
+Il presente documento conserva la descrizione dell'incremento del 5 ottobre;
+nessuna modifica al sito è eseguita con il nuovo aggiornamento documentale.
+
 ## Decisione finale del 5 ottobre 2026
 
 Luigi ha visto la proposta precedente soltanto in video e non l'ha installata.

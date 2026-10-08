@@ -1,16 +1,42 @@
 # PortaleCinofilo — piano social di partenza
 
-Aggiornato: 6 ottobre 2026. Piano e bozze pronti, nessun post pubblicato da questo intervento.
+Aggiornato: 8 ottobre 2026. Solo direttive e bozze; nessuna pubblicazione da questo intervento.
 
-## Situazione e scelta
+## Ultimo riscontro di Luigi e prossimo concept
 
-Luigi conferma un primo post di presentazione su Instagram. Facebook, LinkedIn e TikTok non hanno ancora post. Bio e materiali di profilo esistono; qualità, ritagli e configurazioni vanno verificati sull'anteprima effettiva prima di pubblicare, senza dare per conclusa la sistemazione degli account.
+Luigi riferisce i primi tre post pubblicati e visualizzazioni soltanto da TikTok.
+Non ha fornito numeri, periodo o ripartizione dei post fra le piattaforme.
+Il precedente resoconto «solo Instagram» è superato; non assumere tre post
+per canale. Lo stato LinkedIn non è stato aggiornato.
 
-Per trenta giorni creare due contenuti principali a settimana e adattarli. Instagram e Facebook sono la coppia principale; LinkedIn racconta l'utilità per professionisti e possibili collaborazioni; TikTok mostra il prodotto con video brevi. Non produrre quattro calendari scollegati e non aggiungere pubblicità a pagamento in questa fase.
+Profili: [TikTok](https://www.tiktok.com/@portalecinofilo),
+[Facebook](https://www.facebook.com/profile.php?id=61594532382204),
+[Instagram](https://www.instagram.com/portalecinofilo/).
+
+Prossima direzione creativa: video da realizzare in futuro con Higgsfield.
+I cani raccontano gli errori di gestione nelle rispettive scene, si incontrano
+al parco e attraversano un portale, seguiti dai proprietari. Oltre il portale,
+gli stessi binomi vivono passeggiate serene, trekking e Obedience. PortaleCinofilo
+è la metafora dell'accesso a una relazione sana e felice con il cane.
+Storyboard, vincoli e dettagli ancora aperti sono nel riferimento prioritario
+[FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
+
+TikTok è il primo canale da esaminare per l'esperimento video in base al riscontro
+ricevuto; misurare anche le azioni sul sito prima di trarre conclusioni.
+La produzione non è avviata né autorizzata ora. Nessuna ZIP o analytics letti.
+Le date e le bozze sotto sono il piano storico del 6 ottobre, non un calendario
+già eseguito o da pubblicare automaticamente. Non ripetere i post già usciti
+senza confrontarli con il materiale effettivamente pubblicato.
+
+## Situazione e scelta del piano originario — storico del 6 ottobre
+
+Il piano partiva dalla conferma di un primo post Instagram e dagli altri canali ancora senza post. Questo resoconto è superato per Facebook/TikTok dall'aggiornamento sopra. Bio e materiali di profilo esistono; qualità, ritagli e configurazioni vanno verificati sull'anteprima effettiva prima di pubblicare, senza dare per conclusa la sistemazione degli account.
+
+La proposta originaria prevedeva due contenuti principali a settimana e adattamenti: Instagram/Facebook come coppia principale, LinkedIn per professionisti e collaborazioni, TikTok con video brevi. La priorità iniziale fra i canali va ora riletta alla luce del riscontro su TikTok, senza creare quattro calendari scollegati né attivare pubblicità a pagamento.
 
 Ordine narrativo: **che cos'è → cosa puoi farci → come usarlo → esperienza concreta**. I contenuti educativi accompagnano questa sequenza: non sostituiscono la presentazione del servizio. Evitare di pubblicizzare archivi e strumenti futuri come già disponibili.
 
-## Prima settimana proposta
+## Prima settimana proposta il 6 ottobre — non è un registro di pubblicazione
 
 Orari in Europe/Rome, scelti per poter seguire le risposte. Non sono “orari migliori” dimostrati dai dati dell'account. Se manca un materiale verificato, spostare lo slot anziché pubblicare un contenuto difettoso.
 

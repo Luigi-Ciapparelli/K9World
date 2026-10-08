@@ -1,5 +1,28 @@
 # PortaleCinofilo — Product Direction
 
+## Direzione approvata, ancora da implementare — 8 ottobre 2026
+
+Specifiche e casi: [FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
+Questo aggiornamento prevale sulle descrizioni precedenti in conflitto:
+
+- Quattro aree pubbliche: Trova aiuto per il cane, Impara, Sport cinofili,
+  Esposizioni; accesso professionisti/account distinto dai percorsi.
+- Trova aiuto per il cane resta verde e diretto, con soli Addestratori e Pensioni.
+  Pet sitting e passeggiate escono dall'offerta; toelettatura si sposta in
+  Esposizioni, insieme agli handler da esposizione.
+- Storico del cane scaricabile: dati, attività, luoghi registrati, autori, note,
+  revisioni e media autorizzati; restano protetti gli appunti privati altrui.
+- Valutazioni reciproche dal secondo servizio effettivamente concluso fra lo
+  stesso cliente e addestratore, contando servizi diversi della stessa coppia.
+  Per le pensioni solo cliente → struttura; soglia iniziale ancora da definire.
+- Campagna futura Higgsfield: difficoltà raccontate dai cani, parco, attraversamento
+  del portale e binomi felici in trekking, passeggiata e Obedience. Metafora della
+  relazione desiderata, non promessa di risoluzione istantanea. Home ancora statica.
+
+Luigi riferisce tre primi post pubblicati e visualizzazioni soltanto su TikTok.
+Nessuna nuova metrica o conversione verificata. Solo direttive: nessun codice,
+schema, account o contenuto social modificato da questo checkpoint.
+
 ## Modello sostenibile e priorità operative — 6 ottobre 2026
 
 La visione di Luigi è un portale gratuito, utile e sostenibile, seguito da
@@ -48,7 +71,7 @@ non ancora istituiti. Restano prioritarie l'utilità per il proprietario,
 la formazione di base gratuita e l'adesione esplicita a eventuali servizi
 professionali a pagamento. Questa visione non autorizza spese o impegni.
 
-_Last updated: 2026-10-05_
+_Last updated: 2026-10-08 — aggiornamento delle direttive, non del prodotto online._
 
 ## Lancio corrente
 
@@ -528,13 +551,12 @@ La Search non deve diventare caotica né trasformarsi in una classifica commerci
 #### Servizio
 Il servizio richiesto resta uno dei filtri principali.
 
-Esempi:
-- educazione / addestramento;
-- consulenza pre-acquisto / pre-adozione;
-- dog walking;
-- daycare;
-- boarding;
-- altri servizi realmente disponibili sul portale.
+Direzione aggiornata l'8 ottobre 2026: nella ricerca quotidiana soltanto
+Addestratori e Pensioni. Educazione, addestramento e consulenza prima della
+scelta restano ambiti dei primi. Pet sitting e dog walking escono dall'offerta;
+toelettatura e handler si cercano nella nuova area Esposizioni. Sport conserva
+la ricerca per disciplina. La riclassificazione futura deve preservare i dati
+storici: i precedenti esempi dog walking/daycare non autorizzano nuovi box.
 
 #### Zona e distanza
 La ricerca deve poter essere ristretta per:

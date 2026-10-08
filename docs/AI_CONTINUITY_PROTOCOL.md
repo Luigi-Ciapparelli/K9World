@@ -1,5 +1,18 @@
 # AI Continuity Protocol
 
+## Direzione futura del 7 ottobre, registrata l'8 ottobre 2026
+
+Prima di toccare ricerca, social, esportazioni o recensioni leggere
+[FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
+Questo checkpoint autorizza soltanto documentazione su GitHub. Non implementare,
+generare contenuti, spendere o pubblicare sui social fino a una nuova istruzione.
+La ZIP allegata è esclusa e non va usata come fonte per questo aggiornamento.
+Le nuove categorie prevalgono sulle precedenti indicazioni di offerta; conservare
+lo storico e i permessi degli archivi. Il concept video non riapre la scelta di
+una home animata. Distinguere riscontro social di Luigi, dati misurati e ipotesi.
+Il checkpoint CURRENT_STATE è aggiornato manualmente per la sola documentazione:
+non eseguire il generatore di build/diagnosi online in questo intervento.
+
 ## Impresa e comunicazione — regola introdotta il 6 ottobre 2026
 
 Prima di proporre monetizzazione, finanziamenti o rete di centri leggere:

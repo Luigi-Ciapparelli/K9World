@@ -1,5 +1,20 @@
 # CURRENT STATE — PawConnect / Portalecinofilo
 
+## Checkpoint esclusivamente documentale — 8 ottobre 2026
+
+Base remota letta: `5edfd4c` su `origin/main`. Direttive future aggiunte in
+[FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md)
+e collegate ai documenti di continuità. Ricerca a due categorie, area Esposizioni,
+export completo autorizzato, nuove valutazioni e campagna Higgsfield sono requisiti
+futuri; questa modifica non ne attesta l'implementazione o il rilascio.
+
+Riscontro utente: primi tre post pubblicati; visualizzazioni soltanto su TikTok,
+senza conteggi o attribuzione dettagliata dei post. ZIP esclusa e non letta.
+Nessuna modifica a codice, database o account; nessuna generazione o pubblicazione
+social. Verifica limitata a diff e coerenza/rimandi dei documenti. Nessun nuovo
+test applicativo, accesso Supabase o deploy avviato manualmente. Lo snapshot
+tecnico sottostante resta storico e non è stato rigenerato.
+
 ## Impresa, ricavi e sviluppo della rete — 6 ottobre 2026
 
 GitHub `main` riletto al commit `431713d508219392d0b657e9abd961537ddc8ae0`:

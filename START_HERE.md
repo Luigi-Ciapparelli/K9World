@@ -1,5 +1,21 @@
 # START HERE — PawConnect / Portalecinofilo
 
+## Direttive future di prodotto e social — 8 ottobre 2026
+
+Leggere prima [FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](docs/FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
+Luigi richiede soltanto di documentare: video futuro con Higgsfield e cani che
+attraversano il portale; ricerca quotidiana con soli Addestratori/Pensioni;
+nuova area Esposizioni con Toelettatura/Handler; storico del cane scaricabile
+con permessi; valutazioni reciproche dal secondo servizio cliente–addestratore
+e recensioni solo cliente → struttura per le pensioni.
+
+Primi tre post pubblicati e visualizzazioni soltanto su TikTok secondo Luigi;
+conteggi e distribuzione per canale non forniti. Questo supera i vecchi resoconti
+social. Nessuna analisi della ZIP, sviluppo o produzione della campagna in
+questo intervento. La home resta statica. Dettagli ancora aperti sono distinti
+dalle decisioni approvate. Il successivo lavoro richiede una nuova istruzione
+di esecuzione: non confondere il commit documentale con un rilascio di funzioni.
+
 ## Impresa, ricavi e sviluppo della rete — 6 ottobre 2026
 
 GitHub `main` riletto al commit `431713d508219392d0b657e9abd961537ddc8ae0`:

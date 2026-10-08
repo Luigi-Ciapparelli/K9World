@@ -1,5 +1,17 @@
 # Area professionista — richieste operative del 13 settembre 2026
 
+## Nuovi requisiti da progettare — 8 ottobre 2026
+
+Riferimento prioritario:
+[FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
+Documentare per il prossimo sviluppo: ricollocazione delle attività nelle aree
+Addestratori/Pensioni, Sport ed Esposizioni; download dello storico autorizzato;
+rating reciproci cliente–addestratore dal secondo servizio concluso con la
+stessa persona, anche per servizi diversi. Per le pensioni recensioni soltanto
+dal cliente alla struttura. Non contare acquisti, annullamenti o semplici
+prenotazioni scadute come prestazioni svolte. Le modalità aperte sono elencate
+nella specifica e non vanno presunte implementate. Nessuna esecuzione ora.
+
 ## Ingresso professionisti e prima beta accompagnata — 29 settembre 2026
 
 Base remota riletta: `0d113db` (`main`), dopo `2cfc932` (SEO) e

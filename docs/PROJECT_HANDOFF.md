@@ -1,5 +1,26 @@
 # PawConnect / Portalecinofilo — Project Handoff
 
+## Passaggio di consegne: nuove direttive, nessuna esecuzione — 8 ottobre 2026
+
+Decisioni di Luigi del 7 ottobre registrate in
+[FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md):
+campagna Higgsfield con portale e binomi; Addestratori/Pensioni come soli box
+della ricerca quotidiana; Esposizioni per Toelettatura/Handler; export dello
+storico autorizzato; valutazioni reciproche dalla seconda esperienza con lo
+stesso addestratore e recensioni unidirezionali per le pensioni.
+
+Luigi riferisce di aver pubblicato i primi tre post, con visualizzazioni soltanto
+su TikTok. Profili social salvati nella specifica; nessun dato quantitativo
+verificato e nessuna deduzione sul numero di post per singolo canale.
+I vecchi resoconti «solo Instagram» sono storici. Il nuovo concept video riguarda
+i social e non modifica la home statica. La ZIP allegata non è stata letta.
+
+Ambito autorizzato: solo documenti e loro pubblicazione su GitHub, su base
+remota `5edfd4c`. Non implementare né produrre il video senza una nuova richiesta.
+Restano da definire dettagli dei download, visibilità del rating sul cliente,
+cadenza degli inviti e soglia per le pensioni: non inventare decisioni di Luigi.
+I precedenti checkpoint tecnici non costituiscono test di queste nuove funzioni.
+
 ## Impresa, ricavi e sviluppo della rete — 6 ottobre 2026
 
 GitHub `main` riletto al commit `431713d508219392d0b657e9abd961537ddc8ae0`:
