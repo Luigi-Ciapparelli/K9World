@@ -1,5 +1,6 @@
 import { Mail, ShieldCheck } from 'lucide-react';
 import { useRouter } from '../lib/RouterContext';
+import { RouteLink } from './RouteLink';
 
 const CONTACT_EMAIL = 'info@portalecinofilo.com';
 
@@ -38,9 +39,10 @@ export function Footer() {
           <div>
             <h3 className="text-white font-bold mb-3">Piattaforma</h3>
             <div className="space-y-2 text-sm">
-              <button type="button" onClick={() => navigate('/search')} className="block hover:text-white">
-                Trova un professionista
-              </button>
+              <RouteLink to="/search?type=trainer" className="block hover:text-white">Trova aiuto per il cane</RouteLink>
+              <RouteLink to="/impara" className="block hover:text-white">Impara</RouteLink>
+              <RouteLink to="/sport" className="block hover:text-white">Sport cinofili</RouteLink>
+              <RouteLink to="/esposizioni" className="block hover:text-white">Esposizioni</RouteLink>
               <button type="button" onClick={() => navigate('/become-a-pro')} className="block hover:text-white">
                 Diventa professionista
               </button>

@@ -17,7 +17,7 @@ import { supabase } from '../lib/supabase';
 import { useRouter } from '../lib/RouterContext';
 import { SearchCard } from '../components/SearchCard';
 import { findSupportedCity } from '../lib/locations';
-import { SERVICE_CATEGORIES } from '../lib/serviceCategories';
+import { DAILY_SERVICE_TYPES, EXHIBITION_SERVICE_TYPES, SERVICE_CATEGORIES } from '../lib/serviceCategories';
 import { RouteLink } from '../components/RouteLink';
 import { readJourneyContext } from '../lib/journeyContext';
 import { JourneyContextNotice } from '../components/ecosystem/ProfessionalBridge';
@@ -112,24 +112,26 @@ function initials(name: string): string {
 }
 
 // ECOSYSTEM_PASS_V1
-export function SearchPage({ sport = false }: { sport?: boolean }) {
+export function SearchPage({ sport = false, exhibitions = false }: { sport?: boolean; exhibitions?: boolean }) {
   const { path } = useRouter();
+  const qs = new URLSearchParams(path.split('?')[1] || '');
+  const bounded = (key: string, fallback: number, low: number, high: number) => {
+    const raw = qs.get(key), value = Number(raw);
+    return raw !== null && Number.isFinite(value) && value >= low && value <= high ? value : fallback;
+  };
+  const [reloadKey, setReloadKey] = useState(0);
   const [pros, setPros] = useState<ProResult[]>([]);
   const [loading, setLoading] = useState(true);
-  const [maxPrice, setMaxPrice] = useState(200);
-  const [minRating, setMinRating] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(() => bounded('max_price', 200, 10, 200));
+  const [minRating, setMinRating] = useState(() => bounded('min_rating', 0, 0, 5));
   const [loadError, setLoadError] = useState('');
-  const [subjectFilter, setSubjectFilter] = useState<SubjectFilter>('all');
-  const [experienceStep, setExperienceStep] = useState(0);
-  const [sortMode, setSortMode] = useState<SortMode>('relevance');
+  const [subjectFilter, setSubjectFilter] = useState<SubjectFilter>(() => ['professional', 'facility'].includes(qs.get('subject') || '') ? qs.get('subject') as SubjectFilter : 'all');
+  const [experienceStep, setExperienceStep] = useState(() => Math.round(bounded('experience_step', 0, 0, 2)));
+  const [sortMode, setSortMode] = useState<SortMode>(() => ['distance', 'experience', 'price', 'rating'].includes(qs.get('sort') || '') ? qs.get('sort') as SortMode : 'relevance');
 
   const journey = readJourneyContext();
-  const hash = path;
-  const qs = hash.includes('?')
-    ? new URLSearchParams(hash.split('?')[1])
-    : new URLSearchParams();
-
-  const typeFilter = sport ? 'trainer' : qs.get('type') || 'trainer';
+  const typeFilter = sport ? 'trainer' : qs.get('type') || (exhibitions ? 'groomer' : 'trainer');
+  const unsupportedCategory = !sport && !(exhibitions ? EXHIBITION_SERVICE_TYPES : DAILY_SERVICE_TYPES).some(type => type === typeFilter);
   const disciplineFilter = sport ? qs.get('discipline') : null;
   const addressFilter = qs.get('address');
   const latParam = qs.get('lat');
@@ -165,10 +167,12 @@ export function SearchPage({ sport = false }: { sport?: boolean }) {
     let cancelled = false;
 
     const load = async () => {
+      if (unsupportedCategory) { setPros([]); setLoading(false); setLoadError(''); return; }
       setLoading(true);
       setLoadError('');
 
-      const { data, error } = await supabase.rpc(sport ? 'search_sport_professionals' : 'search_public_professionals', {
+      try {
+      const { data, error } = await supabase.rpc(sport ? 'search_sport_professionals' : exhibitions ? 'search_exhibition_professionals' : 'search_public_professionals', {
         p_lat: selectedCoordinates?.lat ?? null,
         p_lng: selectedCoordinates?.lng ?? null,
         p_zone_text: selectedCoordinates?.explicit ? null : (selectedCity?.name ?? addressFilter?.trim()) || null,
@@ -195,7 +199,9 @@ export function SearchPage({ sport = false }: { sport?: boolean }) {
       }));
 
       setPros(rows);
-      setLoading(false);
+      } catch {
+        if (!cancelled) { setPros([]); setLoadError('Impossibile caricare i professionisti in questo momento.'); }
+      } finally { if (!cancelled) setLoading(false); }
     };
 
     const timer = window.setTimeout(() => {
@@ -206,7 +212,7 @@ export function SearchPage({ sport = false }: { sport?: boolean }) {
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [sport, disciplineFilter, typeFilter, addressFilter, selectedCity, selectedCoordinates, maxPrice, minRating]);
+  }, [reloadKey, sport, exhibitions, unsupportedCategory, disciplineFilter, typeFilter, addressFilter, selectedCity, selectedCoordinates, maxPrice, minRating]);
 
   const filtered = useMemo(() => {
     const minExperience = EXPERIENCE_STEPS[experienceStep];
@@ -300,13 +306,23 @@ export function SearchPage({ sport = false }: { sport?: boolean }) {
   return (
     <div className="min-h-screen bg-[var(--pc-bone-50)]">
       <div className="max-w-7xl mx-auto px-6 py-8 md:py-12">
-        {!sport && <h1 className="sr-only">Trova aiuto per il cane</h1>}
+        {!sport && !exhibitions && <h1 className="sr-only">Trova aiuto per il cane</h1>}
         {sport ? <header className="mb-8 max-w-3xl">
           <p className="pc-kicker">Un percorso sportivo con il tuo cane</p>
           <h1 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Sport cinofili</h1>
           <p className="pc-lead mt-4">Cerca chi insegna la disciplina che vuoi praticare. Confronta esperienza e attività nel profilo, poi contatta il professionista.</p>
+        </header> : exhibitions ? <header className="mb-8 max-w-3xl">
+          <p className="pc-kicker">Cura del mantello e presentazione sul ring</p>
+          <h1 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Esposizioni</h1>
+          <p className="pc-lead mt-4">Trova un toelettatore o un handler per preparare e presentare il tuo cane in esposizione. La toelettatura è disponibile anche per la cura quotidiana, senza partecipare a una gara.</p>
         </header> : <JourneyContextNotice context={journey} className="mb-6" />}
-        <SearchCard compact sport={sport} />
+        {exhibitions && qs.get('moved') === 'exhibitions' && <p role="status" className="pc-card p-4 mb-4">Toelettatura e handler sono ora in Esposizioni. Abbiamo mantenuto la zona della tua ricerca.</p>}
+        {unsupportedCategory && <div role="status" className="pc-card p-5 mb-4">
+          <h2 className="font-bold">Questa categoria non è disponibile in questa ricerca</h2>
+          <p className="mt-2">Pet sitting e passeggiate non sono più offerti su PortaleCinofilo. Le prenotazioni precedenti restano nella tua area. Seleziona uno dei servizi disponibili qui sotto e premi Cerca.</p>
+          <RouteLink to="/esposizioni" className="inline-block mt-3 underline">Cerchi toelettatura o un handler? Vai a Esposizioni</RouteLink>
+        </div>}
+        <SearchCard compact sport={sport} exhibitions={exhibitions} />
 
         <div className="grid lg:grid-cols-[280px_1fr] gap-6 mt-8">
           <aside className="pc-card p-5 md:p-6 h-fit lg:sticky lg:top-24">
@@ -412,8 +428,8 @@ export function SearchPage({ sport = false }: { sport?: boolean }) {
               </summary>
 
               <div className="pt-2">
-                <label className="text-sm font-semibold text-[var(--pc-ink-800)]">Prezzo massimo per servizio</label>
-                <input type="range" min="10" max="200" step="5" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full accent-[var(--pc-forest-700)] mt-3" />
+                <label htmlFor="search-max-price" className="text-sm font-semibold text-[var(--pc-ink-800)]">Prezzo massimo per servizio</label>
+                <input id="search-max-price" type="range" min="10" max="200" step="5" value={maxPrice} onChange={(e) => setMaxPrice(Number(e.target.value))} className="w-full accent-[var(--pc-forest-700)] mt-3" />
                 <div className="flex justify-between gap-3 mt-1 text-xs text-[var(--pc-muted-600)]">
                   <span>€10</span>
                   <strong className="text-[var(--pc-ink-950)]">{maxPrice >= 200 ? 'Nessun limite' : `Fino a €${maxPrice}`}</strong>
@@ -480,8 +496,8 @@ export function SearchPage({ sport = false }: { sport?: boolean }) {
                 Caricamento professionisti...
               </div>
             ) : loadError ? (
-              <div className="bg-rose-50 rounded-2xl border border-rose-200 p-8 text-rose-700">
-                {loadError} Riprova tra poco.
+              <div role="alert" className="bg-rose-50 rounded-2xl border border-rose-200 p-8 text-rose-700">
+                <p>{loadError}</p><button type="button" className="mt-3 font-semibold underline" onClick={() => setReloadKey(key => key + 1)}>Riprova</button>
               </div>
             ) : filtered.length === 0 ? (
               <div className="bg-white rounded-2xl border border-stone-200 p-8">
@@ -665,7 +681,7 @@ export function SearchPage({ sport = false }: { sport?: boolean }) {
                               </div>
 
                               <RouteLink
-                                to={(() => { const params = new URLSearchParams(qs); if (sport) params.set('context', 'sport'); else params.delete('context'); return '/p/' + pro.id + (params.toString() ? `?${params}` : ''); })()}
+                                to={(() => { const params = new URLSearchParams(qs); if (sport) params.set('context', 'sport'); else if (exhibitions) params.set('context', 'exhibitions'); else params.delete('context'); params.set('type', typeFilter); params.set('max_price', String(maxPrice)); params.set('min_rating', String(minRating)); params.set('subject', subjectFilter); params.set('experience_step', String(experienceStep)); params.set('sort', sortMode); return '/p/' + pro.id + (params.toString() ? `?${params}` : ''); })()}
                                 className="pc-btn pc-btn-primary w-full sm:w-auto lg:w-full justify-center group/cta"
                               >
                                 Vedi profilo e competenze

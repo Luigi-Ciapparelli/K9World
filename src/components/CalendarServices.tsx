@@ -2,6 +2,7 @@ import { useRef, useState, type FormEvent } from 'react';
 import { Plus, Save } from 'lucide-react';
 import { useUnsavedChanges } from '../lib/RouterContext';
 import { supabase } from '../lib/supabase';
+import { isBookableService, serviceSearchArea } from '../lib/serviceCategories';
 import { serviceColor } from '../lib/professionalCalendar';
 
 type Service = {
@@ -11,17 +12,16 @@ type Service = {
 const categories = [
   ['trainer', 'Educazione e addestramento', '#2563EB'],
   ['boarding', 'Pensione', '#7C3AED'], ['enci_course', 'Corso ENCI', '#B45309'],
-  ['walker', 'Passeggiata', '#047857'], ['sitter', 'Dog sitting', '#BE185D'],
-  ['groomer', 'Toelettatura', '#0E7490'], ['other', 'Altro', '#57534E'],
+  ['groomer', 'Toelettatura', '#0E7490'], ['handler', 'Handler per esposizioni', '#D5A33A'],
 ] as const;
 const field = 'mt-1 block w-full rounded-xl border border-stone-300 bg-white px-3 py-2 text-stone-900';
 
-export function CalendarServices({ services, onChange }: { services: Service[]; onChange: (rows: Service[]) => void }) {
+export function CalendarServices({ services, onChange, defaultType = 'trainer' }: { services: Service[]; onChange: (rows: Service[]) => void; defaultType?: string }) {
   const [editing, setEditing] = useState<Service | null>(null);
   const [notice, setNotice] = useState('');
   const add = () => {
     setNotice('');
-    setEditing({ id: crypto.randomUUID(), name: '', service_type: 'trainer', price: 25,
+    setEditing({ id: crypto.randomUUID(), name: '', service_type: isBookableService(defaultType) ? defaultType : 'trainer', price: 25,
       duration_minutes: 60, duration_kind: 'hourly', calendar_color: '#2563EB', active: true });
   };
   return <div className="space-y-4 text-stone-900">
@@ -35,7 +35,7 @@ export function CalendarServices({ services, onChange }: { services: Service[]; 
         <div className="min-w-0 flex items-center gap-3">
           <span aria-hidden="true" className="h-5 w-5 shrink-0 rounded-full border border-stone-300" style={{ backgroundColor: serviceColor(service.calendar_color) }} />
           <div><p className="font-semibold break-words">{service.name || 'Servizio senza nome'}</p>
-            <p className="text-sm text-stone-600">{Number(service.price || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} · {service.duration_minutes} min · {service.active ? 'Attivo' : 'Disattivato'}</p></div>
+            <p className="text-sm text-stone-600">{Number(service.price || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} · {service.duration_minutes} min · {!isBookableService(service.service_type) ? 'Non più prenotabile' : service.active ? 'Attivo' : 'Disattivato'}</p></div>
         </div>
         <button type="button" onClick={() => { setNotice(''); setEditing(service); }} className="shrink-0 rounded-xl border border-stone-300 px-3 py-2 text-sm font-semibold">Modifica</button>
       </div>)}
@@ -46,7 +46,7 @@ export function CalendarServices({ services, onChange }: { services: Service[]; 
 }
 
 function ServiceEditor({ initial, onSaved, onCancel }: { initial: Service; onSaved: (value: Service) => void; onCancel: () => void }) {
-  const [value, setValue] = useState({ ...initial, calendar_color: serviceColor(initial.calendar_color), price: String(initial.price ?? 0), duration_minutes: String(initial.duration_minutes || 60) });
+  const [value, setValue] = useState({ ...initial, active: isBookableService(initial.service_type) && initial.active, calendar_color: serviceColor(initial.calendar_color), price: String(initial.price ?? 0), duration_minutes: String(initial.duration_minutes || 60) });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const lock = useRef(false);
@@ -77,21 +77,26 @@ function ServiceEditor({ initial, onSaved, onCancel }: { initial: Service; onSav
     <div className="pg-mini-steps" aria-label="Passaggi del servizio">{['Cosa offri', 'Prezzo e durata', 'Controlla e salva'].map((label, i) => <span key={label} aria-current={stage === i ? 'step' : undefined}>{i + 1}. {label}</span>)}</div>
     <fieldset disabled={busy} className="grid gap-4 sm:grid-cols-2 disabled:opacity-60">
       {stage === 0 && <><label className="text-sm font-semibold sm:col-span-2">Nome del servizio<input autoFocus required maxLength={120} value={value.name} onChange={(e) => patch({ name: e.target.value })} className={field} /></label>
-      <label className="text-sm font-semibold">Categoria<select value={value.service_type} onChange={(e) => {
+      <div className="text-sm font-semibold"><label htmlFor="service-category">Categoria</label><select id="service-category" value={value.service_type} onChange={(e) => {
         const selected = categories.find(([id]) => id === e.target.value);
-        patch({ service_type: e.target.value, calendar_color: selected?.[2] || value.calendar_color });
+        patch({ service_type: e.target.value, active: isBookableService(e.target.value) && value.active, calendar_color: selected?.[2] || value.calendar_color });
       }} className={field}>
-        {!categories.some(([id]) => id === value.service_type) && <option value={value.service_type}>{value.service_type}</option>}
+        {!categories.some(([id]) => id === value.service_type) && <option value={value.service_type}>{value.service_type} · categoria storica</option>}
         {categories.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
-      </select></label></>}
+      </select></div></>}
       {stage === 2 && <label className="text-sm font-semibold">Colore nel calendario<input type="color" value={value.calendar_color} onChange={(e) => patch({ calendar_color: e.target.value })} className="mt-1 block h-11 w-full cursor-pointer rounded-xl border border-stone-300 bg-white p-1" /></label>}
       {stage === 1 && <><label className="text-sm font-semibold">Prezzo per prenotazione (€)<input type="number" required min="0" max="100000" step="0.01" value={value.price} onChange={(e) => patch({ price: e.target.value })} className={field} /></label>
       <label className="text-sm font-semibold">Durata occupata nel calendario (minuti)<input type="number" required min="1" max="525600" step="1" value={value.duration_minutes} onChange={(e) => patch({ duration_minutes: e.target.value })} className={field} /></label>
       <label className="text-sm font-semibold">Tipo di durata<select value={value.duration_kind} onChange={(e) => patch({ duration_kind: e.target.value })} className={field}><option value="hourly">Orario</option><option value="daily">Giornaliero</option><option value="variable">Variabile</option></select></label></>}
-      {stage === 2 && <><label className="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" checked={value.active} onChange={(e) => patch({ active: e.target.checked })} />Servizio attivo</label>
+      {stage === 2 && <><label className="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" checked={value.active} disabled={!isBookableService(value.service_type)} onChange={(e) => patch({ active: e.target.checked })} />Servizio attivo</label>
       <p className="text-sm sm:col-span-2"><strong>{value.name}</strong> · {Number(value.price).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })} · {value.duration_minutes} minuti</p></>}
       {stage === 1 && <p className="text-xs text-stone-600 sm:col-span-2">Per 24 ore indica 1440 minuti. Il prezzo si riferisce all’intera durata indicata.</p>}
     </fieldset>
+    <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm" aria-live="polite">
+      <p className="font-semibold">Dove apparirà questo servizio</p><p className="mt-1">{serviceSearchArea(value.service_type)}</p>
+      {isBookableService(value.service_type) ? <p className="mt-1 text-stone-600">Comparirà dopo l’approvazione del profilo, quando il servizio sarà attivo. Per essere trovato nella tua zona, completa anche la località del profilo.</p>
+        : <p className="mt-1">Il servizio e gli appuntamenti passati restano nello storico. Puoi salvarlo disattivato; per una nuova attività aggiungi un servizio nella categoria corretta.</p>}
+    </div>
     {error && <p role="alert" className="mt-3 text-sm text-rose-700">{error}</p>}
     <div className="mt-4 flex flex-wrap gap-3"><button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-xl bg-emerald-800 px-4 py-2 font-semibold text-white disabled:opacity-60"><Save className="h-4 w-4" />{busy ? 'Salvataggio…' : stage < 2 ? 'Continua' : 'Salva servizio'}</button>
       {stage > 0 && <button type="button" disabled={busy} onClick={() => setStage(stage - 1)} className="pg-secondary">Indietro</button>}

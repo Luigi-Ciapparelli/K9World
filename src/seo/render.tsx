@@ -23,7 +23,7 @@ export { PUBLIC_PAGES, pageMetadata, SITE_URL, SOCIAL_IMAGE, structuredData } fr
 export function renderPublicPage(path: string) {
   const components: Record<string, ReactNode> = {
     '/': <HomePage />, '/impara': <ImparaHomePage />, '/prima-del-cane': <BeforeDogPage />,
-    '/scegliere-allevatore': <BreederGuidePage />, '/search': <SearchPage />, '/sport': <SearchPage sport />,
+    '/scegliere-allevatore': <BreederGuidePage />, '/search': <SearchPage />, '/sport': <SearchPage sport />, '/esposizioni': <SearchPage exhibitions />,
     '/become-pro': <BecomeProPage />, '/contact': <ContactPage />, '/ranking': <RankingPage />,
     '/privacy': <PrivacyPage />, '/terms': <TermsPage />, '/cookies': <CookiePage />, '/professional-terms': <ProfessionalTermsPage />,
   };

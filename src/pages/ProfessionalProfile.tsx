@@ -43,7 +43,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
   const journey = readJourneyContext();
   const profileQuery = readBrowserRoute().split('?')[1] || '';
-  const searchBase = new URLSearchParams(profileQuery).get('context') === 'sport' ? '/sport' : '/search';
+  const searchBase = new URLSearchParams(profileQuery).get('context') === 'sport' ? '/sport' : new URLSearchParams(profileQuery).get('context') === 'exhibitions' ? '/esposizioni' : '/search';
   const returnToSearch = profileQuery ? `${searchBase}?${profileQuery}` : searchBase;
   useEffect(() => {
     let active = true;
@@ -203,7 +203,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
   const hasRating = reviewCount > 0 && Number.isFinite(rating) && rating >= 1 && rating <= 5;
   const professionalLabels: Record<string, string> = {
     trainer: 'Educazione e addestramento', walker: 'Dog walking',
-    sitter: 'Dog sitting', boarding: 'Pensione per cani',
+    sitter: 'Dog sitting', boarding: 'Pensione per cani', handler: 'Handler per esposizioni',
   };
   const isVerified = !!profile?.email_verified;
 

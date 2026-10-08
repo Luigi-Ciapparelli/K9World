@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Home,
-  Building2,
+  Award,
   MapPin,
   Search,
-  Bone,
   Scissors,
   GraduationCap,
   Navigation,
@@ -14,24 +13,22 @@ import { useRouter } from '../lib/RouterContext';
 import { cityLabel, loadItalianCities, normalizeCitySearch, type ItalianCity } from '../lib/italianCities';
 import type { ServiceCategoryType } from '../lib/serviceCategories';
 
-const services: Array<{ id: ServiceCategoryType; label: string; icon: typeof Home }> = [
-  { id: 'boarding', label: 'Pensione', icon: Home },
-  { id: 'sitter', label: 'Pet sitting', icon: Building2 },
-  { id: 'walker', label: 'Passeggiate', icon: Bone },
-  { id: 'trainer', label: 'Addestramento', icon: GraduationCap },
+const dailyServices: Array<{ id: ServiceCategoryType; label: string; icon: typeof Home }> = [
+  { id: 'trainer', label: 'Addestratori', icon: GraduationCap },
+  { id: 'boarding', label: 'Pensioni', icon: Home },
+];
+const exhibitionServices: typeof dailyServices = [
   { id: 'groomer', label: 'Toelettatura', icon: Scissors },
+  { id: 'handler', label: 'Handler per esposizioni', icon: Award },
 ];
 
-function isServiceCategory(value: string | null): value is ServiceCategoryType {
-  return services.some((service) => service.id === value);
-}
-
 // ECOSYSTEM_PASS_V1
-export function SearchCard({ compact = false, sport = false }: { compact?: boolean; sport?: boolean }) {
+export function SearchCard({ compact = false, sport = false, exhibitions = false }: { compact?: boolean; sport?: boolean; exhibitions?: boolean }) {
+  const services = exhibitions ? exhibitionServices : dailyServices;
   const catalog = useSportDisciplines(sport);
   const [discipline, setDiscipline] = useState('');
   const { path, navigate } = useRouter();
-  const [service, setServizio] = useState<ServiceCategoryType>('trainer');
+  const [service, setServizio] = useState<ServiceCategoryType>(exhibitions ? 'groomer' : 'trainer');
   const [address, setAddress] = useState('');
   const [locationLoading, setLocationLoading] = useState(false);
   const [locationAccuracy, setLocationAccuracy] = useState<number | null>(null);
@@ -54,13 +51,13 @@ export function SearchCard({ compact = false, sport = false }: { compact?: boole
       Number.isFinite(lat) &&
       Number.isFinite(lng);
 
-    setServizio(sport ? 'trainer' : isServiceCategory(type) ? type : 'trainer');
+    setServizio(sport ? 'trainer' : type ? type as ServiceCategoryType : exhibitions ? 'groomer' : 'trainer');
     setDiscipline(params.get('discipline') || '');
     setAddress(nextAddress);
     setSelectedCity(null);
     setGpsCoords(hasCoords ? { lat, lng } : null);
     setLocationAccuracy(null);
-  }, [path, sport]);
+  }, [path, sport, exhibitions]);
 
   useEffect(() => {
     let active = true;
@@ -137,7 +134,8 @@ export function SearchCard({ compact = false, sport = false }: { compact?: boole
 
     if (sport && discipline) params.set('discipline', discipline);
     if (sport) params.set('context', 'sport');
-    navigate(`${sport ? '/sport' : '/search'}?${params.toString()}`);
+    if (exhibitions) params.set('context', 'exhibitions');
+    navigate(`${sport ? '/sport' : exhibitions ? '/esposizioni' : '/search'}?${params.toString()}`);
   };
 
   const handleUseLocation = () => {
@@ -251,7 +249,7 @@ export function SearchCard({ compact = false, sport = false }: { compact?: boole
         SCEGLI UN SERVIZIO
       </p>
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4">
+      <div className="grid grid-cols-2 gap-2 mb-4">
         {services.map((s) => {
           const Icon = s.icon;
           const active = service === s.id;
@@ -261,6 +259,7 @@ export function SearchCard({ compact = false, sport = false }: { compact?: boole
               key={s.id}
               type="button"
               onClick={() => setServizio(s.id)}
+              aria-pressed={active}
               className={`flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border-2 transition ${
                 active
                   ? 'border-[var(--pc-forest-700)] bg-[var(--pc-forest-100)] text-[var(--pc-forest-900)]'
@@ -278,7 +277,7 @@ export function SearchCard({ compact = false, sport = false }: { compact?: boole
 
       <div className="flex flex-col md:flex-row gap-3">
         <div className="relative flex-1">
-          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+          <MapPin className="absolute left-3 top-6 -translate-y-1/2 w-4 h-4 text-stone-400" />
           <label htmlFor="search-address" className="sr-only">Città o zona</label>
           <input
             id="search-address"
@@ -296,7 +295,7 @@ export function SearchCard({ compact = false, sport = false }: { compact?: boole
           />
 
           {suggestions.length > 0 && (
-            <div className="absolute left-0 right-0 top-full mt-1 z-30 bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
+            <div className="relative md:absolute left-0 right-0 md:top-full mt-1 z-30 bg-[var(--pc-paper)] text-[var(--pc-ink-950)] border border-[var(--pc-line)] rounded-xl shadow-xl max-h-60 overflow-y-auto">
               {suggestions.map((city) => (
                 <button
                   key={city.code}
@@ -320,7 +319,7 @@ export function SearchCard({ compact = false, sport = false }: { compact?: boole
           <button
             type="button"
             onClick={handleUseLocation}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1"
+            className="absolute right-2 top-6 -translate-y-1/2 text-xs text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1"
           >
             <Navigation className="w-3 h-3" />
             {locationLoading

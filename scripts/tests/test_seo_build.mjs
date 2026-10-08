@@ -34,3 +34,10 @@ for (const route of ['/forgot-password', '/reset-password']) {
  assert.ok(headers?.some(h=>h.key==='Referrer-Policy' && h.value==='no-referrer'));
 }
 console.log(`OK: ${urls.length} URL canonici, HTML con contenuto, otto lezioni, JSON-LD, link, sitemap ed esclusione delle aree personali.`);
+
+assert.ok(urls.includes('https://www.portalecinofilo.com/esposizioni'));
+const exhibitions=await fs.readFile(path.join(dist,'esposizioni.html'),'utf8');
+assert.match(exhibitions,/Handler per esposizioni/);
+assert.match(exhibitions,/anche per la cura quotidiana/);
+assert.ok(!exhibitions.includes('Pet sitting'));
+assert.match(home,/href="\/esposizioni"/);

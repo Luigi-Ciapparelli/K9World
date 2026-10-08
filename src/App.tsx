@@ -205,6 +205,7 @@ function AppShell() {
   else if (basePath === '/signup') content = <SignUpPage defaultRole={signupRole} />;
   else if (basePath === '/become-pro') content = <BecomeProPage />;
   else if (basePath === '/search') content = <SearchPage key="companion" />;
+  else if (basePath === '/esposizioni') content = <SearchPage key="exhibitions" exhibitions />;
   else if (basePath === '/sport') content = <SearchPage key="sport" sport />;
   else if (basePath === '/services') content = <HomePage />;
   else if (basePath.startsWith('/p/')) {

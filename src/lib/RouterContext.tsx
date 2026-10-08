@@ -21,7 +21,7 @@ export function RouterProvider({ children, initialPath }: { children: ReactNode;
 
   useEffect(() => {
     // Do not touch #access_token, recovery codes or other Supabase Auth fragments.
-    if (window.location.hash.startsWith('#/') && !privateRoute(currentPath.current)) {
+    if (!privateRoute(currentPath.current) && (window.location.hash.startsWith('#/') || (!window.location.hash && window.location.pathname + window.location.search !== routeHref(currentPath.current)))) {
       window.history.replaceState(window.history.state, '', routeHref(currentPath.current));
       currentUrl.current = routeHref(currentPath.current);
     }
@@ -29,7 +29,7 @@ export function RouterProvider({ children, initialPath }: { children: ReactNode;
       const next = readBrowserRoute();
       if (next === currentPath.current) return;
       if (!canNavigate(next)) { window.history.replaceState(window.history.state, '', currentUrl.current); return; }
-      if (window.location.hash.startsWith('#/') && !privateRoute(next)) window.history.replaceState(window.history.state, '', routeHref(next));
+      if (!privateRoute(next) && (window.location.hash.startsWith('#/') || (!window.location.hash && window.location.pathname + window.location.search !== routeHref(next)))) window.history.replaceState(window.history.state, '', routeHref(next));
       currentUrl.current = window.location.pathname + window.location.search + window.location.hash;
       currentPath.current = next; setPath(next); setParams({});
     };

@@ -2,7 +2,12 @@
 export function normalizeRoute(value: string) {
   const [raw, query = ''] = value.split('?');
   let path = raw.replace(/\/+$/, '') || '/';
-  if (path === '/services') return `/search${query ? `?${query}` : '?type=trainer'}`;
+  if (path === '/services') return normalizeRoute(`/search${query ? `?${query}` : '?type=trainer'}`);
+  const filters = new URLSearchParams(query);
+  if (path === '/search' && ['groomer', 'handler'].includes(filters.get('type') || '')) {
+    filters.set('moved', 'exhibitions'); filters.set('context', 'exhibitions');
+    return `/esposizioni?${filters}`;
+  }
   if (path === '/become-a-pro') path = '/become-pro';
   return path + (query ? `?${query}` : '');
 }

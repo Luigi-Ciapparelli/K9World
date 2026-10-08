@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AlertCircle, BookOpen, GraduationCap, LogOut, Menu, Search, Trophy, User, X } from 'lucide-react';
+import { AlertCircle, Award, BookOpen, GraduationCap, LogOut, Menu, Search, Trophy, User, X } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
 import { RouteLink } from './RouteLink';
@@ -41,6 +41,7 @@ export function Navbar() {
     { to: '/search?type=trainer', label: 'Trova aiuto per il cane', icon: Search, active: basePath === '/search', kind: 'help' },
     { to: '/impara', label: 'Impara', icon: BookOpen, active: basePath.startsWith('/impara') || basePath === '/prima-del-cane', kind: 'learn' },
     { to: '/sport', label: 'Sport cinofili', icon: Trophy, active: basePath === '/sport', kind: 'sport' },
+    { to: '/esposizioni', label: 'Esposizioni', icon: Award, active: basePath === '/esposizioni', kind: 'sport' },
   ];
 
   return (

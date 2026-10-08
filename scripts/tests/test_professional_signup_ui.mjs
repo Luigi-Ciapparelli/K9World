@@ -35,7 +35,7 @@ async function details(page, professional = true) {
   await page.getByLabel('Password', { exact: true }).fill('Synthetic-only-123');
 }
 try {
-  for (const [activity, width] of [['trainer', 1440], ['boarding', 390]]) {
+  for (const [activity, width] of [['trainer', 1440], ['boarding', 390], ['handler', 390], ['groomer', 1440]]) {
     const t = await setup(width);
     // Same entry link used by invitations, not the generic role selection.
     await t.page.goto(base + '/become-pro');
@@ -92,5 +92,5 @@ try {
   assert.equal(t.writes.length, 0, 'Owner must complete dog onboarding before account creation');
   await t.context.close();
   assert.deepEqual(errors, []);
-  console.log('OK: invito diretto, attività obbligatoria, trainer/pensione nel payload Auth, retry senza perdita dati, conferma email e percorso proprietario preservato. Auth simulata, nessun account reale creato.');
+  console.log('OK: invito diretto, attività obbligatoria, trainer/pensione/toelettatura/handler nel payload Auth, retry senza perdita dati, conferma email e percorso proprietario preservato. Auth simulata, nessun account reale creato.');
 } finally { await browser.close(); }

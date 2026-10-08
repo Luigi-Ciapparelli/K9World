@@ -388,7 +388,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
   }
 
   return (
-    <AuthFrame title={role === 'professional' ? 'Inizia il tuo profilo professionale' : 'Crea il tuo account'} subtitle={role === 'professional' ? 'Per addestratori, centri cinofili e strutture.' : 'Il primo passo per trovare aiuto per il tuo cane.'}>
+    <AuthFrame title={role === 'professional' ? 'Inizia il tuo profilo professionale' : 'Crea il tuo account'} subtitle={role === 'professional' ? 'Per addestratori, pensioni, toelettatori e handler per esposizioni.' : 'Il primo passo per trovare aiuto per il tuo cane.'}>
       <form onSubmit={submit} className="space-y-4">
         {role === 'professional' && <div>
           <label htmlFor="signup-activity" className="block text-sm font-semibold text-stone-700 mb-2">Attività principale</label>
@@ -396,8 +396,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
             <option value="" disabled>Scegli la tua attività</option>
             <option value="trainer">Educazione e addestramento</option>
             <option value="boarding">Pensione per cani</option>
-            <option value="sitter">Dog sitter</option>
-            <option value="walker">Passeggiate con il cane</option>
+            <option value="handler">Handler per esposizioni</option>
             <option value="groomer">Toelettatura</option>
           </select>
           <p id="signup-activity-help" className="mt-2 text-xs text-stone-600">Scegli l’attività prevalente. Nel profilo guidato potrai indicare il nome del centro o della struttura e aggiungere i servizi offerti.</p>

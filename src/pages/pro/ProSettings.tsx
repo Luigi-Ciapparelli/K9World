@@ -144,10 +144,9 @@ type SettingsService = { id: string; name: string; service_type: string; price: 
 type ApprovalStatus = 'pending' | 'approved' | 'rejected';
 
 const PROFESSIONAL_TYPES = [
-  { value: 'walker', label: 'Dog walker' },
   { value: 'trainer', label: 'Educatore / addestratore' },
   { value: 'boarding', label: 'Pensione' },
-  { value: 'sitter', label: 'Pet sitter' },
+  { value: 'handler', label: 'Handler per esposizioni' },
   { value: 'groomer', label: 'Toelettatore' },
 ];
 
@@ -259,7 +258,7 @@ export function ProSettings() {
     const loadedPro = (
       p.data || {
         id: userId,
-        professional_type: 'walker',
+        professional_type: 'trainer',
         bio: '',
         zone_text: '',
         latitude: null,
@@ -831,7 +830,7 @@ export function ProSettings() {
         if (readError) throw readError;
         const result = existing
           ? await supabase.from('professionals').update({ ...payload, updated_at: new Date().toISOString() }).eq('id', user.id)
-          : await supabase.from('professionals').insert({ id: user.id, professional_type: pro.professional_type || 'walker', listing_type: pro.listing_type || 'individual', ...payload });
+          : await supabase.from('professionals').insert({ id: user.id, professional_type: pro.professional_type || 'trainer', listing_type: pro.listing_type || 'individual', ...payload });
         if (result.error) throw result.error;
         setProfileExists(true);
         if (step === 'identity') {
@@ -920,10 +919,11 @@ export function ProSettings() {
           <div>
             <label className="text-sm font-semibold text-stone-700">Attività principale</label>
             <select
-              value={pro.professional_type || 'walker'}
+              value={pro.professional_type || 'trainer'}
               onChange={(e) => setPro({ ...pro, professional_type: e.target.value })}
               className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
             >
+              {pro.professional_type && !PROFESSIONAL_TYPES.some(type => type.value === pro.professional_type) && <option value={pro.professional_type}>Attività precedente (non più offerta al pubblico)</option>}
               {PROFESSIONAL_TYPES.map((type) => (
                 <option key={type.value} value={type.value}>
                   {type.label}
@@ -1669,9 +1669,9 @@ export function ProSettings() {
           </div>
               </>}
               {step === 'services' && <>
-<CalendarServices key={user?.id} services={services} onChange={setServices} />              </>}
+<CalendarServices key={user?.id} services={services} onChange={setServices} defaultType={pro.professional_type} />              </>}
               {step === 'visibility' && <>
-<ProfessionalSearchSettings key={user?.id} />              </>}
+<ProfessionalSearchSettings key={user?.id} services={services} professionalType={pro.professional_type} />              </>}
               {step === 'replies' && <>
 <ProfessionalReplyTemplates key={user?.id} />              </>}
               {step === 'rules' && <>

@@ -1,5 +1,21 @@
 # CURRENT STATE — PawConnect / Portalecinofilo
 
+## Ricerca ed Esposizioni implementate — 8 ottobre 2026
+
+NAV-01/PRO-01 preparati sulla base remota `85cd0a7`: ricerca quotidiana con soli
+Addestratori/Pensioni; Esposizioni con Toelettatura/Handler; attività e anteprima
+della visibilità integrate nel profilo guidato. I dati precedenti sono conservati.
+Leggere [EXHIBITIONS_RELEASE_V1.md](EXHIBITIONS_RELEASE_V1.md) per mappatura,
+contratti API, verifiche e rilascio coordinato con la nuova migration
+`20261008120000_exhibitions_and_service_catalog.sql`.
+
+I controlli qui documentati sono locali con dati sintetici; non attestano un
+nuovo deployment Ready o lo stato del database online. L'installer con --publish
+esegue i controlli nativi e pubblica dal repository WSL dell'utente.
+Questa istruzione di esecuzione supera il precedente limite «solo documenti»
+per questo incremento. Export e nuove recensioni restano successivi; la ZIP
+indicata dall'utente non è stata letta.
+
 ## Checkpoint: priorità e criteri di completamento — 8 ottobre 2026
 
 `origin/main` riletto a `821f4de`: il precedente piano mercati/SEO/hosting è remoto.

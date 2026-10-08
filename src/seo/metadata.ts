@@ -12,7 +12,8 @@ const pages: PageMeta[] = [
   { path: '/impara', title: 'Educazione del cane: lezioni gratuite | PortaleCinofilo', description: 'Otto lezioni gratuite su bisogni, comportamento e apprendimento del cane. Letture, attività pratiche, shaping e autoverifiche per i proprietari.', index: true, type: 'CollectionPage' },
   { path: '/prima-del-cane', title: 'Scegliere un cane: parti dalla tua vita | PortaleCinofilo', description: 'Prima di prendere un cane, valuta tempo, abitudini, ambiente e impegno quotidiano. Un percorso orientativo per una scelta consapevole.', index: true },
   { path: '/scegliere-allevatore', title: 'Come scegliere un allevatore di cani | PortaleCinofilo', description: 'Domande, documenti e controlli utili per scegliere un allevatore. Consulta i riferimenti ENCI e valuta salute, selezione e gestione dei cuccioli.', index: true },
-  { path: '/search', title: 'Trova educatori e servizi per il cane | PortaleCinofilo', description: 'Cerca un addestratore, una pensione, un dog sitter o altri servizi per il cane. Confronta zona, profilo e competenze prima di contattare il professionista.', index: true, type: 'CollectionPage' },
+  { path: '/search', title: 'Trova addestratori e pensioni per cani | PortaleCinofilo', description: 'Cerca un addestratore o una pensione per il tuo cane. Confronta zona, profilo e competenze prima di contattare il professionista.', index: true, type: 'CollectionPage' },
+  { path: '/esposizioni', title: 'Toelettatura e handler per esposizioni | PortaleCinofilo', description: 'Trova un toelettatore o un handler per esposizioni nella tua zona. Cura del mantello anche senza gare, preparazione e presentazione sul ring.', index: true, type: 'CollectionPage' },
   { path: '/sport', title: 'Sport cinofili: trova un addestratore | PortaleCinofilo', description: 'Cerca professionisti per disciplina sportiva e zona. Consulta esperienze e risultati, distinguendo dichiarazioni, fonti e informazioni verificate.', index: true, type: 'CollectionPage' },
   { path: '/become-pro', title: 'Strumenti per professionisti cinofili | PortaleCinofilo', description: 'Presenta la tua attività cinofila e gestisci richieste, calendario, clienti e percorsi dei cani. Scopri gli strumenti di PortaleCinofilo.', index: true },
   { path: '/contact', title: 'Contatti | PortaleCinofilo', description: 'Contatta PortaleCinofilo: info@portalecinofilo.com, telefono +39 353 407 7841. Informazioni sul portale e segnalazioni.', index: true, type: 'ContactPage' },
@@ -34,7 +35,7 @@ export function pageMetadata(route: string): PageMeta {
   const known = byPath.get(path);
   if (known) {
     const filters = new URLSearchParams(query);
-    const filteredSearch = ['/search', '/sport'].includes(path) && [...filters.keys()].some(key => !['source', 'from', 'topic', 'intent', 'utm_source', 'utm_medium', 'utm_campaign'].includes(key));
+    const filteredSearch = ['/search', '/sport', '/esposizioni'].includes(path) && [...filters.keys()].some(key => !['source', 'from', 'topic', 'intent', 'utm_source', 'utm_medium', 'utm_campaign'].includes(key));
     return { ...known, index: known.index && !filteredSearch };
   }
   if (/^\/p\/[a-f0-9-]{36}$/i.test(path)) return { path, title: 'Profilo professionista cinofilo | PortaleCinofilo', description: 'Consulta presentazione, servizi e competenze del professionista su PortaleCinofilo.', index: true };

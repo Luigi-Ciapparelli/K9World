@@ -1,5 +1,21 @@
 # PortaleCinofilo — priorità operative e criteri di completamento
 
+## Ricerca ed Esposizioni implementate — 8 ottobre 2026
+
+NAV-01/PRO-01 preparati sulla base remota `85cd0a7`: ricerca quotidiana con soli
+Addestratori/Pensioni; Esposizioni con Toelettatura/Handler; attività e anteprima
+della visibilità integrate nel profilo guidato. I dati precedenti sono conservati.
+Leggere [EXHIBITIONS_RELEASE_V1.md](EXHIBITIONS_RELEASE_V1.md) per mappatura,
+contratti API, verifiche e rilascio coordinato con la nuova migration
+`20261008120000_exhibitions_and_service_catalog.sql`.
+
+I controlli qui documentati sono locali con dati sintetici; non attestano un
+nuovo deployment Ready o lo stato del database online. L'installer con --publish
+esegue i controlli nativi e pubblica dal repository WSL dell'utente.
+Questa istruzione di esecuzione supera il precedente limite «solo documenti»
+per questo incremento. Export e nuove recensioni restano successivi; la ZIP
+indicata dall'utente non è stata letta.
+
 8 ottobre 2026. Base remota riletta: `821f4de`.
 
 **Questo incremento aggiorna soltanto le direttive.** Nessun nuovo sviluppo, migrazione, acquisto, attivazione di monitor, invito o pubblicazione social eseguito. Il piano precedente su mercati, SEO e hosting è già presente su GitHub. La ZIP esclusa da Luigi non è stata letta.
@@ -20,8 +36,8 @@ Le priorità non sono una nuova autorizzazione di esecuzione. “Pronto per prog
 | --- | --- | --- | --- | --- |
 | AFF-01 | Prima priorità; diagnosi in attesa di dettagli | Ricostruire il downtime e identificare il componente coinvolto | Data, ora, URL e sintomo; poi log pertinenti | Causa o limite della diagnosi documentato, intervento motivato e verifica del percorso coinvolto |
 | SEO-01 | Prima priorità; campione pubblico già controllato | Associare esclusioni Google agli URL | Tre export Search Console; canonica Google del duplicato | Ogni gruppo classificato, pagine essenziali controllate, correzioni specifiche individuate |
-| NAV-01 | Primo incremento di prodotto proposto | Ricerca quotidiana con Addestratori/Pensioni, nuova area Esposizioni | Mappatura di categorie, servizi, profili e URL esistenti | Percorsi comprensibili, vecchi link gestiti, nessuna perdita di storico |
-| PRO-01 | Nello stesso incremento NAV-01 | Adattare profilo guidato e servizi alle nuove aree | Mappatura attività miste e handler | Un professionista imposta soltanto ciò che offre, con anteprima della visibilità e dati salvati |
+| NAV-01 | Implementato e verificato localmente; rilascio da confermare | Ricerca quotidiana con Addestratori/Pensioni, nuova area Esposizioni | Mappatura di categorie, servizi, profili e URL esistenti | Percorsi comprensibili, vecchi link gestiti, nessuna perdita di storico |
+| PRO-01 | Implementato insieme a NAV-01; rilascio da confermare | Adattare profilo guidato e servizi alle nuove aree | Mappatura attività miste e handler | Un professionista imposta soltanto ciò che offre, con anteprima della visibilità e dati salvati |
 | EXP-01 | Incremento successivo | Esportare lo storico autorizzato del cane | Modello reale di note, revisioni, concessioni e file | Export leggibile e completo nel perimetro consentito; isolamento e revoca verificati |
 | REV-01 | Specifica parziale; chiudere le decisioni mirate | Richieste di valutazione dopo esperienze concluse | Soglia pensioni, visibilità cliente, cadenza e completamento servizi | Ammissibilità lato server, niente duplicati, regole distinte e storico preservato |
 | SOC-01 | Pianificazione pronta; produzione futura | Dimostrazioni del prodotto e campagna del portale | Materiali effettivi dei tre post, funzione mostrata disponibile; budget per Higgsfield | Una sequenza curata e un collegamento pertinente, controllati nell'anteprima del canale |

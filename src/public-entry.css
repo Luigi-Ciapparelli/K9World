@@ -27,7 +27,7 @@ html.dark .pc-brand img { filter: brightness(0) invert(.95); }
 .pc-register-link:hover { background: #316b48; }
 .pc-icon-button { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9px; }
 .pc-icon-button:hover { background: var(--entry-soft); }
-.pc-primary-nav { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 10px; padding-bottom: 13px; }
+.pc-primary-nav { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 10px; padding-bottom: 13px; }
 .pc-nav-tile { min-height: 47px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; border: 1px solid var(--entry-line); border-radius: 10px; background: var(--entry-soft); color: var(--entry-ink); font-size: 14px; font-weight: 700; padding: 10px 14px; transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease; }
 .pc-nav-tile:hover { border-color: var(--entry-accent); background: var(--entry-paper); }
 .pc-nav-help { background: #214c33; color: white; border-color: #214c33; }

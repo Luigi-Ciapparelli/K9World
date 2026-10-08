@@ -1,5 +1,5 @@
 export type Role = 'owner' | 'professional' | 'admin';
-export type ProfessionalType = 'walker' | 'sitter' | 'trainer' | 'groomer' | 'boarding';
+export type ProfessionalType = 'walker' | 'sitter' | 'trainer' | 'groomer' | 'boarding' | 'handler';
 
 export interface Profile {
   id: string;

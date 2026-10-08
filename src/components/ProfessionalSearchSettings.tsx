@@ -1,9 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 import { useUnsavedChanges } from '../lib/RouterContext';
+import { serviceSearchArea, isBookableService } from '../lib/serviceCategories';
 import { supabase } from '../lib/supabase';
 import { useSportDisciplines, type ProfessionalSearchModes } from '../lib/sportSearch';
 
-export function ProfessionalSearchSettings() {
+export function ProfessionalSearchSettings({ services, professionalType }: { services: Array<{ id: string; name: string; service_type: string; active: boolean }>; professionalType: string }) {
+  const trainer = professionalType === 'trainer' || services.some(service => service.service_type === 'trainer');
+  return <>
+    <section className="pc-card p-6 mb-5" aria-labelledby="service-areas-heading">
+      <h2 id="service-areas-heading" className="pc-display text-2xl font-semibold">Dove possono trovarti</h2>
+      <p className="mt-3 text-sm">Ogni servizio appare nella propria sezione. Puoi offrire più attività dallo stesso profilo: aggiungile nel passaggio Servizi.</p>
+      {services.length ? <ul className="mt-4 space-y-3">{services.map(service => <li key={service.id} className="rounded-xl border border-[var(--pc-line)] p-3 text-sm">
+        <strong>{service.name}</strong><p>{serviceSearchArea(service.service_type)}</p>
+        {isBookableService(service.service_type) && !service.active && <p className="mt-1">Servizio disattivato: non compare nelle ricerche.</p>}
+      </li>)}</ul> : <p className="mt-4">Aggiungi un servizio per scegliere le attività che offri.</p>}
+      <p className="mt-4 text-sm text-[var(--pc-muted-600)]">La presenza negli elenchi richiede l’approvazione del profilo. La categoria scelta non assegna qualifiche o badge.</p>
+    </section>
+    {trainer && <TrainingSearchSettings />}
+  </>;
+}
+
+function TrainingSearchSettings() {
   const catalog = useSportDisciplines();
   const [modes, setModes] = useState<ProfessionalSearchModes | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,7 +96,7 @@ export function ProfessionalSearchSettings() {
             <label className="flex items-start gap-3 rounded-2xl border border-[var(--pc-line)] p-4 cursor-pointer">
               <input type="checkbox" className="mt-1 accent-emerald-700" checked={modes.show_companion}
                 onChange={e => change({ ...modes, show_companion: e.target.checked })} />
-              <span><span className="block font-semibold">Mostrami nella sezione Gestione del cane</span>
+              <span><span className="block font-semibold">Mostrami in Trova aiuto per il cane</span>
                 <span className="block text-sm text-[var(--pc-muted-600)] mt-1">Per chi cerca aiuto nella vita quotidiana e nella relazione con il cane.</span></span>
             </label>
             <label className="flex items-start gap-3 rounded-2xl border border-[var(--pc-line)] p-4 cursor-pointer">

@@ -1,9 +1,10 @@
+import { isBookableService } from './serviceCategories';
 export const setupSteps = [
   { id: 'identity', label: 'Presenta la tua attività', short: 'Identità', description: 'Il tuo nome e il tipo di lavoro che offri.', group: 'base' },
   { id: 'area', label: 'Indica dove lavori', short: 'Zona', description: 'La zona e la distanza entro cui puoi seguire i clienti.', group: 'base' },
   { id: 'story', label: 'Racconta come lavori', short: 'Presentazione', description: 'Una breve presentazione, con parole tue.', group: 'base' },
   { id: 'services', label: 'Crea il primo servizio', short: 'Servizi', description: 'Nome, durata, prezzo e colore nel calendario.', group: 'base' },
-  { id: 'visibility', label: 'Scegli dove comparire', short: 'Ricerca e sport', description: 'Gestione quotidiana e sport: due scelte indipendenti.', group: 'more' },
+  { id: 'visibility', label: 'Scegli dove comparire', short: 'Visibilità', description: 'Scopri in quali ricerche compariranno i tuoi servizi.', group: 'more' },
   { id: 'appearance', label: 'Personalizza la tua immagine', short: 'Foto e link', description: 'Foto o logo, sito e profili social.', group: 'more' },
   { id: 'experience', label: 'Aggiungi la tua esperienza', short: 'Esperienza', description: 'Anno di inizio, formazione e documentazione.', group: 'more' },
   { id: 'credentials', label: 'Documenta le competenze', short: 'Attestati e risultati', description: 'Un attestato alla volta. Working-Dog è facoltativo.', group: 'more' },
@@ -23,11 +24,11 @@ export const profileStepFields: Partial<Record<SetupStep, string[]>> = {
   story: ['bio'], appearance: ['website_url', 'instagram_url', 'cover_photo_url'],
   experience: ['experience_start_year', 'qualification_summary', 'insurance_summary'],
 };
-export function completedProfileSteps(name: string, pro: Record<string, unknown> | null, services: Array<{ active: boolean }>) {
+export function completedProfileSteps(name: string, pro: Record<string, unknown> | null, services: Array<{ active: boolean; service_type?: string }>) {
   const filled = (value: unknown) => typeof value === 'string' && value.trim().length > 0;
   return {
     identity: filled(name) && filled(pro?.professional_type) && (pro?.listing_type === 'individual' || !pro?.listing_type || filled(pro?.business_name)),
-    area: filled(pro?.zone_text), story: filled(pro?.bio), services: services.some(service => service.active),
+    area: filled(pro?.zone_text), story: filled(pro?.bio), services: services.some(service => service.active && (!service.service_type || isBookableService(service.service_type))),
   };
 }
 export const toolTours = [

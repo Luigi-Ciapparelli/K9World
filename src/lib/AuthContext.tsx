@@ -132,7 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     dogReactive,
     dogNotes,
   }: SignUpArgs) => {
-    if (role === 'professional' && (!professionalType || !['walker', 'sitter', 'trainer', 'groomer', 'boarding'].includes(professionalType))) {
+    if (role === 'professional' && (!professionalType || !['trainer', 'groomer', 'boarding', 'handler'].includes(professionalType))) {
       return { error: 'Scegli la tua attività principale.' };
     }
     const { data, error } = await supabase.auth.signUp({
