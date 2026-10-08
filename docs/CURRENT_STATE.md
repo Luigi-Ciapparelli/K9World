@@ -1,5 +1,22 @@
 # CURRENT STATE — PawConnect / Portalecinofilo
 
+## Checkpoint: priorità e criteri di completamento — 8 ottobre 2026
+
+`origin/main` riletto a `821f4de`: il precedente piano mercati/SEO/hosting è remoto.
+Aggiunto [EXECUTION_PRIORITIES_2026_10.md](EXECUTION_PRIORITIES_2026_10.md) e collegato
+alle direttive tecniche, professionali, social e di lancio. Separati prossimo
+lavoro, dipendenze, decisioni aperte e backlog storico. Nessuna funzione nuova.
+
+Le indicazioni AFF-01/SEO-01 attendono i dati specificati nel piano. NAV-01/PRO-01
+sono il primo incremento di prodotto proposto per un successivo incarico.
+Nessun test applicativo, build, SQL, controllo HTTP aggiuntivo, piano a pagamento,
+monitor automatico o pubblicazione social eseguiti. ZIP non letta. Verifica
+limitata a documentazione e confezionamento dell'aggiornamento Git.
+
+Lo snapshot tecnico sottostante non è rigenerato. Il commit `599e152` del lancio
+email-only è nella storia Git riletta; i relativi esiti CLI erano già stati
+comunicati dall'utente. Questo non equivale a un nuovo collaudo live odierno.
+
 ## Checkpoint documentale e controllo HTTP pubblico — 8 ottobre 2026
 
 Base remota verificata: `5c96a79`, che contiene le direttive future precedenti.

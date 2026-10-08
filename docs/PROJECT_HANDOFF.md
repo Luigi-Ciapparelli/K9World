@@ -1,5 +1,23 @@
 # PawConnect / Portalecinofilo — Project Handoff
 
+## Piano operativo consolidato — 8 ottobre 2026
+
+Base remota `821f4de`, con direttive internazionali/SEO/hosting già pubblicate.
+Nuovo indice: [EXECUTION_PRIORITIES_2026_10.md](EXECUTION_PRIORITIES_2026_10.md).
+Contiene lavori identificabili, dipendenze e criteri di completamento, regole per
+ricerca/Esposizioni e profilo guidato, confini di export/recensioni, sequenza social
+e misurazione. Proposte organizzative e commerciali restano distinte da decisioni.
+
+Non ricostruire gli strumenti professionali già introdotti in base a liste storiche.
+Per il prossimo incarico di sviluppo partire da NAV-01/PRO-01, salvo un problema
+concreto di affidabilità o accesso da correggere prima. I CSV Search Console e i
+dettagli del downtime sono ancora mancanti. Le demo concordate di percorsi
+funzionanti non dipendono dall'indicizzazione di tutte le schede razza.
+
+Solo documenti: nessun codice, SQL, acquisto, social, invio o nuova analisi della ZIP.
+Non è stato eseguito un nuovo collaudo online; i riscontri precedenti conservano
+la data e i limiti già dichiarati. Nessun generatore dello snapshot tecnico avviato.
+
 ## Nuovo passaggio di consegne: mercati, SEO, downtime — 8 ottobre 2026
 
 Base GitHub riletta: `5c96a79`; le direttive di prodotto e social precedenti sono

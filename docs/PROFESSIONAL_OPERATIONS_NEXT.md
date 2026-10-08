@@ -1,5 +1,18 @@
 # Area professionista — richieste operative del 13 settembre 2026
 
+## Indice del prossimo lavoro — 8 ottobre 2026
+
+Riferimento: [EXECUTION_PRIORITIES_2026_10.md](EXECUTION_PRIORITIES_2026_10.md).
+Prossimo incremento proposto: NAV-01/PRO-01, tassonomia della ricerca ed Esposizioni
+con adeguamento del profilo guidato esistente. Seguono EXP-01 (storico autorizzato)
+e REV-01 (valutazioni, dopo le decisioni ancora aperte).
+
+Calendario, indisponibilità, messaggi, pacchetti e abbonamenti hanno già ricevuto
+incrementi descritti più sotto: non sono automaticamente da ricostruire. Le voci
+originarie di settembre restano storico, non elenco corrente dei mancanti.
+Per un difetto reale controllare codice, ultimo rilascio e caso segnalato prima
+di modificare. Questa revisione non aggiunge strumenti né ne certifica l'uso online.
+
 ## Nuovi requisiti da progettare — 8 ottobre 2026
 
 Riferimento prioritario:
@@ -46,7 +59,7 @@ dei pulsanti Accetta/Rifiuta. La pagina Richieste gia mostra questo campo.
 Nessuna nuova query, API o modifica dei permessi. Se il messaggio manca anche
 in Richieste, verificare la richiesta specifica e la versione del frontend.
 
-## Funzioni richieste, ancora da implementare
+## Richieste originarie del 13 settembre — storico, superato dagli incrementi successivi
 
 - Calendario degli impegni, con colori distinguibili per servizio/categoria:
   pensione, addestramento, corso ENCI e gli altri servizi offerti.
@@ -61,7 +74,7 @@ in Richieste, verificare la richiesta specifica e la versione del frontend.
   Bloccare lato server nuove prenotazioni incompatibili e mostrare il periodo;
   non cancellare automaticamente appuntamenti gia accettati.
 
-Ordine di lavoro: visibilita note; calendario e colori insieme a indisponibilita;
+Ordine di lavoro storico del 13 settembre: visibilita note; calendario e colori insieme a indisponibilita;
 risposte e modelli. Sono requisiti di sviluppo, non funzioni gia rilasciate.
 Servono API per dettagli servizio e durata appuntamenti: l'attuale proiezione
 get_professional_bookings non restituisce end_at e identificativo servizio.

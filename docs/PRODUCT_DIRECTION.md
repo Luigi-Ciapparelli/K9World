@@ -1,5 +1,18 @@
 # PortaleCinofilo — Product Direction
 
+## Sequenza di realizzazione proposta — 8 ottobre 2026
+
+[EXECUTION_PRIORITIES_2026_10.md](EXECUTION_PRIORITIES_2026_10.md) raccoglie l'ordine
+di esecuzione futura e i criteri di completamento senza cambiare i requisiti approvati.
+Prima problemi concreti di disponibilità/accesso e diagnosi SEO per URL; primo
+incremento di prodotto ricerca/Esposizioni insieme al profilo guidato; poi export
+autorizzato e valutazioni con decisioni aperte risolte. Comunicazione e prove
+commerciali usano le funzioni effettivamente disponibili e possono proseguire
+senza aspettare il completamento dell'intero catalogo SEO o della roadmap.
+
+Proposta organizzativa: un incremento di prodotto alla volta, chiuso con prove
+pertinenti e stato del rilascio. Nessuna modifica applicativa da questo documento.
+
 ## Espansione e sostenibilità tecnica — proposta dell'8 ottobre 2026
 
 Riferimento: [INTERNATIONAL_SEO_AND_HOSTING_V1.md](INTERNATIONAL_SEO_AND_HOSTING_V1.md).

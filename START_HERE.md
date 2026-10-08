@@ -1,5 +1,19 @@
 # START HERE — PawConnect / Portalecinofilo
 
+## Ordine di lavoro corrente — 8 ottobre 2026
+
+Leggere [EXECUTION_PRIORITIES_2026_10.md](docs/EXECUTION_PRIORITIES_2026_10.md)
+per priorità, dipendenze, decisioni aperte e criteri di completamento. Questo è
+l'indice operativo; le specifiche dei requisiti rimangono nei documenti collegati.
+Le direttive su mercati/SEO/hosting sono già su GitHub al commit `821f4de`.
+
+Proposta: diagnosi mirate di affidabilità e SEO; prossimo incremento di prodotto
+ricerca Addestratori/Pensioni ed Esposizioni con profilo guidato coerente; poi
+export e valutazioni. Non attendere tutta l'indicizzazione o tutte le funzioni
+future per dimostrazioni concordate su percorsi disponibili. Non rifare strumenti
+esistenti perché indicati come mancanti nei vecchi checkpoint.
+Questo aggiornamento è soltanto documentale: nessuna esecuzione del piano.
+
 ## Mercati, Google e disponibilità — integrazione dell'8 ottobre 2026
 
 Leggere [INTERNATIONAL_SEO_AND_HOSTING_V1.md](docs/INTERNATIONAL_SEO_AND_HOSTING_V1.md)

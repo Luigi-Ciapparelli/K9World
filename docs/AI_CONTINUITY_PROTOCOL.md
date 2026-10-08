@@ -1,5 +1,18 @@
 # AI Continuity Protocol
 
+## Ordine operativo e stato delle prove — 8 ottobre 2026
+
+Usare [EXECUTION_PRIORITIES_2026_10.md](EXECUTION_PRIORITIES_2026_10.md) come indice
+del lavoro successivo. Non confondere un requisito approvato con una funzione
+online, un test locale con una prova del servizio o un calendario proposto con
+contenuti già pubblicati. Il piano su mercati/SEO/hosting è remoto in `821f4de`.
+
+I vecchi backlog di settembre sono storici dove superati: calendario, messaggi,
+pacchetti e abbonamenti hanno incrementi successivi, da leggere prima di agire.
+Un dato mancante blocca il lavoro che ne dipende, non ogni attività del progetto.
+Le nuove direttive restano documentazione; implementazione, produzione video,
+spese e invii non sono eseguiti né implicitamente attivati dal piano.
+
 ## Internazionalizzazione, SEO e hosting — 8 ottobre 2026
 
 Leggere [INTERNATIONAL_SEO_AND_HOSTING_V1.md](INTERNATIONAL_SEO_AND_HOSTING_V1.md)

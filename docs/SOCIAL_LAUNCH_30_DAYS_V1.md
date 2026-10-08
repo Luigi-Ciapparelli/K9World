@@ -1,5 +1,18 @@
 # PortaleCinofilo — piano social di partenza
 
+## Coordinamento con prodotto e lancio — 8 ottobre 2026
+
+Il riferimento per ordine, prerequisiti e verifica dei risultati è
+[EXECUTION_PRIORITIES_2026_10.md](EXECUTION_PRIORITIES_2026_10.md), sezione 5.
+Prima confrontare i tre post effettivamente usciti; poi scegliere un compito e
+una sola destinazione per contenuto. Non riproporre automaticamente le vecchie
+date. La campagna Higgsfield prevede prima storyboard e scena campione, poi
+valutazione qualitativa e budget esplicito per l'intera storia.
+
+Le funzioni future non entrano nella promessa del contenuto corrente. Il dato
+TikTok riferito da Luigi guida una prova, non dimostra conversioni. Nessun nuovo
+contenuto, messaggio, annuncio, acquisto di crediti o accesso agli account eseguito.
+
 Aggiornato: 8 ottobre 2026. Solo direttive e bozze; nessuna pubblicazione da questo intervento.
 
 ## Ultimo riscontro di Luigi e prossimo concept

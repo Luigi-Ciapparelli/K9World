@@ -1,5 +1,21 @@
 # Lancio PortaleCinofilo — 30 settembre 2026
 
+## Stato e ordine corrente — 8 ottobre 2026
+
+Seguire [EXECUTION_PRIORITIES_2026_10.md](EXECUTION_PRIORITIES_2026_10.md) per il
+prossimo lavoro. Il commit email-only `599e152` è presente nella storia di
+`origin/main` riletta a `821f4de`; l'utente ha già fornito gli esiti del push,
+della migration e del deploy dei tre endpoint. Non ripetere il vecchio rilascio
+solo perché le sezioni storiche sottostanti lo descrivevano ancora preparato.
+Non è stato eseguito in questo incremento un nuovo collaudo degli endpoint.
+
+Le dimostrazioni concordate di una funzione disponibile non richiedono tutte le
+pagine indicizzate, Esposizioni già costruita o la campagna video completa.
+Prima di ampliare gli inviti verificare il percorso effettivamente proposto e
+registrarne l'esito senza ripetere test recenti ancora pertinenti. Un problema
+concreto di accesso o dati ha precedenza sulla distribuzione del percorso coinvolto.
+Nessun acquisto o invio nasce da questo aggiornamento solo documentale.
+
 ## Decisione corrente
 
 Luigi chiede di arrivare agli inviti e al marketing contenendo i costi. Il
@@ -13,7 +29,7 @@ Business +39 353 407 7841 e profili social già creati. Nessun nuovo tracker.
 Non è una promessa di costi operativi nulli: restano limiti e consumi dei
 piani già in uso. Controllarne le dashboard senza attivare upgrade automatici.
 
-## Stato verificato e limiti delle prove
+## Stato verificato e limiti delle prove — storico prima del rilascio del 30 settembre
 
 | Elemento | Evidenza disponibile |
 | --- | --- |
