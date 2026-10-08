@@ -38,7 +38,7 @@ Le priorità non sono una nuova autorizzazione di esecuzione. “Pronto per prog
 | SEO-01 | Prima priorità; campione pubblico già controllato | Associare esclusioni Google agli URL | Tre export Search Console; canonica Google del duplicato | Ogni gruppo classificato, pagine essenziali controllate, correzioni specifiche individuate |
 | NAV-01 | Implementato e verificato localmente; rilascio da confermare | Ricerca quotidiana con Addestratori/Pensioni, nuova area Esposizioni | Mappatura di categorie, servizi, profili e URL esistenti | Percorsi comprensibili, vecchi link gestiti, nessuna perdita di storico |
 | PRO-01 | Implementato insieme a NAV-01; rilascio da confermare | Adattare profilo guidato e servizi alle nuove aree | Mappatura attività miste e handler | Un professionista imposta soltanto ciò che offre, con anteprima della visibilità e dati salvati |
-| EXP-01 | Incremento successivo | Esportare lo storico autorizzato del cane | Modello reale di note, revisioni, concessioni e file | Export leggibile e completo nel perimetro consentito; isolamento e revoca verificati |
+| EXP-01 | Implementato e verificato localmente; rilascio da eseguire | Esportare lo storico autorizzato del cane | Modello reale di note, revisioni, concessioni e file | Export leggibile e completo nel perimetro consentito; isolamento e revoca verificati |
 | REV-01 | Specifica parziale; chiudere le decisioni mirate | Richieste di valutazione dopo esperienze concluse | Soglia pensioni, visibilità cliente, cadenza e completamento servizi | Ammissibilità lato server, niente duplicati, regole distinte e storico preservato |
 | SOC-01 | Pianificazione pronta; produzione futura | Dimostrazioni del prodotto e campagna del portale | Materiali effettivi dei tre post, funzione mostrata disponibile; budget per Higgsfield | Una sequenza curata e un collegamento pertinente, controllati nell'anteprima del canale |
 | ECO-01 | Ricerca commerciale proposta | Individuare un problema professionale per cui esiste disponibilità a pagare | Interviste e utilizzo reale | Offerta concreta, costo di erogazione e interesse documentati; nessuna tariffa attivata automaticamente |
@@ -73,6 +73,9 @@ Pet sitting e passeggiate escono dall'offerta pubblica come deciso da Luigi; non
 ## 4. Export e recensioni: confini da conservare
 
 ### EXP-01 — esportazione
+
+Implementazione dell’8 ottobre: [DOG_HISTORY_EXPORT_V1.md](DOG_HISTORY_EXPORT_V1.md).
+Contenuti, limiti e stato del rilascio in quel documento; criteri originari sotto.
 
 Il primo incremento può esportare dati e documenti realmente disponibili: non deve promettere registrazioni audio/video non implementate. Se un allegato autorizzato esiste ma non è recuperabile, non ometterlo silenziosamente; spiegare il limite nel riepilogo consentito.
 

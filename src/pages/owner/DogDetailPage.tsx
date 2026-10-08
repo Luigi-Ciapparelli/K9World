@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowLeft, CalendarDays, Heart, PawPrint, Scale } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { DogHistoryExport } from '../../components/DogHistoryExport';
 import { DogPhoto } from '../../components/DogPhoto';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
@@ -13,20 +14,15 @@ export function DogDetailPage({ id }: { id: string }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
-
-    supabase
-      .from('dogs')
-      .select('*')
-      .eq('id', id)
-      .eq('owner_id', user.id)
-      .maybeSingle()
+    let active = true;
+    setDog(null); setLoading(true);
+    if (!user) { setLoading(false); return; }
+    void supabase.from('dogs').select('*').eq('id', id).eq('owner_id', user.id).maybeSingle()
       .then(({ data, error }) => {
-        if (error) console.error('Dog detail error:', error);
-        setDog(data as Dog | null);
-        setLoading(false);
+        if (active) { setDog(error ? null : data as Dog | null); setLoading(false); }
       });
-  }, [id, user]);
+    return () => { active = false; };
+  }, [id, user?.id]);
 
   if (loading) {
     return (
@@ -36,7 +32,7 @@ export function DogDetailPage({ id }: { id: string }) {
     );
   }
 
-  if (!dog) {
+  if (!dog || dog.id !== id || dog.owner_id !== user?.id) {
     return (
       <div className="min-h-screen bg-stone-50 px-6 py-12">
         <div className="max-w-4xl mx-auto">
@@ -80,6 +76,7 @@ export function DogDetailPage({ id }: { id: string }) {
                 {dog.name}
               </h1>
               <p className="text-lg text-stone-600 mt-1">{dog.breed}</p>
+              <div className="mt-5"><DogHistoryExport scope="owner" subjectId={dog.id} /></div>
 
               {dog.fci_group && (
                 <button

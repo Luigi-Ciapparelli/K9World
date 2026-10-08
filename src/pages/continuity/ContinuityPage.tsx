@@ -3,6 +3,7 @@ import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
 import { supabase } from '../../lib/supabase';
 import { ProLayout } from '../pro/ProLayout';
+import { DogHistoryExport } from '../../components/DogHistoryExport';
 import { ProfessionalContinuitySharing } from '../../components/ProfessionalContinuitySharing';
 import { OwnerContinuitySharing } from '../../components/OwnerContinuitySharing';
 import { notifySharingChanged } from '../../lib/continuitySharing';
@@ -81,6 +82,7 @@ function ContinuityWorkspace({ professional, userId, verified }: { professional:
       {(r.revoked_at || r.ended_at) && <p className="text-sm">Chiusura: {displayDate((r.revoked_at || r.ended_at)!)}</p>}
       <div className="flex flex-wrap gap-2">
         {professional && r.status === 'invited' && <><button className={button} disabled={busy || selected !== null} onClick={() => void act(r, true)}>Accetta invito</button><button className={secondary} disabled={busy || selected !== null} onClick={() => void act(r, false)}>Rifiuta invito</button></>}
+        {professional && <DogHistoryExport scope="professional" subjectId={r.id} label="Scarica il tuo archivio" />}
         {professional && r.status === 'active' && <button className={button} disabled={busy || selected !== null} onClick={() => setSelected(r)}>Registra sessione</button>}
         {(r.status === 'active' || (!professional && r.status === 'invited')) && <button className={secondary} disabled={busy || selected !== null} onClick={() => void act(r)}>{professional ? 'Concludi relazione' : r.status === 'invited' ? 'Ritira invito' : 'Revoca autorizzazione'}</button>}
       </div>

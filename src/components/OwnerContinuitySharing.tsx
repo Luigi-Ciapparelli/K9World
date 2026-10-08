@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { supabase } from '../lib/supabase';
 import { continuityRpc, displayDate } from '../lib/continuity';
 import { grantStatus, notifySharingChanged, sharingButton, sharingSecondary, sharingField, sharingError, useSharingRows, type ContinuityGrant, type ContinuityRecipient, type SharedContinuityNote } from '../lib/continuitySharing';
+import { DogHistoryExport } from './DogHistoryExport';
 import { SharedNoteText, SharingPager } from './ContinuitySharingCommon';
 
 export function OwnerContinuitySharing({ userId, verified, refreshKey }: { userId: string; verified: boolean; refreshKey: number }) {
@@ -74,6 +75,7 @@ function OwnerDogSharing({ dogId, verified, refreshKey, onPendingChange }: { dog
         onSaved={() => { clearSelection(); setNotice('Autorizzazione registrata. Il professionista trova la selezione nello “Storico ricevuto”.'); notifySharingChanged(); }}
         onAbandon={() => { clearSelection(); publications.reload(); recipients.reload(); }} />
     </div>
+    <DogHistoryExport scope="owner" subjectId={dogId} label="Scarica lo storico del cane" />
     <OwnerGrantHistory dogId={dogId} refreshKey={refreshKey} />
   </div>;
 }

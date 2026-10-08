@@ -1,5 +1,11 @@
 # Area professionista — richieste operative del 13 settembre 2026
 
+## Export disponibile nel prossimo rilascio — 8 ottobre 2026
+
+Storico autorizzato, archivio privato dell’autore e selezioni ricevute esportabili
+con [EXP-01](DOG_HISTORY_EXPORT_V1.md). Implementazione e test locali completati;
+rilascio da applicare. Media delle sessioni e nuove recensioni restano successivi.
+
 ## Ricerca ed Esposizioni implementate — 8 ottobre 2026
 
 NAV-01/PRO-01 preparati sulla base remota `85cd0a7`: ricerca quotidiana con soli

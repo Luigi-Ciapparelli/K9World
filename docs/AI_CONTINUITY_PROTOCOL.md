@@ -1,5 +1,20 @@
 # AI Continuity Protocol
 
+## Storico del cane scaricabile — 8 ottobre 2026
+
+EXP-01 implementato sulla base remota `7f11610`: esportazione proprietario,
+archivio dell'autore per relazione e selezioni autorizzate del destinatario.
+Documento HTML stampabile in PDF e JSON, foto privata opzionale per il proprietario,
+ricontrollo alla consegna, segnalazione delle omissioni e limiti espliciti.
+Specifiche e rilascio: [DOG_HISTORY_EXPORT_V1.md](DOG_HISTORY_EXPORT_V1.md).
+
+Ricerca/Esposizioni risultano su GitHub in `7f11610`. Questo nuovo incremento
+è verificato localmente, ancora da pubblicare dal repository WSL con l'installer.
+Nessun database online, account, campagna o nuovo deployment modificato qui.
+La prosecuzione richiesta da Luigi autorizza l'implementazione di EXP-01 e supera
+il precedente limite «solo documentazione» per questo blocco. Le recensioni
+reciproche rimangono successive, con le decisioni aperte già registrate.
+
 ## Ordine operativo e stato delle prove — 8 ottobre 2026
 
 Usare [EXECUTION_PRIORITIES_2026_10.md](EXECUTION_PRIORITIES_2026_10.md) come indice

@@ -1,5 +1,11 @@
 # Storico professionale del cane, note e media — architettura v1
 
+## Export disponibile nel prossimo rilascio — 8 ottobre 2026
+
+Storico autorizzato, archivio privato dell’autore e selezioni ricevute esportabili
+con [EXP-01](DOG_HISTORY_EXPORT_V1.md). Implementazione e test locali completati;
+rilascio da applicare. Media delle sessioni e nuove recensioni restano successivi.
+
 ## Esportazione richiesta — aggiornamento dell'8 ottobre 2026
 
 Luigi richiede lo storico del cane scaricabile: dati, dove è stato, chi lo ha

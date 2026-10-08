@@ -1,6 +1,7 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { continuityRpc, displayDate } from '../lib/continuity';
 import { grantStatus, notifySharingChanged, sharingButton, sharingSecondary, sharingError, useSharingRows, type ContinuityGrant, type OwnContinuityNote } from '../lib/continuitySharing';
+import { DogHistoryExport } from './DogHistoryExport';
 import { ReceivedContinuityDialog, SharingPager } from './ContinuitySharingCommon';
 
 export function ProfessionalContinuitySharing({ refreshKey }: { refreshKey: number }) {
@@ -30,6 +31,7 @@ function ReceivedGrants({ refreshKey }: { refreshKey: number }) {
       <div className="flex flex-wrap justify-between gap-2"><h3 className="font-bold">{grant.dog_name}</h3><span className="text-sm font-semibold">{grantStatus(grant)}</span></div>
       <p className="whitespace-pre-wrap break-words text-sm">{grant.purpose}</p><p className="text-sm text-stone-600">Fino al {displayDate(grant.expires_at)} · {grant.selected_count} contributi selezionati · {grant.available_count} consultabili</p>
       <button type="button" disabled={!grant.is_current || Number(grant.available_count) === 0} onClick={() => setOpen(grant)} className={sharingButton}>Leggi lo storico autorizzato</button>
+      {grant.is_current && <div><DogHistoryExport scope="received" subjectId={grant.grant_id} label="Scarica la selezione autorizzata" /></div>}
     </article>)}
     <SharingPager page={page} total={Number(rows[0]?.total_count || 0)} count={rows.length} busy={loading} onPage={setPage} />
     {open && <ReceivedContinuityDialog key={open.grant_id} grant={open} onClose={() => { setOpen(null); reload(); }} />}
