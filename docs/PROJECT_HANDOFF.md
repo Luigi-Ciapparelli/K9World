@@ -1,5 +1,26 @@
 # PawConnect / Portalecinofilo — Project Handoff
 
+## Nuovo passaggio di consegne: mercati, SEO, downtime — 8 ottobre 2026
+
+Base GitHub riletta: `5c96a79`; le direttive di prodotto e social precedenti sono
+quindi già nel repository remoto. Nuovo piano:
+[INTERNATIONAL_SEO_AND_HOSTING_V1.md](INTERNATIONAL_SEO_AND_HOSTING_V1.md).
+
+Raccomandazione, non acquisto autorizzato: Italia con il marchio attuale, futuro
+prodotto multilingue condiviso, un mercato estero pilota; niente siti indipendenti
+per ogni paese o server domestico di produzione senza motivazione economica.
+PawConnect rimane un esempio di marchio da verificare.
+
+Il controllo pubblico del sito ha trovato pagine principali disponibili e una
+sitemap con 364 schede razza su 391 URL. Dal codice emerge contenuto per gruppo FCI
+riusato nelle schede: ipotesi editoriale da correlare con gli URL Search Console.
+Il disservizio riferito dall'utente non è stato attribuito a una causa.
+
+Prossimi dati minimi: i tre export CSV delle esclusioni, canonica scelta da Google
+per il duplicato, data/ora e messaggio del downtime. Nessuna credenziale richiesta.
+Nessun codice, database, piano, dominio, social o contenuto della ZIP modificato.
+Non presentare il documento come correzione già applicata all'indicizzazione.
+
 ## Passaggio di consegne: nuove direttive, nessuna esecuzione — 8 ottobre 2026
 
 Decisioni di Luigi del 7 ottobre registrate in

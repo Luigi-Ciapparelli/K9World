@@ -1,5 +1,20 @@
 # Visibilità sui motori di ricerca — SEO v1
 
+## Riscontro e priorità correnti — 8 ottobre 2026
+
+Verifica Google e invio sitemap sono stati confermati da Luigi nella conversazione;
+i passaggi del 29 settembre sotto rimangono il resoconto storico dell'implementazione.
+Il report corrente dell'utente contiene 264 URL rilevati non indicizzati,
+3 scansionati non indicizzati e 1 duplicato con canonica diversa. Gli URL non sono
+ancora disponibili; non è stato confermato un errore unico per tutte le pagine.
+
+Vedere [INTERNATIONAL_SEO_AND_HOSTING_V1.md](INTERNATIONAL_SEO_AND_HOSTING_V1.md)
+per audit pubblico, sequenza di lavoro e fonti. Il campione HTML controllato
+risponde correttamente; le 364 schede razza su 391 URL di sitemap e i testi
+condivisi per gruppo FCI richiedono una valutazione editoriale mirata.
+Non ampliare il catalogo multilingue né deindicizzare in massa prima di esaminare
+gli URL. Nessuna correzione al codice SEO applicata da questo aggiornamento.
+
 29 settembre 2026. Base GitHub esaminata: `5bfe88b` (profilo professionista guidato).
 Incremento frontend e configurazione Vercel, senza migrazioni o scritture al database.
 

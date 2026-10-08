@@ -1,5 +1,28 @@
 # CURRENT STATE — PawConnect / Portalecinofilo
 
+## Checkpoint documentale e controllo HTTP pubblico — 8 ottobre 2026
+
+Base remota verificata: `5c96a79`, che contiene le direttive future precedenti.
+Aggiunto [INTERNATIONAL_SEO_AND_HOSTING_V1.md](INTERNATIONAL_SEO_AND_HOSTING_V1.md):
+confronto mercati/marchi, sequenza SEO, valutazione hosting e indagine del downtime.
+Nessuna modifica applicativa o acquisto; nessun pannello autenticato interrogato.
+
+Campione pubblico avviato alle 07:22 UTC / 09:22 Europe/Rome: Home, robots e sitemap
+200; sei pagine principali e due schede razza indicizzabili nel loro HTML;
+URL inesistente 404/noindex; varianti .it e .com senza www provate su /impara
+convergono alla pagina www.portalecinofilo.com/impara. Sitemap: 391 URL, 364 razze.
+Questo non prova l'indicizzazione Google o l'assenza di downtime precedente.
+
+Report utente: 264 rilevate non indicizzate, 3 scansionate non indicizzate,
+1 canonica diversa scelta da Google. Mancano gli URL del report e i dettagli
+dell'incidente. Contenuto condiviso per gruppo FCI osservato nel codice:
+ipotesi da verificare, non diagnosi causale conclusa.
+
+Verifica dell'incremento limitata a Markdown, rimandi e diff; nessun nuovo test
+applicativo, build, SQL, deploy manuale o automazione. Lo snapshot tecnico
+sottostante rimane storico. Un push documentale può avviare la pipeline Git
+esistente, senza introdurre cambiamenti funzionali. ZIP non letta.
+
 ## Checkpoint esclusivamente documentale — 8 ottobre 2026
 
 Base remota letta: `5edfd4c` su `origin/main`. Direttive future aggiunte in

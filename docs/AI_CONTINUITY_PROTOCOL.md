@@ -1,5 +1,19 @@
 # AI Continuity Protocol
 
+## Internazionalizzazione, SEO e hosting — 8 ottobre 2026
+
+Leggere [INTERNATIONAL_SEO_AND_HOSTING_V1.md](INTERNATIONAL_SEO_AND_HOSTING_V1.md)
+prima di proporre nuovi domini, lingue, piani hosting o interventi di indicizzazione.
+Distinguere raccomandazione dell'assistente, decisione di Luigi e azione eseguita.
+Non trattare PawConnect come marchio disponibile o già scelto.
+
+La base remota `5c96a79` contiene le direttive future precedenti. Il controllo HTTP
+odierno non attesta il funzionamento di tutti i flussi, l'indicizzazione Google o
+la causa del downtime. Gli URL Search Console interessati non sono ancora forniti.
+Non promettere di risolvere l'indicizzazione acquistando potenza o un altro dominio.
+In questa fase soltanto documentazione e letture pubbliche; snapshot tecnico
+aggiornato manualmente, senza build, SQL o generatore di stato. ZIP non letta.
+
 ## Direzione futura del 7 ottobre, registrata l'8 ottobre 2026
 
 Prima di toccare ricerca, social, esportazioni o recensioni leggere

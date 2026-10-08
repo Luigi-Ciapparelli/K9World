@@ -1,5 +1,22 @@
 # PortaleCinofilo — Product Direction
 
+## Espansione e sostenibilità tecnica — proposta dell'8 ottobre 2026
+
+Riferimento: [INTERNATIONAL_SEO_AND_HOSTING_V1.md](INTERNATIONAL_SEO_AND_HOSTING_V1.md).
+Luigi chiede di confrontare marchio globale, siti nazionali e modello ibrido,
+risolvere le esclusioni di indicizzazione e valutare un server domestico.
+
+La proposta è mantenere il lancio italiano e costruire poi una piattaforma
+multilingue condivisa, con offerta e assistenza localizzate e un mercato pilota
+alla volta. Nome internazionale, paesi, soglie commerciali e spese restano da
+approvare. Lingua del sito e paese servito sono dimensioni distinte. Non duplicare
+prodotti e archivi per ogni nazione né sacrificare la semplicità per il proprietario.
+
+Priorità: disponibilità del servizio e pagine utili indicizzabili prima di
+moltiplicare traduzioni. La produzione domestica non è la soluzione consigliata
+all'attuale capacità operativa. Nessuna infrastruttura o interfaccia modificata.
+Le direttive di prodotto approvate nel checkpoint sottostante restano valide.
+
 ## Direzione approvata, ancora da implementare — 8 ottobre 2026
 
 Specifiche e casi: [FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).

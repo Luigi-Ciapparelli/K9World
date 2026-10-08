@@ -1,12 +1,12 @@
 # PortaleCinofilo — dall'utilità all'impresa
 
-Aggiornato: 6 ottobre 2026. Piano operativo proposto, senza acquisti, prezzi attivati o contratti sottoscritti.
+Aggiornato: 8 ottobre 2026. Piano operativo proposto, senza acquisti, prezzi attivati o contratti sottoscritti.
 
 ## 1. Decisioni, realtà e ipotesi
 
 **Direzione richiesta da Luigi:** rendere il portale utile e sostenibile, mantenere l'accesso gratuito, sviluppare ricavi e valutare finanziamenti; in seguito internazionalizzare il progetto e costruire una rete di centri cinofili, anche con allevamento, franchising e componente immobiliare.
 
-**Stato verificato:** `origin/main` è stato riletto al commit `431713d508219392d0b657e9abd961537ddc8ae0`, che contiene la home statica e l'orizzonte imprenditoriale. Questo riscontro Git non certifica lo stato del deployment Vercel. Luigi riferisce che il primo post Instagram è pubblicato; Facebook, LinkedIn e TikTok non hanno ancora contenuti. Non sono stati forniti dati aggiornati di traffico, conversione, ricavi o utilizzatori esterni ricorrenti.
+**Stato aggiornato:** `origin/main` riletto al commit `5c96a79`, con le direttive future di prodotto e social. Luigi riferisce i primi tre post pubblicati e visualizzazioni soltanto su TikTok, senza conteggi o attribuzione dei post ai canali. Questo supera il precedente resoconto con il solo Instagram avviato. Non sono disponibili metriche aggiornate di conversione, ricavi o uso esterno ricorrente. Il controllo HTTP pubblico e i suoi limiti sono registrati in [INTERNATIONAL_SEO_AND_HOSTING_V1.md](INTERNATIONAL_SEO_AND_HOSTING_V1.md).
 
 **Ipotesi da validare:** prezzi, quantità di clienti, disponibilità a pagare, potenziale pubblicitario, contributi ottenibili e redditività dei centri. I numeri sotto sono obiettivi di lavoro o esempi matematici, non risultati, previsioni o decisioni già approvate.
 
@@ -66,6 +66,8 @@ Distinguere traffico da attività economica: un follower non equivale a un clien
 
 Per i primi 30 giorni la proposta è **zero nuova spesa pubblicitaria e zero nuovi abbonamenti software**. Non significa che dominio, hosting, email, consulenze e tempo abbiano costo nullo. Prima di un impegno redigere l'elenco dei costi esistenti, fissare un tetto sostenibile e chiarire tempi di erogazione e anticipazioni degli eventuali contributi. Un finanziamento concesso non è necessariamente denaro subito disponibile.
 
+La proposta di nessun nuovo abbonamento non autorizza a usare un piano incompatibile con il progetto o a ignorare un problema di disponibilità. Verificare piani effettivi e costi necessari secondo [hosting e affidabilità](INTERNATIONAL_SEO_AND_HOSTING_V1.md), prima di aumentare le spese. Nessun server domestico acquistato o raccomandato per la produzione iniziale.
+
 ## 5. Come arrivare alla rete di centri
 
 La visione è plausibile come sviluppo graduale, ma oggi non disponiamo di un piano economico immobiliare verificato. Sono tre attività differenti: portale e servizi digitali; gestione e marchio dei centri; possesso e locazione di immobili. Possono rafforzarsi, ma hanno costi, rischi, competenze e tempi diversi.
@@ -101,6 +103,19 @@ Le entrate continuative non sono autorizzate o regolarizzate semplicemente chiam
 - L'assistente prepara documenti, contenuti, analisi e aggiornamenti tecnici verificabili; segnala i limiti delle verifiche e conserva le decisioni su GitHub.
 - Nessun piano scritto equivale a invio di email, attivazione di annunci, richiesta di un prestito o pubblicazione social. Queste azioni devono risultare da un'istruzione e da un'esecuzione esplicite.
 - Prezzi e soglie numeriche qui proposti restano ipotesi fino alla decisione registrata. Il cambio di account AI non deve trasformarle in fatti acquisiti.
+
+## 8. Integrazione operativa: mercati esteri, Google e hosting
+
+Seguire [INTERNATIONAL_SEO_AND_HOSTING_V1.md](INTERNATIONAL_SEO_AND_HOSTING_V1.md),
+che completa questo piano e la guida operativa. La proposta è un ibrido progressivo:
+lancio italiano attuale, prodotto condiviso, primo mercato estero selezionato con
+contatti, domanda locale e costo di assistenza. Il marchio internazionale resta
+una scelta da validare, non una soluzione automatica ai problemi SEO.
+
+Prima di investire in traduzioni o hardware: ricostruire il downtime, associare
+le esclusioni Google agli URL e rendere solide le pagine che portano a un uso
+reale del portale. Il nuovo documento assegna attività a Luigi e all'assistente,
+riporta i riscontri e distingue proposte, condizioni pubbliche e dati mancanti.
 
 ## Fonti e documenti collegati
 

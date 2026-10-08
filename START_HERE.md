@@ -1,5 +1,23 @@
 # START HERE — PawConnect / Portalecinofilo
 
+## Mercati, Google e disponibilità — integrazione dell'8 ottobre 2026
+
+Leggere [INTERNATIONAL_SEO_AND_HOSTING_V1.md](docs/INTERNATIONAL_SEO_AND_HOSTING_V1.md)
+insieme alle direttive di prodotto sottostanti. Proposta: lancio italiano attuale,
+un solo prodotto multilingue in futuro e prova di un mercato estero alla volta.
+PawConnect è un nome candidato non verificato; nessun nuovo dominio deciso.
+
+Search Console riportata da Luigi: 264 URL rilevati, 3 scansionati non indicizzati,
+1 duplicato con canonica diversa. Controllo pubblico: pagine principali HTTP 200;
+sitemap con 391 URL, 364 schede razza. La condivisione di testi per gruppo FCI
+è un punto editoriale da esaminare, non la causa già dimostrata delle esclusioni.
+Servono elenchi URL e dettagli dell'interruzione prima di correggere alla cieca.
+Non acquistare un home server sulla base di questo report.
+
+Aggiornamento solo documentale con diagnosi pubblica in lettura. Nessun cambio
+al sito, acquisto, migrazione, account o campagna. Le priorità proposte sono:
+affidabilità e pagine essenziali, uso reale in Italia, quindi espansione mirata.
+
 ## Direttive future di prodotto e social — 8 ottobre 2026
 
 Leggere prima [FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](docs/FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
