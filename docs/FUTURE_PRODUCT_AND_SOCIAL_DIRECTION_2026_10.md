@@ -185,6 +185,13 @@ nuovi download; non può richiamare una copia già scaricata.
 
 ## 5. Valutazioni dopo l'esperienza effettiva
 
+**9 ottobre 2026 — specifica aggiornata:** Luigi conferma scala 1–5, commento
+entro 500 caratteri, pensioni dal primo soggiorno concluso, voto sul cliente
+visibile solo a cliente e addestratore e richieste nell’account senza email/SMS.
+Implementazione e scelte operative in [SERVICE_REVIEWS_V1.md](SERVICE_REVIEWS_V1.md).
+Queste decisioni superano i corrispondenti punti aperti storici sottostanti.
+
+
 ### Addestratori: richiesta reciproca dal secondo servizio
 
 Dopo la fine del servizio deve essere proposta:

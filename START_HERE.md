@@ -1,5 +1,19 @@
 # START HERE — PawConnect / Portalecinofilo
 
+## Valutazioni dopo i servizi — 9 ottobre 2026
+
+REV-01 implementato sulla base remota `3ec87ad`. Luigi ha confermato voti 1–5,
+commenti entro 500 caratteri, addestratori dal secondo servizio concluso,
+pensioni dal primo; voto sul cliente visibile solo alla coppia. Richieste
+nell’account, nessun invio email/SMS. Regole, limiti e rilascio coordinato in
+[SERVICE_REVIEWS_V1.md](docs/SERVICE_REVIEWS_V1.md). Centri con più istruttori: reciprocità ancora
+sospesa finché la prenotazione non identifica la persona.
+
+Storico scaricabile già su GitHub in `3ec87ad`; nuovo blocco recensioni
+preparato e verificato localmente, da pubblicare con l’installer WSL.
+Non attestati Supabase online o Vercel Ready da questo ambiente. Questo stato
+supera i vecchi paragrafi che indicavano EXP-01/REV-01 ancora da iniziare.
+
 ## Storico del cane scaricabile — 8 ottobre 2026
 
 EXP-01 implementato sulla base remota `7f11610`: esportazione proprietario,

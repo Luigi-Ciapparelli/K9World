@@ -1,3 +1,4 @@
+import { ServiceReviewPanel } from '../../components/ServiceReviews';
 import { useEffect, useRef, useState } from 'react';
 import { Search as SearchIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
@@ -79,6 +80,7 @@ export function ProBookings() {
   const reload = () => setReloadKey((key) => key + 1);
   const updateStatus = async (id: string, status: 'accepted' | 'declined' | 'completed') => {
     if (!userId || lock.current) return;
+    if (status === 'completed' && !confirm('Confermi che il servizio è stato effettivamente svolto? Non segnare come completata una mancata presenza.')) return;
     lock.current = true;
     const currentSession = session.current;
     setBusyId(id);
@@ -109,6 +111,7 @@ export function ProBookings() {
         </div>
         <p className="text-[var(--pc-muted-600)] mt-3 mb-6">Prima le richieste in attesa, poi gli appuntamenti accettati e lo storico. In ogni gruppo, le date più vicine all’inizio dell’elenco.</p>
 
+        <ServiceReviewPanel professional refresh={reloadKey} />
         <div aria-label="Filtra per stato" className="flex flex-wrap gap-2 mb-4">
           {statuses.map(([value, label]) => (
             <button type="button" key={value} aria-pressed={filter === value}

@@ -1,3 +1,4 @@
+import { ServiceReviewNotice } from '../../components/ServiceReviews';
 import { continuityEnabled } from '../../lib/continuity';
 import { BookingMessageInbox } from '../../components/BookingMessageInbox';
 import { useEffect, useState } from 'react';
@@ -132,6 +133,7 @@ export function OwnerDashboard() {
         </header>
 
         <BookingMessageInbox />
+        <ServiceReviewNotice />
         <button onClick={() => navigate('/owner/subscriptions')} className="mb-5 mr-3 rounded-xl border border-emerald-800 px-4 py-3 font-semibold text-emerald-900">I miei abbonamenti</button>
         <button onClick={() => navigate('/owner/passes')} className="mb-5 rounded-xl border border-emerald-800 px-4 py-3 font-semibold text-emerald-900">I miei pacchetti · lezioni e scadenze</button>
         <section aria-labelledby="owner-search-title">

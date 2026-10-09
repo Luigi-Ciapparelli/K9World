@@ -1,3 +1,4 @@
+import { ServiceReviewNotice } from '../../components/ServiceReviews';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { ArrowRight, Bell, Calendar, Check, Settings, Users, X } from 'lucide-react';
@@ -134,6 +135,7 @@ export function ProDashboard() {
 
         {notice && <p role={notice.error ? 'alert' : 'status'} className="pc-card p-4 mb-5 text-sm">{notice.text}</p>}
         <BookingMessageInbox professional />
+        <ServiceReviewNotice professional />
 
         <div className="grid xl:grid-cols-2 gap-6">
           <section className="pc-card p-5 md:p-6" aria-labelledby="pro-requests-title" aria-busy={loading}>

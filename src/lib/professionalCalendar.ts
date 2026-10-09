@@ -65,6 +65,7 @@ export function bookingAvailabilityError(error: unknown): string | null {
   return null;
 }
 export function acceptanceError(error: unknown) {
+  if ((error as { code?: string } | null)?.code === 'PCR01') return 'Puoi confermare un servizio svolto solo dopo il suo orario di fine.';
   return (error as { code?: string } | null)?.code === 'PCA02'
     ? 'Richiesta ancora in attesa: il periodo è segnato come indisponibile. Gestisci l’indisponibilità nel Calendario prima di accettare.'
     : 'Non è stato possibile confermare l’esito. Aggiorna e controlla lo stato prima di riprovare.';

@@ -100,6 +100,7 @@ function CalendarContent() {
     }
   };
   const changeStatus = (id: string, status: 'accepted' | 'declined' | 'completed') => void perform(async () => {
+    if (status === 'completed' && !confirm('Confermi che il servizio è stato effettivamente svolto? Non segnare come completata una mancata presenza.')) return 'Nessuna modifica effettuata.';
     const result = await supabase.rpc('change_booking_status', { p_booking_id: id, p_new_status: status });
     if (result.error) throw result.error;
     return status === 'accepted' ? 'Richiesta accettata.' : status === 'declined' ? 'Richiesta rifiutata.' : 'Appuntamento completato.';

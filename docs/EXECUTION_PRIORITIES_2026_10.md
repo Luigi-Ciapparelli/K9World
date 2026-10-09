@@ -38,8 +38,8 @@ Le priorità non sono una nuova autorizzazione di esecuzione. “Pronto per prog
 | SEO-01 | Prima priorità; campione pubblico già controllato | Associare esclusioni Google agli URL | Tre export Search Console; canonica Google del duplicato | Ogni gruppo classificato, pagine essenziali controllate, correzioni specifiche individuate |
 | NAV-01 | Implementato e verificato localmente; rilascio da confermare | Ricerca quotidiana con Addestratori/Pensioni, nuova area Esposizioni | Mappatura di categorie, servizi, profili e URL esistenti | Percorsi comprensibili, vecchi link gestiti, nessuna perdita di storico |
 | PRO-01 | Implementato insieme a NAV-01; rilascio da confermare | Adattare profilo guidato e servizi alle nuove aree | Mappatura attività miste e handler | Un professionista imposta soltanto ciò che offre, con anteprima della visibilità e dati salvati |
-| EXP-01 | Implementato e verificato localmente; rilascio da eseguire | Esportare lo storico autorizzato del cane | Modello reale di note, revisioni, concessioni e file | Export leggibile e completo nel perimetro consentito; isolamento e revoca verificati |
-| REV-01 | Specifica parziale; chiudere le decisioni mirate | Richieste di valutazione dopo esperienze concluse | Soglia pensioni, visibilità cliente, cadenza e completamento servizi | Ammissibilità lato server, niente duplicati, regole distinte e storico preservato |
+| EXP-01 | Presente su GitHub in `3ec87ad`; stato online non attestato | Esportare lo storico autorizzato del cane | Modello reale di note, revisioni, concessioni e file | Export leggibile e completo nel perimetro consentito; isolamento e revoca verificati |
+| REV-01 | Implementato e verificato localmente; rilascio da eseguire | Richieste di valutazione dopo esperienze concluse | Centri: ancora da assegnare l’istruttore alla prenotazione | Ammissibilità lato server, niente duplicati, regole distinte e storico preservato |
 | SOC-01 | Pianificazione pronta; produzione futura | Dimostrazioni del prodotto e campagna del portale | Materiali effettivi dei tre post, funzione mostrata disponibile; budget per Higgsfield | Una sequenza curata e un collegamento pertinente, controllati nell'anteprima del canale |
 | ECO-01 | Ricerca commerciale proposta | Individuare un problema professionale per cui esiste disponibilità a pagare | Interviste e utilizzo reale | Offerta concreta, costo di erogazione e interesse documentati; nessuna tariffa attivata automaticamente |
 | INT-01 | Dopo la prima prova italiana | Confrontare due mercati, provarne uno | Offerta locale, lingua/assistenza e budget incrementale | Scelta motivata dai dati; nessun insieme di siti nazionali creato in anticipo |
@@ -84,6 +84,14 @@ La specifica deve coprire: identità e attività del cane, luoghi registrati, au
 PDF e archivio strutturato con allegati rimangono formati proposti da valutare rispetto a dati, dimensioni e utilità. Definire limite, scadenza e pulizia dei temporanei; non introdurre una dipendenza a pagamento senza confronto. La futura compressione dei media deve rispettarne leggibilità e utilità professionale: nessuna cancellazione automatica degli originali stabilita da questa direttiva.
 
 ### REV-01 — valutazioni
+
+**Aggiornamento 9 ottobre:** regole confermate da Luigi e implementazione in
+[SERVICE_REVIEWS_V1.md](SERVICE_REVIEWS_V1.md). La tabella seguente descrive le
+scelte precedenti; scala 1–5, limite 500 caratteri, primo soggiorno pensione,
+voto cliente privato e soli richiami nell’account sono ora approvati.
+Rettifiche a 7 giorni e un invito per rapporto adottati come scelte operative.
+L’estensione ai centri resta subordinata all’identificazione dell’istruttore.
+
 
 Restano vincolanti: per lo stesso cliente e addestratore, richiesta reciproca soltanto dopo la seconda esperienza effettivamente conclusa, anche con servizi diversi. Non contare acquisti di pacchetti, appuntamenti annullati o semplice decorso dell'orario. Per le pensioni soltanto cliente → struttura.
 
