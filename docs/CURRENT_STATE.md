@@ -1,7 +1,7 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **9 ottobre 2026**. Base verificata con fetch di `origin/main`:
-[`204441b`](https://github.com/Luigi-Ciapparelli/K9World/commit/204441b891399b4643ef073bdb409bd43bf933b8).
+[`558e0d5`](https://github.com/Luigi-Ciapparelli/K9World/commit/558e0d573c1b7c679cd4d74936b2ab744e524f9d).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
@@ -22,13 +22,16 @@ Questo registro è mantenuto manualmente; il generatore scrive in
 | REV-01 | `fd619e4` | Recensioni dal secondo servizio con un addestratore individuale; pensione dal primo; voto sul cliente privato | Reciprocità per centri sospesa finché manca l'istruttore assegnato; moderazione completa futura |
 | Impara / diagnosi SEO | `204441b` | Timing spostato dalla posizione 2 alla 8; altre lezioni scalate; CSV e riscontri SEO conservati | Nessuna garanzia di indicizzazione; ordine e progressi preservati |
 
+| Guide razze / SEO | `558e0d5` | Guide originali Shikoku, Clumber Spaniel e Dobermann, fonti e metadata specifici | Attendere riscontri Google; nessuna promessa di indicizzazione |
+
 Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
 [export](DOG_HISTORY_EXPORT_V1.md), [valutazioni](SERVICE_REVIEWS_V1.md).
 I vecchi testi «preparato localmente, da pubblicare» per questi tre blocchi sono superati.
 
-Il repository contiene **54 migration**, fino a
-`20261008220000_completed_service_reviews.sql`. Questo è un conteggio dei file
-versionati, non la prova che tutte siano applicate nel database online.
+La base GitHub contiene **54 migration**, fino a
+`20261008220000_completed_service_reviews.sql`. Il nuovo incremento aggiunge
+`20261009140000_profile_images.sql` (55ª). La presenza di un file non dimostra
+che sia applicato nel database online.
 
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati
 sintetici. Auth/Storage e API browser sono simulati nelle prove descritte;
@@ -71,16 +74,17 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 | HTTP pubblico, 9 ottobre | Campione di 10 pagine e 4 varianti della home: HTTP finale 200, canonical coerenti, nessun noindex; tutti i 264 URL presenti nella sitemap | Indicizzazione, accessibilità storica o flussi autenticati |
 | Luigi, Controllo URL della home | Alla scansione del 4 ottobre Google scelse la home senza www; dichiarata quella con www. Richiesta di indicizzazione inviata e sitemap riuscita, confermate il 9 ottobre | Nuova scansione già completata o canonical già aggiornata nell'indice |
 | HTTP pubblico, secondo controllo 9 ottobre | Home, `/impara` e sitemap senza www restituiscono 308 verso www; home e sitemap www rispondono 200 | Tempi o scelta futura di Google |
-| Git remoto, 9 ottobre | `204441b` include anche riordino Impara e analisi degli URL SEO | Nuovo controllo autenticato di Vercel/Supabase |
+| Git remoto, 9 ottobre | `558e0d5` include riordino Impara, analisi SEO e tre guide originali | Nuovo controllo autenticato di Vercel/Supabase |
 
 ## Residui identificati e dipendenze
 
 | Blocco | Stato reale | Per procedere |
 | --- | --- | --- |
-| MEDIA-01 | Pipeline allegati privati delle sessioni non implementata | Progettare quote, compressione, permessi, conservazione, download e recupero; eventuale spesa richiede tetto esplicito |
+| IMG-01 | Foto professionali/banner e foto cliente privata preparate e testate | Rilascio mediante installer, migration prima del frontend; prova Storage reale dopo Ready |
+| MEDIA-01 | Allegati delle sessioni rinviati per decisione di Luigi | Prima matrice quote per abbonamento, utilità dei file, compressione, conservazione e costo totale; nessuna pipeline audio/video avviata |
 | TEAM-01 | Manca attribuzione della prenotazione al singolo istruttore del centro | Modellare persona/team/assegnazione e storia delle modifiche; poi estendere REV-01 |
 | SPORT-02 | Basi presenti, flusso reale e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
-| SEO-01 | Canonical ricevuta, redirect coerenti, richiesta inviata e sitemap riuscita; tre guide specifiche preparate/testate | Rilasciare le guide; osservare nuova scansione, canonical e pagine prioritarie. Non chiedere di nuovo i dati già ricevuti |
+| SEO-01 | Canonical ricevuta, redirect coerenti, richiesta inviata e sitemap riuscita; tre guide specifiche su GitHub | Osservare nuova scansione, canonical e pagine prioritarie. Non chiedere di nuovo i dati già ricevuti |
 | AFF-01 | Luigi conferma che la causa è rimasta ignota; piano gratuito soltanto ipotizzato | Nessun acquisto basato sull’ipotesi; se ricapita raccogliere ora/URL/errore e correlare log |
 | SOC-01 | Concept approvato; possibile trial da 100 crediti comunicato, video non prodotto | Storyboard e scena campione; verificare crediti/costo reale della generazione prima dell’uso, nessuna spesa attivata |
 | ECO-01 / INT-01 | Modello economico e mercati da validare | Utilizzo reale, costi e disponibilità a pagare; fonti aggiornate prima di domande di fondi o spese |
@@ -90,16 +94,24 @@ learning/credenziali futuri, team, formazione ENCI, biblioteca, tessere/campagne
 editoria, ricerca, commercio e rete di centri. La loro presenza nel piano non è
 prova di implementazione. Priorità e criteri: [EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md).
 
-## Incremento preparato il 9 ottobre
+## Incremento immagini preparato il 9 ottobre
 
-Guide originali per Shikoku, Clumber Spaniel e Dobermann, con fonti FCI,
-domande specifiche per l'allevatore, collegamenti a Impara/pre-cane/ricerca e
-metadata dedicati. TypeScript, build, HTML SEO e browser desktop/mobile superati.
-Il browser usa la build di produzione con API simulate; nessun account reale.
-URL e catalogo restante conservati. Specifica: [BREED_GUIDES_V1](BREED_GUIDES_V1.md).
+Foto/logo professionale visibile in ricerca e profilo, upload banner anche per
+individuali e handler; editor con anteprima, ridimensionamento e WebP. Una foto
+personale facoltativa del cliente, privata e visibile nei contesti autorizzati
+(prenotazioni, calendario, dashboard, CRM). Percorsi fissi per sostituire le copie
+senza produrre nuovi oggetti a ogni upload. Nessun allegato di sessione introdotto.
+Specifica e limiti: [PROFILE_IMAGES_V1](PROFILE_IMAGES_V1.md).
 
-Installer WSL predisposto per backup, controlli, commit dei soli file interessati
-e push su main. Da questo ambiente non è disponibile autenticazione GitHub in
-scrittura: le nuove guide sono preparate, non dichiarate già online. Nessuna
-migration, modifica DNS, invio social o acquisto. Il precedente riordino Impara
-è invece già su GitHub: non richiedere di eseguirlo ancora.
+SQL verificato ricostruendo le 54 migration precedenti e la nuova in PostgreSQL
+WASM: ruoli, isolamento, stati prenotazione, relazione bilaterale, revoca e cambio
+proprietario. Auth/Storage sono dipendenze simulate. Test browser con API simulate,
+compressione reale nel browser, TypeScript, build e HTML SEO: vedere la specifica.
+Non sono prove del database online, dei byte nello Storage reale o di concorrenza
+nativa. Nessun nuovo audit remoto Supabase è stato eseguito.
+
+Da questo ambiente manca l'autenticazione GitHub in scrittura. L'installer WSL
+prepara backup, verifica compatibilità e test, controlla il dry-run, crea il commit,
+applica soltanto la migration prevista e invia main. **Preparato non significa già
+online**: registrare output Supabase, commit remoto e Vercel Ready dopo l'esecuzione.
+Nessuna spesa, invio esterno o modifica delle tariffe autorizzata da questo incremento.

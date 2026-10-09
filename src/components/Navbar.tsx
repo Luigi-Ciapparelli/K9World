@@ -58,7 +58,7 @@ export function Navbar() {
           </RouteLink>
           {user ? <>
             <RouteLink to={dashboard} className="pc-account-link"><User size={17} aria-hidden="true" /><span>{profile?.full_name || 'La tua area'}</span></RouteLink>
-            <RouteLink to="/account/contacts" className="pc-login-link">Recapiti</RouteLink>
+            <RouteLink to="/account/contacts" className="pc-login-link">Profilo e recapiti</RouteLink>
             <button type="button" onClick={leave} className="pc-icon-button" aria-label="Esci dall’account"><LogOut size={19} /></button>
           </> : <>
             <RouteLink to="/signin" className="pc-login-link">Accedi</RouteLink>
@@ -84,7 +84,7 @@ export function Navbar() {
           <RouteLink to="/become-a-pro" onClick={close} className="pc-pro-link"><GraduationCap size={18} aria-hidden="true" /> Per i professionisti</RouteLink>
           {user ? <>
             <RouteLink to={dashboard} onClick={close} className="pc-account-link"><User size={18} aria-hidden="true" /> {profile?.full_name || 'La tua area'}</RouteLink>
-            <RouteLink to="/account/contacts" onClick={close} className="pc-pro-link">Email e telefono</RouteLink>
+            <RouteLink to="/account/contacts" onClick={close} className="pc-pro-link">Profilo e recapiti</RouteLink>
             <button type="button" onClick={leave} className="pc-pro-link"><LogOut size={18} aria-hidden="true" /> Esci</button>
           </> : <RouteLink to="/signup" onClick={close} className="pc-register-link">Crea il tuo account</RouteLink>}
           <div className="pc-mobile-theme"><span>Aspetto</span><ThemeToggle /></div>

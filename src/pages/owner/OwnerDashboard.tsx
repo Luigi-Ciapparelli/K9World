@@ -1,3 +1,4 @@
+import { ClientPortrait, useClientPortraits } from '../../components/ClientPortrait';
 import { ServiceReviewNotice } from '../../components/ServiceReviews';
 import { continuityEnabled } from '../../lib/continuity';
 import { BookingMessageInbox } from '../../components/BookingMessageInbox';
@@ -92,6 +93,7 @@ export function OwnerDashboard() {
     return () => { active = false; };
   }, [userId, reloadKey]);
 
+  const portraits = useClientPortraits(userId ? [userId] : []);
   const firstName = profile?.full_name?.trim().split(/\s+/)[0] || '';
   const needsEmailVerification = !profile?.email_verified;
   const needsPhoneVerification = !profile?.phone_verified;
@@ -103,7 +105,7 @@ export function OwnerDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-10">
         <header className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-7">
           <div>
-            <p className="pc-kicker">La tua area</p>
+            <button aria-label="Modifica la tua foto" onClick={() => navigate('/account/contacts')} className="mb-3"><ClientPortrait src={portraits[userId || '']} name={profile?.full_name || 'Il tuo profilo'} className="h-16 w-16" /></button><p className="pc-kicker">La tua area</p>
             <h1 className="pc-display text-4xl md:text-5xl font-semibold mt-2 text-[var(--pc-ink-950)]">
               {firstName ? `Ciao, ${firstName}.` : 'Ciao.'}
             </h1>
@@ -289,7 +291,7 @@ export function OwnerDashboard() {
               />
             </div>
 
-            <button type="button" onClick={() => navigate('/account/contacts')} className="mt-4 rounded-xl border border-emerald-700 px-4 py-3 font-semibold text-emerald-800">Modifica email o telefono</button>
+            <button type="button" onClick={() => navigate('/account/contacts')} className="mt-4 rounded-xl border border-emerald-700 px-4 py-3 font-semibold text-emerald-800">Foto, email e telefono</button>
             <p className="text-sm leading-6 text-[var(--pc-muted-600)] mt-5">
               Le verifiche servono per le azioni che coinvolgono altre persone,
               come richieste e prenotazioni.

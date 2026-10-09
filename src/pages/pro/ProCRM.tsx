@@ -1,3 +1,4 @@
+import { ClientPortrait, useClientPortraits } from '../../components/ClientPortrait';
 import { useEffect, useState } from 'react';
 import { Search as SearchIcon, Tag, StickyNote, X, Users } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
@@ -53,6 +54,7 @@ export function ProCRM() {
 
   useEffect(() => { load(); }, [user]);
 
+  const portraits = useClientPortraits(clients.map(client => client.id));
   const filtered = clients.filter((c) => !q || c.full_name.toLowerCase().includes(q.toLowerCase()));
 
   return (
@@ -88,7 +90,7 @@ export function ProCRM() {
                 {filtered.map((c) => (
                   <tr key={c.id} onClick={() => setSelected(c)} className="border-t border-stone-100 hover:bg-stone-50 cursor-pointer">
                     <td className="p-4">
-                      <div className="font-semibold">{c.full_name}</div>
+                      <div className="font-semibold flex items-center gap-3"><ClientPortrait src={portraits[c.id]} name={c.full_name} />{c.full_name}</div>
                       <div className="text-xs text-stone-500">{c.email}</div>
                     </td>
                     <td className="p-4 text-stone-600">{c.dogs.map((d) => d.name).join(', ')}</td>
@@ -107,12 +109,12 @@ export function ProCRM() {
           </div>
         )}
       </div>
-      {selected && <ClienteDrawer client={selected} onClose={() => { setSelected(null); load(); }} />}
+      {selected && <ClienteDrawer portrait={portraits[selected.id]} client={selected} onClose={() => { setSelected(null); load(); }} />}
     </ProLayout>
   );
 }
 
-function ClienteDrawer({ client, onClose }: { client: ClienteRow; onClose: () => void }) {
+function ClienteDrawer({ client, onClose, portrait }: { client: ClienteRow; onClose: () => void; portrait?: string }) {
   const { user } = useAuth();
   const [notes, setNotes] = useState<any[]>([]);
   const [newNote, setNewNote] = useState('');
@@ -145,7 +147,7 @@ function ClienteDrawer({ client, onClose }: { client: ClienteRow; onClose: () =>
     <div className="fixed inset-0 bg-stone-900/50 z-50 flex justify-end">
       <div className="bg-white w-full max-w-lg h-full overflow-y-auto">
         <div className="p-6 border-b border-stone-200 flex justify-between items-center">
-          <h2 className="text-xl font-bold">{client.full_name}</h2>
+          <h2 className="text-xl font-bold flex items-center gap-3"><ClientPortrait src={portrait} name={client.full_name} />{client.full_name}</h2>
           <button onClick={onClose}><X className="w-5 h-5" /></button>
         </div>
         <div className="p-6 space-y-6">

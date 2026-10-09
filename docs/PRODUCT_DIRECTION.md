@@ -106,6 +106,21 @@ requisiti sulle fonti ufficiali aggiornate; non attribuire qualifiche per catego
 Un eventuale catalogo dei corsi ENCI deve usare riferimenti leciti/aggiornati,
 fonte, date e stato, senza simulare accreditamento o copiare materiale riservato.
 
+## Immagini e contenimento dei costi — decisione del 9 ottobre
+
+Ora: foto/logo dell’addestratore, centro o altro professionista visibile in
+ricerca e nel profilo, più banner caricato dal titolare. Il cliente può caricare
+una foto personale facoltativa per essere riconosciuto dai professionisti
+autorizzati; questa foto non deve diventare pubblica. Ottimizzare le copie,
+limitare formato e dimensioni e sostituire quelle precedenti senza accumulo.
+Specifica dell’incremento: [PROFILE_IMAGES_V1](PROFILE_IMAGES_V1.md).
+
+Per gli allegati delle sessioni, prima definire limiti per piano di abbonamento,
+compressione e contenuti che danno valore. Evitare duplicati, originali enormi
+conservati senza motivo, video superflui e costi di transcodifica non misurati.
+Nessun listino o piano a pagamento viene attivato ora. Funzionamento,
+ottimizzazione e sicurezza precedono l’aggiunta di altri strumenti.
+
 ## Continuità, media ed export
 
 L'autore conserva l'archivio del proprio lavoro; il nuovo professionista vede

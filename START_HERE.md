@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 9 ottobre 2026, dopo il controllo di `origin/main` a `204441b`.
+Aggiornamento del 9 ottobre 2026, dopo il controllo di `origin/main` a `558e0d5`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -22,16 +22,19 @@ Calendario, messaggi, pacchetti, abbonamenti e archivio testuale esistono già.
 Il registro corrente specifica i limiti: presenza su GitHub, migration applicata,
 deployment Ready e prova con account reali sono evidenze distinte.
 
-Prossimo incremento tecnico da valutare: media privati della continuità;
+Priorità approvata: foto dei profili, funzionamento, ottimizzazione e sicurezza.
+Gli allegati delle sessioni attendono quote per piano e una politica di compressione;
 Impara ora segue l’ordine precedente 1, 3, 4, 5, 6, 7, 8, 2 (rinumerato 1–8).
 Il CSV SEO è stato analizzato: dettagli in [SEO_INDEXATION_2026_10_09](docs/SEO_INDEXATION_2026_10_09.md).
 Il riordino è su GitHub (`204441b`). Google aveva scelto la home senza www;
 il redirect 308 attuale porta a www. Luigi ha inviato la richiesta di indicizzazione
 e confermato la sitemap riuscita. Non richiedere questi dati nuovamente.
-Le tre guide razza specifiche sono preparate e testate: [BREED_GUIDES_V1](docs/BREED_GUIDES_V1.md).
+Le tre guide razza specifiche sono su GitHub (`558e0d5`): [BREED_GUIDES_V1](docs/BREED_GUIDES_V1.md).
 L'esito della nuova scansione resta da osservare; la causa del downtime resta ignota.
 Social e possibile prova Higgsfield da 100 crediti sono aggiornati nel piano operativo.
 Non sospendere tutto il lavoro per questi dati e non ricreare funzioni esistenti.
+Foto professionali, banner e ritratti privati dei clienti: incremento preparato,
+con prova SQL/browser e procedura di rilascio in [PROFILE_IMAGES_V1](docs/PROFILE_IMAGES_V1.md).
 
 ## Primo controllo, senza modificare nulla
 

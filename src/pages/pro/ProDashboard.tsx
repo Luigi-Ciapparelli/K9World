@@ -1,3 +1,4 @@
+import { ClientPortrait, useClientPortraits } from '../../components/ClientPortrait';
 import { ServiceReviewNotice } from '../../components/ServiceReviews';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
@@ -32,6 +33,7 @@ export function ProDashboard() {
   const [reloadKey, setReloadKey] = useState(0);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [notice, setNotice] = useState<{ error: boolean; text: string } | null>(null);
+  const portraits = useClientPortraits([], [...pending.rows, ...today.rows, ...(next ? [next] : [])].map(booking => booking.id), reloadKey);
   const mutationLock = useRef(false);
   const session = useRef(0);
 
@@ -146,7 +148,7 @@ export function ProDashboard() {
                 <p className="text-sm text-[var(--pc-muted-600)]">Non ci sono richieste in attesa.</p>
               ) : <div className="space-y-4">{pending.rows.map((booking) => (
                 <article key={booking.id} className="rounded-2xl border border-[var(--pc-line)] p-4">
-                  <BookingSummary booking={booking} />
+                  <BookingSummary booking={booking} portrait={portraits[booking.id]} />
                   <section className="mt-3 rounded-xl bg-stone-50 p-3" aria-label="Messaggio del richiedente">
                     <h3 className="text-xs font-bold uppercase tracking-wide text-stone-600">Messaggio del richiedente</h3>
                     <p className="mt-1 whitespace-pre-wrap break-words text-sm text-stone-900">{booking.notes?.trim() || 'Nessuna nota inserita.'}</p>
@@ -171,7 +173,7 @@ export function ProDashboard() {
             <p className="mt-2 text-sm text-[var(--pc-muted-600)]">Orari nel fuso del tuo dispositivo. Appuntamenti con inizio oggi.</p>
             <div className="mt-5">
               {loading ? <Loading /> : today.error ? <LoadError onRetry={retry} /> : today.rows.length === 0 ? <p className="text-sm text-[var(--pc-muted-600)]">Nessun appuntamento accettato con inizio oggi.</p> : (
-                <div className="divide-y divide-[var(--pc-line)]">{today.rows.map((booking) => <div key={booking.id} className="py-4 first:pt-0"><BookingSummary booking={booking} /></div>)}</div>
+                <div className="divide-y divide-[var(--pc-line)]">{today.rows.map((booking) => <div key={booking.id} className="py-4 first:pt-0"><BookingSummary booking={booking} portrait={portraits[booking.id]} /></div>)}</div>
               )}
             </div>
             {!loading && !today.error && today.count > today.rows.length && <p className="mt-4 text-sm text-[var(--pc-muted-600)]">Mostrati {today.rows.length} appuntamenti su {today.count}.</p>}
@@ -182,7 +184,7 @@ export function ProDashboard() {
         <section className="pc-card p-5 md:p-6 mt-6" aria-labelledby="pro-next-title" aria-busy={loading}>
           <p className="pc-kicker">In programma</p>
           <h2 id="pro-next-title" className="pc-display text-2xl font-semibold mt-1">Prossimo impegno</h2>
-          <div className="mt-4">{loading ? <Loading /> : nextError ? <LoadError onRetry={retry} /> : next ? <BookingSummary booking={next} /> : <p className="text-sm text-[var(--pc-muted-600)]">Non ci sono appuntamenti accettati con inizio futuro.</p>}</div>
+          <div className="mt-4">{loading ? <Loading /> : nextError ? <LoadError onRetry={retry} /> : next ? <BookingSummary booking={next} portrait={portraits[next.id]} /> : <p className="text-sm text-[var(--pc-muted-600)]">Non ci sono appuntamenti accettati con inizio futuro.</p>}</div>
           <SectionLink onClick={() => navigate('/pro/bookings')}>Consulta prenotazioni</SectionLink>
         </section>
         <section aria-label="Strumenti professionali" className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-7">
@@ -197,13 +199,13 @@ export function ProDashboard() {
   );
 }
 
-function BookingSummary({ booking }: { booking: DashboardBooking }) {
+function BookingSummary({ booking, portrait }: { booking: DashboardBooking; portrait?: string }) {
   const price = booking.price === null ? NaN : Number(booking.price);
   const date = new Date(booking.start_at);
   return <div>
     <div className="flex flex-wrap items-start justify-between gap-3">
     <div>
-      <p className="font-bold mb-1">{booking.client_name || 'Nome non indicato'}</p>
+      <p className="font-bold mb-1 flex items-center gap-3"><ClientPortrait src={portrait} name={booking.client_name} />{booking.client_name || 'Nome non indicato'}</p>
       <p className="font-bold">{Number.isNaN(date.getTime()) ? 'Data da controllare' : date.toLocaleString('it-IT', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
       <p className="mt-1 text-xs text-[var(--pc-muted-600)]">Riferimento {booking.id.slice(0, 8)}</p>
     </div>

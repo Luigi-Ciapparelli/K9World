@@ -1,3 +1,4 @@
+import { ClientPortrait, useClientPortraits } from '../../components/ClientPortrait';
 import { ServiceReviewPanel } from '../../components/ServiceReviews';
 import { useEffect, useRef, useState } from 'react';
 import { Search as SearchIcon } from 'lucide-react';
@@ -35,6 +36,7 @@ export function ProBookings() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const lock = useRef(false);
   const session = useRef(0);
+  const portraits = useClientPortraits([], bookings.map(booking => booking.id), reloadKey);
   const messageSummaries = useBookingMessageSummaries(bookings.map((booking) => booking.id));
 
   useEffect(() => {
@@ -139,7 +141,7 @@ export function ProBookings() {
             <article key={booking.id} className="pc-card p-5">
               <div className="flex flex-wrap justify-between gap-3">
                 <div>
-                  <h2 className="font-bold text-lg break-words">{booking.client_name || 'Nome non indicato'}</h2>
+                  <h2 className="font-bold text-lg break-words flex items-center gap-3"><ClientPortrait src={portraits[booking.id]} name={booking.client_name || 'Cliente'} />{booking.client_name || 'Nome non indicato'}</h2>
                   <p className="text-sm mt-1">{new Date(booking.start_at).toLocaleString('it-IT', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                   <p className="text-xs text-[var(--pc-muted-600)] mt-1">Riferimento {booking.id.slice(0, 8)}</p>
                 </div>

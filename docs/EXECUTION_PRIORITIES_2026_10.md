@@ -8,7 +8,7 @@ non un'autorizzazione generale a spendere, pubblicare o contattare terzi.
 
 NAV-01 / PRO-01 (`7f11610`), EXP-01 (`3ec87ad`) e REV-01 individuali/pensioni
 (`fd619e4`) sono su `main`. La parte centri di REV-01 è distinta in TEAM-01.
-Anche il riordino Impara è su `main` (`204441b`).
+Anche il riordino Impara (`204441b`) e le tre guide razza (`558e0d5`) sono su `main`.
 Non ripetere l'installer di una funzione già presente per correggere un documento.
 La conferma dell'ambiente online, dove manca, è un controllo circoscritto, non
 un nuovo sviluppo né una ragione per negare i test locali già eseguiti.
@@ -22,8 +22,9 @@ future per dimostrare quelle già utilizzabili.
 | ID | Priorità e ambito | Dipendenza / prossimo risultato concreto | Criterio di chiusura |
 | --- | --- | --- | --- |
 | AFF-01 | Causa storica non ricostruita; controllo al prossimo episodio | Luigi non ha una causa certa; raccogliere finestra, URL/sintomo e log se ricapita; piano gratuito resta ipotesi | Causa oppure limite d'indagine esplicito, correzione motivata e percorso verificato; monitor valutato separatamente |
-| SEO-01 | Canonical ricevuta; richiesta inviata e sitemap riuscita; guide specifiche preparate | Rilascio delle tre guide e osservazione di nuova scansione/canonical, poi pagine prioritarie; vedere SEO_INDEXATION_2026_10_09 | Diagnosi per famiglia/URL, interventi mirati e misurazione successiva; nessuna promessa di indicizzare tutto |
-| MEDIA-01 | Prossimo blocco tecnico proposto | Specifica dati/permessi/quote e costo prima di caricare file; prima allegati privati e foto, poi audio/video | Pipeline utilizzabile, compressione utile, revoca/download, limiti, cancellazione e ripristino provati |
+| SEO-01 | Canonical ricevuta; richiesta inviata e sitemap riuscita; guide specifiche su GitHub | Osservazione di nuova scansione/canonical, poi pagine prioritarie; vedere SEO_INDEXATION_2026_10_09 | Diagnosi per famiglia/URL, interventi mirati e misurazione successiva; nessuna promessa di indicizzare tutto |
+| IMG-01 | Incremento corrente: identità visiva | Foto/logo e banner per tutti i professionisti; foto cliente privata; compressione e sostituzione a spazio limitato | Test pertinenti, migration pubblicata, frontend Ready e caricamento reale; specifica PROFILE_IMAGES_V1 |
+| MEDIA-01 | Implementazione rinviata per decisione del 9 ottobre | Quote per piano di abbonamento, tipi di file utili, compressione misurata, conservazione e costo totale prima della pipeline | Matrice approvata; solo dopo costruire flusso privato, revoca/download, limiti, cancellazione e ripristino |
 | TEAM-01 | Successivo o anticipato da un centro reale | Persona, appartenenza al team e istruttore assegnato alla prenotazione | Esperienze attribuite alla persona corretta, nessun trasferimento di reputazione e reciprocità sicura nei centri |
 | SPORT-02 | Blocco separato dopo verifica dei consumer esistenti | Identità Working-Dog, accesso ammesso alla fonte, parser reale e regole per disciplina | Collegamento → verifica → badge/ranking e revoca, con prova reale; casi ambigui rimangono non verificati |
 | SOC-01 | Preparazione commerciale in parallelo; trazione solo TikTok segnalata | Storyboard e scena campione; possibile trial 100 crediti, costo monetario proposto zero; verificare disponibilità effettiva prima di generare | Prodotto riconoscibile, contenuto corretto, ritagli/testi curati, destinazione funzionante e misurazione distinta dalle visualizzazioni |
@@ -49,7 +50,15 @@ criteri e rilascio in [IMPARA_LESSON_ORDER_V1](IMPARA_LESSON_ORDER_V1.md).
 Questi input non sono prerequisiti per consolidare le direttive, preparare uno
 storyboard o progettare un blocco indipendente. Non chiedere di rispiegare il prodotto.
 
-## Sequenza MEDIA-01 proposta
+## MEDIA-01: progettazione prima dell’implementazione
+
+Non avviare ora upload foto/audio/video delle sessioni. Luigi ha anticipato
+IMG-01 e la solidità tecnica. Le quote riguardano futuri piani del portale, non
+gli abbonamenti alle lezioni venduti dai professionisti già presenti. Prima
+di attivare il dominio definire la matrice per piano e i costi di storage,
+traffico, elaborazione, varianti e backup. Nessun prezzo è deciso.
+
+Sequenza da riprendere dopo queste decisioni:
 
 1. Leggere archivio, sharing ed export correnti; fissare il primo tipo di allegato
    supportato e il suo legame con una revisione. Non creare una seconda storia del cane.

@@ -5,7 +5,7 @@ export const setupSteps = [
   { id: 'story', label: 'Racconta come lavori', short: 'Presentazione', description: 'Una breve presentazione, con parole tue.', group: 'base' },
   { id: 'services', label: 'Crea il primo servizio', short: 'Servizi', description: 'Nome, durata, prezzo e colore nel calendario.', group: 'base' },
   { id: 'visibility', label: 'Scegli dove comparire', short: 'Visibilità', description: 'Scopri in quali ricerche compariranno i tuoi servizi.', group: 'more' },
-  { id: 'appearance', label: 'Personalizza la tua immagine', short: 'Foto e link', description: 'Foto o logo, sito e profili social.', group: 'more' },
+  { id: 'appearance', label: 'Personalizza la tua immagine', short: 'Foto e link', description: 'Foto o logo, banner, sito e profili social.', group: 'more' },
   { id: 'experience', label: 'Aggiungi la tua esperienza', short: 'Esperienza', description: 'Anno di inizio, formazione e documentazione.', group: 'more' },
   { id: 'credentials', label: 'Documenta le competenze', short: 'Attestati e risultati', description: 'Un attestato alla volta. Working-Dog è facoltativo.', group: 'more' },
   { id: 'replies', label: 'Prepara le tue risposte', short: 'Messaggi', description: 'Modelli riutilizzabili e risposte automatiche.', group: 'more' },
@@ -21,7 +21,7 @@ export function setupPath(step?: SetupStep) { return `/pro/settings${step ? `?st
 export const profileStepFields: Partial<Record<SetupStep, string[]>> = {
   identity: ['professional_type', 'listing_type', 'business_name', 'main_contact_name', 'team_size', 'vat_number'],
   area: ['zone_text', 'latitude', 'longitude', 'coverage_radius_km', 'starting_price'],
-  story: ['bio'], appearance: ['website_url', 'instagram_url', 'cover_photo_url'],
+  story: ['bio'], appearance: ['website_url', 'instagram_url'],
   experience: ['experience_start_year', 'qualification_summary', 'insurance_summary'],
 };
 export function completedProfileSteps(name: string, pro: Record<string, unknown> | null, services: Array<{ active: boolean; service_type?: string }>) {

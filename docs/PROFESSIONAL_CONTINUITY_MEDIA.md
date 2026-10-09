@@ -10,7 +10,13 @@ condivisione selettiva sono implementati: [UI](CONTINUITY_UI_V1.md) e
 commit `3ec87ad`: [specifica](DOG_HISTORY_EXPORT_V1.md). Non riapplicare le
 vecchie proposte SQL come se queste funzioni mancassero.
 
-**Da costruire:** allegati delle sessioni, pipeline privata di upload e quote,
+**Decisione successiva di Luigi, 9 ottobre:** rinviare l’implementazione degli
+allegati finché non sono definite quote per piano di abbonamento, compressione,
+utilità dei tipi di file e costo totale. Anticipare soltanto le immagini dei
+profili, con perimetro separato: [PROFILE_IMAGES_V1](PROFILE_IMAGES_V1.md).
+I futuri piani del portale non sono gli abbonamenti alle lezioni già implementati.
+
+**Da progettare prima di costruire:** allegati delle sessioni, pipeline privata di upload e quote,
 compressione foto/audio/video, conservazione e integrazione negli export.
 I nomi concettuali e gli stati della pipeline sotto non sono schema implementato.
 Il modello effettivo di note e concessioni nelle migration correnti prevale
@@ -153,7 +159,12 @@ Verificare separatamente backup Postgres e backup dei byte nello storage: non pr
 
 Esportazioni autorizzate includono autore, date, revisioni pertinenti, riferimenti e media consentiti. Non includono appunti privati altrui, chiavi, URL firmati persistenti o dati estranei. Avvisare che file esportati non sono revocabili a distanza.
 
-## 11. Prossimo incremento del dominio
+## 11. Sequenza futura del dominio, ora sospesa
+
+Prerequisito: matrice per piano con tipi ammessi, dimensione/file, quota totale,
+durata, frequenza, traffico e trasformazioni; regole di superamento quota,
+downgrade, conservazione ed export. Misurare il costo e la qualità utile prima
+di assegnare capacità o prezzi. Nessuna attivazione implicita da questa lista.
 
 1. Partire da sessioni, note, revisioni, concessioni ed export esistenti.
 2. Definire allegati privati per revisione, quote, upload/elaborazione e recupero.

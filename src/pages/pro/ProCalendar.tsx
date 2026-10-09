@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { ClientPortrait, useClientPortraits } from '../../components/ClientPortrait';
 import { CalendarDays, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
@@ -83,6 +84,7 @@ function CalendarContent() {
   const visible = bookings.filter((booking) => (showClosed || !['cancelled', 'declined'].includes(booking.status))
     && (service === 'all' || (booking.service_id || 'deleted') === service));
   const selectedBookings = visible.filter((booking) => bookingOnDay(booking, selected));
+  const portraits = useClientPortraits([], selectedBookings.map(booking => booking.id), reload);
   const selectedPeriods = schedule?.periods.filter((period) => period.start_date <= selected && period.end_date >= selected) || [];
   const legend = Array.from(new Map(bookings.map((booking) => [booking.service_id || 'deleted', booking])).entries());
 
@@ -206,7 +208,7 @@ function CalendarContent() {
       {selectedPeriods.length > 0 && <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950">Giorno segnato come indisponibile. Gli impegni già accettati restano confermati.</p>}
       {!selectedBookings.length && <p className="rounded-xl border border-stone-200 bg-white p-5 text-sm text-stone-600">Nessun impegno per questo giorno e questi filtri.</p>}
       {selectedBookings.map((booking) => <article key={booking.id} className="rounded-2xl border border-stone-200 border-l-4 bg-white p-5" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
-        <div className="flex flex-wrap items-start justify-between gap-3"><div><h3 className="font-bold">{booking.client_name}</h3><p className="mt-1 text-sm">{booking.service_name}</p></div><StatusBadge status={booking.status} /></div>
+        <div className="flex flex-wrap items-start justify-between gap-3"><div><h3 className="font-bold flex items-center gap-3"><ClientPortrait src={portraits[booking.id]} name={booking.client_name} />{booking.client_name}</h3><p className="mt-1 text-sm">{booking.service_name}</p></div><StatusBadge status={booking.status} /></div>
         <p className="mt-3 text-sm text-stone-600">{calendarDateTime(booking.start_at)} – {calendarDateTime(booking.end_at)} · {Number(booking.price || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
         <div className="mt-3 rounded-xl bg-stone-50 p-3"><p className="text-xs font-bold text-stone-600">Note del cliente</p><p className="mt-1 whitespace-pre-wrap break-words text-sm">{booking.notes?.trim() || 'Nessuna nota inserita.'}</p></div>
         <div className="mt-4 flex flex-wrap gap-2"><BookingConversation bookingId={booking.id} professional requestNotes={booking.notes} />{booking.status === 'pending' && <><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'accepted')} className={primary}>Accetta</button><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'declined')} className={button}>Rifiuta</button></>}

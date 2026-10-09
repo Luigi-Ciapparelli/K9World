@@ -1,3 +1,4 @@
+import { ProfileImageEditor } from '../../components/ProfileImageEditor';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import {
   Save,
@@ -10,8 +11,6 @@ import {
   ShieldCheck,
   AlertTriangle,
   Clock,
-  Camera,
-  Upload,
   Trash2,
   Award,
   ExternalLink,
@@ -177,23 +176,6 @@ function findCityCoordinates(zoneText: string) {
 }
 
 
-function getBrandingInitials(value: string) {
-  return value
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() || '')
-    .join('');
-}
-
-function professionalBrandingObjectPath(url: string | null | undefined) {
-  if (!url) return null;
-  const marker = '/storage/v1/object/public/professional-branding/';
-  const index = url.indexOf(marker);
-  if (index === -1) return null;
-  return decodeURIComponent(url.slice(index + marker.length).split('?')[0] || '') || null;
-}
-
 export function ProSettings() {
   const { user, profile, refreshProfile } = useAuth();
   const { path, navigate } = useRouter();
@@ -219,10 +201,9 @@ export function ProSettings() {
   const [verifying, setVerifying] = useState<'email' | 'phone' | null>(null);
   const [loadingData, setLoadingData] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [brandingFile, setBrandingFile] = useState<File | null>(null);
-  const [brandingPreview, setBrandingPreview] = useState('');
-  const [brandingBusy, setBrandingBusy] = useState(false);
-  const [brandingStatus, setBrandingStatus] = useState('');
+  const [avatarActive, setAvatarActive] = useState(false);
+  const [coverActive, setCoverActive] = useState(false);
+  const brandingBusy = avatarActive || coverActive;
   const [credentials, setCredentials] = useState<ProfessionalCredential[]>([]);
   const [credentialsLoading, setCredentialsLoading] = useState(false);
   const [credentialBusy, setCredentialBusy] = useState(false);
@@ -302,133 +283,6 @@ export function ProSettings() {
   }, [userId]);
 
   useEffect(() => { void load(); }, [load]);
-
-
-  const selectBrandingFile = (file: File) => {
-    setBrandingStatus('');
-    const allowed = new Set(['image/jpeg', 'image/png', 'image/webp']);
-
-    if (!allowed.has(file.type)) {
-      setBrandingStatus('Usa un file JPG, PNG o WebP.');
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      setBrandingStatus('L’immagine deve pesare meno di 5 MB.');
-      return;
-    }
-
-    if (brandingPreview) URL.revokeObjectURL(brandingPreview);
-    setBrandingFile(file);
-    setBrandingPreview(URL.createObjectURL(file));
-  };
-
-  const cancelBrandingSelection = () => {
-    if (brandingPreview) URL.revokeObjectURL(brandingPreview);
-    setBrandingFile(null);
-    setBrandingPreview('');
-    setBrandingStatus('');
-  };
-
-  const uploadBrandingImage = async () => {
-    if (!user || !brandingFile) return;
-
-    setBrandingBusy(true);
-    setBrandingStatus('');
-
-    try {
-      const extension =
-        brandingFile.type === 'image/png'
-          ? 'png'
-          : brandingFile.type === 'image/webp'
-            ? 'webp'
-            : 'jpg';
-
-      const previousUrl = profile?.avatar_url || '';
-      const previousPath = professionalBrandingObjectPath(previousUrl);
-      const objectPath = `${user.id}/identity-${Date.now()}.${extension}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('professional-branding')
-        .upload(objectPath, brandingFile, {
-          upsert: false,
-          contentType: brandingFile.type,
-          cacheControl: '3600',
-        });
-
-      if (uploadError) throw uploadError;
-
-      const { data: publicUrlData } = supabase.storage
-        .from('professional-branding')
-        .getPublicUrl(objectPath);
-
-      const publicUrl = publicUrlData.publicUrl;
-
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: publicUrl })
-        .eq('id', user.id);
-
-      if (profileError) {
-        await supabase.storage.from('professional-branding').remove([objectPath]);
-        throw profileError;
-      }
-
-      if (previousPath && previousPath !== objectPath) {
-        const { error: cleanupError } = await supabase.storage
-          .from('professional-branding')
-          .remove([previousPath]);
-        if (cleanupError) console.warn('Professional branding cleanup error:', cleanupError);
-      }
-
-      if (brandingPreview) URL.revokeObjectURL(brandingPreview);
-      setBrandingFile(null);
-      setBrandingPreview('');
-      await refreshProfile();
-      setBrandingStatus('Immagine pubblica aggiornata.');
-    } catch (error) {
-      setBrandingStatus(
-        error instanceof Error ? error.message : 'Impossibile aggiornare l’immagine.'
-      );
-    } finally {
-      setBrandingBusy(false);
-    }
-  };
-
-  const removeBrandingImage = async () => {
-    if (!user || !profile?.avatar_url) return;
-
-    setBrandingBusy(true);
-    setBrandingStatus('');
-
-    try {
-      const previousPath = professionalBrandingObjectPath(profile.avatar_url);
-
-      if (previousPath) {
-        const { error: removeError } = await supabase.storage
-          .from('professional-branding')
-          .remove([previousPath]);
-        if (removeError) throw removeError;
-      }
-
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: '' })
-        .eq('id', user.id);
-
-      if (profileError) throw profileError;
-
-      await refreshProfile();
-      setBrandingStatus('Immagine rimossa. Nella ricerca verranno mostrate le iniziali.');
-    } catch (error) {
-      setBrandingStatus(
-        error instanceof Error ? error.message : 'Impossibile rimuovere l’immagine.'
-      );
-    } finally {
-      setBrandingBusy(false);
-    }
-  };
-
 
 
   const loadCredentials = useCallback(async () => {
@@ -766,7 +620,7 @@ export function ProSettings() {
 
   const profileDirty = Boolean(savedState && (name !== savedState.name || Object.values(profileStepFields).flat().some(key => JSON.stringify(pro?.[key]) !== JSON.stringify(savedState.pro?.[key])) || JSON.stringify(rules) !== JSON.stringify(savedState.rules)));
   const evidenceDirty = JSON.stringify(credentialDraft) !== JSON.stringify(EMPTY_CREDENTIAL) || Boolean(credentialFile);
-  useUnsavedChanges(profileDirty || evidenceDirty || Boolean(brandingFile) || workingDogProfileUrl !== (workingDogIdentity?.profile_url || '') || saving || brandingBusy || credentialBusy || workingDogBusy, '/pro/settings');
+  useUnsavedChanges(profileDirty || evidenceDirty || workingDogProfileUrl !== (workingDogIdentity?.profile_url || '') || saving || brandingBusy || credentialBusy || workingDogBusy, '/pro/settings');
 
   useEffect(() => {
     setSaveMessage(''); setSaveError('');
@@ -848,8 +702,7 @@ export function ProSettings() {
     } finally { saveLock.current = false; setSaving(false); }
   };
 
-  const brandingImage = brandingPreview || profile?.avatar_url || '';
-  const brandingInitials = getBrandingInitials(name || profile?.full_name || 'PC') || 'PC';
+
 
   const isIndividualProfile = (pro?.listing_type || 'individual') === 'individual';
 
@@ -968,103 +821,13 @@ export function ProSettings() {
           </div>
 </Section>              </>}
               {step === 'appearance' && <>
-        <section className="pc-card relative overflow-hidden mb-5">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-20 -top-24 h-52 w-52 rounded-full bg-[var(--pc-forest-100)] opacity-70 blur-3xl"
-          />
-          <div className="relative p-6 md:p-7">
-            <div className="grid md:grid-cols-[144px_minmax(0,1fr)] gap-6 items-center">
-              <div className="w-36 h-36 rounded-[1.6rem] overflow-hidden bg-white ring-1 ring-[var(--pc-line)] shadow-sm">
-                {brandingImage ? (
-                  <img
-                    src={brandingImage}
-                    alt="Anteprima immagine profilo o logo"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-[var(--pc-forest-100)] text-[var(--pc-forest-900)] flex items-center justify-center pc-display text-3xl font-semibold">
-                    {brandingInitials}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <p className="pc-kicker">Identità pubblica</p>
-                <h2 className="pc-display text-2xl md:text-3xl font-semibold text-[var(--pc-ink-950)] mt-2">
-                  Immagine profilo o logo
-                </h2>
-                <p className="text-[var(--pc-muted-600)] leading-7 mt-3 max-w-2xl">
-                  È l’immagine principale che le persone vedono nella ricerca e nel profilo pubblico.
-                  Può essere una tua foto professionale oppure il logo della tua attività.
-                </p>
-
-                <div className="flex flex-wrap gap-3 mt-5">
-                  <label className="pc-btn pc-btn-secondary cursor-pointer">
-                    <Camera className="w-4 h-4" />
-                    {brandingImage ? 'Scegli un’altra immagine' : 'Aggiungi foto o logo'}
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      className="sr-only"
-                      onChange={(event) => {
-                        const file = event.target.files?.[0];
-                        if (file) selectBrandingFile(file);
-                        event.currentTarget.value = '';
-                      }}
-                    />
-                  </label>
-
-                  {brandingFile && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => void uploadBrandingImage()}
-                        disabled={brandingBusy}
-                        className="pc-btn pc-btn-primary"
-                      >
-                        <Upload className="w-4 h-4" />
-                        {brandingBusy ? 'Caricamento…' : 'Pubblica immagine'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={cancelBrandingSelection}
-                        disabled={brandingBusy}
-                        className="px-4 py-2 text-sm font-bold text-[var(--pc-muted-600)] hover:text-[var(--pc-ink-950)]"
-                      >
-                        Annulla
-                      </button>
-                    </>
-                  )}
-
-                  {!brandingFile && profile?.avatar_url && (
-                    <button
-                      type="button"
-                      onClick={() => void removeBrandingImage()}
-                      disabled={brandingBusy}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-rose-700 hover:bg-rose-50 disabled:opacity-50"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Rimuovi immagine
-                    </button>
-                  )}
-                </div>
-
-                <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-xs text-[var(--pc-muted-600)]">
-                  <span>JPG, PNG o WebP</span>
-                  <span>Massimo 5 MB</span>
-                  <span>Formato quadrato consigliato</span>
-                </div>
-
-                {brandingStatus && (
-                  <p role="status" className="mt-3 text-sm font-semibold text-[var(--pc-ink-800)]">
-                    {brandingStatus}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
+        {user && <>
+          <ProfileImageEditor key={`${user.id}-avatar`} userId={user.id} kind="avatar" currentUrl={profile?.avatar_url} onActivity={setAvatarActive} onSaved={async () => { await refreshProfile(); }} />
+          <ProfileImageEditor key={`${user.id}-cover`} userId={user.id} kind="cover" currentUrl={pro.cover_photo_url || ''} onActivity={setCoverActive} onSaved={url => {
+            setPro(current => current && ({ ...current, cover_photo_url: url }));
+            setSavedState(current => current && ({ ...current, pro: { ...current.pro, cover_photo_url: url } }));
+          }} />
+        </>}
 
 <Section title="I tuoi collegamenti">          <div className="grid md:grid-cols-2 gap-3">
             <Field
@@ -1079,19 +842,6 @@ export function ProSettings() {
             />
           </div>
 
-          {!isIndividualProfile && (
-            <div>
-              <Field
-                label="URL foto copertina attività"
-                value={pro.cover_photo_url || ''}
-                onChange={(v) => setPro({ ...pro, cover_photo_url: v })}
-              />
-              <p className="text-xs text-stone-500 mt-1">
-                Foto orizzontale della sede, campo o struttura. Non viene richiesta
-                al professionista individuale.
-              </p>
-            </div>
-          )}
 </Section>              </>}
               {step === 'experience' && <>
                   <section className="pc-card p-6 md:p-7 mb-5">
