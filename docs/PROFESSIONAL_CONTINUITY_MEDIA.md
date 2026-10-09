@@ -1,24 +1,20 @@
-# Storico professionale del cane, note e media — architettura v1
+# Storico professionale, note e media — direttive e stato del dominio
 
-## Export disponibile nel prossimo rilascio — 8 ottobre 2026
+Consolidamento del 9 ottobre 2026. Stato del rilascio in
+[CURRENT_STATE](CURRENT_STATE.md). Le regole seguenti conservano la direzione
+originaria del 13 settembre, distinguendo ciò che esiste dal progetto media.
 
-Storico autorizzato, archivio privato dell’autore e selezioni ricevute esportabili
-con [EXP-01](DOG_HISTORY_EXPORT_V1.md). Implementazione e test locali completati;
-rilascio da applicare. Media delle sessioni e nuove recensioni restano successivi.
+Sessioni/note private, relazioni bilaterali, revisioni, archivio autore e
+condivisione selettiva sono implementati: [UI](CONTINUITY_UI_V1.md) e
+[sharing](CONTINUITY_SHARING_V1.md). Export testuale e foto opzionale sono nel
+commit `3ec87ad`: [specifica](DOG_HISTORY_EXPORT_V1.md). Non riapplicare le
+vecchie proposte SQL come se queste funzioni mancassero.
 
-## Esportazione richiesta — aggiornamento dell'8 ottobre 2026
-
-Luigi richiede lo storico del cane scaricabile: dati, dove è stato, chi lo ha
-seguito, attività e note, con revisioni e allegati autorizzati. L'esistenza
-della funzione è ora una direzione approvata; formati, quote, modalità e
-permessi di download restano da progettare. Non esportare automaticamente
-appunti privati altrui e non equiparare il permesso di lettura al download.
-Specifiche: [FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
-Solo documentazione; nessuna esportazione, nuova API o pipeline media creata.
-
-Stato: decisione di prodotto approvata in chat; proposta tecnica da verificare sul codice e sul database prima delle migration. Questo documento non implementa funzionalità né descrive tabelle già esistenti.
-
-Baseline Git verificata: 9b23833, main e signup-dog-profile allineati, working tree pulito. Profilo pubblico e prenotazioni sono stati verificati dall'utente in produzione. La nuova fase riguarda lo storico professionale, non le note inviate dal proprietario con una prenotazione.
+**Da costruire:** allegati delle sessioni, pipeline privata di upload e quote,
+compressione foto/audio/video, conservazione e integrazione negli export.
+I nomi concettuali e gli stati della pipeline sotto non sono schema implementato.
+Il modello effettivo di note e concessioni nelle migration correnti prevale
+sugli esempi della proposta; non introdurre tabelle duplicate.
 
 ## 1. Decisioni approvate
 
@@ -49,7 +45,7 @@ Le scelte di questa fase si applicano al nuovo dominio. Non rendere permanenti i
 
 Una nota nasce privata. L'autore decide quali contributi sono destinati allo storico condivisibile. Il proprietario può autorizzare il nuovo professionista a leggere tale storico, ma non può trasformare gli appunti privati dell'autore in materiale condiviso.
 
-La concessione iniziale proposta seleziona contributi o un periodo storico: non include automaticamente ogni contenuto futuro. Accesso ai nuovi contributi richiede una scelta esplicita. Il pacchetto deve mostrare anche i limiti della propria completezza: assenza di note condivise non significa assenza di lavoro precedente.
+La concessione implementata seleziona contributi o un periodo storico: non include automaticamente ogni contenuto futuro. Accesso ai nuovi contributi richiede una scelta esplicita. Il pacchetto deve mostrare anche i limiti della propria completezza: assenza di note condivise non significa assenza di lavoro precedente.
 
 | Attore | Contributi propri | Storico condivisibile altrui | Appunti privati altrui | Nuovi dati del cane |
 | --- | --- | --- | --- | --- |
@@ -157,15 +153,15 @@ Verificare separatamente backup Postgres e backup dei byte nello storage: non pr
 
 Esportazioni autorizzate includono autore, date, revisioni pertinenti, riferimenti e media consentiti. Non includono appunti privati altrui, chiavi, URL firmati persistenti o dati estranei. Avvisare che file esportati non sono revocabili a distanza.
 
-## 11. Ordine di implementazione
+## 11. Prossimo incremento del dominio
 
-1. Documentare questa decisione e collegarla alla continuità (questo checkpoint).
-2. Ispezionare schema, API/RLS/storage correnti e storico migration. Definire relazione autorizzata e ambito archivio senza alterare le vecchie migration.
-3. Implementare sessioni e note testuali con revisioni e passaggio autorizzato; testare l'intera matrice degli accessi.
-4. Aggiungere foto private e pipeline di quota, elaborazione, cancellazione e recupero.
-5. Aggiungere audio e video dopo misurazioni di qualità, compatibilità, costo e limiti.
-6. Testare fine relazione, revoca, account disattivato, cambio proprietario, file fallito e ripristino.
-7. Rilasciare un incremento funzionante alla volta, aggiornando documentazione e CURRENT_STATE.md. Non accumulare funzioni non verificate.
+1. Partire da sessioni, note, revisioni, concessioni ed export esistenti.
+2. Definire allegati privati per revisione, quote, upload/elaborazione e recupero.
+3. Rilasciare un primo flusso completo, poi audio/video dopo prove di qualità e costo.
+4. Integrare i media autorizzati nell'export senza perdere i controlli alla consegna.
+5. Chiudere ogni incremento con permessi, revoca, cancellazione e ripristino provati.
+
+Ordine operativo generale: [EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md).
 
 ## 12. Verifiche necessarie prima del rilascio
 
@@ -181,22 +177,15 @@ Usare account e cani di test separati: autore A, nuovo professionista B, profess
 - Compressione verificata su postura, segnali veloci, clicker, voce e sincronizzazione; test su dispositivi d'uso reali.
 - La cancellazione elimina anche le varianti previste; il ripristino non annulla revoche o cancellazioni.
 
-## 13. Decisioni ancora aperte
+## 13. Decisioni aperte della pipeline media
 
-Le seguenti sono proposte tecniche, non decisioni già approvate: durata delle concessioni/link, criteri di finalizzazione delle note, gestione del cambio proprietario, periodo di conservazione degli originali, limiti e quote, codec/provider di elaborazione, formati e modalità/permessi di esportazione e download, procedure straordinarie di assistenza, obiettivi backup e recupero. Il requisito di rendere scaricabile lo storico autorizzato è stato approvato il 7 ottobre 2026; non è più da decidere se prevederlo.
+Restano da fissare durata dei link ai media, gestione degli originali, quote,
+codec/provider e costi di elaborazione, grandi export con allegati, procedure
+straordinarie di assistenza e obiettivi di backup/ripristino. Non riaprire come
+indecisi il diritto al download autorizzato o i formati testuali già implementati.
+Per scadenze/revoche delle concessioni e revisioni delle note leggere le API
+esistenti; per l'aggiunta dei media progettare soltanto l'estensione necessaria.
 
-Risolverle prima della rispettiva implementazione, con opzioni concrete. Non iniziare nuove migration solo perché i nomi concettuali sono elencati qui.
-
-## Proposta tecnica per sessioni e note private
-
-Vedi [proposta e limiti](proposals/PROFESSIONAL_CONTINUITY_V1.md) e [SQL non applicabile automaticamente](proposals/professional_continuity_v1.sql). Sono bozze da verificare, non migration applicate: nessuna nuova API o funzione del sito è attiva.
-
-
-## Interfaccia continuità — incremento locale
-
-Vedi [stato UI, attivazione e verifiche](CONTINUITY_UI_V1.md). Interfaccia implementata dietro flag disattivato di default; SQL ancora nelle proposte, nessuna attivazione online dichiarata. Condivisione dello storico e media restano da implementare.
-
-<!-- continuity-sharing-v1 -->
-## Continuità condivisa fra professionisti
-
-Revisioni scelte dall’autore e concessioni del proprietario a destinatari specifici, con durata e revoca. Riferimento: `docs/CONTINUITY_SHARING_V1.md`. PostgreSQL nativo: regressioni e sette casi concorrenti superati dall’utente il 14 settembre 2026. Incremento preparato localmente; applicare la nuova migrazione prima del frontend e registrare l’esito del rilascio. Archivio originale conservato; media e compressione restano nel passo successivo.
+Le proposte SQL iniziali in `docs/proposals` sono fonti storiche, non nuove
+migration da eseguire. L'assenza di pipeline audio/video non implica assenza
+di sessioni, condivisione o archivio professionale.

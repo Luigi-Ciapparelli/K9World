@@ -1,1567 +1,200 @@
-# PortaleCinofilo — Product Direction
-
-## Sequenza di realizzazione proposta — 8 ottobre 2026
-
-[EXECUTION_PRIORITIES_2026_10.md](EXECUTION_PRIORITIES_2026_10.md) raccoglie l'ordine
-di esecuzione futura e i criteri di completamento senza cambiare i requisiti approvati.
-Prima problemi concreti di disponibilità/accesso e diagnosi SEO per URL; primo
-incremento di prodotto ricerca/Esposizioni insieme al profilo guidato; poi export
-autorizzato e valutazioni con decisioni aperte risolte. Comunicazione e prove
-commerciali usano le funzioni effettivamente disponibili e possono proseguire
-senza aspettare il completamento dell'intero catalogo SEO o della roadmap.
-
-Proposta organizzativa: un incremento di prodotto alla volta, chiuso con prove
-pertinenti e stato del rilascio. Nessuna modifica applicativa da questo documento.
-
-## Espansione e sostenibilità tecnica — proposta dell'8 ottobre 2026
-
-Riferimento: [INTERNATIONAL_SEO_AND_HOSTING_V1.md](INTERNATIONAL_SEO_AND_HOSTING_V1.md).
-Luigi chiede di confrontare marchio globale, siti nazionali e modello ibrido,
-risolvere le esclusioni di indicizzazione e valutare un server domestico.
-
-La proposta è mantenere il lancio italiano e costruire poi una piattaforma
-multilingue condivisa, con offerta e assistenza localizzate e un mercato pilota
-alla volta. Nome internazionale, paesi, soglie commerciali e spese restano da
-approvare. Lingua del sito e paese servito sono dimensioni distinte. Non duplicare
-prodotti e archivi per ogni nazione né sacrificare la semplicità per il proprietario.
-
-Priorità: disponibilità del servizio e pagine utili indicizzabili prima di
-moltiplicare traduzioni. La produzione domestica non è la soluzione consigliata
-all'attuale capacità operativa. Nessuna infrastruttura o interfaccia modificata.
-Le direttive di prodotto approvate nel checkpoint sottostante restano valide.
-
-## Direzione approvata, ancora da implementare — 8 ottobre 2026
-
-Specifiche e casi: [FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
-Questo aggiornamento prevale sulle descrizioni precedenti in conflitto:
-
-- Quattro aree pubbliche: Trova aiuto per il cane, Impara, Sport cinofili,
-  Esposizioni; accesso professionisti/account distinto dai percorsi.
-- Trova aiuto per il cane resta verde e diretto, con soli Addestratori e Pensioni.
-  Pet sitting e passeggiate escono dall'offerta; toelettatura si sposta in
-  Esposizioni, insieme agli handler da esposizione.
-- Storico del cane scaricabile: dati, attività, luoghi registrati, autori, note,
-  revisioni e media autorizzati; restano protetti gli appunti privati altrui.
-- Valutazioni reciproche dal secondo servizio effettivamente concluso fra lo
-  stesso cliente e addestratore, contando servizi diversi della stessa coppia.
-  Per le pensioni solo cliente → struttura; soglia iniziale ancora da definire.
-- Campagna futura Higgsfield: difficoltà raccontate dai cani, parco, attraversamento
-  del portale e binomi felici in trekking, passeggiata e Obedience. Metafora della
-  relazione desiderata, non promessa di risoluzione istantanea. Home ancora statica.
-
-Luigi riferisce tre primi post pubblicati e visualizzazioni soltanto su TikTok.
-Nessuna nuova metrica o conversione verificata. Solo direttive: nessun codice,
-schema, account o contenuto social modificato da questo checkpoint.
-
-## Modello sostenibile e priorità operative — 6 ottobre 2026
-
-La visione di Luigi è un portale gratuito, utile e sostenibile, seguito da
-espansione internazionale e, quando provato economicamente, un sistema di
-centri, allevamento, franchising e immobili. È un percorso per tappe: il successo
-digitale non certifica la redditività di una struttura fisica.
-
-Il piano proposto concentra il primo lancio su un territorio, sull'uso reale
-e sulla validazione di nuovi servizi professionali facoltativi. Pubblicità,
-sponsor e affiliazioni sono possibilità da valutare con dati, trasparenza e
-corretto inquadramento dell'attività; nessuna tariffa o campagna è attivata.
-Formazione di base e ricerca restano gratuite; ranking, approvazioni e risultati
-sportivi non si acquistano. Gli strumenti oggi gratuiti non diventano
-abbonamenti automaticamente.
-
-Leggere [BUSINESS_ROADMAP_V1.md](BUSINESS_ROADMAP_V1.md),
-[FUNDING_SCREENING_2026_10.md](FUNDING_SCREENING_2026_10.md) e
-[SOCIAL_LAUNCH_30_DAYS_V1.md](SOCIAL_LAUNCH_30_DAYS_V1.md).
-Le cifre nei piani sono ipotesi o massimali condizionati, non ricavi o contributi
-acquisiti. La situazione fiscale/personale non va inventata né salvata su Git.
-Questo aggiornamento integra la missione esistente; non sostituisce le scelte
-sulla home, sull'accesso semplice dei proprietari o sulla separazione Sport.
-
-## Direzione home aggiornata — 5 ottobre 2026
-
-La decisione finale di Luigi conserva «Apri la porta al suo mondo» e la
-composizione a due colonne; il cane attraversa un portone già aperto in una
-sola immagine statica. Niente animazione, introduzione da saltare o scroll
-obbligatorio. La precedente proposta animata non è stata installata.
-
-Il percorso consigliato è: test di scelta → Impara → confronto con un
-addestratore prima di scegliere il cane → addestratore nella propria zona.
-Ogni tappa è accessibile direttamente, senza iscrizione o completamento delle
-precedenti. La maggioranza degli utenti può avere già un cane: l'accesso diretto
-alla ricerca deve rimanere evidente nel primo blocco e nella navigazione.
-Sport mantiene il suo ingresso distinto. Specifiche: [HOME_PORTAL_V1.md](HOME_PORTAL_V1.md).
-
-## Orizzonte imprenditoriale dichiarato — 5 ottobre 2026
-
-Luigi vuole prima rendere il portale utile, utilizzato e sostenibile, poi
-svilupparne una versione internazionale. Nell'orizzonte successivo considera
-un proprio centro e allevamento e una rete di strutture organizzate, anche
-in franchising. È una direzione futura, non una funzione disponibile né una
-rete già esistente. Non pubblicizzare centri «ufficiali» o riconoscimenti
-non ancora istituiti. Restano prioritarie l'utilità per il proprietario,
-la formazione di base gratuita e l'adesione esplicita a eventuali servizi
-professionali a pagamento. Questa visione non autorizza spese o impegni.
-
-_Last updated: 2026-10-08 — aggiornamento delle direttive, non del prodotto online._
-
-## Lancio corrente
-
-Inviti personali ai primi professionisti e strutture, con costi contenuti.
-Nessuna etichetta pubblica beta/MVP; funzioni e limiti concreti sempre espliciti.
-Email verificata, SMS spenti per default, nessun acquisto Twilio o campagna
-pubblicitaria. Formazione di base gratuita; eventuali futuri piani professionali
-con adesione distinta, senza ranking a pagamento. Riferimenti operativi:
-[LAUNCH_READINESS_V1.md](LAUNCH_READINESS_V1.md) e [LAUNCH_COPY_V1.md](LAUNCH_COPY_V1.md).
-
-## 1. Missione
-
-PortaleCinofilo non è soltanto un marketplace di servizi cinofili.
-
-L'obiettivo è costruire un ecosistema che aiuti più persone a:
-
-- comprendere meglio il cane;
-- rispettarne bisogni, comunicazione e individualità;
-- gestire correttamente il binomio persona–cane;
-- scegliere con maggiore responsabilità prima di prendere un cane;
-- lavorare con professionisti competenti;
-- costruire continuità nel tempo sul singolo cane e sul binomio.
-
-La formazione gratuita deve aumentare consapevolezza e qualità delle decisioni, non sostituire il professionista.
-
-L'impatto desiderato è più ampio della singola prenotazione: aumentare il rispetto verso gli animali e, indirettamente, la sensibilità verso il mondo naturale.
-
----
-
-## 2. Principio di prodotto centrale
-
-PortaleCinofilo deve essere percepito come un unico percorso:
-
-**conoscenza → osservazione → professionista → lavoro sul binomio → continuità → nuova conoscenza**
-
-Non devono esistere isole funzionali scollegate.
-
-Ogni funzione dovrebbe migliorare almeno uno di questi rapporti:
-
-1. **persona ↔ cane**
-2. **persona ↔ professionista**
-3. **professionista ↔ storia del cane**
-
-Se una funzione separa questi elementi invece di collegarli, va ripensata.
-
----
-
-## 3. Ruolo di Impara
-
-`Impara` è una base educativa pubblica e gratuita.
-
-Serve a:
-
-- costruire cultura cinofila di base;
-- aiutare le persone a osservare prima di interpretare;
-- spiegare bisogni, comunicazione, routine, recupero, funzione e comportamento;
-- aiutare il cliente a fare domande migliori;
-- preparare un lavoro più efficace con il professionista.
-
-Impara **non deve presentarsi come alternativa al professionista**.
-
-Il principio corretto è:
-
-> Quello che impari ti aiuta a osservare meglio.  
-> Il professionista aggiunge esperienza, metodo, contesto e continuità sul singolo binomio.
-
----
-
-## 4. Prima del cane
-
-La gestione responsabile comincia prima della scelta.
-
-`Prima del cane` deve guidare l'utente a valutare:
-
-- tempo disponibile;
-- ambiente;
-- routine;
-- famiglia;
-- attività;
-- budget;
-- aspettative;
-- complessità gestionale;
-- caratteristiche funzionali e di selezione.
-
-Il risultato non deve essere trattato come una raccomandazione definitiva.
-
-Il percorso deve portare naturalmente a:
-
-**profilo di compatibilità → confronto con professionista → scelta più consapevole**
-
-La consulenza professionale pre-acquisto / pre-adozione deve diventare un comportamento normale all'interno dell'ecosistema.
-
----
-
-## 5. Il professionista è il core relazionale
-
-Il professionista non entra nel percorso solo quando "c'è un problema".
-
-Deve essere parte normale della gestione del binomio.
-
-PortaleCinofilo deve aiutare l'utente a scegliere un professionista sulla base di:
-
-- competenze;
-- esperienza;
-- ambiti di lavoro;
-- formazione;
-- qualifiche e attestati;
-- attività e discipline;
-- informazioni verificabili;
-- compatibilità con il contesto del cliente e del cane.
-
-Prezzo e rating restano utili, ma **non devono diventare proxy della competenza**.
-
----
-
-## 6. Professional Identity
-
-### Informazioni da rendere immediatamente confrontabili nella ricerca
-
-Ogni risultato professionista dovrebbe avere la stessa anatomia visiva:
-
-1. identità;
-2. ruolo;
-3. località;
-4. profilo approvato / stato verifica;
-5. anni di esperienza;
-6. principali ambiti di lavoro;
-7. presenza di formazione documentata;
-8. bio breve;
-9. informazioni pratiche secondarie;
-10. CTA evidente verso il profilo.
-
-### Anni di esperienza
-
-Non memorizzare preferibilmente un numero statico come:
-
-`years_experience = 6`
-
-Preferire:
-
-`experience_start_year = 2020`
-
-e calcolare gli anni correnti nell'interfaccia.
-
-### Ambiti di lavoro
-
-Gli ambiti principali devono essere strutturati e filtrabili, non solo testo libero.
-
-Esempi iniziali:
-
-- Educazione di base
-- Cuccioli
-- Adolescenza
-- Aggressività
-- Paure / insicurezze
-- Gestione urbana
-- Obedience
-- IGP
-- Ricerca olfattiva
-- Preparazione sportiva
-- Consulenza pre-acquisto / pre-adozione
-
-La tassonomia dovrà essere progettata prima della migrazione definitiva.
-
----
-
-## 7. Formazione, qualifiche e attestati
-
-Il profilo professionista dovrà permettere di inserire elementi documentabili come:
-
-- qualifica;
-- certificazione;
-- corso;
-- seminario;
-- workshop;
-- risultato sportivo;
-- altro percorso formativo rilevante.
-
-Campi candidati:
-
-- titolo;
-- ente / docente;
-- tipologia;
-- anno / data;
-- eventuale scadenza;
-- documento;
-- stato di verifica;
-- visibilità.
-
-Possibile modello futuro:
-
-`professional_credentials`
-
-con storage privato per i documenti originali e dati pubblici separati.
-
-Il documento originale non deve necessariamente essere pubblico.
-
----
-
-## 8. Formazione continua
-
-Qualifiche e formazione continua non sono la stessa cosa.
-
-Il profilo dovrebbe poter mostrare una timeline leggibile:
-
-**2026 — Stage / seminario**  
-**2025 — Corso / workshop**  
-**2024 — Qualifica**
-
-L'obiettivo è rendere visibile che il professionista continua a formarsi senza trasformare il numero di corsi in una classifica automatica.
-
----
-
-## 9. Biblioteca professionale
-
-I professionisti potranno indicare libri e riferimenti letti o studiati.
-
-Questa sezione deve essere visibile solo nel profilo approfondito.
-
-Nome consigliato:
-
-**Letture e riferimenti**
-
-oppure:
-
-**Biblioteca professionale**
-
-Regola fondamentale:
-
-> Le letture dichiarate non sono qualifiche, certificazioni o prove di competenza.
-
-Non devono influenzare direttamente badge, ranking o verifica professionale.
-
----
-
-## 10. Search: confronto, non catalogo
-
-La pagina `Trova un professionista` deve essere progettata per confrontare persone competenti, non per imitare un portale alberghiero.
-
-### Search card
-
-Le card possono restare leggere e prevalentemente bianche, ma devono avere una gerarchia interna molto più forte.
-
-Usare principalmente:
-
-- tipografia;
-- spaziatura;
-- divisori sottili;
-- leggere variazioni di superficie;
-- chip sobri;
-- evidence layer;
-- CTA fortemente distinguibile.
-
-Evitare:
-
-- riquadri dentro riquadri dentro riquadri;
-- troppi colori;
-- badge ovunque;
-- densità da gestionale.
-
-### Regola di confronto
-
-Le stesse informazioni devono trovarsi nello stesso punto in tutte le card.
-
-La Search è **comparazione**.
-
-Il profilo professionista è **approfondimento**.
-
-Le bio nella Search devono essere corte e controllate.
-
----
-
-## 11. Interaction Design
-
-Il sito è volutamente ricco di contenuti e funzioni.
-
-La soluzione non è ridurre drasticamente l'informazione, ma aumentare la gerarchia visiva e la percezione dell'interattività.
-
-Ogni schermata deve far capire rapidamente:
-
-1. dove sono;
-2. cosa sto leggendo;
-3. cosa posso fare adesso;
-4. qual è il passo successivo consigliato.
-
-### CTA system
-
-Estendere il Design System v2 con una gerarchia interattiva coerente:
-
-- `pc-btn-primary`
-- `pc-btn-secondary`
-- futura CTA ad alta evidenza / hero
-- action zone
-- sticky action mobile dove appropriato
-- card interattive chiaramente riconoscibili
-
-Una CTA primaria deve essere evidente senza trasformare il sito in un'interfaccia commerciale aggressiva.
-
-### Microinterazioni
-
-Introdurre progressivamente:
-
-- lieve sollevamento delle card cliccabili;
-- ombra controllata;
-- movimento delle frecce;
-- transizioni di apertura/chiusura;
-- feedback hover/focus;
-- animazioni d'ingresso molto leggere quando utili.
-
-Requisito:
-
-`prefers-reduced-motion` deve essere rispettato.
-
-Le animazioni devono comunicare interattività e gerarchia, non essere decorative.
-
----
-
-## 12. Design System v2
-
-Il Design System v2 è il linguaggio visivo obbligatorio.
-
-Nuove UI non devono introdurre palette o pattern paralleli senza motivo.
-
-Preferire:
-
-- token `pc-*`;
-- `pc-display`;
-- `pc-kicker`;
-- `pc-card`;
-- `pc-evidence-surface`;
-- `pc-surface-dark`;
-- `pc-rule`;
-- componenti riutilizzabili.
-
-Prima di creare una nuova UI, verificare se il pattern esiste già.
-
----
-
-## 13. Journey context
-
-L'Ecosystem Pass v1 ha introdotto un contesto leggero tra:
-
-**Impara / Prima del cane / Home → Search → Professional Profile**
-
-Il contesto viaggia nel routing.
-
-Regole:
-
-- non trasformarlo in diagnosi;
-- non salvarlo automaticamente nel database;
-- non precompilare automaticamente note private;
-- l'utente decide cosa condividere con il professionista.
-
-In futuro il journey potrà alimentare funzioni esplicite di condivisione controllata.
-
----
-
-## 14. Continuità
-
-La continuità cliente–professionista resta una parte core del prodotto.
-
-Distinguere:
-
-### Continuità essenziale
-Prioritaria:
-
-- cane;
-- proprietario;
-- professionista;
-- booking;
-- stato;
-- note rilevanti;
-- messaggi;
-- calendario;
-- storico della relazione.
-
-### Continuità avanzata
-Può essere sviluppata progressivamente:
-
-- media avanzati;
-- condivisioni sofisticate;
-- casi limite amministrativi;
-- workflow complessi;
-- automazioni secondarie.
-
-La complessità infrastrutturale non deve bloccare l'evoluzione dell'esperienza pubblica.
-
----
-
-## 15. Priorità di sviluppo
-
-### NOW — Interaction & Professional Identity Pass
-
-1. Rendere CTA e azioni molto più evidenti in tutto il portale.
-2. Definire `Action Zone` e pattern interattivi nel Design System.
-3. Migliorare le Search card per confronto rapido.
-4. Mostrare anni di esperienza.
-5. Mostrare principali ambiti di lavoro.
-6. Ridurre visivamente il peso di prezzo e rating.
-7. Rendere il bottone verso il profilo inequivocabile.
-8. Migliorare hover/focus/microanimazioni senza rendere il sito pesante.
-9. Controllare Prima del cane, Impara e profilo professionista per CTA poco percepibili.
-10. Verificare mobile e sticky actions dove utili.
-
-### NEXT — Professional Evidence
-
-1. Disegnare tassonomia degli ambiti di lavoro.
-2. Disegnare schema `professional_credentials`.
-3. Upload documenti.
-4. Privacy e storage.
-5. Workflow di verifica.
-6. Timeline formazione continua.
-7. Sezione qualifiche / formazione nel profilo.
-8. Biblioteca professionale.
-9. Distinguere chiaramente dichiarato / documentato / verificato.
-
-### NEXT — Ecosystem Deepening
-
-1. Collegare contenuti Impara a osservazioni volontarie sul proprio cane.
-2. Consentire al professionista di suggerire contenuti Impara.
-3. Consentire all'utente di condividere volontariamente osservazioni rilevanti.
-4. Collegare progressivamente queste informazioni alla continuità del binomio.
-
-### LATER
-
-- ranking basato su evidenze verificabili;
-- raccomandazioni più contestuali;
-- alimentazione e strumenti tipo Genius non-medical;
-- espansione professioni e specie solo quando il modello sul cane è stabile;
-- internazionalizzazione.
-
----
-
-## 16. Regole da non violare
-
-1. **Il cane non è un prodotto.**
-2. **Il professionista non è un risultato ordinato solo per prezzo e stelle.**
-3. **Impara non sostituisce il professionista.**
-4. **La formazione gratuita deve restare accessibile.**
-5. **Le letture non sono qualifiche.**
-6. **Un documento caricato non è automaticamente verificato.**
-7. **L'utente controlla ciò che condivide.**
-8. **La privacy non deve essere sacrificata per creare continuità.**
-9. **La densità informativa non deve distruggere la chiarezza dell'azione.**
-10. **Design System v2 prima di nuove UI isolate.**
-11. **Ogni nuova funzione deve rafforzare l'ecosistema, non creare un'altra isola.**
-
----
-
-## 17. Definizione di successo
-
-PortaleCinofilo sta andando nella direzione corretta quando una persona:
-
-- sceglie un cane con maggiore consapevolezza;
-- riconosce meglio i bisogni dell'animale;
-- osserva prima di interpretare;
-- sa quando e perché rivolgersi a un professionista;
-- sa valutare meglio un professionista;
-- arriva più preparata agli incontri;
-- mantiene continuità nel percorso;
-- prende decisioni più rispettose per il cane.
-
-Il successo non è soltanto aumentare le prenotazioni.
-
-È aumentare la qualità della relazione tra persone, animali e professionisti.
-
----
-
-## 18. Search Filters — principi definitivi
-
-La ricerca deve funzionare come uno strumento di scrematura fattuale, nello spirito di portali come AutoScout24: molti filtri sono accettabili se ognuno ha un significato concreto e aiuta realmente a trovare il professionista più adatto.
-
-La Search non deve diventare caotica né trasformarsi in una classifica commerciale.
-
-### Filtri prioritari
-
-#### Servizio
-Il servizio richiesto resta uno dei filtri principali.
-
-Direzione aggiornata l'8 ottobre 2026: nella ricerca quotidiana soltanto
-Addestratori e Pensioni. Educazione, addestramento e consulenza prima della
-scelta restano ambiti dei primi. Pet sitting e dog walking escono dall'offerta;
-toelettatura e handler si cercano nella nuova area Esposizioni. Sport conserva
-la ricerca per disciplina. La riclassificazione futura deve preservare i dati
-storici: i precedenti esempi dog walking/daycare non autorizzano nuovi box.
-
-#### Zona e distanza
-La ricerca deve poter essere ristretta per:
-- città / indirizzo;
-- distanza massima;
-- copertura geografica del professionista.
-
-#### Tipo di soggetto
-L'utente deve poter distinguere tra:
-- **Tutti**
-- **Professionista singolo**
-- **Struttura / centro cinofilo**
-
-Professionista e struttura non sono la stessa entità.
-
-Una struttura può ospitare più professionisti, mentre un professionista può operare:
-- in una propria struttura;
-- presso una struttura terza;
-- senza struttura;
-- a domicilio;
-- in più modalità.
-
-#### Esperienza minima
-La Search non deve usare una scala con etichette arbitrarie come "debuttante", "neofita" o "esperto".
-
-Usare solo soglie semplici e fattuali:
-
-- **0+ anni**
-- **10+ anni**
-- **20+ anni**
-
-La UI può utilizzare una barra / slider discreto con tre punti chiaramente marcati.
-
-Il valore mostrato deve essere:
-- "Qualsiasi esperienza"
-- "Almeno 10 anni"
-- "Almeno 20 anni"
-
-Non assegnare automaticamente un livello professionale in base agli anni.
-
-#### Prezzo massimo
-Il filtro prezzo è legittimo e necessario.
-
-Se una persona ha un budget massimo, deve poterlo usare per restringere i risultati.
-
-Il prezzo deve però essere:
-- riferito al servizio selezionato;
-- mostrato come informazione pratica;
-- mai usato come proxy di qualità.
-
-#### Ambiti di lavoro
-Gli ambiti professionali devono essere strutturati e filtrabili.
-
-Esempi iniziali:
-- Cuccioli
-- Educazione di base
-- Adolescenza
-- Aggressività
-- Paure / insicurezze
-- Gestione urbana
-- Obedience
-- IGP
-- Ricerca olfattiva
-- Preparazione sportiva
-- Consulenza pre-acquisto / pre-adozione
-
-#### Formazione / verifica
-Filtri candidati:
-- Profilo approvato
-- Professionista verificato
-- Qualifiche documentate
-- Qualifiche verificate
-
-Evitare filtri basati su:
-- numero di libri letti;
-- numero totale di corsi;
-- follower;
-- popolarità;
-- classifiche arbitrarie.
-
----
-
-## 19. Esperienza professionale — dato documentabile
-
-Gli anni di esperienza non devono essere un semplice campo libero facilmente gonfiabile.
-
-### Modello raccomandato
-
-Memorizzare:
-
-`experience_start_date` oppure `experience_start_year`
-
-e calcolare automaticamente gli anni correnti.
-
-### Prova dell'inizio attività
-
-Il professionista deve poter caricare una prova documentale che supporti l'anno dichiarato di inizio attività.
-
-Esempi possibili:
-- attestazione professionale datata;
-- iscrizione / registrazione presso ente o associazione;
-- documentazione fiscale / professionale compatibile;
-- certificazione o diploma con data;
-- altro documento giudicato adeguato in fase di verifica.
-
-La piattaforma non deve assumere che ogni documento dimostri automaticamente l'intera esperienza dichiarata.
-
-Lo stato deve essere distinto tra:
-
-- **esperienza dichiarata**
-- **esperienza documentata**
-- **esperienza verificata**
-
-La UI deve mostrare chiaramente la differenza.
-
----
-
-## 20. Sistema di verifica professionista
-
-PortaleCinofilo deve prevedere un sistema di verifica simile, come concetto, ai profili verificati dei social network: chi desidera ottenere uno status verificato invia documenti, la piattaforma li controlla e assegna un badge distinto.
-
-La verifica non deve essere automatica.
-
-### Flusso candidato
-
-1. Il professionista completa il profilo.
-2. Richiede la verifica.
-3. Carica i documenti richiesti.
-4. Accetta il trattamento dei documenti per la verifica.
-5. La richiesta entra in revisione.
-6. Un amministratore / verificatore esamina i documenti.
-7. La richiesta può essere:
-   - approvata;
-   - rifiutata;
-   - rimandata per integrazione;
-   - revocata in seguito.
-8. Il profilo mostra lo stato aggiornato.
-
-### Stati candidati
-
-- `not_requested`
-- `pending`
-- `needs_more_info`
-- `verified`
-- `rejected`
-- `revoked`
-
-### Badge
-
-Non usare un solo badge generico.
-
-Distinguere almeno:
-
-- **Profilo approvato**
-  - indica che il profilo può comparire sulla piattaforma;
-  - non implica verifica documentale completa.
-
-- **Professionista verificato**
-  - indica che PortaleCinofilo ha esaminato e accettato i documenti previsti dal processo di verifica.
-
-- **Qualifica verificata**
-  - riguarda uno specifico titolo / attestato / certificazione.
-
-Questi concetti non devono essere confusi.
-
-### Verifica identità
-
-Il processo può includere:
-- documento d'identità;
-- prova di identità / selfie o controllo equivalente;
-- dati anagrafici coerenti;
-- eventuali controlli manuali.
-
-La verifica identità e la verifica professionale possono essere due livelli distinti.
-
-### Verifica dell'esperienza
-
-La verifica degli anni di esperienza deve essere separata dalla verifica dell'identità.
-
-Un'identità verificata non significa automaticamente esperienza verificata.
-
-### Privacy
-
-I documenti caricati:
-- non devono essere pubblici per impostazione predefinita;
-- devono essere conservati in storage privato;
-- devono essere accessibili solo a chi gestisce la verifica;
-- devono avere logica di retention e revoca;
-- non devono essere esposti tramite URL pubblici permanenti.
-
-Nel profilo pubblico si mostra solo il risultato della verifica, non necessariamente il documento originale.
-
----
-
-## 21. Strutture / centri cinofili
-
-Una struttura deve diventare un'entità propria.
-
-Possibile modello futuro:
-
-`professional_facilities`
-
-Campi candidati:
-- id
-- nome
-- indirizzo
-- coordinate
-- anno di apertura
-- descrizione
-- servizi disponibili
-- foto
-- stato verifica
-- titolare / responsabile
-
-Relazione professionisti-strutture:
-
-`professional_facility_memberships`
-
-Campi candidati:
-- professional_id
-- facility_id
-- ruolo
-- data inizio collaborazione
-- data fine collaborazione
-- stato
-
-### Regola fondamentale
-
-**Anni di attività della struttura ≠ anni di esperienza del professionista.**
-
-Esempio:
-- centro aperto da 2 anni;
-- professionista con 20 anni di esperienza.
-
-La Search deve poter filtrare entrambe le dimensioni senza confonderle.
-
----
-
-## 22. Anatomia definitiva della Search Card
-
-La Search serve a confrontare.
-
-Tutte le card devono avere la stessa struttura visiva.
-
-### Ordine consigliato
-
-1. Foto / identità
-2. Nome
-3. Ruolo
-4. Località
-5. Badge di approvazione / verifica
-6. Anni di esperienza
-7. Principali ambiti di lavoro
-8. Presenza di qualifiche / formazione documentata
-9. Bio breve
-10. Dati pratici: prezzo, distanza, rating
-11. CTA evidente verso il profilo
-
-### Principio visivo
-
-La card può restare prevalentemente bianca.
-
-Non usare molti box annidati.
-
-La gerarchia deve derivare soprattutto da:
-- tipografia;
-- spaziatura;
-- divisori sottili;
-- chip sobri;
-- evidence layer;
-- differenze leggere di superficie;
-- CTA forte e inequivocabile.
-
-### Bio
-Massimo 2–3 righe nella Search.
-
-Il profilo completo contiene il testo esteso.
-
-### CTA
-Una CTA primaria chiara:
-
-**Vedi profilo e competenze →**
-
-Deve essere sempre nello stesso punto.
-
----
-
-## 23. Filtri Search — UI
-
-La sidebar / area filtri deve essere leggibile anche con molti filtri.
-
-### Struttura suggerita
-
-Sempre visibili:
-- servizio;
-- zona;
-- distanza;
-- tipo di soggetto;
-- esperienza minima;
-- ambiti principali.
-
-Dentro "Altri filtri":
-- prezzo massimo;
-- verifiche;
-- luogo di svolgimento;
-- lingue;
-- disponibilità futura;
-- altri filtri secondari.
-
-### Chip attivi
-
-Sopra i risultati mostrare filtri attivi come chip removibili.
-
-Esempio:
-
-`Addestramento ×`
-`30 km ×`
-`10+ anni ×`
-`Aggressività ×`
-`Struttura ×`
-
-Aggiungere sempre:
-
-**Azzera filtri**
-
-### Ordinamento
-
-Ordinamenti candidati:
-- Pertinenza
-- Distanza
-- Esperienza
-- Prezzo crescente
-- Valutazione
-
-La logica di Pertinenza deve essere spiegabile e basata su criteri reali.
-
----
-
-## 24. Prima del cane — integrazione con il professionista
-
-Il blocco separato "Dal sapere alla pratica" sotto il risultato del questionario va rimosso.
-
-La CTA verso il professionista deve essere integrata direttamente nel box del risultato.
-
-### Nuovo flusso
-
-1. L'utente completa il questionario.
-2. Riceve il risultato.
-3. Vede i gruppi FCI suggeriti.
-4. Può:
-   - approfondire gruppi / razze;
-   - trovare un professionista per una consulenza pre-acquisto / pre-adozione.
-5. L'utente può scegliere di condividere il risultato del questionario con il professionista.
-
-### Condivisione
-
-Con consenso esplicito, il professionista scelto può vedere:
-- risposte al questionario;
-- risultato;
-- gruppi FCI suggeriti;
-- data del questionario.
-
-Il professionista non deve ricevere automaticamente questi dati senza consenso.
-
-### Obiettivo
-
-Il professionista deve poter iniziare la consulenza pre-cane avendo già il quadro costruito dall'utente.
-
-Il questionario diventa quindi il primo elemento di continuità del percorso.
-
----
-
-## 25. Modello futuro per il questionario pre-cane
-
-Possibile tabella:
-
-`pre_dog_assessments`
-
-Campi candidati:
-- id
-- owner_id
-- answers_json
-- recommended_fci_groups
-- created_at
-- updated_at
-
-Possibile condivisione:
-
-`pre_dog_assessment_shares`
-
-Campi candidati:
-- assessment_id
-- professional_id
-- shared_by
-- shared_at
-- revoked_at
-
-Alternativa:
-il booking di consulenza pre-cane può referenziare direttamente un assessment.
-
-La soluzione definitiva va scelta prima della migrazione.
-
----
-
-## 26. Nuova priorità operativa
-
-### NOW — Search, CTA, Professional Identity
-
-1. Rimuovere il blocco professionista separato da `Prima del cane`.
-2. Integrare CTA professionista nel risultato del questionario.
-3. Disegnare condivisione consensuale delle risposte.
-4. Definire Action Zone nel Design System.
-5. Rendere tutte le CTA principali molto più evidenti.
-6. Ridisegnare la Search card.
-7. Aggiungere anni di esperienza visibili.
-8. Aggiungere filtro esperienza `0 / 10+ / 20+`.
-9. Aggiungere filtro professionista / struttura.
-10. Aggiungere filtro prezzo massimo.
-11. Aggiungere filtro ambiti.
-12. Aggiungere chip filtri attivi + reset.
-13. Migliorare microinterazioni.
-14. Progettare struttura dati per esperienza documentata.
-15. Progettare sistema di verifica professionista.
-16. Progettare entità struttura / centro cinofilo.
-
-### NEXT — Verification & Evidence
-
-1. Migrazione per dati esperienza.
-2. Storage privato documenti.
-3. Flusso richiesta verifica.
-4. Dashboard admin verifica.
-5. Badge professionista verificato.
-6. Badge qualifiche verificate.
-7. Strutture / centri.
-8. Formazione e qualifiche.
-9. Timeline formazione continua.
-10. Biblioteca professionale.
-
----
-
-## 27. Governance delle direttive di progetto
-
-`docs/PRODUCT_DIRECTION.md` è la **fonte unica delle direttive di prodotto e delle prossime implementazioni** di PortaleCinofilo.
-
-### Regola fondamentale
-
-Ogni indicazione data dal product owner sul comportamento, sulla UX, sul modello del prodotto, sui filtri, sulle verifiche, sui professionisti, sulle strutture, sui percorsi utente o sulle priorità deve essere considerata una **direttiva di progetto**, non una semplice osservazione di chat.
-
-Una direttiva rimane valida finché non viene:
-- implementata;
-- esplicitamente modificata;
-- sostituita da una decisione successiva;
-- esplicitamente scartata dal product owner.
-
-### Disciplina documentale
-
-Non creare nuove roadmap o documenti di direzione paralleli senza una necessità reale.
-
-Usare:
-
-- `docs/PRODUCT_DIRECTION.md` → decisioni, principi, backlog e prossime implementazioni;
-- `docs/CURRENT_STATE.md` → stato tecnico realmente implementato;
-- `START_HERE.md` → punto d'ingresso e riferimenti ai documenti principali;
-- documenti tecnici specifici → solo quando una feature richiede dettagli di implementazione non adatti al documento principale.
-
-Una decisione tecnica dettagliata può vivere in un documento specifico, ma la relativa direttiva e la sua priorità devono comunque essere richiamate in `PRODUCT_DIRECTION.md`.
-
-### Stato delle direttive
-
-Le future direttive rilevanti devono essere registrate nello stesso documento e, quando utile, classificate come:
-
-- **DECIDED** — decisione presa;
-- **NOW** — da implementare nel pass corrente;
-- **NEXT** — immediatamente successiva;
-- **LATER** — valida ma non prioritaria;
-- **DONE** — implementata e verificata.
-
-L'obiettivo è evitare che decisioni importanti rimangano soltanto nella cronologia delle chat.
-
----
-
-## 28. Esperienza di strutture e professionisti — regola definitiva
-
-### Professionista singolo
-
-Gli anni mostrati e filtrabili rappresentano gli **anni di esperienza professionale della persona**.
-
-Devono derivare dal periodo di attività del professionista e, quando dichiarati come verificati, essere supportati dal processo documentale previsto da PortaleCinofilo.
-
-### Struttura / centro cinofilo
-
-Gli anni mostrati e filtrabili per una struttura rappresentano esclusivamente gli **anni di attività della struttura stessa**.
-
-Esempio:
-
-- struttura aperta nel 2023;
-- fondatore attivo professionalmente dal 1998.
-
-Nel risultato della struttura si mostrano **3 anni di attività della struttura**, non 28 anni.
-
-Gli anni del fondatore:
-- non si trasferiscono alla struttura;
-- non vengono sommati;
-- non aumentano automaticamente l'anzianità della struttura;
-- possono comparire solo nel profilo personale del fondatore, se presente come professionista.
-
-### Principio di valutazione della struttura
-
-Il valore professionale di una struttura dipende soprattutto dalle **persone che vi lavorano attualmente**, non dall'esperienza storica del fondatore.
-
-La scheda della struttura dovrà quindi rendere leggibili anche:
-
-- professionisti attualmente presenti;
-- loro profili individuali;
-- loro verifiche;
-- ambiti di competenza del team;
-- qualifiche dei singoli;
-- servizi realmente disponibili;
-- eventuali responsabilità o ruoli nella struttura.
-
-Se il fondatore non lavora più operativamente con i cani, la sua esperienza personale non deve essere utilizzata per rappresentare la competenza attuale del centro.
-
-### Nessun trasferimento automatico di reputazione
-
-Non trasferire automaticamente:
-
-- esperienza della struttura → professionisti;
-- esperienza del professionista → struttura;
-- rating della struttura → professionisti;
-- rating del professionista → struttura;
-- qualifiche del fondatore → team.
-
-Le entità sono collegate, ma rimangono valutabili separatamente.
-
-### Filtro esperienza
-
-Il filtro:
-
-`0+ / 10+ / 20+`
-
-cambia significato in base al tipo di risultato selezionato:
-
-- **Professionista** → esperienza professionale personale minima;
-- **Struttura** → anni di attività della struttura.
-
-La UI deve esplicitare questa differenza e non confrontare i due valori come se fossero la stessa metrica.
-
----
-
-## 29. Search Card v2 e identità visiva professionista
-
-**Stato: NOW / DECIDED — approvazione visiva ancora richiesta.**
-
-### Search Card v2
-
-Il primo redesign della card risultati è **bocciato** e non va considerato `DONE`.
-
-La card non deve essere costruita come una sequenza di tre fasce orizzontali o come un pannello amministrativo. Deve avere una sola superficie continua, più editoriale e premium, con gerarchia visiva chiara.
-
-Ordine di lettura:
-
-1. immagine professionista o logo;
-2. nome, ruolo/tipo, zona e stato di verifica;
-3. breve bio;
-4. esperienza/anni di attività e ambiti principali;
-5. prezzo, distanza e recensioni come dati pratici secondari;
-6. CTA evidente `Vedi profilo e competenze →`.
-
-Sono ammessi micro-movimenti sobri (lift della card, movimento della freccia) nel rispetto di `prefers-reduced-motion`. Evitare UI da e-commerce aggressivo, badge inutili e separatori che frammentano la scheda.
-
-### Foto profilo / logo
-
-Ogni professionista deve poter caricare, sostituire e rimuovere dalla propria area personale una **foto professionale oppure il logo della propria attività**.
-
-Questa immagine:
-- è l'identità visiva pubblica principale;
-- appare nel quadrato della Search Card;
-- viene riutilizzata nel profilo pubblico;
-- usa le iniziali di nome/cognome esclusivamente come fallback quando non è presente alcuna immagine;
-- può essere una foto personale o un logo, senza trasformare il logo in una credenziale o verifica.
-
-L'asset è pubblico perché destinato alle superfici pubbliche del portale. Upload, sostituzione e cancellazione devono essere consentiti soltanto al proprietario autenticato del profilo.
-
-La qualità visiva finale della Search Card deve essere approvata dal product owner prima di marcarla `DONE`.
-
----
-
-## 30. Esperienza professionale — dato reale e verificabile
-
-**Stato: NOW / DECIDED.**
-
-Gli anni di esperienza di un professionista non devono essere salvati come un numero statico modificabile (`years_experience`).
-
-La fonte del dato diventa l'**anno di inizio dell'attività professionale** (`experience_start_year`). Gli anni mostrati dalla piattaforma vengono calcolati automaticamente rispetto all'anno corrente.
-
-Regole:
-
-- il professionista può dichiarare il proprio anno di inizio;
-- il valore dichiarato non equivale a un dato verificato;
-- `Esperienza verificata` può comparire solo dopo il processo documentale previsto da PortaleCinofilo;
-- il professionista non può auto-attribuirsi lo stato di verifica;
-- la Search usa questo dato per i soli livelli `0+ / 10+ / 20+`;
-- i profili privi di anno di inizio non entrano nei filtri `10+` e `20+`;
-- il vecchio `years_experience` non è più la fonte autorevole e va rimosso soltanto in una futura migrazione di pulizia, dopo verifica di tutti i consumer.
-
-Questa regola riguarda esclusivamente il **professionista singolo**. Per una struttura, l'anzianità resta separata e deriva dalla data/anno reale di apertura della struttura, senza ereditare gli anni del fondatore.
-
----
-
-## 31. Campi contestuali e credenziali professionali
-
-**Stato: NOW / DECIDED.**
-
-### Campi contestuali in base al tipo profilo
-
-Quando `listing_type = individual`, PortaleCinofilo rappresenta una persona fisica e non deve chiedere o usare come identità pubblica campi da organizzazione.
-
-Per un professionista individuale non vengono richiesti:
-
-- referente principale;
-- numero persone nel team;
-- nome attività / struttura;
-- URL foto copertina attività.
-
-Il nome pubblico deriva dal nome della persona. Partita IVA, sito e Instagram possono rimanere disponibili perché possono appartenere anche a un libero professionista.
-
-Quando il tipo profilo rappresenta invece attività, centro o pensione, i campi organizzativi diventano pertinenti.
-
-### Formazione, prove e risultati sportivi
-
-La sezione `Experience and verification details` deve contenere **evidenze strutturate**, non soltanto testo libero.
-
-Tipi iniziali:
-
-- qualifica professionale;
-- corso / attestato;
-- seminario / stage;
-- prova o brevetto ufficiale;
-- risultato gara / titolo sportivo;
-- altro.
-
-Ogni voce può contenere ente/fonte, data, disciplina, risultato/livello, descrizione, documento privato e URL esterno pubblico.
-
-Per il lavoro sportivo è esplicitamente valido collegare una pagina o un risultato **Working-Dog** o altra fonte pertinente. I file originali restano privati; il profilo pubblico mostra solo i metadati autorizzati e lo stato di verifica.
-
-Gli stati devono essere distinguibili almeno tra dichiarato, in verifica, verificato, rifiutato e revocato. Il professionista non può attribuirsi autonomamente lo stato `verified`.
-
-Un risultato come **IGP3** è un segnale professionale forte e visibile nella relativa disciplina e deve permettere all'utente di distinguere chi possiede esperienza sportiva documentabile da chi non la possiede. Non va però trasformato in un punteggio universale per ambiti diversi: sport, educazione del cane da compagnia, comportamento, allevamento e altre specializzazioni restano fatti distinti.
-
-La Search può mostrare pochi highlight fattuali (`IGP3`, qualifica verificata, corso rilevante) con il relativo stato di verifica. Il numero grezzo di corsi o attestati non diventa un ranking.
-
----
-
-## 32. Albo d'Oro della Cinofilia e priorità del merito sportivo
-
-**Stato: NOW / DECIDED.**
-
-PortaleCinofilo distingue tra **Albo d'Oro della Cinofilia** e normali criteri di ricerca.
-
-### Albo d'Oro IGP
-
-- `IGP3 verificato` → **Oro** → `Maestro Addestratore · Oro IGP3`;
-- `IGP2 verificato` → **Argento**;
-- `IGP1 verificato` → **Bronzo**.
-
-La dicitura `Maestro Addestratore` è editoriale PortaleCinofilo e non va rappresentata come titolo ENCI, statale o di altra organizzazione.
-
-Nessun risultato `self_declared` o `pending` produce medaglia o priorità: serve stato `verified`.
-
-### Priorità di ricerca
-
-Ordine iniziale:
-
-1. IGP3 verificato;
-2. IGP2 verificato;
-3. IGP1 verificato;
-4. altra attività sportiva verificata;
-5. professionisti senza risultato sportivo verificato.
-
-Prima gerarchia disciplinare:
-
-`IGP > Obedience > Agility`.
-
-Dentro la stessa fascia, più brevetti e risultati verificati aumentano il merito. In futuro il modello `Persona → Cane → Disciplina → Prova/Gara → Risultato → Fonte → Verifica` permetterà di premiare esplicitamente la replicabilità su cani diversi.
-
-La distanza è secondaria rispetto al merito sportivo verificato. La Search può mantenere visibili un numero limitato di professionisti sportivi anche fuori dal normale raggio locale e deve dichiararlo chiaramente.
-
-### Strutture
-
-Le medaglie appartengono alle persone. Una struttura potrà mostrare `Nel team: Maestro Addestratore Oro IGP3` solo attraverso una relazione team attiva e verificabile. Il prestigio non viene trasferito permanentemente alla facility.
-
-### Trasparenza educativa
-
-La Search deve contenere `Perché vedo questi professionisti?` e spiegare che brevetti e risultati verificati possono precedere distanza, prezzo e popolarità.
-
-### Divieto di pay-to-rank
-
-Nessun abbonamento, boost o sponsorizzazione può comprare una posizione superiore al merito verificato.
-
----
-
-## 33. Working-Dog — verifica automatica della carriera sportiva
-
-**Stato: NOW / DECIDED.**
-
-Working-Dog diventa il primo provider esterno con verifica automatica per la carriera sportiva.
-
-### Regola fondamentale
-
-Un semplice URL non equivale a `verified`.
-
-PortaleCinofilo controlla la fonte **lato server** e assegna automaticamente `verified` solo quando la pagina Working-Dog permette di far coincidere in modo sufficiente:
-
-- identità del professionista;
-- disciplina;
-- brevetto / livello;
-- cane condotto, obbligatorio per la verifica automatica IGP;
-- prova/gara quando indicata.
-
-Se il controllo non è univoco, la voce resta `pending`. L'admin interviene soltanto come fallback per casi ambigui, altre fonti, documenti e contestazioni.
-
-### Profilo Working-Dog collegato
-
-Il professionista può collegare il proprio profilo Working-Dog.
-
-Lo stato pubblico `Profilo Working-Dog verificato` compare solo dopo la corrispondenza automatica dell'identità. Lo stesso profilo Working-Dog non può essere rivendicato contemporaneamente da due account.
-
-Il collegamento del profilo non rende automaticamente vera ogni futura dichiarazione: ogni risultato sportivo mantiene una propria provenienza e verifica.
-
-### Fonte del risultato
-
-Per un brevetto/risultato Working-Dog vengono registrati:
-
-- URL pubblico;
-- provider;
-- data dell'ultimo controllo;
-- metodo di verifica;
-- fingerprint della fonte;
-- esito sintetico del controllo.
-
-PortaleCinofilo non salva una copia pubblica integrale della pagina esterna.
-
-### Carriera strutturata
-
-I risultati sportivi devono poter rappresentare:
-
-`Professionista → Cane → Disciplina → Prova/Gara → Livello/Risultato → Fonte → Verifica`
-
-Campi iniziali:
-
-- cane;
-- disciplina;
-- livello/brevetto;
-- nome prova/gara;
-- livello della competizione;
-- piazzamento;
-- punteggio/dettaglio;
-- data;
-- fonte.
-
-Per l'Albo d'Oro, a parità di fascia, la **replicabilità su cani diversi precede il numero grezzo di risultati**.
-
-### Effetto sull'Albo d'Oro
-
-Solo `verification_status = verified` incide sul merito.
-
-Una verifica `working_dog_auto` ha pieno valore come una verifica amministrativa: la differenza resta visibile nella provenienza (`Verificato automaticamente tramite Working-Dog`).
-
-### Fail closed
-
-Se Working-Dog non è raggiungibile, cambia markup, blocca l'accesso automatico o non espone abbastanza informazioni, PortaleCinofilo **non inventa la verifica**: mantiene la voce `pending`.
-
-L'architettura deve restare a provider, così in futuro fonti ufficiali o sportive di altri paesi possano essere integrate senza cambiare il Core.
-
-## 34. MVP launch freeze e avvio business — DECIDED
-
-### Obiettivo
-PortaleCinofilo entra nella fase di lancio: da questo punto la priorità non è ampliare il prodotto ma portarlo sul mercato, ottenere professionisti esterni reali e misurare l'uso.
-
-### Freeze fino alla beta
-- Nessuna nuova macro-feature prima della beta, salvo bug, sicurezza, requisiti legali o blocchi reali al lancio.
-- Facility/team e altre estensioni strutturali restano successive alla validazione MVP.
-- L'infrastruttura pubblica resta su servizi cloud già operativi; il desktop personale non diventa il server pubblico dell'MVP.
-
-### Brand MVP
-- Identità principale provvisoria: binomio persona-cane al lavoro.
-- Compact mark/favicon: monogramma PC con cane integrato.
-- Sigillo separato: Albo d'Oro.
-- Il branding viene considerato sufficiente per l'MVP e sarà rifinito prima del lancio nazionale quando esisteranno dati e utenti reali.
-
-### Business MVP
-- Proprietari: accesso gratuito.
-- Professionisti: accesso gratuito durante la beta.
-- Nessun pay-to-rank.
-- Nessun pagamento della prestazione gestito da PortaleCinofilo durante la beta.
-- La monetizzazione futura deve privilegiare strumenti professionali/SaaS, non l'acquisto di visibilità meritocratica.
-
-### Legal/privacy MVP
-- Gestione attuale come persona fisica.
-- Privacy, cookie, termini utenti, termini professionisti e spiegazione del ranking devono essere accessibili pubblicamente.
-- Nessun tracking pubblicitario o profilazione nella beta.
-- I documenti professionali privati non diventano pubblici per default.
-- L'Albo d'Oro è una classificazione editoriale PortaleCinofilo, non un titolo ENCI/FCI o pubblico.
-
-### Prossimo obiettivo operativo
-Costruire la prima supply reale:
-**50 professionisti identificati → 20 contattati → 10 conversazioni → primi 5 professionisti esterni onboarded.**
-
-<!-- sport-search-and-working-dog-v1 -->
-
-## 35. Ricerca professionisti: due percorsi distinti — DECIDED / NOW
-
-PortaleCinofilo deve offrire due ingressi leggibili e separati:
-
-1. **Gestione del cane**: aiuto quotidiano al binomio, educazione, convivenza,
-   prevenzione dei problemi, puppy/adolescenza e accompagnamento del proprietario.
-2. **Sport cinofili**: preparazione e pratica di una disciplina scelta, con
-   risultati, livelli, gare e competenze riferiti soltanto a quella disciplina.
-
-Nel pannello professionista ci sono due selettori indipendenti: **Mostrami
-nella sezione Gestione del cane** e **Mostrami nella sezione Sport cinofili**.
-Il modello tecnico li conserva come booleani `show_companion` e `show_sport`;
-non presenta una scelta combinata né l'etichetta “Entrambi”. I profili
-professionali già approvati partono con entrambi i selettori attivi, così
-nessuno scompare dalla ricerca senza una scelta esplicita.
-
-**Gestione del cane** è il percorso normale e diretto per chi cerca aiuto
-quotidiano: usa servizio, contesto, zona, disponibilità, esperienza dichiarata
-e credenziali verificabili. La sezione **Sport cinofili** è un'area autonoma,
-riconoscibile nel menu e nella Home. Solo chi vi entra volontariamente sceglie
-una disciplina; la ricerca sportiva mostra professionisti con `show_sport`
-attivo che offrono quella disciplina. Nel percorso normale non appare una
-domanda Gestione/Sport, un filtro sportivo o un passaggio aggiuntivo: ricerca
-e prenotazione restano dirette. Una competenza IGP non aumenta la posizione
-in Obedience, Agility o altre discipline. Follower, prezzo pagato e
-sponsorizzazione non sono proxy di competenza.
-
-## 36. Catalogo sport e badge per disciplina — DECIDED / NEXT
-
-Il catalogo delle discipline è un registro versionato e riconciliabile con le
-fonti dei risultati, non una lista copiata a mano dentro ogni card frontend.
-Ogni voce conserva identificativo del provider, etichetta canonica, alias,
-stato attivo, fonte e versione. Il frontend può quindi aggiungere una nuova
-disciplina senza una modifica separata per ogni pagina.
-
-Ogni disciplina possiede la propria configurazione di merito: livelli validi,
-campi obbligatori, pesi di piazzamento/evento, fattore di recenza, bonus per
-cani distinti, regole di badge e fonti alternative. La configurazione è
-versionata e revisionabile.
-
-Il collegamento a Working-Dog avvia la verifica; non assegna da solo un badge.
-Il server deve verificare identità del professionista, disciplina, cane,
-evento, data, livello e risultato prima di pubblicare un merito. Per esempio,
-se l’identità di Valentina Balli è verificata e il risultato Obedience supera
-le regole configurate, il profilo può mostrare **Oro · OBEDIENCE**. Il testo è
-un esempio di comportamento del prodotto: non è una dichiarazione sul suo
-risultato reale finché la verifica non è completata.
-
-Una disciplina senza livelli comparabili mostra risultati verificati e fonte,
-ma non inventa un medaglione. Badge e risultati restano sempre associati alla
-coppia `(professionista, disciplina)`.
-
-## 37. Verifica e ranking automatico — DECIDED / NEXT
-
-Il collegamento crea una richiesta di verifica asincrona. Un worker server:
-
-- scarica la pagina o risposta del provider senza fidarsi dei dati inseriti nel
-  browser e salva URL, timestamp e fingerprint della fonte;
-- riconcilia l'identità con segnali verificabili e normalizza la disciplina
-  tramite il catalogo versionato;
-- richiede i campi obbligatori della disciplina (per esempio livello, evento,
-  data, cane e piazzamento) e rifiuta claim incompleti, duplicati o riferiti a
-  un altro cane;
-- calcola il merito solo per risultati verificati. Fonte irraggiungibile,
-  identità ambigua o dati discordanti restano `pending_review` e non diventano
-  badge pubblici;
-- conserva configurazione, versione dell'algoritmo, fingerprint, data del
-  controllo e motivo di eventuale revisione.
-
-Per ogni disciplina `D` e risultato verificato `r`:
-
-```text
-result_score(D, r) =
-  level_weight(D, r)
-  × placement_weight(D, r)
-  × event_weight(D, r)
-  × verification_weight(r)
-  × recency_factor(D, r)
-
-discipline_score(P, D) = cap(
-  sum(result_score(D, r))
-  + distinct_dog_bonus(D, P)
-  + consistency_bonus(D, P)
-)
-```
-
-`badge_tier(D, discipline_score)` usa soglie e pesi della sola disciplina
-`D`. Non esiste un punteggio globale che sommi IGP, Obedience, Agility e altre
-discipline, e un risultato di una disciplina non può gonfiare il badge di
-un'altra. A parità si ordinano, nell'ordine, tier verificato, cani distinti,
-numero di risultati verificati e data dell'ultima verifica. Follower,
-recensioni non comparabili e pagamento non sono spareggi.
-
-## 38. Superficie sportiva e ordine di rilascio — DECIDED / NEXT
-
-La sezione Sport deve partire da un catalogo ricercabile con l'azione
-**Trova addestratore per disciplina**. Ogni disciplina ha una scheda con
-descrizione, alias, livelli, professionisti visibili, badge e risultati
-verificati, fonte e data dell'ultima verifica. La scheda deve spiegare perché
-un risultato è mostrato e distinguere sempre il percorso sportivo da quello
-di gestione quotidiana.
-
-Ordine vincolante:
-
-1. modellare catalogo e alias versionati;
-2. aggiungere i due selettori indipendenti `show_companion` e `show_sport`;
-3. costruire il verifier Working-Dog provider-aware;
-4. configurare le regole per disciplina, iniziando da IGP e Obedience senza
-   trasformarle in regole hardcoded del frontend;
-5. collegare ricerca, filtri, card e pagina disciplina;
-6. aggiungere ranking, audit e revisione dei casi ambigui;
-7. provare il flusso con professionisti reali prima di ampliare il catalogo.
-
-Questa decisione sostituisce l'ordine generale precedente `IGP > Obedience >
-Agility`: le discipline sono parallele e ciascuna ha il proprio significato.
-
-## 39. Criteri di accettazione
-
-- Un professionista può scegliere una sola sezione o entrambe; la scelta
-  cambia realmente i risultati delle due ricerche.
-- Un risultato IGP non cambia il punteggio Obedience e viceversa.
-- L'esempio **Oro · OBEDIENCE** compare solo dopo identità e risultato
-  verificati, con disciplina e fonte visibili.
-- Una nuova disciplina del provider può essere importata nel catalogo senza
-  riscrivere ogni card o filtro del frontend.
-- Fonte non raggiungibile, identità ambigua, cane errato o risultato duplicato
-  restano in attesa/revisione e non producono un badge pubblico.
-- Nessun follower, recensione non comparabile o pagamento modifica il merito.
-- Il client non può auto-dichiararsi verificato né scrivere tier, ranking,
-  risultati o configurazioni; RLS e RPC devono imporre questa separazione.
-- Ogni badge pubblico espone disciplina, livello, fonte, data del controllo e
-  stato di verifica; il profilo conserva l'audit necessario alla rettifica.
-
-
-
-<!-- sport-search-owner-ux-v2 -->
-
-### Regola di semplicità per il proprietario
-
-La Home e il menu rendono riconoscibili due destinazioni: **Trova aiuto per il cane**
-e **Sport cinofili**. Il primo è il percorso principale: apre subito la ricerca
-normale e non chiede di scegliere tra gestione e sport. Sport è un ingresso
-autonomo e facoltativo; soltanto lì compaiono disciplina e risultati sportivi.
-Il proprietario non deve fare un passaggio aggiuntivo per contattare o prenotare
-un professionista nel percorso normale. Nel pannello professionista, invece,
-due selettori indipendenti decidono in quali elenchi comparire.
-
-## 40. Home e stile: indicazioni vincolanti — 29 settembre 2026
-
-Luigi ha approvato i pulsanti superiori, poi richiesto di unificare Servizi e
-Trova aiuto per il cane. La navigazione principale contiene solo **Trova aiuto
-per il cane** (verde, `/search?type=trainer`), **Impara** e **Sport cinofili**.
-Account e ingresso professionisti restano nelle utilità del menu.
-Nessuna scelta preliminare tra quotidiano e sport per il normale proprietario.
-
-La Home deve essere visivamente moderna e legata al cane e all’addestramento:
-immagini pertinenti, brevi video o animazioni, gerarchia tipografica forte e
-movimento leggero. Media compressi, caricamento del video su richiesta, pausa
-del movimento e rispetto di prefers-reduced-motion. Distinguere una scena
-illustrativa dalle riprese e dalle testimonianze di persone reali.
-
-Non aggiungere sezioni che ripetano il menu: niente modulo ricerca in Home,
-tendina Servizi, elenco dei servizi quotidiani o riquadro promozionale
-professionisti. Evitare Evidence layer e statistiche interposte agli ingressi.
-Prima del cane può mantenere un solo richiamo perché non duplica il menu.
-L’anteprima dello shaping è un esempio facoltativo collegato alla lezione
-esistente, non un passaggio necessario per cercare un professionista.
-Specifica e stato: [HOME_NAVIGATION_V2.md](HOME_NAVIGATION_V2.md).
+# PortaleCinofilo — direttive di prodotto in vigore
+
+Consolidamento del 9 ottobre 2026. Fonte delle decisioni: indicazioni di Luigi
+e documenti versionati fino a `fd619e4`. Questo testo sostituisce i checkpoint
+contraddittori del precedente documento, recuperabili in [PROJECT_HISTORY](PROJECT_HISTORY.md).
+Stato effettivo in [CURRENT_STATE](CURRENT_STATE.md), ordine di lavoro in
+[EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md). Una direttiva approvata
+rimane tale finché non viene modificata, implementata o esplicitamente scartata.
+
+## Missione e persone a cui serviamo
+
+Rendere la cultura cinofila seria comprensibile e accessibile gratuitamente;
+aiutare la persona a conoscere il cane, scegliere consapevolmente e costruire
+una relazione sana con il supporto di professionisti. La prenotazione è una
+funzione del percorso, non l'intera identità del prodotto.
+
+Il cane è un individuo: razza, gruppo FCI e funzione storica aiutano a capire,
+non determinano automaticamente il comportamento. Impara e il questionario
+orientano l'osservazione, non producono diagnosi o il «cane perfetto».
+Il professionista aggiunge esperienza, contesto e continuità sul binomio.
+
+Proprietari già con il cane, persone che valutano di prenderlo, praticanti
+sportivi e professionisti devono riconoscere subito la propria azione utile.
+L'obiettivo economico è sostenere il servizio, conservando formazione di base
+e accesso dei proprietari gratuiti; strumenti/servizi B2B facoltativi sono da validare.
+
+## Quattro aree pubbliche, senza un passaggio preliminare
+
+| Area | Comportamento deciso |
+| --- | --- |
+| **Trova aiuto per il cane** | Pulsante verde, ricerca diretta degli addestratori; soli box Addestratori/Pensioni |
+| **Impara** | Gratuito, pubblico, utile anche prima di prendere un cane |
+| **Sport cinofili** | Ingresso separato e ricerca per disciplina; nessuna scelta sportiva imposta al normale proprietario |
+| **Esposizioni** | Toelettatura e Handler; la toelettatura resta accessibile anche senza gare |
+
+Accesso, area personale e ingresso professionisti sono funzioni separate.
+Non ricreare il duplicato «Servizi» né box generici che reintroducano pet sitting,
+passeggiate o le categorie escluse. Le pensioni sono supporto temporaneo.
+La scelta commerciale non diventa un messaggio pubblico contro altri servizi.
+Conservare account, prenotazioni e storico delle categorie ritirate.
+
+La Home usa l'immagine **statica** del portale/cane. La precedente animazione
+della porta e la sostituzione definitiva della home con la ricerca sono superate.
+Percorso suggerito, mai forzato: scelta del cane → Impara → consulenza per scegliere
+insieme → professionista nella propria zona. Chi ha già un cane va subito alla ricerca.
+Conservare il senso della frase «Conosci i suoi bisogni, scopri come impara e trova
+il professionista adatto a voi per vivere felici e sereni la vostra relazione».
+Evitare blocchi ripetitivi, slogan tecnici («Evidence layer»), menu duplicati e
+campi bianchi tutti nella stessa pagina. Desktop curato quanto mobile, CTA
+evidenti, focus/tastiera e movimento ridotto; effetti solo se aiutano l'uso.
+
+## Identità professionale, strutture e ricerca
+
+Visibilità quotidiana e sportiva sono selettori indipendenti: nessuna opzione
+autonoma «Entrambi». Attività miste e servizi devono corrispondere alle ricerche
+effettive; una categoria scelta non è una qualifica.
+
+Scheda confrontabile: foto/logo, nome e ruolo, zona e stato, bio breve, esperienza
+e ambiti; prezzo/distanza/recensioni come informazioni pratiche, CTA al profilo.
+Filtri comprensibili, chip rimovibili, reset, stati vuoti onesti. Nessun risultato
+fittizio o fuori categoria presentato come pertinente. Identità visiva pubblica
+modificabile dal titolare; documenti di prova restano privati.
+
+Esperienza personale calcolata dall'anno di inizio, distinta dalla verifica
+documentale. Anzianità della struttura calcolata dalla sua apertura: non eredita
+anni, rating, qualifiche o merito del fondatore. Filtri 0+/10+/20+ ne esplicitano
+il significato; assenza del dato non abilita filtri di esperienza elevata.
+Nome individuale e campi organizzativi sono contestuali. Il team deve riflettere
+le persone attive, con appartenenza e assegnazioni verificabili: non è tutto già implementato.
+
+Evidenze strutturate: qualifiche, corsi, seminari, prove/brevetti e risultati con
+ente, data, disciplina, documento o fonte, stato e scadenza quando pertinente.
+Dichiarato, in verifica, verificato, rifiutato e revocato non sono equivalenti.
+L'utente non scrive il proprio stato verificato. Foto, follower, quantità di
+corsi e recensioni non certificano competenza. La formazione continua e le
+letture di approfondimento non diventano una classifica per quantità.
+
+## Apprendimento e scelta del cane
+
+Impara resta un percorso con letture, attività e verifica significativa, non
+solo articoli. Le basi includono bisogni, riposo, sicurezza, comunicazione,
+condizionamento classico/operante, marker, shaping e convivenza. Il laboratorio
+del cane sulla piattaforma è semplice ed esemplificativo, non una prova professionale.
+
+Il progresso locale esistente non è una credenziale. Direzione futura:
+Stage → Modulo → Lezione → Attività → Verifica → Completamento, con stati chiari
+e possibili verifiche pratiche. Materiali originali, fonti e revisione dei temi
+controversi; non riprodurre libri, dispense o immagini protette. Sport avanzato
+e uso specialistico degli strumenti non vanno confusi con le basi per proprietari.
+
+Il questionario pre-cane considera tempo, ambiente, famiglia, routine, budget,
+aspettative e funzioni selezionate. Risultati/risposte possono diventare contesto
+condivisibile con il professionista solo per scelta esplicita e revocabile.
+Questa condivisione persistente non va presunta già completa.
+
+Resta richiesta la spiegazione degli addestratori ENCI: sezione 1 compagnia/utilità,
+sezione 2 conduzione del bestiame, sezione 3 caccia, insieme alla distinzione
+dell'handler da esposizione. Quando affrontata, verificare denominazioni e
+requisiti sulle fonti ufficiali aggiornate; non attribuire qualifiche per categoria.
+Un eventuale catalogo dei corsi ENCI deve usare riferimenti leciti/aggiornati,
+fonte, date e stato, senza simulare accreditamento o copiare materiale riservato.
+
+## Continuità, media ed export
+
+L'autore conserva l'archivio del proprio lavoro; il nuovo professionista vede
+solo i contributi autorizzati. Proprietario, autore e destinatario hanno ambiti
+distinti. Una prenotazione non concede l'intero storico; una nuova relazione
+non modifica i contributi precedenti. Note private separate dalle selezioni
+condivise, revisioni attribuite e motivi, revoca/scadenza e permessi di download.
+La condivisione non include automaticamente ogni dato futuro.
+
+L'export disponibile riguarda il perimetro autorizzato e dichiara le omissioni;
+HTML stampabile in PDF e JSON non equivalgono a un archivio di tutti i media.
+Foto/audio/video delle sessioni, quote e compressione sono ancora da completare.
+Qualità utile per postura, movimento e suono, bucket privati, controllo di accesso
+anche alla consegna, politiche esplicite per originali/varianti/cancellazione.
+Nessun consenso implicito a trascrizioni, analisi AI o conservazione perpetua.
+Una revoca ferma accessi futuri, non richiama file già scaricati.
+
+## Valutazioni dopo servizi effettivamente conclusi
+
+Regole correnti: [SERVICE_REVIEWS_V1](SERVICE_REVIEWS_V1.md). Scala 1–5 e commento
+facoltativo entro 500 caratteri. Per lo stesso cliente e addestratore individuale,
+dal secondo servizio concluso anche se diverso: cliente valuta l'attività e
+addestratore lascia un voto al cliente, visibile soltanto ai due. Pensione dal
+primo soggiorno, solo cliente → struttura. Nessun punteggio pubblico dei proprietari.
+
+Completamento effettivo e fine prevista trascorsa; il solo orario, l'acquisto di
+un pacchetto o un annullamento non contano. Richieste nell'account, nessun invio
+esterno. Una recensione corrente per rapporto/tipo, aggiornamento volontario
+dopo una nuova esperienza; rettifica entro sette giorni senza prolungamento.
+Nessun sollecito arretrato automatico. Centri: reciprocità sospesa finché non
+si identifica il singolo istruttore. Recensioni non assegnano qualifiche o medaglie.
+Moderazione estesa/pubblicazione cieca non sono promesse implementate.
+
+## Sport, Working-Dog e merito
+
+Badge e ranking separati per disciplina, mai una gerarchia universale
+IGP > Obedience > Agility. Il collegamento di un URL non equivale a verifica.
+Confermare lato server identità, cane, disciplina, livello, evento/data/risultato
+richiesti; fonte, metodo, versione e data del controllo devono restare tracciabili.
+Fonte assente, accesso bloccato o dati ambigui non generano badge verificati.
+
+Catalogo e alias versionati; criteri bronzo/argento/oro specifici e spiegabili.
+IGP e Obedience hanno basi di calcolo e parser documentati, ma fixture locali
+non provano il provider reale. Nessuna promessa di copertura già completa di
+tutte le discipline Working-Dog. Se una disciplina non consente livelli
+comparabili, mostrare risultati e fonte senza inventare medaglie.
+Merito personale non trasferito automaticamente a struttura/team. La verifica
+deve decadere/revisionarsi quando cambia l'evidenza; client e pagamento non
+scrivono tier, ranking o stato. Nessun pay-to-rank o attestato ufficiale simulato.
+
+## Social, ricavi, mercati e rete futura
+
+Concept approvato e canali in [FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
+Tre post riportati, performance da leggere; Higgsfield futuro con cani/proprietari
+che attraversano il portale, metafora del percorso e non soluzione istantanea.
+La mascotte ispirata a Kyros richiede riferimenti e una scelta stilistica futura.
+Nessuna animazione della home dedotta dalla campagna video.
+
+Lancio italiano con costi contenuti e funzioni realmente utilizzabili. Evitare
+«beta/MVP» come etichetta commerciale, mantenendo trasparenza su rete e limiti.
+Email-only, niente nuovo costo SMS automatico. Ricavi da testare con servizi
+professionali facoltativi, formazione avanzata/pratica, partnership o altri
+modelli coerenti; pubblicità non è reddito garantito. Nessuna vendita di dati
+privati, merito o posizioni. Prezzi, incassi e società non risultano attivati
+da queste direttive. Prima di outreach, spese o fondi verificare requisiti e
+basi applicabili; cambiare dominio/mittente non risolve automaticamente i vincoli.
+
+Internazionalizzazione aperta: stesso prodotto multilingue, siti nazionali o
+ibrido da confrontare su domanda/offerta/costi. Proposta corrente: una piattaforma,
+Italia prima, confronto di due mercati e prova di uno. PawConnect è candidato,
+non dominio/marchio deciso o verificato. Nessun acquisto automatico di home server;
+prima diagnosticare il downtime e confrontare costo operativo/recupero.
+
+Orizzonte richiesto: centro e possibile allevamento, modello di centri ufficiali,
+franchising e componente immobiliare anche internazionale. Fasi successive a
+utilizzo, sostenibilità e replicabilità verificati, non rete o rendita già esistenti.
+Fonti di finanziamento e prezzi nei documenti economici sono datati: aggiornarli
+prima di decisioni, tenendo documenti personali fuori dal repository pubblico.
+
+## Backlog preservato, non attivato da questo consolidamento
+
+| Dominio | Direzione / riferimento |
+| --- | --- |
+| Learning futuro | Progressi account, attività pratiche, credenziali con provenienza; [Learning Core](LEARNING_CREDENTIAL_CORE.md); nessuna equivalenza automatica con ENCI |
+| Persona–cane e team | Relazioni esplicite, ruoli, storia, appartenenze; [relazioni](PERSON_DOG_RELATIONSHIPS.md); no tabella cane universale |
+| Formazione professionale | Timeline, letture/riferimenti, ENCI e catalogo corsi da verificare; credenziali distinte per fonte |
+| Strumenti rimossi | Tessere e campagne da valutare/ripristinare solo con persistenza, permessi e bisogno concreto; pacchetti e abbonamenti già presenti |
+| Sport avanzato | Catalogo/provider estesi, carriera binomio, prove, eventi e risultati verificabili |
+| Editoriale | Magazine con autore, fonti, paese, categoria e aggiornamenti; ebook originale di gestione collegato a Impara |
+| Ricerca | Consenso, dataset derivati/pseudonimizzati, accesso per progetto; mai apertura del database operativo |
+| Commercio | Formazione pratica, servizi/SaaS facoltativi, eventi, e-store e merchandise da validare; niente incassi automatici impliciti |
+| Paesi e rete fisica | Configurazione locale di un Core globale, eventuali centri/franchising/immobiliare dopo prova del modello |
+
+I dettagli architetturali rimangono in [Blueprint](PAWCONNECT_CORE_BLUEPRINT.md)
+e [Core Data Model](PAWCONNECT_CORE_DATA_MODEL.md). Questo riordino non autorizza
+a implementare tutte le tabelle o a riattivare piani superati. Ogni incremento
+deve migliorare un compito concreto, rispettare privacy/provenienza e restare
+semplice da usare.

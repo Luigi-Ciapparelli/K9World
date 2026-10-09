@@ -1,147 +1,54 @@
-# Area professionista — richieste operative del 13 settembre 2026
+# Strumenti professionali — mappa e lavoro residuo
 
-## Export disponibile nel prossimo rilascio — 8 ottobre 2026
+Consolidato il 9 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
+[CURRENT_STATE](CURRENT_STATE.md); l'ordine è in
+[EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md).
 
-Storico autorizzato, archivio privato dell’autore e selezioni ricevute esportabili
-con [EXP-01](DOG_HISTORY_EXPORT_V1.md). Implementazione e test locali completati;
-rilascio da applicare. Media delle sessioni e nuove recensioni restano successivi.
+## Già presenti nel repository
 
-## Ricerca ed Esposizioni implementate — 8 ottobre 2026
+| Strumento | Punto di ingresso / specifica |
+| --- | --- |
+| Profilo guidato e servizi per attività | `/pro/settings`; [workspace](PROFESSIONAL_GUIDED_WORKSPACE_V1.md), [catalogo/Esposizioni](EXHIBITIONS_RELEASE_V1.md) |
+| Richieste, nome e note del cliente | `/pro/bookings`, dashboard; [lettura prenotazioni](PROFESSIONAL_BOOKING_READ.md) |
+| Calendario, colori, pause e indisponibilità | `/pro/calendar`; [specifica](PROFESSIONAL_CALENDAR_V1.md) |
+| Messaggi, inbox e modelli | Prenotazione/dashboard/impostazioni; [specifica](BOOKING_MESSAGES_V1.md) |
+| CRM autorizzato | `/pro/crm`; accesso ai clienti pertinenti |
+| Relazioni, sessioni, note e revisioni | `/pro/archive`; [continuità](CONTINUITY_UI_V1.md) |
+| Condivisione selettiva e archivio scaricabile | Relazione/storico ricevuto; [sharing](CONTINUITY_SHARING_V1.md), [export](DOG_HISTORY_EXPORT_V1.md) |
+| Pacchetti | `/pro/passes`; [specifica](PROFESSIONAL_PASSES_V1.md) |
+| Abbonamenti | `/pro/subscriptions`; [specifica](PROFESSIONAL_SUBSCRIPTIONS_V1.md) |
+| Valutazioni | Dashboard e «Le vostre esperienze»; [specifica](SERVICE_REVIEWS_V1.md) |
+| Statistiche | `/pro/analytics`; leggere il codice prima di promettere metriche ulteriori |
 
-NAV-01/PRO-01 preparati sulla base remota `85cd0a7`: ricerca quotidiana con soli
-Addestratori/Pensioni; Esposizioni con Toelettatura/Handler; attività e anteprima
-della visibilità integrate nel profilo guidato. I dati precedenti sono conservati.
-Leggere [EXHIBITIONS_RELEASE_V1.md](EXHIBITIONS_RELEASE_V1.md) per mappatura,
-contratti API, verifiche e rilascio coordinato con la nuova migration
-`20261008120000_exhibitions_and_service_catalog.sql`.
+## Chiarimenti che evitano diagnosi errate
 
-I controlli qui documentati sono locali con dati sintetici; non attestano un
-nuovo deployment Ready o lo stato del database online. L'installer con --publish
-esegue i controlli nativi e pubblica dal repository WSL dell'utente.
-Questa istruzione di esecuzione supera il precedente limite «solo documenti»
-per questo incremento. Export e nuove recensioni restano successivi; la ZIP
-indicata dall'utente non è stata letta.
+Una richiesta accettata è un appuntamento; non attiva automaticamente una
+relazione di continuità. L'invito proprietario e l'accettazione del professionista
+rendono attiva la relazione; da lì si registrano sessioni. Il flag di continuità
+deve essere attivo nel build. Gli account admin e professionista non sostituiscono
+l'area proprietario per inviare l'invito per un cane.
 
-## Indice del prossimo lavoro — 8 ottobre 2026
+Note del richiedente, conversazioni, appunti CRM e revisioni professionali sono
+oggetti distinti. Non allargare i permessi di uno per risolvere la visibilità
+di un altro. I modelli di risposta non sono un'integrazione WhatsApp.
 
-Riferimento: [EXECUTION_PRIORITIES_2026_10.md](EXECUTION_PRIORITIES_2026_10.md).
-Prossimo incremento proposto: NAV-01/PRO-01, tassonomia della ricerca ed Esposizioni
-con adeguamento del profilo guidato esistente. Seguono EXP-01 (storico autorizzato)
-e REV-01 (valutazioni, dopo le decisioni ancora aperte).
+I pacchetti/abbonamenti gestiscono prestazioni e periodi, non incassi automatici.
+Calendario, messaggi e abbonamenti non sono ancora «da ripristinare» perché
+una lista di settembre usava quell'espressione.
 
-Calendario, indisponibilità, messaggi, pacchetti e abbonamenti hanno già ricevuto
-incrementi descritti più sotto: non sono automaticamente da ricostruire. Le voci
-originarie di settembre restano storico, non elenco corrente dei mancanti.
-Per un difetto reale controllare codice, ultimo rilascio e caso segnalato prima
-di modificare. Questa revisione non aggiunge strumenti né ne certifica l'uso online.
+## Da completare
 
-## Nuovi requisiti da progettare — 8 ottobre 2026
+- **MEDIA-01:** allegati delle sessioni privati, compressione e quote, conservazione,
+  condivisione e download; non basta la foto profilo del cane già esistente.
+- **TEAM-01:** professionisti nel centro e istruttore assegnato al servizio;
+  poi valutazioni reciproche senza sommare istruttori diversi.
+- **SPORT-02:** identità/fonte reale e merito per disciplina, senza auto-verifiche.
+- **Tessere e campagne:** vecchi strumenti rimossi, non dichiarati ripristinati.
+  Valutare il problema reale prima di riportarli nella navigazione; campagne
+  richiedono destinatari, autorizzazioni e canali espliciti.
+- **Letture/riferimenti e ulteriori percorsi formativi:** requisiti di prodotto
+  da confrontare con il codice quando affrontati; nessun badge per quantità di libri.
 
-Riferimento prioritario:
-[FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
-Documentare per il prossimo sviluppo: ricollocazione delle attività nelle aree
-Addestratori/Pensioni, Sport ed Esposizioni; download dello storico autorizzato;
-rating reciproci cliente–addestratore dal secondo servizio concluso con la
-stessa persona, anche per servizi diversi. Per le pensioni recensioni soltanto
-dal cliente alla struttura. Non contare acquisti, annullamenti o semplici
-prenotazioni scadute come prestazioni svolte. Le modalità aperte sono elencate
-nella specifica e non vanno presunte implementate. Nessuna esecuzione ora.
-
-## Ingresso professionisti e prima beta accompagnata — 29 settembre 2026
-
-Base remota riletta: `0d113db` (`main`), dopo `2cfc932` (SEO) e
-`5bfe88b` (profilo guidato). Luigi conferma Search Console verificata e sitemap
-inserita. Home, ricerca, profilo e ingresso professionisti osservati online.
-Questo supera gli stati di pubblicazione ancora incerti nei checkpoint storici.
-
-Corretto nell'incremento corrente l'ingresso diretto che assegnava `walker`
-senza scelta; attività obbligatoria, modulo accessibile, stato approvazione
-in panoramica e pagina professionisti allineata alle funzioni presenti.
-TypeScript, build e test browser isolati superati. Nessuna migration.
-Dettagli, prove reali ancora da completare e piano d'invito:
-[PILOT_READINESS_V1.md](PILOT_READINESS_V1.md).
-Bozze: [PILOT_INVITATIONS.md](PILOT_INVITATIONS.md).
-Questo incremento resta da applicare/pubblicare; nessun invito inviato.
-
-## Profilo e strumenti professionali guidati — 29 settembre 2026
-
-Base corrente GitHub: `b512eb9`, comprensiva della Home con media richiesta da Luigi.
-Nuovo incremento frontend: **Profilo guidato**, quattro attività di base con
-progressi sui dati salvati, schermate separate, servizi e attestati in tre passi,
-guide dentro gli strumenti, menu raggruppato e protezione delle bozze.
-Specifica e limiti: [PROFESSIONAL_GUIDED_WORKSPACE_V1.md](PROFESSIONAL_GUIDED_WORKSPACE_V1.md).
-TypeScript, build e prove browser con API simulate superati. Nessuna migration.
-Codice pronto da applicare/pubblicare; commit remoto e Vercel Ready di questo
-incremento non ancora osservati. I checkpoint sottostanti restano storici.
-
-## Correzione pronta nel codice
-
-Mostrare bookings.notes anche sulle richieste in attesa della dashboard, prima
-dei pulsanti Accetta/Rifiuta. La pagina Richieste gia mostra questo campo.
-Nessuna nuova query, API o modifica dei permessi. Se il messaggio manca anche
-in Richieste, verificare la richiesta specifica e la versione del frontend.
-
-## Richieste originarie del 13 settembre — storico, superato dagli incrementi successivi
-
-- Calendario degli impegni, con colori distinguibili per servizio/categoria:
-  pensione, addestramento, corso ENCI e gli altri servizi offerti.
-- Scelta del colore durante creazione/modifica servizio. Mostrare anche nome
-  servizio e stato, senza affidare la comprensione al solo colore.
-- Risposte del professionista sulla prenotazione: messaggio personalizzato e
-  modelli riutilizzabili, incluso invito a contattare il proprio WhatsApp.
-  Invio automatico vero, eventi di invio e canale richiedono una scelta esplicita;
-  non presumere una integrazione WhatsApp attiva o inviare messaggi da tool.
-- Possibilita di mettersi inattivo e impostare un periodo di indisponibilita.
-  Distinguere inattivita volontaria da approvazione/verifica amministrativa.
-  Bloccare lato server nuove prenotazioni incompatibili e mostrare il periodo;
-  non cancellare automaticamente appuntamenti gia accettati.
-
-Ordine di lavoro storico del 13 settembre: visibilita note; calendario e colori insieme a indisponibilita;
-risposte e modelli. Sono requisiti di sviluppo, non funzioni gia rilasciate.
-Servono API per dettagli servizio e durata appuntamenti: l'attuale proiezione
-get_professional_bookings non restituisce end_at e identificativo servizio.
-Progettare e testare le estensioni prima di applicare nuove migration.
-
-## Chiarimento continuita
-
-Registra sessione compare in Relazioni e archivio per una relazione active.
-Accettare una prenotazione non equivale ad accettare un invito a seguire il cane.
-Il proprietario invia l'invito dal profilo pubblico; il professionista lo accetta
-in Relazioni e archivio. La UI richiede il flag di continuita attivo nel frontend.
-Il backend di continuita risulta applicato dall'output utente (migration
-20260913121224). Restano da verificare nel browser sessioni e revisioni.
-
-<!-- professional-calendar-v1 -->
-## Calendario professionale e indisponibilità
-
-Implementazione e rilascio: `docs/PROFESSIONAL_CALENDAR_V1.md`. Include colori per servizio, impegni con nome e note, pausa e assenze con termine. Preparazione locale: verificare e applicare la nuova migration prima del frontend. Le risposte ai clienti e i modelli di messaggio restano il prossimo incremento.
-
-<!-- booking-messages-v1 -->
-## Messaggi delle prenotazioni e risposte professionali
-
-Incremento successivo al calendario `a712352`: conversazioni fra i partecipanti, messaggi da leggere nelle dashboard, modelli privati e risposte automatiche facoltative. Riferimento: `docs/BOOKING_MESSAGES_V1.md`. Preparazione locale: applicare la nuova migration dopo i test e prima del frontend. Non dichiarare il rilascio concluso senza registrarne l’esito. La continuità condivisa e i media compressi restano nel percorso dedicato.
-
-<!-- continuity-sharing-v1 -->
-## Continuità condivisa fra professionisti
-
-Revisioni scelte dall’autore e concessioni del proprietario a destinatari specifici, con durata e revoca. Riferimento: `docs/CONTINUITY_SHARING_V1.md`. PostgreSQL nativo: regressioni e sette casi concorrenti superati dall’utente il 14 settembre 2026. Incremento preparato localmente; applicare la nuova migrazione prima del frontend e registrare l’esito del rilascio. Archivio originale conservato; media e compressione restano nel passo successivo.
-
-
-## Ripristino strumenti: pacchetti di lezioni — 27 settembre 2026
-
-Primo incremento completo: modelli, assegnazioni, lezioni residue, scadenze,
-storico, storni e vista proprietario. Specifica e stato verifiche:
-[PROFESSIONAL_PASSES_V1.md](PROFESSIONAL_PASSES_V1.md).
-Preparato localmente su base `db2e010`; nuova migration da testare nel WSL
-e applicare prima del frontend. Nessuna pubblicazione online attestata qui.
-Abbonamenti, tessere e campagne rimangono i prossimi strumenti da ripristinare.
-
-<!-- professional-subscriptions-v1 -->
-## Abbonamenti professionali — 28 settembre 2026
-
-Nuovo incremento: piani settimanali, quindicinali o mensili, primo periodo,
-rinnovi confermati, lezioni e storni per periodo, chiusura, annullamento e vista
-proprietario. Specifica, limiti e rilascio: `docs/PROFESSIONAL_SUBSCRIPTIONS_V1.md`.
-Base verificata: `f7d94f4`. Preparato e testato in ambiente isolato; migrazione
-`20260928120000_professional_subscriptions.sql` da applicare prima del frontend.
-Nessun pagamento automatico. Non dichiarare online finché non è confermato.
+Ogni incremento mantiene la procedura guidata, schermate separate, campi
+contestuali e avanzamento basato sui dati salvati. Non reintrodurre un modulo
+unico con decine di campi né pulsanti che promettono funzioni non operative.

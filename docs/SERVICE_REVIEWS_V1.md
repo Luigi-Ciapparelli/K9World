@@ -1,8 +1,9 @@
 # Valutazioni dopo i servizi — REV-01
 
-9 ottobre 2026. Base GitHub esaminata: `3ec87ad`, con lo storico scaricabile già
-nel repository remoto. Questo incremento prepara codice e migration; non
-attesta un deployment Vercel o una prova sul database online.
+Stato al 9 ottobre 2026: implementazione presente su GitHub in `fd619e4`.
+La preparazione/test usavano come base `3ec87ad`. Presenza sul remoto,
+applicazione Supabase e deployment Vercel restano evidenze distinte:
+vedere [CURRENT_STATE](CURRENT_STATE.md).
 
 ## Regole approvate da Luigi
 

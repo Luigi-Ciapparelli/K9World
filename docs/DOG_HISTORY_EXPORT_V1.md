@@ -1,9 +1,9 @@
 # Storico del cane scaricabile — EXP-01
 
-Stato: implementato e verificato localmente l'8 ottobre 2026 sulla base GitHub
-`7f11610` (ricerca ed Esposizioni già sul ramo remoto). Rilascio di questo
-incremento da eseguire dal repository WSL di Luigi. Nessuna prova o modifica
-al database online effettuata durante la preparazione.
+Stato al 9 ottobre 2026: implementazione presente su GitHub in `3ec87ad`.
+La preparazione/test dell'8 ottobre usavano come base `7f11610`.
+Stato online distinto in [CURRENT_STATE](CURRENT_STATE.md); non rieseguire
+il rilascio soltanto perché queste istruzioni ne descrivono la procedura.
 
 ## Dove si trova
 
@@ -113,7 +113,6 @@ controllo migration previsto, commit locale, db push e push GitHub. Nessun force
 push, reset o cancellazione di lavoro estraneo. Richiede il precedente incremento
 ricerca/Esposizioni già nel repository. Vercel Ready resta da osservare dopo il push.
 
-L'implementazione EXP-01 supera il precedente stato solo documentale per questo
-incremento. REV-01 resta il prossimo blocco di prodotto, con le decisioni aperte
-elencate in EXECUTION_PRIORITIES_2026_10.md. Non attivare nuove recensioni, solleciti,
-SMS, spese o campagne durante questo rilascio.
+EXP-01 e il successivo REV-01 sono nel repository remoto; non sono lavori da
+iniziare. Restano media delle sessioni ed estensione delle valutazioni ai centri,
+con le dipendenze del piano operativo. Nessun invio esterno implicito.

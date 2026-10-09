@@ -1,17 +1,15 @@
 # PortaleCinofilo — prossime direttive di prodotto e comunicazione
 
-Decisioni richieste da Luigi il 7 ottobre 2026; registrate l'8 ottobre 2026.
-**Stato: direzione approvata, da progettare e implementare in un intervento successivo.**
+Decisioni richieste il 7 ottobre, consolidate il 9 ottobre 2026.
+Stato autorevole: [CURRENT_STATE](CURRENT_STATE.md). Ricerca/Esposizioni, export
+e valutazioni individuali/pensioni sono ora nel repository remoto; il concept
+Higgsfield resta futuro. Le specifiche dei singoli incrementi prevalgono sui
+formati o meccanismi originariamente proposti qui. Direzione generale in
+[PRODUCT_DIRECTION](PRODUCT_DIRECTION.md), ordine operativo in
+[EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md).
 
-Questo aggiornamento riguarda esclusivamente la documentazione su GitHub.
-Non autorizza ad avviare lo sviluppo, modificare database o configurazioni,
-generare video, acquistare crediti, inviare messaggi o pubblicare sui social.
-La ZIP caricata nella conversazione è esclusa dall'analisi, su richiesta di Luigi.
-
-Le decisioni qui riportate prevalgono sulle indicazioni precedenti in conflitto
-per categorie di ricerca, nuova area Esposizioni, esportazioni e recensioni.
-Il codice corrente e lo stato del rilascio vanno verificati separatamente:
-questa specifica non dimostra che le nuove funzioni siano disponibili.
+Questo aggiornamento documentale non produce video, non acquista crediti e non
+invia messaggi. La ZIP esclusa da Luigi rimane esclusa dall'analisi.
 
 ## 1. Riscontro sui primi contenuti e canali
 
@@ -127,7 +125,7 @@ di iscriversi a una gara per cercare quel servizio. Sport mantiene discipline,
 visibilità professionale e criteri di merito separati: non attribuire all'handler
 da esposizione un badge sportivo non pertinente.
 
-### Compatibilità da progettare prima di scrivere codice
+### Compatibilità da preservare
 
 Inventariare categorie, filtri, schede pubbliche, servizi professionali, pagine
 SEO, link esistenti e regole di ricerca. Pianificare la ricollocazione dei
@@ -135,9 +133,9 @@ profili di toelettatura e l'uscita dall'offerta delle categorie rimosse senza
 cancellare account, prenotazioni, messaggi o storico. I vecchi link devono avere
 un esito comprensibile; modificare soltanto i box visibili non basta.
 
-Restano da definire mappatura delle attività miste, pensione diurna rispetto a
-daycare e dati/prove delle competenze per gli handler. Questi dettagli non
-riaprono la decisione sui due soli box nella ricerca quotidiana.
+Mappatura delle attività miste, trattamento dei vecchi link e servizi sono
+ora definiti in [EXHIBITIONS_RELEASE_V1](EXHIBITIONS_RELEASE_V1.md).
+Le prove di competenza degli handler restano distinte dalla categoria di ricerca.
 
 ## 4. Tutto lo storico del cane deve essere scaricabile
 
@@ -176,12 +174,11 @@ e limiti di completezza, senza rivelare contenuto o metadati di materiale non
 autorizzato. Non inventare eventi mancanti e non trattare l'assenza di note come
 assenza di lavoro precedente.
 
-Proposta da definire tecnicamente: riepilogo leggibile in PDF e archivio ZIP con
-dati strutturati e allegati autorizzati. Formati, quote, durata del download e
-gestione dei grandi media non sono ancora approvati. Verificare i permessi lato
-server alla richiesta e alla consegna, gestire revoche durante la preparazione,
-registrare l'operazione e proteggere i file temporanei. Una revoca può bloccare
-nuovi download; non può richiamare una copia già scaricata.
+Prima implementazione: HTML stampabile in PDF e JSON, con foto del cane opzionale
+nel perimetro del proprietario; nessuna ZIP di audio/video. Limiti e verifiche
+alla consegna in [DOG_HISTORY_EXPORT_V1](DOG_HISTORY_EXPORT_V1.md).
+I futuri media devono rispettare gli stessi confini e permessi. Una revoca
+blocca nuovi download; non può richiamare una copia già scaricata.
 
 ## 5. Valutazioni dopo l'esperienza effettiva
 
@@ -189,7 +186,7 @@ nuovi download; non può richiamare una copia già scaricata.
 entro 500 caratteri, pensioni dal primo soggiorno concluso, voto sul cliente
 visibile solo a cliente e addestratore e richieste nell’account senza email/SMS.
 Implementazione e scelte operative in [SERVICE_REVIEWS_V1.md](SERVICE_REVIEWS_V1.md).
-Queste decisioni superano i corrispondenti punti aperti storici sottostanti.
+Queste decisioni sono vigenti; la precedente lista di scelte già risolte è rimossa.
 
 
 ### Addestratori: richiesta reciproca dal secondo servizio
@@ -206,10 +203,10 @@ sono diversi. La soglia riguarda la coppia cliente–addestratore, non il singol
 servizio, la categoria, il cane o il numero di acquisti di un pacchetto.
 
 Il passaggio dell'orario previsto è necessario ma non sufficiente a provare
-l'erogazione: la futura regola deve usare eventi effettivamente conclusi,
+l'erogazione: la regola usa eventi effettivamente conclusi,
 escludendo richieste in attesa, rifiutate, annullate e mancate presenze. Non
 sollecitare recensioni soltanto perché una prenotazione accettata ha un orario
-passato. Occorre definire il collegamento con lo stato di servizio concluso.
+passato. Il database richiede lo stato completed e la fine prevista già trascorsa.
 
 | Caso | Comportamento atteso |
 | --- | --- |
@@ -229,46 +226,30 @@ né modificano automaticamente i badge sportivi per disciplina.
 
 Per le pensioni può recensire soltanto il cliente: rating e breve commento
 sul soggiorno. Nessuna richiesta alla pensione di valutare il cliente.
-La soglia del secondo utilizzo è stata espressa per gli addestratori: non
-estenderla automaticamente alle pensioni. La prima proposta da valutare è
-l'invito dopo il primo soggiorno effettivamente concluso; la soglia per le
-pensioni resta da confermare prima dell'implementazione.
+La pensione abilita la recensione dal primo soggiorno concluso. Un soggetto
+che offre addestramento e pensione segue la regola del servizio accettato.
+La soglia dell'addestratore riguarda la persona: per i centri la reciprocità
+rimane sospesa finché non esiste l'assegnazione del singolo istruttore.
 
-Un soggetto che offre sia addestramento sia pensione segue la regola del
-servizio effettivamente erogato, non una sola regola per l'intero account.
-Definire come attribuire il singolo addestratore se la prenotazione appartiene
-a un centro con più professionisti; non sommare esperienze con persone diverse.
+### Scelte operative e residui
 
-### Decisioni aperte, da non trasformare in funzioni implicite
+Una recensione corrente per coppia/tipo; richiamo nell'account senza invii
+esterni, aggiornamento volontario dopo una nuova esperienza, rettifica entro
+sette giorni senza proroga, niente inviti storici in massa. Dettagli e limiti
+in [SERVICE_REVIEWS_V1](SERVICE_REVIEWS_V1.md). Non creare un rating pubblico
+dei proprietari né estendere la reciprocità a toelettatura/handler.
+Moderazione estesa e pubblicazione cieca/differita restano eventuali sviluppi.
 
-- Scala del rating, limite del commento e visibilità della valutazione sul cliente.
-  Non creare automaticamente un punteggio pubblico dei proprietari.
-- Cadenza degli inviti dopo la seconda esperienza, aggiornamento della recensione
-  e rapporto fra recensione della relazione e recensioni dei singoli servizi.
-- Finestra temporale, canale del sollecito e promemoria; questa direttiva non
-  autorizza invii email, SMS o notifiche esterne.
-- Eventuale pubblicazione simultanea/differita per ridurre valutazioni di ritorsione,
-  contestazioni, moderazione e gestione delle rettifiche.
-- Uso dello storico precedente al rilascio per il conteggio: non cancellare
-  recensioni esistenti né inviare solleciti arretrati automaticamente.
-- Recensioni di toelettatura e handler: non estendere per analogia la nuova
-  reciprocità degli addestratori a questi servizi.
+## 6. Prosecuzione corrente
 
-## 6. Prossimo lavoro, soltanto dopo una nuova istruzione di esecuzione
+Ricerca/Esposizioni, export testuale e valutazioni non sono più i tre blocchi da
+iniziare. Restano media privati, assegnazione istruttori ai centri e i residui
+del [piano operativo](EXECUTION_PRIORITIES_2026_10.md). Per Higgsfield: analizzare
+i tre contenuti effettivi, scrivere storyboard, preparare una scena campione,
+poi valutare la produzione entro un costo massimo esplicito.
 
-1. Progettare nuova tassonomia e area Esposizioni sul codice corrente,
-   con percorso diretto del proprietario e conservazione dello storico.
-2. Definire export completo autorizzato sul modello reale di note, revisioni,
-   concessioni e media; non aggirare i permessi con un download globale.
-3. Chiudere i dettagli delle valutazioni, poi progettare ammissibilità lato server,
-   conteggio delle esperienze, richieste reciproche e protezione dai duplicati.
-4. Preparare storyboard e preventivo massimo della campagna; solo successivamente
-   produrre e valutare le varianti per TikTok, Instagram e Facebook.
-
-L'ordine è una proposta organizzativa, non autorizzazione a iniziare.
-Prima del futuro rilascio verificare ricerca e link precedenti, separazione
-Sport/Esposizioni, isolamento dell'export e tutti i casi della tabella recensioni.
-Per i video controllare qualità, significato delle scene e anteprima per canale.
+Il concept non autorizza acquisti o pubblicazioni da solo. La qualità dei testi,
+dei ritagli e del senso cinofilo delle scene va verificata prima della consegna.
 
 ## Riferimenti
 

@@ -1,5 +1,10 @@
 # Ricerca quotidiana ed Esposizioni — NAV-01 / PRO-01
 
+Stato al 9 ottobre 2026: implementazione presente su GitHub in `7f11610`.
+Le istruzioni di rilascio sotto descrivono il procedimento dell'incremento;
+non sono una richiesta di rieseguirlo. Evidenze online e residui nel
+[registro corrente](CURRENT_STATE.md).
+
 ## Stato e perimetro — 8 ottobre 2026
 
 Implementazione preparata sulla base GitHub `85cd0a7`, dopo l'istruzione di Luigi
@@ -8,9 +13,9 @@ per NAV-01/PRO-01. La presenza di questi file non dimostra che la nuova migrazio
 sia applicata al progetto online o che il deployment Vercel sia Ready.
 
 La home statica, Impara e gli strumenti professionali già disponibili restano
-nel percorso esistente. Questo incremento realizza ricerca e attività offerte;
-export, nuove regole delle recensioni, internazionalizzazione, campagne e
-finanziamenti rimangono nel piano operativo.
+nel percorso esistente. Questo incremento realizza ricerca e attività offerte.
+Export e valutazioni sono stati aggiunti dai due incrementi successivi già su
+GitHub; internazionalizzazione, campagne e finanziamenti restano nel piano operativo.
 
 ## Mappatura applicata
 

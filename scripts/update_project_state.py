@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "docs" / "CURRENT_STATE.md"
+OUT = ROOT / "docs" / "TECHNICAL_SNAPSHOT.md"
 
 def run(command: list[str], timeout: int = 180) -> tuple[int, str]:
     try:
@@ -35,10 +35,12 @@ def make_section(title: str, command: list[str], timeout: int = 180) -> str:
 now = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
 
 parts = [
-    "# CURRENT STATE — PawConnect / Portalecinofilo\n\n"
+    "# TECHNICAL SNAPSHOT — PortaleCinofilo\n\n"
     f"> Auto-generated repository snapshot. Generated: `{now}`\n\n"
-    "This file records the **implemented state**, not future plans.\n"
-    "If it conflicts with code, Git history or migrations, inspect the repository directly and regenerate it.\n\n",
+    "This file records command outputs, not a complete implementation or deployment assessment.\n"
+    "Maintained project state: [CURRENT_STATE.md](CURRENT_STATE.md).\n"
+    "Read every exit code; report generation alone does not mean all checks passed.\n"
+    "This script does not apply migrations or deploy the website.\n\n",
     make_section("Current branch", ["git", "branch", "--show-current"]),
     make_section("Working tree", ["git", "status", "--short"]),
     make_section("Recent commits", ["git", "log", "--oneline", "--decorate", "-n", "30"]),
