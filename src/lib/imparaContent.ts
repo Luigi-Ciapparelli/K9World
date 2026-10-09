@@ -163,177 +163,8 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
     }
   },
   {
-    "slug": "osservazione-timing-marker",
-    "order": 2,
-    "moduleId": "benessere-osservazione",
-    "moduleOrder": 1,
-    "moduleTitle": "Capire i bisogni",
-    "title": "Osservazione e clicker: allenare il timing",
-    "summary": "Osserva il cane e scopri lo shaping: piccoli passi, dal guardare una piattaforma ad appoggiarvi entrambe le zampe anteriori.",
-    "durationMinutes": 12,
-    "objectives": [
-      "Descrivere ciò che il cane fa, prima di interpretarlo.",
-      "Segnare con il click il criterio scelto per quel passaggio.",
-      "Comprendere lo shaping per approssimazioni successive."
-    ],
-    "sublessons": [
-      {
-        "id": "descrivere-prima",
-        "title": "Descrivere prima di interpretare",
-        "durationMinutes": 2,
-        "paragraphs": [
-          "“È geloso” è un’interpretazione. “Si mette tra me e l’ospite, corpo fermo e bocca chiusa” è una descrizione. La seconda frase permette a un’altra persona di capire che cosa hai osservato, senza dover condividere subito la tua spiegazione.",
-          "Annota luogo, distanza, persone o animali presenti, ciò che accade prima e ciò che segue. Nessun singolo segnale permette di leggere con certezza uno stato emotivo: contesto e insieme dei segnali contano."
-        ],
-        "example": "Il cane gira la testa mentre qualcuno allunga la mano. Registra il movimento e lascia spazio: non ripetere l’avvicinamento per ottenere una reazione più evidente.",
-        "tryThis": "Trasforma “fa i dispetti” in una frase che una telecamera potrebbe documentare."
-      },
-      {
-        "id": "movimento-prossemica",
-        "title": "Corpo, movimento e distanza",
-        "durationMinutes": 2,
-        "paragraphs": [
-          "Guarda l’intero cane: postura, distribuzione del peso, orientamento, velocità e possibilità di allontanarsi. Le distanze fanno parte della comunicazione. Un cane che si sposta può aver bisogno di spazio, anche se non abbaia.",
-          "Osservare non significa mettere alla prova la tolleranza. Non bloccare le vie di uscita e non cercare un contatto per verificare la tua ipotesi. In caso di tensione interrompi l’interazione e crea distanza in sicurezza."
-        ],
-        "example": "Un ospite si china sul cane e lui arretra. Chiedere all’ospite di fermarsi e lasciarlo scegliere ti dà informazioni senza forzare l’incontro.",
-        "tryThis": "Nel prossimo incontro tranquillo, nota chi si avvicina e chi sceglie di interrompere."
-      },
-      {
-        "id": "marker-timing-shaping",
-        "title": "Marker, ricompensa e piccoli obiettivi",
-        "durationMinutes": 2,
-        "paragraphs": [
-          "Il marker è un segnale breve, come un click o una parola, che indica l’istante scelto. Prima di usarlo così, il cane deve aver appreso che quel segnale anticipa una ricompensa. Il click non è un comando e non serve ad attirare l’attenzione.",
-          "Nel laboratorio ogni click corretto è seguito dalla rappresentazione di un premio. Questa associazione chiarisce la differenza fra indicare un comportamento e rinforzarlo. Un suono ripetuto senza significato non insegna da solo cosa fare."
-        ],
-        "example": "Il cane appoggia una zampa: segni quel contatto e poi dai la ricompensa. Se aspetti che abbia già cambiato posizione, il segnale può indicare un’altra azione.",
-        "tryThis": "Prima di avviare ogni passaggio, leggi esattamente quale comportamento vuoi segnare."
-      },
-      {
-        "id": "shaping-piattaforma",
-        "title": "Shaping: una forma costruita poco alla volta",
-        "durationMinutes": 2,
-        "paragraphs": [
-          "Lo shaping sviluppa un comportamento rinforzando approssimazioni successive. Nell’esempio il criterio cambia da orientarsi verso la piattaforma, ad avvicinarsi, a posare una zampa anteriore, infine entrambe. Non chiediamo subito il risultato finale.",
-          "La sequenza è semplificata: nella realtà si ripete e si adatta ogni passo. Si aumenta la difficoltà quando il criterio attuale è facilmente ripetibile; se il cane fatica, si riduce il salto. Il laboratorio non richiede di guidare il cane con un boccone o di spingerlo sulla pedana."
-        ],
-        "example": "Se oggi premi l’avvicinamento, non devi aspettare già due zampe sopra. Decidi un solo piccolo obiettivo e riconosci quando compare.",
-        "tryThis": "Quale passo intermedio potresti inserire se dal guardare la piattaforma al salirci il salto fosse troppo grande?"
-      }
-    ],
-    "activities": [
-      {
-        "id": "video-lab",
-        "type": "video-lab",
-        "title": "Laboratorio: shaping sulla piattaforma",
-        "summary": "Una dimostrazione semplice e guidata. Segna il piccolo obiettivo di ciascuna scena, fino a entrambe le zampe anteriori sopra.",
-        "instructions": [
-          "Leggi il criterio del passaggio e avvia la scena.",
-          "Clicca quando il cane raggiunge quel criterio. Se anticipi o aspetti troppo, riprova con calma.",
-          "Dopo il click corretto osserva il premio e passa al criterio successivo."
-        ],
-        "completionHint": "Completa i quattro esempi. Puoi usare i fotogrammi guidati, senza alcuna fretta; il risultato indica soltanto la comprensione della dimostrazione.",
-        "labKind": "shaping"
-      },
-      {
-        "id": "osservazione-neutra",
-        "type": "reflection",
-        "title": "Cinque frasi senza etichette",
-        "summary": "Descrivi un cane per cinque frasi senza usare parole come dominante, aggressivo, testardo, felice o ansioso.",
-        "instructions": [
-          "Ho descritto il contesto o il caso usato.",
-          "Ho distinto i fatti osservati dalle mie ipotesi.",
-          "Ho indicato un passo concreto o una domanda da approfondire."
-        ],
-        "completionHint": "Compila i tre appunti e conferma le osservazioni. Se non hai ancora un cane, lavora sul caso della lezione e scrivilo nel quaderno.",
-        "fields": [
-          "Contesto: dove, quando e chi era presente",
-          "Tre comportamenti descritti senza interpretazioni",
-          "Una domanda che questa osservazione lascia aperta"
-        ]
-      }
-    ],
-    "quiz": [
-      {
-        "id": "q1",
-        "prompt": "Quale frase è una descrizione osservabile?",
-        "options": [
-          "Il cane orienta il corpo frontalmente e riduce la distanza",
-          "Il cane vuole sicuramente attaccare",
-          "Il cane è dominante"
-        ],
-        "correctIndex": 0,
-        "explanation": "Descrive ciò che accade senza assegnare automaticamente una motivazione."
-      },
-      {
-        "id": "marker-e-premio",
-        "prompt": "Dopo aver segnato correttamente il comportamento con il click, cosa segue in questa dimostrazione?",
-        "options": [
-          "Un secondo click senza premio",
-          "La ricompensa associata al marker",
-          "La richiesta di un comportamento molto più difficile"
-        ],
-        "correctIndex": 1,
-        "explanation": "Il marker indica il momento; la ricompensa segue. Il click non la sostituisce."
-      },
-      {
-        "id": "shaping-criterio",
-        "prompt": "Stai lavorando sul criterio “una zampa sopra”. Quando clicchi?",
-        "options": [
-          "Appena guarda la piattaforma",
-          "Solo quando ha già entrambe le zampe sopra",
-          "Quando la prima zampa anteriore tocca la superficie"
-        ],
-        "correctIndex": 2,
-        "explanation": "Il click riguarda il criterio scelto adesso: l’appoggio della prima zampa."
-      },
-      {
-        "id": "caso-pratico",
-        "prompt": "Un cane si allontana quando una persona allunga la mano. Quale nota è più utile?",
-        "options": [
-          "Non ama le persone",
-          "È dominante",
-          "Arretra di due passi quando la mano si avvicina"
-        ],
-        "correctIndex": 2,
-        "explanation": "La terza frase descrive un evento osservabile. Lasciare spazio evita di forzare un contatto."
-      },
-      {
-        "id": "progressione-shaping",
-        "prompt": "Quando aumenti il criterio con un cane reale?",
-        "options": [
-          "Quando il passo attuale è facilmente ripetibile, adattando l’incremento al cane",
-          "Sempre dopo un unico click",
-          "Quando il cane si stanca"
-        ],
-        "correctIndex": 0,
-        "explanation": "Un esempio per scena basta nel simulatore. Nella realtà servono ripetizioni e criteri individuali."
-      }
-    ],
-    "sources": [
-      {
-        "label": "RSPCA · Linguaggio del corpo",
-        "url": "https://www.rspca.org.uk/adviceandwelfare/pets/dogs/behaviour/understanding"
-      },
-      {
-        "label": "Dogs Trust · Ricompense e timing",
-        "url": "https://www.dogstrust.org.uk/dog-advice/training/techniques/positive-reinforcement-training-with-rewards"
-      },
-      {
-        "label": "Karen Pryor · Principi dello shaping",
-        "url": "https://clickertraining.com/the-ten-laws-of-shaping/"
-      }
-    ],
-    "practiceMinutes": "2 minuti nella dimostrazione e una breve osservazione",
-    "caseStudy": {
-      "title": "Una situazione da osservare",
-      "text": "Un cane si allontana quando una persona allunga la mano. Quale nota è più utile? Puoi usare questo caso nel quaderno se non hai ancora un cane."
-    }
-  },
-  {
     "slug": "routine-sicurezza-autonomia",
-    "order": 3,
+    "order": 2,
     "moduleId": "sicurezza-gestione",
     "moduleOrder": 2,
     "moduleTitle": "Vivere insieme",
@@ -459,7 +290,7 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
   },
   {
     "slug": "spazi-risorse-prossemica",
-    "order": 4,
+    "order": 3,
     "moduleId": "sicurezza-gestione",
     "moduleOrder": 2,
     "moduleTitle": "Vivere insieme",
@@ -585,7 +416,7 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
   },
   {
     "slug": "funzione-memoria-razza",
-    "order": 5,
+    "order": 4,
     "moduleId": "funzione-motivazione",
     "moduleOrder": 3,
     "moduleTitle": "Conoscere il tuo cane",
@@ -725,7 +556,7 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
   },
   {
     "slug": "gioco-lavoro-motivazione",
-    "order": 6,
+    "order": 5,
     "moduleId": "funzione-motivazione",
     "moduleOrder": 3,
     "moduleTitle": "Conoscere il tuo cane",
@@ -851,7 +682,7 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
   },
   {
     "slug": "etogramma-relazione-lettura",
-    "order": 7,
+    "order": 6,
     "moduleId": "relazione-apprendimento",
     "moduleOrder": 4,
     "moduleTitle": "Costruire la relazione",
@@ -977,7 +808,7 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
   },
   {
     "slug": "doti-apprendimento",
-    "order": 8,
+    "order": 7,
     "moduleId": "relazione-apprendimento",
     "moduleOrder": 4,
     "moduleTitle": "Costruire la relazione",
@@ -1242,6 +1073,175 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
         "path": "/sport"
       }
     ]
+  },
+  {
+    "slug": "osservazione-timing-marker",
+    "order": 8,
+    "moduleId": "relazione-apprendimento",
+    "moduleOrder": 4,
+    "moduleTitle": "Costruire la relazione",
+    "title": "Osservazione e clicker: allenare il timing",
+    "summary": "Osserva il cane e scopri lo shaping: piccoli passi, dal guardare una piattaforma ad appoggiarvi entrambe le zampe anteriori.",
+    "durationMinutes": 12,
+    "objectives": [
+      "Descrivere ciò che il cane fa, prima di interpretarlo.",
+      "Segnare con il click il criterio scelto per quel passaggio.",
+      "Comprendere lo shaping per approssimazioni successive."
+    ],
+    "sublessons": [
+      {
+        "id": "descrivere-prima",
+        "title": "Descrivere prima di interpretare",
+        "durationMinutes": 2,
+        "paragraphs": [
+          "“È geloso” è un’interpretazione. “Si mette tra me e l’ospite, corpo fermo e bocca chiusa” è una descrizione. La seconda frase permette a un’altra persona di capire che cosa hai osservato, senza dover condividere subito la tua spiegazione.",
+          "Annota luogo, distanza, persone o animali presenti, ciò che accade prima e ciò che segue. Nessun singolo segnale permette di leggere con certezza uno stato emotivo: contesto e insieme dei segnali contano."
+        ],
+        "example": "Il cane gira la testa mentre qualcuno allunga la mano. Registra il movimento e lascia spazio: non ripetere l’avvicinamento per ottenere una reazione più evidente.",
+        "tryThis": "Trasforma “fa i dispetti” in una frase che una telecamera potrebbe documentare."
+      },
+      {
+        "id": "movimento-prossemica",
+        "title": "Corpo, movimento e distanza",
+        "durationMinutes": 2,
+        "paragraphs": [
+          "Guarda l’intero cane: postura, distribuzione del peso, orientamento, velocità e possibilità di allontanarsi. Le distanze fanno parte della comunicazione. Un cane che si sposta può aver bisogno di spazio, anche se non abbaia.",
+          "Osservare non significa mettere alla prova la tolleranza. Non bloccare le vie di uscita e non cercare un contatto per verificare la tua ipotesi. In caso di tensione interrompi l’interazione e crea distanza in sicurezza."
+        ],
+        "example": "Un ospite si china sul cane e lui arretra. Chiedere all’ospite di fermarsi e lasciarlo scegliere ti dà informazioni senza forzare l’incontro.",
+        "tryThis": "Nel prossimo incontro tranquillo, nota chi si avvicina e chi sceglie di interrompere."
+      },
+      {
+        "id": "marker-timing-shaping",
+        "title": "Marker, ricompensa e piccoli obiettivi",
+        "durationMinutes": 2,
+        "paragraphs": [
+          "Il marker è un segnale breve, come un click o una parola, che indica l’istante scelto. Prima di usarlo così, il cane deve aver appreso che quel segnale anticipa una ricompensa. Il click non è un comando e non serve ad attirare l’attenzione.",
+          "Nel laboratorio ogni click corretto è seguito dalla rappresentazione di un premio. Questa associazione chiarisce la differenza fra indicare un comportamento e rinforzarlo. Un suono ripetuto senza significato non insegna da solo cosa fare."
+        ],
+        "example": "Il cane appoggia una zampa: segni quel contatto e poi dai la ricompensa. Se aspetti che abbia già cambiato posizione, il segnale può indicare un’altra azione.",
+        "tryThis": "Prima di avviare ogni passaggio, leggi esattamente quale comportamento vuoi segnare."
+      },
+      {
+        "id": "shaping-piattaforma",
+        "title": "Shaping: una forma costruita poco alla volta",
+        "durationMinutes": 2,
+        "paragraphs": [
+          "Lo shaping sviluppa un comportamento rinforzando approssimazioni successive. Nell’esempio il criterio cambia da orientarsi verso la piattaforma, ad avvicinarsi, a posare una zampa anteriore, infine entrambe. Non chiediamo subito il risultato finale.",
+          "La sequenza è semplificata: nella realtà si ripete e si adatta ogni passo. Si aumenta la difficoltà quando il criterio attuale è facilmente ripetibile; se il cane fatica, si riduce il salto. Il laboratorio non richiede di guidare il cane con un boccone o di spingerlo sulla pedana."
+        ],
+        "example": "Se oggi premi l’avvicinamento, non devi aspettare già due zampe sopra. Decidi un solo piccolo obiettivo e riconosci quando compare.",
+        "tryThis": "Quale passo intermedio potresti inserire se dal guardare la piattaforma al salirci il salto fosse troppo grande?"
+      }
+    ],
+    "activities": [
+      {
+        "id": "video-lab",
+        "type": "video-lab",
+        "title": "Laboratorio: shaping sulla piattaforma",
+        "summary": "Una dimostrazione semplice e guidata. Segna il piccolo obiettivo di ciascuna scena, fino a entrambe le zampe anteriori sopra.",
+        "instructions": [
+          "Leggi il criterio del passaggio e avvia la scena.",
+          "Clicca quando il cane raggiunge quel criterio. Se anticipi o aspetti troppo, riprova con calma.",
+          "Dopo il click corretto osserva il premio e passa al criterio successivo."
+        ],
+        "completionHint": "Completa i quattro esempi. Puoi usare i fotogrammi guidati, senza alcuna fretta; il risultato indica soltanto la comprensione della dimostrazione.",
+        "labKind": "shaping"
+      },
+      {
+        "id": "osservazione-neutra",
+        "type": "reflection",
+        "title": "Cinque frasi senza etichette",
+        "summary": "Descrivi un cane per cinque frasi senza usare parole come dominante, aggressivo, testardo, felice o ansioso.",
+        "instructions": [
+          "Ho descritto il contesto o il caso usato.",
+          "Ho distinto i fatti osservati dalle mie ipotesi.",
+          "Ho indicato un passo concreto o una domanda da approfondire."
+        ],
+        "completionHint": "Compila i tre appunti e conferma le osservazioni. Se non hai ancora un cane, lavora sul caso della lezione e scrivilo nel quaderno.",
+        "fields": [
+          "Contesto: dove, quando e chi era presente",
+          "Tre comportamenti descritti senza interpretazioni",
+          "Una domanda che questa osservazione lascia aperta"
+        ]
+      }
+    ],
+    "quiz": [
+      {
+        "id": "q1",
+        "prompt": "Quale frase è una descrizione osservabile?",
+        "options": [
+          "Il cane orienta il corpo frontalmente e riduce la distanza",
+          "Il cane vuole sicuramente attaccare",
+          "Il cane è dominante"
+        ],
+        "correctIndex": 0,
+        "explanation": "Descrive ciò che accade senza assegnare automaticamente una motivazione."
+      },
+      {
+        "id": "marker-e-premio",
+        "prompt": "Dopo aver segnato correttamente il comportamento con il click, cosa segue in questa dimostrazione?",
+        "options": [
+          "Un secondo click senza premio",
+          "La ricompensa associata al marker",
+          "La richiesta di un comportamento molto più difficile"
+        ],
+        "correctIndex": 1,
+        "explanation": "Il marker indica il momento; la ricompensa segue. Il click non la sostituisce."
+      },
+      {
+        "id": "shaping-criterio",
+        "prompt": "Stai lavorando sul criterio “una zampa sopra”. Quando clicchi?",
+        "options": [
+          "Appena guarda la piattaforma",
+          "Solo quando ha già entrambe le zampe sopra",
+          "Quando la prima zampa anteriore tocca la superficie"
+        ],
+        "correctIndex": 2,
+        "explanation": "Il click riguarda il criterio scelto adesso: l’appoggio della prima zampa."
+      },
+      {
+        "id": "caso-pratico",
+        "prompt": "Un cane si allontana quando una persona allunga la mano. Quale nota è più utile?",
+        "options": [
+          "Non ama le persone",
+          "È dominante",
+          "Arretra di due passi quando la mano si avvicina"
+        ],
+        "correctIndex": 2,
+        "explanation": "La terza frase descrive un evento osservabile. Lasciare spazio evita di forzare un contatto."
+      },
+      {
+        "id": "progressione-shaping",
+        "prompt": "Quando aumenti il criterio con un cane reale?",
+        "options": [
+          "Quando il passo attuale è facilmente ripetibile, adattando l’incremento al cane",
+          "Sempre dopo un unico click",
+          "Quando il cane si stanca"
+        ],
+        "correctIndex": 0,
+        "explanation": "Un esempio per scena basta nel simulatore. Nella realtà servono ripetizioni e criteri individuali."
+      }
+    ],
+    "sources": [
+      {
+        "label": "RSPCA · Linguaggio del corpo",
+        "url": "https://www.rspca.org.uk/adviceandwelfare/pets/dogs/behaviour/understanding"
+      },
+      {
+        "label": "Dogs Trust · Ricompense e timing",
+        "url": "https://www.dogstrust.org.uk/dog-advice/training/techniques/positive-reinforcement-training-with-rewards"
+      },
+      {
+        "label": "Karen Pryor · Principi dello shaping",
+        "url": "https://clickertraining.com/the-ten-laws-of-shaping/"
+      }
+    ],
+    "practiceMinutes": "2 minuti nella dimostrazione e una breve osservazione",
+    "caseStudy": {
+      "title": "Una situazione da osservare",
+      "text": "Un cane si allontana quando una persona allunga la mano. Quale nota è più utile? Puoi usare questo caso nel quaderno se non hai ancora un cane."
+    }
   }
 ];
 

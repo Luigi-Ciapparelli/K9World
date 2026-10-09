@@ -20,7 +20,10 @@ try {
  assert.equal(lab.shapingPose(3,3.2).paw1,1);assert.equal(lab.shapingPose(3,3.2).paw2,1);
  assert.deepEqual(lab.normalizeShapingResult({exercise:lab.SHAPING_VERSION,completed:['two-paws']}).completed,[]);
  assert.deepEqual(lab.normalizeShapingResult({exercise:lab.SHAPING_VERSION,completed:['orient','orient','one-paw']}).completed,['orient']);
- const p=progress.emptyProgress();const key=L[1].slug+':video-lab';
+ const shaping=L.find(l=>l.slug==='osservazione-timing-marker');
+ const basics=L.find(l=>l.slug==='doti-apprendimento');
+ assert.ok(shaping);assert.ok(basics);
+ const p=progress.emptyProgress();const key=shaping.slug+':video-lab';
  p.activities[key]={fields:[],checks:[],done:true,lab:{hits:4,total:4,extras:0,offsets:[0,0,0,0]}};
  assert.equal(progress.normalizeProgress(p).activities[key].done,false,'the old dot game cannot complete shaping');
  for(let count=1;count<=4;count++){
@@ -30,8 +33,8 @@ try {
   assert.equal(normalized.activities[key].done,count===4);
   assert.equal(normalized.activities[key].lab.completed.length,count);
  }
- const last=L[7];assert.equal(last.quiz.length,8);assert.ok(last.sublessons.some(s=>s.id==='condizionamento-classico'));assert.ok(last.sublessons.some(s=>s.id==='condizionamento-operante'));
- assert.equal(L[1].quiz.length,5);assert.equal(last.activities.length,2,'old glossary notes retained alongside new activity');
+ const last=basics;assert.equal(last.quiz.length,8);assert.ok(last.sublessons.some(s=>s.id==='condizionamento-classico'));assert.ok(last.sublessons.some(s=>s.id==='condizionamento-operante'));
+ assert.equal(shaping.quiz.length,5);assert.equal(last.activities.length,2,'old glossary notes retained alongside new activity');
  assert.match(progress.notebookText(progress.normalizeProgress(p)),/Shaping: 4\/4/);
  console.log('OK: semantic target windows, front-paw poses, sequential completion, legacy isolation, progress persistence, foundations and notebook export.');
 } finally {await fs.rm(temp,{recursive:true,force:true});}

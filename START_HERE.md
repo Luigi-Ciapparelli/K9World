@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Consolidamento del 9 ottobre 2026, dopo il controllo di `origin/main` a `fd619e4`.
+Aggiornamento del 9 ottobre 2026, dopo il controllo di `origin/main` a `684f74e`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -23,7 +23,10 @@ Il registro corrente specifica i limiti: presenza su GitHub, migration applicata
 deployment Ready e prova con account reali sono evidenze distinte.
 
 Prossimo incremento tecnico da valutare: media privati della continuità;
-SEO, incidente di disponibilità e analisi dei tre post attendono dati mirati.
+Impara ora segue l’ordine precedente 1, 3, 4, 5, 6, 7, 8, 2 (rinumerato 1–8).
+Il CSV SEO è stato analizzato: dettagli in [SEO_INDEXATION_2026_10_09](docs/SEO_INDEXATION_2026_10_09.md).
+Per la home manca la canonical scelta da Google; la causa del downtime resta ignota.
+Social e possibile prova Higgsfield da 100 crediti sono aggiornati nel piano operativo.
 Non sospendere tutto il lavoro per questi dati e non ricreare funzioni esistenti.
 
 ## Primo controllo, senza modificare nulla

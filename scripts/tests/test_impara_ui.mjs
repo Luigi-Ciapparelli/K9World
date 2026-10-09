@@ -6,6 +6,9 @@ import ts from 'typescript';
 const {chromium}=await import(process.env.PC_PLAYWRIGHT_MODULE || 'playwright');
 const source=ts.transpileModule(await fs.readFile('src/lib/imparaContent.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext}}).outputText;
 const {STAGE_1_LESSONS:lessons}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+const shaping=lessons.find(l=>l.slug==='osservazione-timing-marker');
+const basicsLesson=lessons.find(l=>l.slug==='doti-apprendimento');
+assert.ok(shaping);assert.ok(basicsLesson);
 const browser=await chromium.launch({headless:true,...(process.env.PC_CHROMIUM_PATH?{executablePath:process.env.PC_CHROMIUM_PATH}:{}),args:['--no-sandbox','--disable-dev-shm-usage','--disable-gpu']});
 const base=process.env.PC_TEST_BASE_URL || 'http://127.0.0.1:5189';
 const key='portalecinofilo-impara-v3';const errors=[];
@@ -24,7 +27,9 @@ try {
  const {context,page}=await setup();
  await page.goto(base+'/#/impara');
  await page.getByRole('heading',{name:'Vivere meglio insieme si impara.'}).waitFor();
- assert.equal(await page.getByRole('button',{name:/LEZIONE/}).count(),8);
+ assert.equal(await page.getByRole('link',{name:/LEZIONE/}).count(),8);
+ assert.deepEqual(await page.locator('.im-lesson-card').evaluateAll(cards=>cards.map(c=>c.getAttribute('href'))),lessons.map(l=>`/impara/stage-1/${l.slug}`));
+ assert.deepEqual(await page.locator('.im-lesson-card .im-eyebrow').allTextContents(),lessons.map((_,i)=>`LEZIONE 0${i+1}`));
  if(screenshots) await page.screenshot({path:`${screenshots}/impara-desktop.png`,fullPage:true});
  await page.getByLabel('Cerca nelle lezioni').fill('nessuna-trovata');
  await page.getByText(/Nessuna lezione trovata/).waitFor();
@@ -51,9 +56,17 @@ try {
  await page.getByRole('heading',{name:'Lezione completata.'}).waitFor();
  assert.equal(await page.getByRole('radio').first().isDisabled(),true,'submitted answers cannot change under stale feedback');
  if(screenshots)await page.screenshot({path:`${screenshots}/impara-verifica.png`,fullPage:true});
- await page.getByRole('button',{name:'Lezione successiva'}).click();
+ await page.getByRole('link',{name:'Lezione successiva'}).click();
  await page.getByRole('heading',{name:lessons[1].title,exact:true}).waitFor();
  assert.equal(await page.getByRole('button',{name:'Ho letto questa parte',exact:true}).count(),lessons[1].sublessons.length,'lesson-local state reset');
+ await page.goto(base+`/impara/stage-1/${basicsLesson.slug}`);
+ await page.getByRole('link',{name:'Lezione successiva'}).click();
+ await page.getByRole('heading',{name:shaping.title,exact:true}).waitFor();
+ assert.equal(await page.getByRole('link',{name:'Lezione successiva'}).count(),0);
+ await page.getByRole('button',{name:'Riepilogo percorso'}).waitFor();
+ await page.getByRole('button',{name:'Lezione precedente'}).click();
+ await page.getByRole('heading',{name:basicsLesson.title,exact:true}).waitFor();
+ await page.getByRole('link',{name:'Lezione successiva'}).click();
  await page.getByRole('button',{name:'2 Metti in pratica',exact:true}).click();
  await page.getByLabel('Senza fretta · fotogrammi guidati').check();
  // Early clicks do not advance the criterion or award progress.
@@ -70,8 +83,8 @@ try {
    await click.focus();await page.keyboard.press('Space');
    await page.getByText('Giusto: hai premiato questa approssimazione.').waitFor();
    const saved=JSON.parse(await page.evaluate(k=>localStorage.getItem(k),key));
-   assert.equal(saved.activities[`${lessons[1].slug}:video-lab`].lab.completed.length,i+1);
-   assert.equal(saved.activities[`${lessons[1].slug}:video-lab`].done,i===3);
+   assert.equal(saved.activities[`${shaping.slug}:video-lab`].lab.completed.length,i+1);
+   assert.equal(saved.activities[`${shaping.slug}:video-lab`].done,i===3);
    if(i===0){
      await page.reload();
      await page.getByRole('button',{name:'2 Metti in pratica',exact:true}).click();
@@ -89,7 +102,7 @@ try {
  await page.getByRole('button',{name:'Riprova questo passaggio'}).click();
  await page.getByText('Il momento è passato. Puoi riprovare con calma.').waitFor();
  const saved=JSON.parse(await page.evaluate(k=>localStorage.getItem(k),key));
- assert.equal(saved.activities[`${lessons[1].slug}:video-lab`].done,true,'retries do not remove completed shaping');
+ assert.equal(saved.activities[`${shaping.slug}:video-lab`].done,true,'retries do not remove completed shaping');
  const downloadPromise=page.waitForEvent('download');
  await page.getByRole('button',{name:'Scarica il quaderno'}).click();const download=await downloadPromise;
  assert.equal(download.suggestedFilename(),'PortaleCinofilo-il-mio-quaderno.txt');
@@ -117,7 +130,7 @@ try {
  await mobile.page.evaluate(()=>{localStorage.setItem('pawconnect-theme','dark');});await mobile.page.reload();
  await mobile.page.getByRole('heading',{name:lessons[0].title,exact:true}).waitFor();
  if(screenshots)await mobile.page.screenshot({path:`${screenshots}/impara-dark-mobile.png`,fullPage:true});
- await mobile.page.goto(base+`/#/impara/stage-1/${lessons[1].slug}`);
+ await mobile.page.goto(base+`/#/impara/stage-1/${shaping.slug}`);
  await mobile.page.getByRole('button',{name:'2 Metti in pratica',exact:true}).click();
  await mobile.page.getByLabel('Senza fretta · fotogrammi guidati').check();
  await mobile.page.getByRole('button',{name:'Avvia passaggio',exact:true}).click();
@@ -129,7 +142,7 @@ try {
  if(screenshots)await mobile.page.locator('.im-shaping').screenshot({path:`${screenshots}/shaping-mobile-dark.png`});
  await mobile.context.close();
  // The full basics are reachable; all new learning topics have an explanation and quiz.
- const basics=await setup();await basics.page.goto(base+`/#/impara/stage-1/${lessons[7].slug}`);
+ const basics=await setup();await basics.page.goto(base+`/#/impara/stage-1/${basicsLesson.slug}`);
  for(const heading of ['Condizionamento classico: un evento ne anticipa un altro','Condizionamento operante: le conseguenze contano','Rinforzo e punizione: leggere i termini tecnici','Segnali, generalizzazione e mantenimento']) await basics.page.getByRole('heading',{name:heading,exact:true}).waitFor();
  await basics.context.close();
  assert.deepEqual(errors,[],'No runtime errors');

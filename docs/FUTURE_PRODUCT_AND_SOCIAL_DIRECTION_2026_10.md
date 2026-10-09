@@ -13,10 +13,12 @@ invia messaggi. La ZIP esclusa da Luigi rimane esclusa dall'analisi.
 
 ## 1. Riscontro sui primi contenuti e canali
 
-Luigi comunica di aver pubblicato i primi tre post e che soltanto TikTok ha
-portato visualizzazioni. È un riscontro del fondatore, non un'analisi degli
-account: non sono stati forniti conteggi, periodo di osservazione, distribuzione
-dei tre post per canale, conversioni o dati comparabili. Non dedurre che siano
+Il 9 ottobre Luigi conferma i primi tre post e segnala che non stanno arrivando
+follower né visualizzazioni sugli altri canali; soltanto TikTok ha portato
+visualizzazioni secondo i dati già comunicati. È un riscontro del fondatore,
+non un nuovo accesso alle statistiche. In questo aggiornamento non sono
+disponibili conteggi confrontabili da riportare: non inventarli né trasformare
+l’assenza di trazione in una percentuale di efficacia. Non dedurre che siano
 tre post su ciascuna piattaforma né che gli altri canali vadano abbandonati.
 
 Profili indicati da Luigi:
@@ -38,9 +40,18 @@ Questa priorità sperimentale non è una promessa di copertura o di iscrizioni.
 
 ### Concept richiesto
 
-Strumento creativo indicato: **Higgsfield**. Utilizzo futuro da pianificare;
-nessun account, abbonamento, credito o capacità tecnica del servizio è assunto
-come già disponibile o autorizzato all'uso.
+Strumento creativo indicato: **Higgsfield**. Il 9 ottobre Luigi comunica che
+può attivare una **prova gratuita con 100 crediti**. È una disponibilità potenziale
+riferita dall’utente: prova, accredito e condizioni non sono stati controllati
+nel suo account. Non è un’autorizzazione a comprare crediti o un abbonamento.
+
+Preparare prima storyboard e una scena campione verticale con un solo binomio;
+usare il costo mostrato dal servizio per decidere quante iterazioni entrano nei
+crediti realmente disponibili. Non promettere una durata o un numero di video
+ricavabili da 100 crediti. Budget monetario proposto: **0 euro**. Prima di attivare
+la prova controllare eventuale rinnovo, carta richiesta e uso commerciale degli
+output. Testi/sottotitoli vanno montati separatamente per evitare scritte deformate.
+Il resto della campagna segue solo dopo la verifica della scena campione.
 
 La storia mette al centro diversi binomi, con i cani che parlano dal proprio
 punto di vista. Ogni episodio rende comprensibile un errore di gestione e il

@@ -20,22 +20,30 @@ future per dimostrare quelle già utilizzabili.
 
 | ID | Priorità e ambito | Dipendenza / prossimo risultato concreto | Criterio di chiusura |
 | --- | --- | --- | --- |
-| AFF-01 | Subito quando arrivano i dettagli del downtime | Finestra temporale, URL e sintomo; poi log del componente interessato | Causa oppure limite d'indagine esplicito, correzione motivata e percorso verificato; monitor valutato separatamente |
-| SEO-01 | Subito quando arrivano gli export | Tre elenchi URL Search Console; canonical scelta per il duplicato | Diagnosi per famiglia/URL, interventi mirati e misurazione successiva; nessuna promessa di indicizzare tutto |
+| AFF-01 | Causa storica non ricostruita; controllo al prossimo episodio | Luigi non ha una causa certa; raccogliere finestra, URL/sintomo e log se ricapita; piano gratuito resta ipotesi | Causa oppure limite d'indagine esplicito, correzione motivata e percorso verificato; monitor valutato separatamente |
+| SEO-01 | CSV e quattro URL specifici ricevuti; diagnosi pubblica eseguita | Canonical scelta da Google per la home; poi qualità delle tre schede e priorità Impara/ricerca; vedere SEO_INDEXATION_2026_10_09 | Diagnosi per famiglia/URL, interventi mirati e misurazione successiva; nessuna promessa di indicizzare tutto |
 | MEDIA-01 | Prossimo blocco tecnico proposto | Specifica dati/permessi/quote e costo prima di caricare file; prima allegati privati e foto, poi audio/video | Pipeline utilizzabile, compressione utile, revoca/download, limiti, cancellazione e ripristino provati |
 | TEAM-01 | Successivo o anticipato da un centro reale | Persona, appartenenza al team e istruttore assegnato alla prenotazione | Esperienze attribuite alla persona corretta, nessun trasferimento di reputazione e reciprocità sicura nei centri |
 | SPORT-02 | Blocco separato dopo verifica dei consumer esistenti | Identità Working-Dog, accesso ammesso alla fonte, parser reale e regole per disciplina | Collegamento → verifica → badge/ranking e revoca, con prova reale; casi ambigui rimangono non verificati |
-| SOC-01 | Preparazione commerciale in parallelo | Tre post reali e dati; storyboard, scena Higgsfield campione e budget esplicito per produrre | Prodotto riconoscibile, contenuto corretto, ritagli/testi curati, destinazione funzionante e misurazione distinta dalle visualizzazioni |
+| SOC-01 | Preparazione commerciale in parallelo; trazione solo TikTok segnalata | Storyboard e scena campione; possibile trial 100 crediti, costo monetario proposto zero; verificare disponibilità effettiva prima di generare | Prodotto riconoscibile, contenuto corretto, ritagli/testi curati, destinazione funzionante e misurazione distinta dalle visualizzazioni |
 | ECO-01 | In parallelo all'utilizzo italiano | Conversazioni autorizzate e un problema professionale concreto; costi reali | Offerta B2B facoltativa e disponibilità a pagare documentate, senza attivare incassi automaticamente |
 | INT-01 | Dopo una prima prova utile italiana | Confronto di due mercati, lingua/assistenza/offerta e costo incrementale | Un mercato testato con decisione motivata; nessuna rete di siti acquistata in anticipo |
 
 ## Input che mancano davvero a Luigi
 
-1. Search Console: export dei tre motivi di esclusione e canonical del duplicato.
-2. Downtime: giorno, ora/fuso, indirizzo e ciò che non funzionava; screenshot se disponibile.
-3. Social: URL dei tre post, periodo e screenshot dei dati disponibili per ciascuno.
-4. Per produrre con Higgsfield: piano/crediti disponibili e tetto massimo di spesa,
-   anche zero. Nessuna password o chiave API da incollare.
+1. **Per chiudere la duplicazione della home:** in Controllo URL leggere soltanto
+   «Pagina canonica scelta da Google». CSV e URL esclusi sono già ricevuti e
+   conservati nel repository; non richiederli nuovamente.
+2. **Downtime:** nessun altro dato storico disponibile per ora. Se ricapita,
+   annotare ora locale, URL e messaggio: senza questi dati non assegnare una causa.
+3. **Social:** usare il riscontro attuale senza inventare numeri; eventuali dati
+   per post servono per confrontare il prossimo esperimento, non per bloccare lo storyboard.
+4. **Higgsfield:** la possibilità di 100 crediti gratuiti è già comunicata;
+   verificare l’effettivo accredito e il costo di una generazione quando si attiverà
+   la prova. Nessun acquisto o rinnovo autorizzato da questo piano.
+
+**Impara:** spostamento dell’ex lezione 2 alla posizione 8 preparato e testato;
+criteri e rilascio in [IMPARA_LESSON_ORDER_V1](IMPARA_LESSON_ORDER_V1.md).
 
 Questi input non sono prerequisiti per consolidare le direttive, preparare uno
 storyboard o progettare un blocco indipendente. Non chiedere di rispiegare il prodotto.

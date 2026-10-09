@@ -1,7 +1,7 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **9 ottobre 2026**. Base verificata con fetch di `origin/main`:
-[`fd619e4`](https://github.com/Luigi-Ciapparelli/K9World/commit/fd619e484e31828cc3c6cecf64c1aec285d0ae33).
+[`684f74e`](https://github.com/Luigi-Ciapparelli/K9World/commit/684f74eda05c552feb2d23a272aadcc6fb8ecf38).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
@@ -42,7 +42,7 @@ osservati direttamente: **non segnalarli come falliti né come verificati**.
 | Area | Implementazione nel repository | Confine importante |
 | --- | --- | --- |
 | Home e ricerca | Home con immagine statica; percorso pre-cane facoltativo; aiuto diretto, Sport ed Esposizioni separati | Non ripristinare la porta animata o un selettore iniziale obbligatorio |
-| Impara | Otto lezioni, attività, quiz, quaderno, shaping sulla piattaforma; basi di condizionamento classico/operante | Progressi locali nel browser, non attestati ufficiali né sincronizzazione account |
+| Impara | Otto lezioni, attività, quiz, quaderno e shaping; riordino locale preparato 1,3,4,5,6,7,8,2, rinumerato 1–8 | Slug e progressi preservati; pubblicazione di questo riordino da eseguire, nessun attestato ufficiale o sync account |
 | Cani | Identità/razza FCI, data di nascita, scheda e foto private | Nessun tracciamento GPS continuo introdotto |
 | Account | Registrazione, recupero password, email/telefono modificabili, verifiche e conferme previste dal flusso | Modalità lancio email-only; SMS disattivati per contenere costi |
 | Profilo professionale | Procedura guidata, identità visiva, esperienza, credenziali, attività/servizi e visibilità | Dato dichiarato, approvazione profilo e qualifica verificata sono distinti |
@@ -54,9 +54,9 @@ osservati direttamente: **non segnalarli come falliti né come verificati**.
 | SEO | URL pubblici, HTML prerenderizzato, canonical, sitemap, robots e 404 | Il build non dimostra l'indicizzazione Google |
 | Sicurezza API | RLS, RPC controllate, proiezioni pubbliche e confine `pc_private` | Uno storico audit positivo non certifica ogni modifica successiva |
 
-Il collaudo build degli incrementi recenti riporta 396 pagine HTML e 392 URL
-nella sitemap; il controllo HTTP pubblico dell'8 ottobre osservava invece 391
-URL. Sono rilevazioni diverse, non un nuovo conteggio live effettuato oggi.
+Il build di questo aggiornamento riporta **396 pagine HTML e 392 URL nella
+sitemap**. Il controllo HTTP pubblico del 9 ottobre osserva anch’esso 392 URL,
+con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 
 ## Riscontri esterni già disponibili
 
@@ -65,9 +65,10 @@ URL. Sono rilevazioni diverse, non un nuovo conteggio live effettuato oggi.
 | Luigi, settembre 2026 | Registrazione e recupero password funzionanti; email ricevuta in inbox e rientro al dominio .com | Consegna di ogni futuro codice Edge o configurazione attuale senza controllo |
 | Output CLI di Luigi, 30 settembre | Migration recapiti e deploy `account-contacts`, `send-verification-code`, `verify-code`; `CONTACT_SMS_ENABLED=false`; commit `599e152` | Nuovo collaudo dei servizi al 9 ottobre |
 | Controllo pubblico, 8 ottobre | Campione di pagine HTTP 200, canonical, redirect .it → .com, 404 corretta | Tutte le pagine, funzioni autenticate, indicizzazione o causa del downtime |
-| Luigi, 7–8 ottobre | Primi tre post pubblicati; visualizzazioni riportate soltanto da TikTok | Conteggi, ripartizione dei post, conversioni o efficacia comparativa misurata |
-| Search Console riportata da Luigi | 264 rilevate/non indicizzate; 3 scansionate/non indicizzate; 1 duplicata con canonica Google diversa | Quali URL siano interessati o una causa già accertata |
-| Git remoto, 9 ottobre | `fd619e4` include export, Esposizioni e nuove valutazioni | Nuovo controllo autenticato di Vercel/Supabase |
+| Luigi, 9 ottobre | Primi tre post; assenza di trazione segnalata sugli altri canali, visualizzazioni soltanto TikTok; possibile prova Higgsfield da 100 crediti | Conteggi comparabili, conversioni, prova già attiva o spesa autorizzata |
+| CSV e URL ricevuti, 9 ottobre | 264 URL unici: 246 razze e 18 altre pagine; scansionate Shikoku/Clumber Spaniel/Dobermann; duplicata la home | Canonical scelta da Google e causa certa delle esclusioni |
+| HTTP pubblico, 9 ottobre | Campione di 10 pagine e 4 varianti della home: HTTP finale 200, canonical coerenti, nessun noindex; tutti i 264 URL presenti nella sitemap | Indicizzazione, accessibilità storica o flussi autenticati |
+| Git remoto, 9 ottobre | `684f74e` include consolidamento direttive, export, Esposizioni e nuove valutazioni | Nuovo controllo autenticato di Vercel/Supabase |
 
 ## Residui identificati e dipendenze
 
@@ -76,9 +77,9 @@ URL. Sono rilevazioni diverse, non un nuovo conteggio live effettuato oggi.
 | MEDIA-01 | Pipeline allegati privati delle sessioni non implementata | Progettare quote, compressione, permessi, conservazione, download e recupero; eventuale spesa richiede tetto esplicito |
 | TEAM-01 | Manca attribuzione della prenotazione al singolo istruttore del centro | Modellare persona/team/assegnazione e storia delle modifiche; poi estendere REV-01 |
 | SPORT-02 | Basi presenti, flusso reale e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
-| SEO-01 | Diagnosi URL incompleta | Export dei tre gruppi Search Console; canonical Google del duplicato |
-| AFF-01 | Causa dell'interruzione sconosciuta | Data, ora/fuso, URL, errore o schermata; correlare log dei componenti |
-| SOC-01 | Concept approvato; campagna Higgsfield non prodotta | URL/statistiche dei tre post; storyboard, scena campione e budget/crediti disponibili |
+| SEO-01 | CSV classificato e campione HTTP verificato; vedere SEO_INDEXATION_2026_10_09 | Solo canonical Google della home per il caso duplicato; poi contenuti specifici delle tre razze e controllo delle pagine prioritarie |
+| AFF-01 | Luigi conferma che la causa è rimasta ignota; piano gratuito soltanto ipotizzato | Nessun acquisto basato sull’ipotesi; se ricapita raccogliere ora/URL/errore e correlare log |
+| SOC-01 | Concept approvato; possibile trial da 100 crediti comunicato, video non prodotto | Storyboard e scena campione; verificare crediti/costo reale della generazione prima dell’uso, nessuna spesa attivata |
 | ECO-01 / INT-01 | Modello economico e mercati da validare | Utilizzo reale, costi e disponibilità a pagare; fonti aggiornate prima di domande di fondi o spese |
 
 Ulteriori direttive restano nel [backlog completo](PRODUCT_DIRECTION.md):
@@ -86,9 +87,17 @@ learning/credenziali futuri, team, formazione ENCI, biblioteca, tessere/campagne
 editoria, ricerca, commercio e rete di centri. La loro presenza nel piano non è
 prova di implementazione. Priorità e criteri: [EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md).
 
-## Chiusura di questo consolidamento
+## Incremento preparato il 9 ottobre
 
-Solo documentazione, indice iniziale e destinazione del generatore diagnostico.
-Nessun cambio a interfaccia, regole di accesso, database, account o campagna.
-Al successivo rilascio aggiornare le righe coinvolte con commit ed evidenza;
-non anteporre un altro resoconto lasciando in vigore quello precedente.
+Riordino Impara e aggiornamento dei riscontri SEO/social. Test di progressi e
+shaping, TypeScript, build, HTML SEO e browser desktop/mobile superati. Browser
+con API simulate, nessun account reale. Contenuti, link e dati salvati preservati.
+Il server Vite di prova segnala il preesistente import JSON da public nella
+metadata SEO; il build di produzione e i test passano. Non confonderlo con una
+causa accertata dell’esclusione Google.
+
+Nessuna migration, invio social o acquisto. Installer WSL predisposto per backup,
+controlli, commit dei soli file interessati e push su main. Da questo ambiente
+non è disponibile autenticazione GitHub in scrittura: non dichiarare questo
+incremento già pubblicato. Dettagli: [ordine lezioni](IMPARA_LESSON_ORDER_V1.md)
+e [diagnosi SEO](SEO_INDEXATION_2026_10_09.md).

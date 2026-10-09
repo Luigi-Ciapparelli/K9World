@@ -11,13 +11,23 @@ try {
     const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText.replaceAll("'./imparaContent'","'./imparaContent.mjs'").replaceAll("'./shapingLab'", "'./shapingLab.mjs'");
     await fs.writeFile(path.join(temp,`${file}.mjs`),code);
   }
-  const { STAGE_1_LESSONS:L }=await import(`file://${temp}/imparaContent.mjs`);
+  const { STAGE_1_LESSONS:L, STAGE_1_MODULES:modules }=await import(`file://${temp}/imparaContent.mjs`);
+  const expected=['bisogni-recupero','routine-sicurezza-autonomia','spazi-risorse-prossemica','funzione-memoria-razza','gioco-lavoro-motivazione','etogramma-relazione-lettura','doti-apprendimento','osservazione-timing-marker'];
+  assert.deepEqual(L.map(l=>l.slug),expected,'move only the former second lesson to the end');
+  assert.deepEqual(L.map(l=>l.order),[1,2,3,4,5,6,7,8]);
+  assert.deepEqual(modules.flatMap(module=>L.filter(l=>l.moduleId===module.id).map(l=>l.slug)),expected,'grouped course cards keep the same order as lesson navigation');
   const m=await import(`file://${temp}/imparaProgress.mjs`);
   const {normalizeProgress,emptyProgress,learningKey:key,lessonStatus,scoreMarkers,labPassed}=m;
   const lesson=L[0]; const reading=key(lesson.slug,lesson.sublessons[0].id);
   let p=normalizeProgress({studied:[reading,reading,'unknown',null],activities:['any'],verified:L.map(l=>l.slug)});
   assert.deepEqual(p.studied,[reading]); assert.equal(p.migrated,true); assert.equal(lessonStatus(lesson,p).complete,false);
   assert.deepEqual(normalizeProgress(null),emptyProgress());
+  const timing=L.find(l=>l.slug==='osservazione-timing-marker');
+  const timingReading=key(timing.slug,timing.sublessons[0].id);
+  const existing=normalizeProgress({version:3,studied:[timingReading],resume:timing.slug,quizzes:{[timing.slug]:[{answers:timing.quiz.map(q=>q.correctIndex),date:'2026-10-08T10:00:00.000Z'}]}});
+  assert.deepEqual(existing.studied,[timingReading],'readings survive the change of lesson number');
+  assert.equal(existing.resume,timing.slug,'resume keeps the same content');
+  assert.equal(existing.quizzes[timing.slug].length,1,'past quiz answers remain associated with the same lesson');
   p=emptyProgress();p.studied=lesson.sublessons.map(s=>key(lesson.slug,s.id));
   const a=lesson.activities[0];const id=key(lesson.slug,a.id);
   p.activities[id]={fields:a.fields.map(()=>''),checks:a.instructions.map(()=>true),done:true};

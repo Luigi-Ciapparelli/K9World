@@ -82,6 +82,12 @@ solo articoli. Le basi includono bisogni, riposo, sicurezza, comunicazione,
 condizionamento classico/operante, marker, shaping e convivenza. Il laboratorio
 del cane sulla piattaforma è semplice ed esemplificativo, non una prova professionale.
 
+Dal 9 ottobre 2026 l’ordine delle lezioni è quello precedente **1, 3, 4, 5, 6, 7, 8, 2**,
+rinumerato da 1 a 8. «Osservazione e clicker: allenare il timing» chiude il percorso,
+dopo le basi dell’apprendimento, nel modulo «Costruire la relazione». Contenuti,
+slug, ID delle attività e progressi restano gli stessi; le altre lezioni mantengono
+il proprio ordine relativo. Specifica: [IMPARA_LESSON_ORDER_V1](IMPARA_LESSON_ORDER_V1.md).
+
 Il progresso locale esistente non è una credenziale. Direzione futura:
 Stage → Modulo → Lezione → Attività → Verifica → Completamento, con stati chiari
 e possibili verifiche pratiche. Materiali originali, fonti e revisione dei temi
@@ -153,7 +159,11 @@ scrivono tier, ranking o stato. Nessun pay-to-rank o attestato ufficiale simulat
 ## Social, ricavi, mercati e rete futura
 
 Concept approvato e canali in [FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md).
-Tre post riportati, performance da leggere; Higgsfield futuro con cani/proprietari
+Tre post riportati: Luigi segnala assenza di follower/visualizzazioni sugli altri
+canali e visualizzazioni soltanto su TikTok; non attribuire conteggi non disponibili.
+Luigi indica la possibilità di una prova Higgsfield gratuita da 100 crediti,
+non ancora attestata come attivata. Budget di lavoro proposto: zero euro e una
+scena campione prima del video completo; nessun acquisto implicito. Higgsfield futuro con cani/proprietari
 che attraversano il portale, metafora del percorso e non soluzione istantanea.
 La mascotte ispirata a Kyros richiede riferimenti e una scelta stilistica futura.
 Nessuna animazione della home dedotta dalla campagna video.

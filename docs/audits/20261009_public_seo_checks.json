@@ -1,0 +1,244 @@
+{
+  "checked_at_utc": "2026-10-09T07:06:25.424994+00:00",
+  "csv_rows": 264,
+  "csv_unique_urls": 264,
+  "last_scan_values": {
+    "1970-01-01": 264
+  },
+  "families": {
+    "gruppi-fci": 7,
+    "impara": 7,
+    "ranking": 1,
+    "razze": 246,
+    "scegliere-allevatore": 1,
+    "search": 1,
+    "sport": 1
+  },
+  "sitemap_count": 392,
+  "csv_urls_missing_from_sitemap": [],
+  "checks": [
+    {
+      "url": "https://www.portalecinofilo.com/",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "PortaleCinofilo | Educazione del cane e professionisti cinofili",
+      "text_chars": 1854,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://www.portalecinofilo.com/impara",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/impara",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/impara"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "Educazione del cane: lezioni gratuite | PortaleCinofilo",
+      "text_chars": 4362,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://www.portalecinofilo.com/impara/stage-1/osservazione-timing-marker",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/impara/stage-1/osservazione-timing-marker",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/impara/stage-1/osservazione-timing-marker"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "Osservazione e clicker: allenare il timing | PortaleCinofilo",
+      "text_chars": 5141,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://www.portalecinofilo.com/search",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/search",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/search"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "Trova addestratori e pensioni per cani | PortaleCinofilo",
+      "text_chars": 1924,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://www.portalecinofilo.com/sport",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/sport",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/sport"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "Sport cinofili: trova un addestratore | PortaleCinofilo",
+      "text_chars": 2159,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://www.portalecinofilo.com/esposizioni",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/esposizioni",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/esposizioni"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "Toelettatura e handler per esposizioni | PortaleCinofilo",
+      "text_chars": 2150,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://www.portalecinofilo.com/ranking",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/ranking",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/ranking"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "Competenze, verifiche e criteri di ricerca | PortaleCinofilo",
+      "text_chars": 3303,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://www.portalecinofilo.com/razze/shikoku",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/razze/shikoku",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/razze/shikoku"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "Shikoku: gruppo FCI e bisogni | PortaleCinofilo",
+      "text_chars": 2715,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://www.portalecinofilo.com/razze/clumber-spaniel",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/razze/clumber-spaniel",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/razze/clumber-spaniel"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "Clumber Spaniel: gruppo FCI e bisogni | PortaleCinofilo",
+      "text_chars": 2717,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://www.portalecinofilo.com/razze/dobermann",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/razze/dobermann",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/razze/dobermann"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "Dobermann: gruppo FCI e bisogni | PortaleCinofilo",
+      "text_chars": 2770,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://www.portalecinofilo.com/robots.txt",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/robots.txt",
+      "x_robots_tag": null,
+      "body": "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /app-shell\nDisallow: /profile-shell\nDisallow: /offline.html\n\nSitemap: https://www.portalecinofilo.com/sitemap.xml\n"
+    },
+    {
+      "url": "https://www.portalecinofilo.com/sitemap.xml",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/sitemap.xml",
+      "x_robots_tag": null
+    },
+    {
+      "url": "https://portalecinofilo.com/",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "PortaleCinofilo | Educazione del cane e professionisti cinofili",
+      "text_chars": 1854,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://www.portalecinofilo.it/",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "PortaleCinofilo | Educazione del cane e professionisti cinofili",
+      "text_chars": 1854,
+      "exhibitions_link": true
+    },
+    {
+      "url": "https://portalecinofilo.it/",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "PortaleCinofilo | Educazione del cane e professionisti cinofili",
+      "text_chars": 1854,
+      "exhibitions_link": true
+    },
+    {
+      "url": "http://www.portalecinofilo.com/",
+      "status": 200,
+      "final_url": "https://www.portalecinofilo.com/",
+      "x_robots_tag": null,
+      "canonical": [
+        "https://www.portalecinofilo.com/"
+      ],
+      "robots": [
+        "index, follow, max-image-preview:large"
+      ],
+      "title": "PortaleCinofilo | Educazione del cane e professionisti cinofili",
+      "text_chars": 1854,
+      "exhibitions_link": true
+    }
+  ]
+}

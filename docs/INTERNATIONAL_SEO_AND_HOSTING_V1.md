@@ -55,7 +55,11 @@ Calcolo da usare: **ricavi incrementali attesi − costi incrementali del paese*
 
 ## 4. Search Console: cosa sappiamo davvero
 
-Luigi ha riportato l'8 ottobre 2026 tre motivi, per complessive **268 pagine**. Non sono disponibili gli URL interessati, l'ultima data di aggiornamento del report o il numero totale di pagine indicizzate.
+Luigi ha riportato tre motivi, per complessive **268 pagine**. Il 9 ottobre ha
+fornito il CSV dei 264 URL e indicato le altre quattro pagine: Shikoku, Clumber
+Spaniel e Dobermann (scansione 5 ottobre), home duplicata (4 ottobre). Analisi e
+dati versionati in [SEO_INDEXATION_2026_10_09](SEO_INDEXATION_2026_10_09.md).
+Manca la canonical scelta da Google della home, non l’elenco degli URL.
 
 | Motivo riportato | Pagine | Interpretazione e prossimo controllo |
 | --- | ---: | --- |
@@ -85,13 +89,18 @@ Questo campione non mostra un blocco generale `noindex` o robots. Non certifica 
 
 Nel codice di `src/pages/BreedPage.tsx`, le schede usano i testi di `FCI_GROUP_CONTENT[breed.fciGroup]` per selezione e gestione. Cambiano identità e riferimenti della razza, mentre parti sostanziali del testo sono condivise dal gruppo. `src/seo/metadata.ts` include tutte queste schede tra le pagine indicizzabili.
 
-**Inferenza:** molte pagine simili possono offrire poco valore specifico rispetto al numero di URL pubblicati. Non sappiamo ancora se le 264 escluse siano queste schede né se questa sia la causa della mancata indicizzazione. Non cancellare o deindicizzare tutte le razze sulla sola inferenza.
+**Dato aggiornato:** 246 dei 264 URL ricevuti sono schede razza. **Inferenza:**
+molte pagine simili possono offrire poco valore specifico rispetto al numero di
+URL pubblicati; il CSV non dimostra che questa sia la causa delle esclusioni.
+Non cancellare o deindicizzare tutte le razze sulla sola inferenza.
 
 Anche i profili `/p/:id` meritano un successivo intervento: la versione documentata usa una shell HTML con dati pubblici caricati dal browser e non li inserisce automaticamente nella sitemap. Migliorare la loro presenza nei motori potrebbe essere più utile commercialmente che aggiungere altre centinaia di pagine generiche. Il progetto futuro deve usare esclusivamente la proiezione pubblica autorizzata, senza esportare archivi, contatti riservati o note.
 
 ## 5. Sequenza operativa SEO
 
-1. **Raccogliere gli URL.** In Search Console aprire ciascuno dei tre motivi e usare Esporta → CSV; annotare proprietà e data del report. Per il duplicato, aggiungere il risultato di Controllo URL con canonica dichiarata e canonica scelta da Google. Non servono password o accesso all'account.
+1. **URL ricevuti e classificati.** Non richiedere nuovamente gli export. Per il
+   duplicato manca solo «Pagina canonica scelta da Google» in Controllo URL della
+   home; quella dichiarata attualmente è `https://www.portalecinofilo.com/`.
 2. **Classificare il campione.** Controllare tutte le 3 pagine scansionate e il duplicato, poi un campione delle 264 distribuito per tipo di pagina. Incrociare HTTP, HTML iniziale, canonical, collegamenti interni, contenuto e ultima scansione. Distinguere problema tecnico, duplicazione prevista e lavoro editoriale.
 3. **Dare precedenza alle pagine che fanno usare il portale.** Home, Impara e lezioni utili, ricerca, Sport e ingresso professionisti. Verificare lo stato con Controllo URL; non usare il solo conteggio di una ricerca `site:` come inventario [1, 4].
 4. **Correggere solo ciò che emerge.** Per contenuti troppo simili, scegliere approfondimento specifico oppure consolidamento motivato. Per le schede mantenute: informazioni originali utili, fonti, limiti, link contestuali verso percorso pre-cane e professionisti. Non riscrivere in serie cambiando soltanto il nome della razza.
@@ -133,7 +142,11 @@ I backup del database Supabase non contengono i file di Storage: coprono i metad
 
 ## 7. Downtime: indagine mirata, non acquisto al buio
 
-**Informazione utente:** il sito è stato irraggiungibile per alcune ore. Mancano data, fascia oraria, indirizzo preciso, messaggio d'errore e distinzione tra pagina irraggiungibile e funzioni interne non disponibili. Il controllo HTTP odierno non risolve questo incidente retroattivamente.
+**Informazione utente aggiornata al 9 ottobre:** la causa non è stata capita;
+Luigi ipotizza il servizio gratuito, senza prove. Mancano finestra e sintomo
+precisi. Il controllo HTTP del 9 ottobre riesce, ma non spiega il disservizio
+storico. Non attribuire la causa né acquistare hardware/piani sulla sola ipotesi.
+La raccolta di evidenze al prossimo episodio è il passo concreto rimasto.
 
 Ordine proposto per la successiva diagnosi:
 
@@ -148,7 +161,7 @@ Ordine proposto per la successiva diagnosi:
 | Priorità | Luigi, mentre segue la guida | Lavoro successivo dell'assistente | Evidenza di chiusura |
 | --- | --- | --- | --- |
 | P0 — affidabilità | Fornire finestra e sintomo del downtime; indicare i piani effettivi senza segreti | Diagnosi del componente coinvolto e correzione proporzionata | Causa documentata, controllo del percorso coinvolto e monitoraggio |
-| P0 — pagine principali | Esportare i tre elenchi Search Console | Associare i problemi agli URL e preparare correzioni mirate | Report per URL, riscontri tecnici e andamento delle pagine prioritarie |
+| P0 — pagine principali | Fornire solo la canonical Google della home; elenchi già ricevuti | Proseguire dalla diagnosi del 9 ottobre e dalle pagine prioritarie | Report per URL, riscontri tecnici e andamento delle pagine prioritarie |
 | P1 — qualità e conversione | Continuare contatti concordati e dimostrazioni locali | Migliorare contenuti e ostacoli emersi, conservando ricerca semplice | Richieste reali con risposta, contenuti utili, ritorno all'uso |
 | P2 — prova estera | Segnalare contatti e lingue realmente gestibili | Scheda comparativa di due mercati e budget incrementale | Primo mercato scelto sulla base di prove, non del nome del dominio |
 | P3 — marchio e infrastruttura | Decidere eventuali impegni economici su proposta concreta | Piano tecnico e commerciale verificabile | Acquisti o migrazioni soltanto quando motivati e autorizzati |
