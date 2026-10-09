@@ -8,6 +8,7 @@ non un'autorizzazione generale a spendere, pubblicare o contattare terzi.
 
 NAV-01 / PRO-01 (`7f11610`), EXP-01 (`3ec87ad`) e REV-01 individuali/pensioni
 (`fd619e4`) sono su `main`. La parte centri di REV-01 è distinta in TEAM-01.
+Anche il riordino Impara è su `main` (`204441b`).
 Non ripetere l'installer di una funzione già presente per correggere un documento.
 La conferma dell'ambiente online, dove manca, è un controllo circoscritto, non
 un nuovo sviluppo né una ragione per negare i test locali già eseguiti.
@@ -21,7 +22,7 @@ future per dimostrare quelle già utilizzabili.
 | ID | Priorità e ambito | Dipendenza / prossimo risultato concreto | Criterio di chiusura |
 | --- | --- | --- | --- |
 | AFF-01 | Causa storica non ricostruita; controllo al prossimo episodio | Luigi non ha una causa certa; raccogliere finestra, URL/sintomo e log se ricapita; piano gratuito resta ipotesi | Causa oppure limite d'indagine esplicito, correzione motivata e percorso verificato; monitor valutato separatamente |
-| SEO-01 | CSV e quattro URL specifici ricevuti; diagnosi pubblica eseguita | Canonical scelta da Google per la home; poi qualità delle tre schede e priorità Impara/ricerca; vedere SEO_INDEXATION_2026_10_09 | Diagnosi per famiglia/URL, interventi mirati e misurazione successiva; nessuna promessa di indicizzare tutto |
+| SEO-01 | Canonical ricevuta; richiesta inviata e sitemap riuscita; guide specifiche preparate | Rilascio delle tre guide e osservazione di nuova scansione/canonical, poi pagine prioritarie; vedere SEO_INDEXATION_2026_10_09 | Diagnosi per famiglia/URL, interventi mirati e misurazione successiva; nessuna promessa di indicizzare tutto |
 | MEDIA-01 | Prossimo blocco tecnico proposto | Specifica dati/permessi/quote e costo prima di caricare file; prima allegati privati e foto, poi audio/video | Pipeline utilizzabile, compressione utile, revoca/download, limiti, cancellazione e ripristino provati |
 | TEAM-01 | Successivo o anticipato da un centro reale | Persona, appartenenza al team e istruttore assegnato alla prenotazione | Esperienze attribuite alla persona corretta, nessun trasferimento di reputazione e reciprocità sicura nei centri |
 | SPORT-02 | Blocco separato dopo verifica dei consumer esistenti | Identità Working-Dog, accesso ammesso alla fonte, parser reale e regole per disciplina | Collegamento → verifica → badge/ranking e revoca, con prova reale; casi ambigui rimangono non verificati |
@@ -31,9 +32,9 @@ future per dimostrare quelle già utilizzabili.
 
 ## Input che mancano davvero a Luigi
 
-1. **Per chiudere la duplicazione della home:** in Controllo URL leggere soltanto
-   «Pagina canonica scelta da Google». CSV e URL esclusi sono già ricevuti e
-   conservati nel repository; non richiederli nuovamente.
+1. **SEO:** CSV, URL e canonical sono già ricevuti. Richiesta inviata e sitemap
+   riuscita già confermate. Manca soltanto l'esito di una nuova scansione Google:
+   non chiedere di ripetere questi passaggi o cambiare DNS senza un nuovo riscontro.
 2. **Downtime:** nessun altro dato storico disponibile per ora. Se ricapita,
    annotare ora locale, URL e messaggio: senza questi dati non assegnare una causa.
 3. **Social:** usare il riscontro attuale senza inventare numeri; eventuali dati
@@ -42,7 +43,7 @@ future per dimostrare quelle già utilizzabili.
    verificare l’effettivo accredito e il costo di una generazione quando si attiverà
    la prova. Nessun acquisto o rinnovo autorizzato da questo piano.
 
-**Impara:** spostamento dell’ex lezione 2 alla posizione 8 preparato e testato;
+**Impara:** spostamento dell'ex lezione 2 alla posizione 8 su GitHub (`204441b`);
 criteri e rilascio in [IMPARA_LESSON_ORDER_V1](IMPARA_LESSON_ORDER_V1.md).
 
 Questi input non sono prerequisiti per consolidare le direttive, preparare uno

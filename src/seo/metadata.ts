@@ -2,6 +2,7 @@ import { STAGE_1_LESSONS } from '../lib/imparaContent';
 import { FCI_GROUP_NAMES, FCI_GROUP_CONTENT } from '../lib/fciGroups';
 import breeds from '../../public/data/fci-breeds.json';
 import { normalizeRoute, privateRoute } from '../lib/routeUrls';
+import { BREED_GUIDES } from '../lib/breedGuides';
 
 export const SITE_URL = 'https://www.portalecinofilo.com';
 export const SITE_NAME = 'PortaleCinofilo';
@@ -24,7 +25,10 @@ const pages: PageMeta[] = [
   { path: '/professional-terms', title: 'Condizioni per professionisti | PortaleCinofilo', description: 'Condizioni per la presenza e l’attività dei professionisti su PortaleCinofilo.', index: false },
   ...STAGE_1_LESSONS.map(lesson => ({ path: `/impara/stage-1/${lesson.slug}`, title: `${lesson.title} | PortaleCinofilo`, description: lesson.summary, index: true, type: 'LearningResource', parent: '/impara' })),
   ...Object.entries(FCI_GROUP_NAMES).map(([group, name]) => ({ path: `/gruppi-fci/${group}`, title: `Gruppo FCI ${group}: ${name} | PortaleCinofilo`, description: FCI_GROUP_CONTENT[Number(group)].intro, index: true, parent: '/prima-del-cane', type: 'CollectionPage' })),
-  ...breeds.map(breed => ({ path: `/razze/${breed.slug}`, title: `${breed.name}: gruppo FCI e bisogni | PortaleCinofilo`, description: `Conosci ${breed.name}: classificazione nel gruppo FCI ${breed.fciGroup}, contesto di selezione e domande utili sulla gestione. Con riferimenti ENCI.`, index: true, parent: `/gruppi-fci/${breed.fciGroup}` })),
+  ...breeds.map(breed => {
+    const guide = BREED_GUIDES[breed.slug];
+    return { path: `/razze/${breed.slug}`, title: guide ? `${guide.title} | PortaleCinofilo` : `${breed.name}: gruppo FCI e bisogni | PortaleCinofilo`, description: guide?.description || `Conosci ${breed.name}: classificazione nel gruppo FCI ${breed.fciGroup}, contesto di selezione e domande utili sulla gestione. Con riferimenti ENCI.`, index: true, parent: `/gruppi-fci/${breed.fciGroup}` };
+  }),
 ];
 export const PUBLIC_PAGES = pages;
 const byPath = new Map(pages.map(page => [page.path, page]));

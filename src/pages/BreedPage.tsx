@@ -11,6 +11,8 @@ import { loadFciBreeds, type FciBreed } from '../lib/fciBreeds';
 import { RouteLink } from '../components/RouteLink';
 import { FCI_GROUP_CONTENT } from '../lib/fciGroups';
 import { useRouter } from '../lib/RouterContext';
+import { BREED_GUIDES } from '../lib/breedGuides';
+import { BreedGuideContent } from '../components/BreedGuideContent';
 
 export function BreedPage({ slug, initialBreed }: { slug: string; initialBreed?: FciBreed }) {
   const { navigate } = useRouter();
@@ -55,6 +57,7 @@ export function BreedPage({ slug, initialBreed }: { slug: string; initialBreed?:
   }
 
   const groupContent = FCI_GROUP_CONTENT[breed.fciGroup];
+  const guide = BREED_GUIDES[breed.slug];
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -84,6 +87,7 @@ export function BreedPage({ slug, initialBreed }: { slug: string; initialBreed?:
               <h1 className="text-3xl md:text-5xl font-bold text-stone-900 mt-1 tracking-tight">
                 {breed.name}
               </h1>
+              {guide && <p className="mt-4 max-w-3xl text-lg leading-relaxed text-stone-700">{guide.lead}</p>}
               <RouteLink
                 to={`/gruppi-fci/${breed.fciGroup}`}
                 className="inline-flex items-center gap-2 text-stone-600 hover:text-emerald-700 mt-3"
@@ -103,7 +107,9 @@ export function BreedPage({ slug, initialBreed }: { slug: string; initialBreed?:
           </div>
         </section>
 
-        {groupContent && (
+        {guide && <BreedGuideContent guide={guide} name={breed.name} />}
+
+        {!guide && groupContent && (
           <section className="mt-6 grid md:grid-cols-2 gap-5">
             <InfoCard
               icon={<Heart className="w-5 h-5" />}
@@ -150,6 +156,11 @@ export function BreedPage({ slug, initialBreed }: { slug: string; initialBreed?:
             Apri la scheda ENCI ufficiale
             <ExternalLink className="w-4 h-4" />
           </a>
+          {guide && <div className="mt-6 border-t border-stone-200 pt-5">
+            <h3 className="font-semibold text-stone-900">Fonti di questa guida</h3>
+            <ul className="mt-3 space-y-2">{guide.sources.map(source=><li key={source.url}><a href={source.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-800 underline underline-offset-4">{source.label}<ExternalLink size={14} className="shrink-0"/></a></li>)}</ul>
+            <p className="mt-4 text-sm leading-relaxed text-stone-600">Standard ufficiale: {guide.standardDate}. Fonti consultate il <time dateTime={guide.checkedOn}>9 ottobre 2026</time>. Sintesi e spunti originali di PortaleCinofilo; nessuna approvazione di questa guida da parte di FCI o ENCI.</p>
+          </div>}
         </section>
 
         <section className="mt-6 bg-emerald-50 border border-emerald-100 rounded-3xl p-7 md:p-8">
@@ -161,14 +172,14 @@ export function BreedPage({ slug, initialBreed }: { slug: string; initialBreed?:
           </h2>
 
           <div className="mt-5 grid md:grid-cols-2 gap-3 text-sm text-stone-700">
-            {[
+            {(guide?.questions || [
               'Qual è l’obiettivo della selezione e come vengono scelti gli accoppiamenti?',
               'Quali controlli sanitari sono rilevanti per questa razza e quali risultati hanno i genitori?',
               'Che carattere e che stile di vita hanno i genitori e i parenti stretti?',
               'Come crescono i cuccioli prima della consegna e quali esperienze fanno?',
               'L’allevatore resta disponibile anche dopo l’affido?',
               'Le aspettative della tua famiglia sono compatibili con il singolo cucciolo proposto?',
-            ].map((question) => (
+            ]).map((question) => (
               <div
                 key={question}
                 className="rounded-2xl bg-white/70 border border-emerald-100 p-4"
@@ -189,14 +200,13 @@ export function BreedPage({ slug, initialBreed }: { slug: string; initialBreed?:
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => navigate(`/scegliere-allevatore?razza=${breed.slug}`)}
+          <RouteLink
+            to={`/scegliere-allevatore?razza=${breed.slug}`}
             className="inline-flex items-center gap-2 mt-6 px-5 py-3 rounded-xl bg-emerald-700 text-white font-semibold hover:bg-emerald-800"
           >
             Come scegliere un allevamento
             <ArrowRight className="w-4 h-4" />
-          </button>
+          </RouteLink>
         </section>
       </div>
     </div>

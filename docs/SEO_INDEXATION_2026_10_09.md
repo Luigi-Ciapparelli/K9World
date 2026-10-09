@@ -46,8 +46,10 @@ ranking e tutte e tre le razze segnalate. Per ognuna:
 
 La sitemap online contiene **392 URL**; **tutti i 264 del CSV vi compaiono**.
 Le varianti della home `.com` senza www, `.it` con/senza www e HTTP arrivano
-alla home HTTPS con www. Il controllo ha seguito i redirect, senza affermare
-un particolare codice per ogni passaggio intermedio.
+alla home HTTPS con www. Un secondo controllo del 9 ottobre, senza seguire
+automaticamente i redirect, ha osservato **308** da `https://portalecinofilo.com/`
+a `https://www.portalecinofilo.com/`, anche per `/impara` e `/sitemap.xml`.
+HTTP passa a HTTPS tramite 308; dalla variante senza www segue il 308 verso www.
 
 Questo esclude un `noindex`, un errore HTTP o un’assenza dalla sitemap osservati
 su questo campione adesso. Non dimostra disponibilità continua, comportamento
@@ -55,18 +57,25 @@ di Googlebot, stato dei flussi autenticati o inclusione nell’indice.
 
 ## Decisioni motivate
 
-**Home duplicata.** Il canonical dichiarato ora è corretto. Manca soltanto
-l’indirizzo mostrato da Search Console in «Pagina canonica scelta da Google».
-Senza quello non cambiare dominio, canonical o redirect alla cieca. Un risultato
-di una vecchia scansione può differire dallo stato attuale; va verificato.
+**Home duplicata.** Dato ricevuto: alla scansione del **4 ottobre, 08:45:30**,
+Googlebot smartphone ha scelto `https://portalecinofilo.com/`, mentre il canonical
+dichiarato era `https://www.portalecinofilo.com/`. Scansione e indicizzazione
+erano consentite; recupero riuscito. Nel controllo attuale redirect, HTML e sitemap
+convergono già sulla versione www. Non è emersa una configurazione da modificare.
+Luigi ha confermato il **9 ottobre** l'invio della richiesta di indicizzazione
+e la sitemap indicata come **riuscita**: la precedente segnalazione di errore
+temporaneo della sitemap non è il suo stato corrente. Il risultato di Google
+resta riferito alla vecchia scansione fino a una nuova osservazione.
 
 **Tre razze scansionate.** Non emergono blocchi di accesso nel controllo attuale.
 Il codice usa testi comuni del gruppo FCI per ampie parti delle schede. È un
 limite editoriale concreto; che determini queste esclusioni è un’ipotesi,
-non una diagnosi comunicata da Google. Priorità successiva: rendere utili e
-specifiche queste tre schede con fonti ufficiali di razza, storia/funzione,
-gestione e domande per allevatore/professionista, senza promesse comportamentali
-basate sulla sola razza. Non generare in massa 364 varianti dello stesso testo.
+non una diagnosi comunicata da Google. Incremento preparato: testi specifici per
+queste tre schede con fonti FCI, storia/funzione, vita quotidiana e domande per
+allevatore/professionista, senza promesse comportamentali basate sulla sola razza.
+Dettagli e test in [BREED_GUIDES_V1](BREED_GUIDES_V1.md). Sono approfondimenti
+editoriali, non una garanzia di inclusione nell'indice. Non generare in massa
+364 varianti dello stesso testo.
 
 **264 pagine rilevate.** La sitemap le include già. Dare precedenza a Impara,
 lezioni e ricerca, poi gruppi/schede utili; verificare Controllo URL e link
@@ -78,14 +87,14 @@ sitemap rimangono coerenti con il percorso. Non occorre una migrazione SEO.
 
 ## Prossimo controllo concreto
 
-Luigi: Search Console → Controllo URL → incollare la home → Indicizzazione
-delle pagine → copiare solo **Pagina canonica scelta da Google**. Non servono
-password, token o l’intero export di nuovo.
+Dopo il rilascio delle guide, confrontare in Search Console la data dell'ultima
+scansione e la canonical della home con il riferimento del 4 ottobre, poi lo
+stato delle tre razze. Non chiedere di inviare nuovamente la richiesta già fatta
+o la sitemap già riuscita. Una nuova richiesta non equivale a una scansione
+completata né all'indicizzazione.
 
-Assistente: confrontare quel valore con canonical/redirect attuali e correggere
-solo l’incongruenza osservata; preparare poi i tre approfondimenti editoriali.
-Confrontare nel tempo indicizzazione delle pagine prioritarie, impressioni e
-clic utili. Nessuna data garantita di indicizzazione.
+Confrontare nel tempo pagine prioritarie, impressioni e clic utili. Nessuna data
+garantita di indicizzazione. Non sospendere gli altri incrementi in attesa di Google.
 
 ## Disponibilità e limiti dell’indagine
 

@@ -43,3 +43,7 @@ con `--publish` esegue test unitari, TypeScript, build/SEO, commit limitato ai
 file dell’incremento e push su `main`. Il push può avviare Vercel. Nessuna
 migration, comando Supabase, spesa o pubblicazione social.
 Il completamento locale non certifica un deployment online.
+
+Il 9 ottobre un fetch ha confermato il riordino su `origin/main` nel commit
+`204441b`. Non ripetere l'installer per questo blocco; il riscontro GitHub resta
+distinto dallo stato di Vercel.

@@ -41,3 +41,23 @@ assert.match(exhibitions,/Handler per esposizioni/);
 assert.match(exhibitions,/anche per la cura quotidiana/);
 assert.ok(!exhibitions.includes('Pet sitting'));
 assert.match(home,/href="\/esposizioni"/);
+
+// The three expanded guides must be readable before JavaScript runs. Their
+// canonical URLs stay stable; the remaining breed catalogue keeps its content.
+for (const [slug,title,standard] of [
+  ['shikoku','Shikoku: origini, convivenza e scelta consapevole','319'],
+  ['clumber-spaniel','Clumber Spaniel: attività, cura e scelta consapevole','109'],
+  ['dobermann','Dobermann: relazione, attività e scelta consapevole','143'],
+]) {
+  const html=await fs.readFile(path.join(dist,'razze',slug+'.html'),'utf8');
+  assert.ok(html.includes(`<title>${title} | PortaleCinofilo</title>`),slug);
+  assert.ok(html.includes('Immagina la vostra giornata'),slug+' original guidance');
+  assert.ok(html.includes(`N. ${standard}`),slug+' standard reference');
+  assert.ok(html.includes('Fonti di questa guida'),slug+' visible sources');
+  assert.ok(html.includes('dateTime="2026-10-09"'),slug+' source check date');
+  assert.ok(!html.includes('Da quale storia funzionale partire'),slug+' no generic duplicate section');
+  assert.ok(html.includes('href="/search?type=trainer"'),slug+' direct professional search');
+  assert.ok(html.includes('href="/impara/stage-1/'),slug+' contextual learning links');
+}
+assert.match(await fs.readFile(path.join(dist,'razze','affenpinscher.html'),'utf8'),/Da quale storia funzionale partire/);
+console.log('OK: tre guide specifiche nel prerender, fonti visibili, URL stabili e catalogo restante conservato.');

@@ -1,7 +1,7 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **9 ottobre 2026**. Base verificata con fetch di `origin/main`:
-[`684f74e`](https://github.com/Luigi-Ciapparelli/K9World/commit/684f74eda05c552feb2d23a272aadcc6fb8ecf38).
+[`204441b`](https://github.com/Luigi-Ciapparelli/K9World/commit/204441b891399b4643ef073bdb409bd43bf933b8).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
@@ -20,6 +20,7 @@ Questo registro è mantenuto manualmente; il generatore scrive in
 | NAV-01 / PRO-01 | `7f11610` | Ricerca quotidiana Addestratori/Pensioni; Esposizioni con Toelettatura/Handler; attività nel profilo guidato | Una categoria selezionata non certifica una qualifica |
 | EXP-01 | `3ec87ad` | Storico autorizzato in HTML stampabile in PDF e JSON; archivio autore e selezioni ricevute | Audio/video e documenti delle sessioni assenti; luoghi solo quando registrati nelle note; limiti dimensionali espliciti |
 | REV-01 | `fd619e4` | Recensioni dal secondo servizio con un addestratore individuale; pensione dal primo; voto sul cliente privato | Reciprocità per centri sospesa finché manca l'istruttore assegnato; moderazione completa futura |
+| Impara / diagnosi SEO | `204441b` | Timing spostato dalla posizione 2 alla 8; altre lezioni scalate; CSV e riscontri SEO conservati | Nessuna garanzia di indicizzazione; ordine e progressi preservati |
 
 Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
 [export](DOG_HISTORY_EXPORT_V1.md), [valutazioni](SERVICE_REVIEWS_V1.md).
@@ -42,7 +43,7 @@ osservati direttamente: **non segnalarli come falliti né come verificati**.
 | Area | Implementazione nel repository | Confine importante |
 | --- | --- | --- |
 | Home e ricerca | Home con immagine statica; percorso pre-cane facoltativo; aiuto diretto, Sport ed Esposizioni separati | Non ripristinare la porta animata o un selettore iniziale obbligatorio |
-| Impara | Otto lezioni, attività, quiz, quaderno e shaping; riordino locale preparato 1,3,4,5,6,7,8,2, rinumerato 1–8 | Slug e progressi preservati; pubblicazione di questo riordino da eseguire, nessun attestato ufficiale o sync account |
+| Impara | Otto lezioni, attività, quiz, quaderno e shaping; riordino su GitHub 1,3,4,5,6,7,8,2, rinumerato 1–8 | Slug e progressi preservati; nessun attestato ufficiale o sync account |
 | Cani | Identità/razza FCI, data di nascita, scheda e foto private | Nessun tracciamento GPS continuo introdotto |
 | Account | Registrazione, recupero password, email/telefono modificabili, verifiche e conferme previste dal flusso | Modalità lancio email-only; SMS disattivati per contenere costi |
 | Profilo professionale | Procedura guidata, identità visiva, esperienza, credenziali, attività/servizi e visibilità | Dato dichiarato, approvazione profilo e qualifica verificata sono distinti |
@@ -66,9 +67,11 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 | Output CLI di Luigi, 30 settembre | Migration recapiti e deploy `account-contacts`, `send-verification-code`, `verify-code`; `CONTACT_SMS_ENABLED=false`; commit `599e152` | Nuovo collaudo dei servizi al 9 ottobre |
 | Controllo pubblico, 8 ottobre | Campione di pagine HTTP 200, canonical, redirect .it → .com, 404 corretta | Tutte le pagine, funzioni autenticate, indicizzazione o causa del downtime |
 | Luigi, 9 ottobre | Primi tre post; assenza di trazione segnalata sugli altri canali, visualizzazioni soltanto TikTok; possibile prova Higgsfield da 100 crediti | Conteggi comparabili, conversioni, prova già attiva o spesa autorizzata |
-| CSV e URL ricevuti, 9 ottobre | 264 URL unici: 246 razze e 18 altre pagine; scansionate Shikoku/Clumber Spaniel/Dobermann; duplicata la home | Canonical scelta da Google e causa certa delle esclusioni |
+| CSV e URL ricevuti, 9 ottobre | 264 URL unici: 246 razze e 18 altre pagine; scansionate Shikoku/Clumber Spaniel/Dobermann; duplicata la home | Causa certa delle esclusioni |
 | HTTP pubblico, 9 ottobre | Campione di 10 pagine e 4 varianti della home: HTTP finale 200, canonical coerenti, nessun noindex; tutti i 264 URL presenti nella sitemap | Indicizzazione, accessibilità storica o flussi autenticati |
-| Git remoto, 9 ottobre | `684f74e` include consolidamento direttive, export, Esposizioni e nuove valutazioni | Nuovo controllo autenticato di Vercel/Supabase |
+| Luigi, Controllo URL della home | Alla scansione del 4 ottobre Google scelse la home senza www; dichiarata quella con www. Richiesta di indicizzazione inviata e sitemap riuscita, confermate il 9 ottobre | Nuova scansione già completata o canonical già aggiornata nell'indice |
+| HTTP pubblico, secondo controllo 9 ottobre | Home, `/impara` e sitemap senza www restituiscono 308 verso www; home e sitemap www rispondono 200 | Tempi o scelta futura di Google |
+| Git remoto, 9 ottobre | `204441b` include anche riordino Impara e analisi degli URL SEO | Nuovo controllo autenticato di Vercel/Supabase |
 
 ## Residui identificati e dipendenze
 
@@ -77,7 +80,7 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 | MEDIA-01 | Pipeline allegati privati delle sessioni non implementata | Progettare quote, compressione, permessi, conservazione, download e recupero; eventuale spesa richiede tetto esplicito |
 | TEAM-01 | Manca attribuzione della prenotazione al singolo istruttore del centro | Modellare persona/team/assegnazione e storia delle modifiche; poi estendere REV-01 |
 | SPORT-02 | Basi presenti, flusso reale e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
-| SEO-01 | CSV classificato e campione HTTP verificato; vedere SEO_INDEXATION_2026_10_09 | Solo canonical Google della home per il caso duplicato; poi contenuti specifici delle tre razze e controllo delle pagine prioritarie |
+| SEO-01 | Canonical ricevuta, redirect coerenti, richiesta inviata e sitemap riuscita; tre guide specifiche preparate/testate | Rilasciare le guide; osservare nuova scansione, canonical e pagine prioritarie. Non chiedere di nuovo i dati già ricevuti |
 | AFF-01 | Luigi conferma che la causa è rimasta ignota; piano gratuito soltanto ipotizzato | Nessun acquisto basato sull’ipotesi; se ricapita raccogliere ora/URL/errore e correlare log |
 | SOC-01 | Concept approvato; possibile trial da 100 crediti comunicato, video non prodotto | Storyboard e scena campione; verificare crediti/costo reale della generazione prima dell’uso, nessuna spesa attivata |
 | ECO-01 / INT-01 | Modello economico e mercati da validare | Utilizzo reale, costi e disponibilità a pagare; fonti aggiornate prima di domande di fondi o spese |
@@ -89,15 +92,14 @@ prova di implementazione. Priorità e criteri: [EXECUTION_PRIORITIES](EXECUTION_
 
 ## Incremento preparato il 9 ottobre
 
-Riordino Impara e aggiornamento dei riscontri SEO/social. Test di progressi e
-shaping, TypeScript, build, HTML SEO e browser desktop/mobile superati. Browser
-con API simulate, nessun account reale. Contenuti, link e dati salvati preservati.
-Il server Vite di prova segnala il preesistente import JSON da public nella
-metadata SEO; il build di produzione e i test passano. Non confonderlo con una
-causa accertata dell’esclusione Google.
+Guide originali per Shikoku, Clumber Spaniel e Dobermann, con fonti FCI,
+domande specifiche per l'allevatore, collegamenti a Impara/pre-cane/ricerca e
+metadata dedicati. TypeScript, build, HTML SEO e browser desktop/mobile superati.
+Il browser usa la build di produzione con API simulate; nessun account reale.
+URL e catalogo restante conservati. Specifica: [BREED_GUIDES_V1](BREED_GUIDES_V1.md).
 
-Nessuna migration, invio social o acquisto. Installer WSL predisposto per backup,
-controlli, commit dei soli file interessati e push su main. Da questo ambiente
-non è disponibile autenticazione GitHub in scrittura: non dichiarare questo
-incremento già pubblicato. Dettagli: [ordine lezioni](IMPARA_LESSON_ORDER_V1.md)
-e [diagnosi SEO](SEO_INDEXATION_2026_10_09.md).
+Installer WSL predisposto per backup, controlli, commit dei soli file interessati
+e push su main. Da questo ambiente non è disponibile autenticazione GitHub in
+scrittura: le nuove guide sono preparate, non dichiarate già online. Nessuna
+migration, modifica DNS, invio social o acquisto. Il precedente riordino Impara
+è invece già su GitHub: non richiedere di eseguirlo ancora.
