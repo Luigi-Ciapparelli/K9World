@@ -1,6 +1,6 @@
 # PortaleCinofilo — ordine operativo
 
-9 ottobre 2026. Stato e prove in [CURRENT_STATE](CURRENT_STATE.md); decisioni in
+10 ottobre 2026. Stato e prove in [CURRENT_STATE](CURRENT_STATE.md); decisioni in
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questa è la coda operativa unica,
 non un'autorizzazione generale a spendere, pubblicare o contattare terzi.
 
@@ -23,7 +23,7 @@ future per dimostrare quelle già utilizzabili.
 | --- | --- | --- | --- |
 | AFF-01 | Causa storica non ricostruita; controllo al prossimo episodio | Luigi non ha una causa certa; raccogliere finestra, URL/sintomo e log se ricapita; piano gratuito resta ipotesi | Causa oppure limite d'indagine esplicito, correzione motivata e percorso verificato; monitor valutato separatamente |
 | SEO-01 | Canonical ricevuta; richiesta inviata e sitemap riuscita; guide specifiche su GitHub | Osservazione di nuova scansione/canonical, poi pagine prioritarie; vedere SEO_INDEXATION_2026_10_09 | Diagnosi per famiglia/URL, interventi mirati e misurazione successiva; nessuna promessa di indicizzare tutto |
-| IMG-01 | Incremento corrente: identità visiva | Foto/logo e banner per tutti i professionisti; foto cliente privata; compressione e sostituzione a spazio limitato | Test pertinenti, migration pubblicata, frontend Ready e caricamento reale; specifica PROFILE_IMAGES_V1 |
+| IMG-01 | Identità visiva su GitHub (`e6e38c9`); ottimizzazione tecnica preparata | Compressione anche per le foto dei cani, aggiornamento dopo sostituzione e preparazione anteprime serializzata; PHOTO_UPLOAD_OPTIMIZATION_V1 | Prove frontend pertinenti e rilascio del correttivo; per IMG-01 restano distinti gli esiti Storage reali non osservati |
 | MEDIA-01 | Implementazione rinviata per decisione del 9 ottobre | Quote per piano di abbonamento, tipi di file utili, compressione misurata, conservazione e costo totale prima della pipeline | Matrice approvata; solo dopo costruire flusso privato, revoca/download, limiti, cancellazione e ripristino |
 | TEAM-01 | Successivo o anticipato da un centro reale | Persona, appartenenza al team e istruttore assegnato alla prenotazione | Esperienze attribuite alla persona corretta, nessun trasferimento di reputazione e reciprocità sicura nei centri |
 | SPORT-02 | Blocco separato dopo verifica dei consumer esistenti | Identità Working-Dog, accesso ammesso alla fonte, parser reale e regole per disciplina | Collegamento → verifica → badge/ranking e revoca, con prova reale; casi ambigui rimangono non verificati |
@@ -46,8 +46,9 @@ future per dimostrare quelle già utilizzabili.
 
 **Impara:** spostamento dell'ex lezione 2 alla posizione 8 su GitHub (`204441b`);
 criteri e rilascio in [IMPARA_LESSON_ORDER_V1](IMPARA_LESSON_ORDER_V1.md).
-Richiesta successiva: sostituzione del laboratorio con “Rex e il Clicker”, preparata
-e testata il 10 ottobre. Rilascio frontend e criteri in [REX_CLICKER_V1](REX_CLICKER_V1.md);
+Richiesta successiva: sostituzione del laboratorio con “Rex e il Clicker”, su
+GitHub (`d3517b5`); gioco/lezione raggiungibili al controllo pubblico del 10 ottobre.
+Criteri in [REX_CLICKER_V1](REX_CLICKER_V1.md);
 nessuna nuova migration. IMG-01 è ora presente su GitHub (`e6e38c9`).
 
 Questi input non sono prerequisiti per consolidare le direttive, preparare uno

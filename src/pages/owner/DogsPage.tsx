@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
@@ -6,7 +6,7 @@ import { useRouter } from '../../lib/RouterContext';
 import type { Dog } from '../../lib/types';
 import { loadFciBreeds, normalizeBreedSearch, type FciBreed } from '../../lib/fciBreeds';
 import { DogPhoto } from '../../components/DogPhoto';
-import { deleteDogPhoto, uploadDogPhoto, validateDogPhotoFile } from '../../lib/dogPhotos';
+import { deleteDogPhoto, uploadDogPhoto, prepareDogPhoto } from '../../lib/dogPhotos';
 
 export function DogsPage() {
   const { user } = useAuth();
@@ -258,8 +258,8 @@ export function DogsPage() {
                       )}
                     </div>
                     <div className="flex gap-1">
-                      <button onClick={(e) => { e.stopPropagation(); setEditing(d); }} className="p-1.5 text-stone-500 hover:text-emerald-700"><Pencil className="w-4 h-4" /></button>
-                      <button onClick={(e) => { e.stopPropagation(); remove(d); }} className="p-1.5 text-stone-500 hover:text-rose-600"><Trash2 className="w-4 h-4" /></button>
+                      <button aria-label={`Modifica ${d.name}`} onClick={(e) => { e.stopPropagation(); setEditing(d); }} className="p-1.5 text-stone-500 hover:text-emerald-700"><Pencil className="w-4 h-4" /></button>
+                      <button aria-label={`Elimina ${d.name}`} onClick={(e) => { e.stopPropagation(); remove(d); }} className="p-1.5 text-stone-500 hover:text-rose-600"><Trash2 className="w-4 h-4" /></button>
                     </div>
                   </div>
                   <div className="flex gap-3 mt-3 text-sm text-stone-700">
@@ -336,6 +336,10 @@ function DogModal({
   const [removePhoto, setRemovePhoto] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [photoPreparing, setPhotoPreparing] = useState(false);
+  const [photoError, setPhotoError] = useState('');
+  const photoTask = useRef<AbortController | null>(null);
+  useEffect(() => () => photoTask.current?.abort(), []);
 
   useEffect(() => {
     let active = true;
@@ -375,25 +379,27 @@ function DogModal({
     };
   }, [photoFile]);
 
-  const choosePhoto = (file: File | null) => {
-    if (!file) return;
-
+  const choosePhoto = async (file: File | null) => {
+    if (!file || saving) return;
+    photoTask.current?.abort();
+    const task = new AbortController(); photoTask.current = task;
+    setPhotoPreparing(true); setPhotoError(''); setPhotoFile(null);
     try {
-      validateDogPhotoFile(file);
-      setPhotoFile(file);
-      setRemovePhoto(false);
+      const prepared = await prepareDogPhoto(file, task.signal);
+      if (task.signal.aborted) return;
+      setPhotoFile(prepared); setRemovePhoto(false);
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Foto non valida');
-    }
+      if (!task.signal.aborted) setPhotoError(error instanceof Error ? error.message : 'Foto non valida');
+    } finally { if (!task.signal.aborted) setPhotoPreparing(false); }
   };
 
   const clearPhoto = () => {
-    setPhotoFile(null);
-    setRemovePhoto(Boolean(dog.photo_url));
+    photoTask.current?.abort(); setPhotoPreparing(false); setPhotoError('');
+    setPhotoFile(null); setRemovePhoto(Boolean(dog.photo_url));
   };
 
   const handleSave = async () => {
-    if (saving) return;
+    if (saving || photoPreparing) return;
 
     setSaving(true);
     try {
@@ -459,7 +465,7 @@ function DogModal({
       <div className="bg-white rounded-2xl max-w-lg w-full p-6">
         <div className="flex justify-between items-center mb-5">
           <h2 className="text-xl font-bold text-stone-900">{dog.id ? 'Edit dog' : 'Add a dog'}</h2>
-          <button onClick={onClose} className="text-stone-500 hover:text-stone-900"><X className="w-5 h-5" /></button>
+          <button aria-label="Chiudi modifica cane" disabled={saving} onClick={onClose} className="text-stone-500 hover:text-stone-900"><X className="w-5 h-5" /></button>
         </div>
         <div className="space-y-3">
           <Input label="Name" value={dog.name || ''} onChange={(v) => onChange({ ...dog, name: v })} />
@@ -615,12 +621,14 @@ function DogModal({
                     {previewUrl || (!removePhoto && dog.photo_url) ? 'Cambia foto' : 'Scegli foto'}
                     <input
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg,image/png,image/webp"
+                      aria-label="Foto del cane"
+                      disabled={saving}
                       className="hidden"
                       onChange={(e) => {
                         const file = e.currentTarget.files?.[0] || null;
                         e.currentTarget.value = '';
-                        choosePhoto(file);
+                        void choosePhoto(file);
                       }}
                     />
                   </label>
@@ -629,6 +637,7 @@ function DogModal({
                     <button
                       type="button"
                       onClick={clearPhoto}
+                      disabled={saving}
                       className="px-3 py-2 border border-stone-300 text-stone-700 rounded-lg text-sm font-semibold hover:bg-white"
                     >
                       Rimuovi foto
@@ -637,9 +646,12 @@ function DogModal({
                 </div>
 
                 <p className="text-xs text-stone-500 mt-2">
-                  Immagine privata. Massimo 8 MB.
+                  Immagine privata. JPG, PNG o WebP fino a 8 MB; copia ottimizzata fino a 512 × 512 pixel e 160 KB. L’originale non viene caricato.
                 </p>
 
+                {photoPreparing && <p role="status" className="text-xs text-stone-600 mt-2">Preparazione della foto…</p>}
+                {photoError && <p role="alert" className="text-xs text-rose-700 mt-2">{photoError}</p>}
+                {photoFile && !photoPreparing && <p className="text-xs text-stone-600 mt-2">Copia pronta: {Math.ceil(photoFile.size / 1024)} KB. Questa è l’immagine che verrà salvata.</p>}
                 {removePhoto && !previewUrl && (
                   <p className="text-xs text-rose-600 mt-1">
                     La foto attuale verrà rimossa al salvataggio.
@@ -665,10 +677,10 @@ function DogModal({
           </div>
         </div>
         <div className="flex gap-3 mt-6">
-          <button onClick={onClose} className="flex-1 py-2.5 border border-stone-300 rounded-lg font-semibold">Cancel</button>
+          <button disabled={saving} onClick={onClose} className="flex-1 py-2.5 border border-stone-300 rounded-lg font-semibold">Cancel</button>
           <button
             onClick={handleSave}
-            disabled={saving}
+            disabled={saving || photoPreparing}
             className="flex-1 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {saving ? 'Salvataggio...' : 'Save'}

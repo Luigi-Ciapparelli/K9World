@@ -42,12 +42,16 @@ export function imageDimensions(bytes: Uint8Array): [number, number] {
   throw new Error('Il file non è un’immagine JPG, PNG o WebP valida.');
 }
 
-export async function prepareProfileImage(file: File, kind: ImageKind, fit: 'contain' | 'cover', position = 50) {
+export async function prepareProfileImage(file: File, kind: ImageKind, fit: 'contain' | 'cover', position = 50, signal?: AbortSignal) {
+  const check = () => { if (signal?.aborted) throw new DOMException('Preparazione annullata.', 'AbortError'); };
+  check();
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 10 * 1024 * 1024) throw new Error('Scegli una foto JPG, PNG o WebP fino a 10 MB.');
   const [width, height] = imageDimensions(new Uint8Array(await file.arrayBuffer()));
+  check();
   if (!width || !height || width * height > 32_000_000 || width > 16000 || height > 16000) throw new Error('Immagine troppo grande: riducila sotto 32 megapixel e 16.000 pixel per lato.');
   const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
   try {
+    check();
     const limit = IMAGE_LIMITS[kind];
     const canvas = document.createElement('canvas');
     // No enlargement: small originals remain small, within the selected aspect ratio.
@@ -62,6 +66,7 @@ export async function prepareProfileImage(file: File, kind: ImageKind, fit: 'con
     ctx.drawImage(bitmap, (canvas.width - w) / 2, (canvas.height - h) * Math.max(0, Math.min(100, position)) / 100, w, h);
     for (const quality of [0.86, 0.76, 0.66, 0.56]) {
       const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/webp', quality));
+      check();
       if (blob?.type === 'image/webp' && blob.size <= limit.bytes) return blob;
     }
     throw new Error('Questa foto non rientra nel limite dopo la compressione. Scegli una foto meno dettagliata o ritagliala.');

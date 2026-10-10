@@ -1,7 +1,7 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **10 ottobre 2026**. Base verificata con fetch di `origin/main`:
-[`e6e38c9`](https://github.com/Luigi-Ciapparelli/K9World/commit/e6e38c903f6394a313dfee3578348945f455d497).
+[`d3517b5`](https://github.com/Luigi-Ciapparelli/K9World/commit/d3517b5f8eb31318b20adb877b3f177e93956d58).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
@@ -22,6 +22,7 @@ Questo registro è mantenuto manualmente; il generatore scrive in
 | REV-01 | `fd619e4` | Recensioni dal secondo servizio con un addestratore individuale; pensione dal primo; voto sul cliente privato | Reciprocità per centri sospesa finché manca l'istruttore assegnato; moderazione completa futura |
 | Impara / diagnosi SEO | `204441b` | Timing spostato dalla posizione 2 alla 8; altre lezioni scalate; CSV e riscontri SEO conservati | Nessuna garanzia di indicizzazione; ordine e progressi preservati |
 | IMG-01 | `e6e38c9` | Foto/logo, banner professionali e ritratti privati dei clienti; compressione nel browser e controllo accessi | Push Git osservato; Storage reale, migration applicata e frontend Ready non osservati direttamente |
+| Rex e il Clicker | `d3517b5` | Minigioco fornito da Luigi nella lezione 8; progressi e isolamento | Gioco e lezione HTTP 200 il 10 ottobre; nessuna sessione utente reale collaudata online |
 | Guide razze / SEO | `558e0d5` | Guide originali Shikoku, Clumber Spaniel e Dobermann, fonti e metadata specifici | Attendere riscontri Google; nessuna promessa di indicizzazione |
 
 Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
@@ -45,7 +46,7 @@ osservati direttamente: **non segnalarli come falliti né come verificati**.
 | Area | Implementazione nel repository | Confine importante |
 | --- | --- | --- |
 | Home e ricerca | Home con immagine statica; percorso pre-cane facoltativo; aiuto diretto, Sport ed Esposizioni separati | Non ripristinare la porta animata o un selettore iniziale obbligatorio |
-| Impara | Rex e il Clicker sostituisce il vecchio laboratorio nella preparazione corrente; otto lezioni, attività, quiz e quaderno; riordino su GitHub 1,3,4,5,6,7,8,2, rinumerato 1–8 | Slug e progressi preservati; nessun attestato ufficiale o sync account |
+| Impara | Rex e il Clicker sostituisce il vecchio laboratorio su GitHub e nella pagina pubblica; otto lezioni, attività, quiz e quaderno; riordino su GitHub 1,3,4,5,6,7,8,2, rinumerato 1–8 | Slug e progressi preservati; nessun attestato ufficiale o sync account |
 | Cani | Identità/razza FCI, data di nascita, scheda e foto private | Nessun tracciamento GPS continuo introdotto |
 | Account | Registrazione, recupero password, email/telefono modificabili, verifiche e conferme previste dal flusso | Modalità lancio email-only; SMS disattivati per contenere costi |
 | Profilo professionale | Procedura guidata, identità visiva, esperienza, credenziali, attività/servizi e visibilità | Dato dichiarato, approvazione profilo e qualifica verificata sono distinti |
@@ -117,7 +118,7 @@ di IMG-01 registrare gli esiti Supabase e Vercel effettivi, senza ripetere il ri
 in assenza di un difetto concreto.
 Nessuna spesa, invio esterno o modifica delle tariffe autorizzata da questo incremento.
 
-## Incremento Rex e il Clicker — 10 ottobre, preparato localmente
+## Rex e il Clicker — 10 ottobre, pubblicato su GitHub
 
 Sostituisce il vecchio gioco dello shaping nella lezione 8 con il file HTML fornito
 da Luigi, conservando cane e scenario. Gioco isolato, nessuna richiesta a Supabase,
@@ -127,4 +128,24 @@ facoltativo, pausa, tastiera/tocco, dimensioni responsive e modalità senza fret
 Superati TypeScript, build/SEO, test dei progressi e prova browser desktop/mobile:
 partita completa, click anticipato, ripresa parziale, vecchio completamento,
 quaderno/backup e isolamento del gioco. API browser simulate. Non è un collaudo
-online. Installer e limiti in [REX_CLICKER_V1](REX_CLICKER_V1.md); nessuna migration.
+online con account. Il fetch del 10 ottobre osserva `d3517b5`; GET pubblico del
+gioco (redirect a `/games/rex-clicker`) e della lezione
+`/impara/stage-1/osservazione-timing-marker` restituiscono HTTP 200 e contengono
+Rex. Il gioco è noindex; la lezione è indicizzabile. Nessuna osservazione del
+pannello Vercel Ready. Dettagli in [REX_CLICKER_V1](REX_CLICKER_V1.md).
+
+## Ottimizzazione foto — 10 ottobre, preparata e testata localmente
+
+Corretto il caricamento delle foto del cane: copia WebP entro 512 × 512 e
+160 KiB, anteprima dei byte effettivi, aggiornamento della scheda dopo una
+sostituzione sullo stesso percorso. La copia non viene compressa due volte.
+Editor professionale/cliente: elaborazioni serializzate, movimenti del ritaglio
+accorpati, lavoro obsoleto annullato e salvataggio legato all’anteprima corrente.
+
+Browser reale desktop/mobile con API simulate: formati falsi respinti, invio
+esattamente della copia mostrata, dimensioni/byte, sostituzione senza nuovo file,
+rimozione, annullamento e massimo un decoder attivo per editor. TypeScript,
+build e HTML SEO superati. Nessun nuovo test SQL: schema e policy invariati.
+L’installer `ottimizza_caricamento_foto.py` applica e pubblica solo questo incremento;
+nessun commit remoto o deploy dell’ottimizzazione è ancora osservato.
+[Specifica, limiti e rilascio](PHOTO_UPLOAD_OPTIMIZATION_V1.md).

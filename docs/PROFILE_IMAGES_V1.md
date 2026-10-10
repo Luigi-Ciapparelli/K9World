@@ -1,8 +1,10 @@
 # Foto dei profili — IMG-01
 
 9 ottobre 2026. Base GitHub esaminata: `558e0d5`.
-Implementazione preparata per il rilascio; applicazione online e Ready non
-osservati da questo ambiente. Il registro corrente prevale su questo checkpoint.
+Implementazione ora su GitHub (`e6e38c9`); applicazione online e Ready non
+osservati direttamente da questo ambiente. Il registro corrente prevale su
+questo checkpoint. Il correttivo del 10 ottobre serializza le anteprime e
+ottimizza anche le foto dei cani: [PHOTO_UPLOAD_OPTIMIZATION_V1](PHOTO_UPLOAD_OPTIMIZATION_V1.md).
 
 ## Uso
 

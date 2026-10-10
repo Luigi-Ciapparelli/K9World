@@ -1,6 +1,9 @@
 import { supabase } from './supabase';
+import { prepareProfileImage } from './profileImages';
 
 export const DOG_PHOTO_BUCKET = 'dog-photos';
+export const DOG_PHOTO_CHANGED = 'portalecinofilo-dog-photo-changed';
+const preparedPhotos = new WeakSet<File>();
 
 export const DOG_PHOTO_FALLBACK =
   'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=400';
@@ -9,7 +12,7 @@ export function isExternalDogPhoto(value?: string | null) {
   return Boolean(value && /^https?:\/\//i.test(value));
 }
 
-export async function resolveDogPhotoUrl(photoPath?: string | null) {
+export async function resolveDogPhotoUrl(photoPath?: string | null, cacheNonce?: string) {
   if (!photoPath) return null;
 
   if (isExternalDogPhoto(photoPath)) {
@@ -25,18 +28,30 @@ export async function resolveDogPhotoUrl(photoPath?: string | null) {
     return null;
   }
 
-  return data.signedUrl;
+  if (!cacheNonce) return data.signedUrl;
+  const url = new URL(data.signedUrl);
+  url.searchParams.set('cacheNonce', cacheNonce);
+  return url.toString();
 }
 
 export function validateDogPhotoFile(file: File) {
-  if (!file.type.startsWith('image/')) {
-    throw new Error('Seleziona un file immagine');
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+    throw new Error('Scegli una foto JPG, PNG o WebP.');
   }
 
   const maxBytes = 8 * 1024 * 1024;
   if (file.size > maxBytes) {
     throw new Error('La foto deve essere inferiore a 8 MB');
   }
+}
+
+export async function prepareDogPhoto(file: File, signal?: AbortSignal) {
+  validateDogPhotoFile(file);
+  if (preparedPhotos.has(file)) return file;
+  const blob = await prepareProfileImage(file, 'avatar', 'contain', 50, signal);
+  const prepared = new File([blob], 'profile.webp', { type: 'image/webp' });
+  preparedPhotos.add(prepared);
+  return prepared;
 }
 
 export async function uploadDogPhoto(params: {
@@ -46,19 +61,21 @@ export async function uploadDogPhoto(params: {
 }) {
   const { file, ownerId, dogId } = params;
 
-  validateDogPhotoFile(file);
+  const prepared = await prepareDogPhoto(file);
 
   const path = `${ownerId}/${dogId}/profile`;
 
   const { error } = await supabase.storage
     .from(DOG_PHOTO_BUCKET)
-    .upload(path, file, {
+    .upload(path, prepared, {
       upsert: true,
-      contentType: file.type,
-      cacheControl: '3600',
+      contentType: 'image/webp',
+      cacheControl: '60',
     });
 
   if (error) throw error;
+
+  window.dispatchEvent(new CustomEvent(DOG_PHOTO_CHANGED, { detail: path }));
 
   return path;
 }
