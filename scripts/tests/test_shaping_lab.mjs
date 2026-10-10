@@ -33,8 +33,20 @@ try {
   assert.equal(normalized.activities[key].done,count===4);
   assert.equal(normalized.activities[key].lab.completed.length,count);
  }
+ // Rex checkpoints keep their own version and cannot skip or forge criteria.
+ for(const bad of [null,{exercise:lab.REX_VERSION,completed:['platform'],hits:0},{exercise:lab.REX_VERSION,completed:['arrival','arrival'],hits:0},{exercise:lab.REX_VERSION,completed:[],hits:1},{exercise:lab.REX_VERSION,completed:['arrival'],hits:3},{exercise:lab.REX_VERSION,completed:[],hits:-1},{exercise:lab.REX_VERSION,completed:[],hits:NaN}]) assert.equal(lab.normalizeRexResult(bad),undefined);
+ for(let count=0;count<=4;count++){
+  const value={exercise:lab.REX_VERSION,completed:lab.REX_STEPS.slice(0,count),hits:count===1?2:0};
+  const q=progress.emptyProgress();q.activities[key]={fields:[],checks:[],done:true,lab:value};
+  q.studied=[shaping.slug+':descrivere-prima'];q.resume=shaping.slug;
+  q.quizzes[shaping.slug]=[{answers:shaping.quiz.map(q=>q.correctIndex),date:'2026-10-09T20:00:00Z'}];
+  const n=progress.normalizeProgress(JSON.parse(JSON.stringify(q)));
+  assert.deepEqual(n.activities[key].lab,value);assert.equal(n.activities[key].done,count===4);
+  assert.deepEqual(n.studied,q.studied);assert.deepEqual(n.quizzes,q.quizzes);assert.equal(n.resume,q.resume);
+  assert.match(progress.notebookText(n),new RegExp('Rex e il Clicker: '+count+'/4'));
+ }
  const last=basics;assert.equal(last.quiz.length,8);assert.ok(last.sublessons.some(s=>s.id==='condizionamento-classico'));assert.ok(last.sublessons.some(s=>s.id==='condizionamento-operante'));
  assert.equal(shaping.quiz.length,5);assert.equal(last.activities.length,2,'old glossary notes retained alongside new activity');
  assert.match(progress.notebookText(progress.normalizeProgress(p)),/Shaping: 4\/4/);
- console.log('OK: semantic target windows, front-paw poses, sequential completion, legacy isolation, progress persistence, foundations and notebook export.');
+ console.log('OK: semantic target windows, front-paw poses, sequential completion, legacy isolation, legacy completion preserved, Rex checkpoints, progress persistence, foundations and notebook export.');
 } finally {await fs.rm(temp,{recursive:true,force:true});}

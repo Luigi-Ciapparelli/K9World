@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 9 ottobre 2026, dopo il controllo di `origin/main` a `558e0d5`.
+Aggiornamento del 10 ottobre 2026, dopo il controllo di `origin/main` a `e6e38c9`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -33,8 +33,10 @@ Le tre guide razza specifiche sono su GitHub (`558e0d5`): [BREED_GUIDES_V1](docs
 L'esito della nuova scansione resta da osservare; la causa del downtime resta ignota.
 Social e possibile prova Higgsfield da 100 crediti sono aggiornati nel piano operativo.
 Non sospendere tutto il lavoro per questi dati e non ricreare funzioni esistenti.
-Foto professionali, banner e ritratti privati dei clienti: incremento preparato,
-con prova SQL/browser e procedura di rilascio in [PROFILE_IMAGES_V1](docs/PROFILE_IMAGES_V1.md).
+Foto professionali, banner e ritratti privati dei clienti sono su GitHub (`e6e38c9`):
+[PROFILE_IMAGES_V1](docs/PROFILE_IMAGES_V1.md). Il nuovo laboratorio della lezione 8
+usa il minigioco fornito da Luigi, “Rex e il Clicker”: [REX_CLICKER_V1](docs/REX_CLICKER_V1.md).
+La sostituzione è preparata e testata; il rilascio avviene con il relativo installer WSL.
 
 ## Primo controllo, senza modificare nulla
 

@@ -81,6 +81,10 @@ Impara resta un percorso con letture, attività e verifica significativa, non
 solo articoli. Le basi includono bisogni, riposo, sicurezza, comunicazione,
 condizionamento classico/operante, marker, shaping e convivenza. Il laboratorio
 del cane sulla piattaforma è semplice ed esemplificativo, non una prova professionale.
+Dal 10 ottobre il laboratorio usa “Rex e il Clicker”, fornito da Luigi: arrivo,
+orientamento alla pedana, avvicinamento e salita. Sostituisce la vecchia animazione
+conservando i completamenti precedenti, lo slug e la posizione 8.
+Specifica: [REX_CLICKER_V1](REX_CLICKER_V1.md).
 
 Dal 9 ottobre 2026 l’ordine delle lezioni è quello precedente **1, 3, 4, 5, 6, 7, 8, 2**,
 rinumerato da 1 a 8. «Osservazione e clicker: allenare il timing» chiude il percorso,

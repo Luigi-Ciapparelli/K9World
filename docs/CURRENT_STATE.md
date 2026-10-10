@@ -1,7 +1,7 @@
 # PortaleCinofilo — stato corrente
 
-Aggiornato il **9 ottobre 2026**. Base verificata con fetch di `origin/main`:
-[`558e0d5`](https://github.com/Luigi-Ciapparelli/K9World/commit/558e0d573c1b7c679cd4d74936b2ab744e524f9d).
+Aggiornato il **10 ottobre 2026**. Base verificata con fetch di `origin/main`:
+[`e6e38c9`](https://github.com/Luigi-Ciapparelli/K9World/commit/e6e38c903f6394a313dfee3578348945f455d497).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
@@ -21,17 +21,16 @@ Questo registro è mantenuto manualmente; il generatore scrive in
 | EXP-01 | `3ec87ad` | Storico autorizzato in HTML stampabile in PDF e JSON; archivio autore e selezioni ricevute | Audio/video e documenti delle sessioni assenti; luoghi solo quando registrati nelle note; limiti dimensionali espliciti |
 | REV-01 | `fd619e4` | Recensioni dal secondo servizio con un addestratore individuale; pensione dal primo; voto sul cliente privato | Reciprocità per centri sospesa finché manca l'istruttore assegnato; moderazione completa futura |
 | Impara / diagnosi SEO | `204441b` | Timing spostato dalla posizione 2 alla 8; altre lezioni scalate; CSV e riscontri SEO conservati | Nessuna garanzia di indicizzazione; ordine e progressi preservati |
-
+| IMG-01 | `e6e38c9` | Foto/logo, banner professionali e ritratti privati dei clienti; compressione nel browser e controllo accessi | Push Git osservato; Storage reale, migration applicata e frontend Ready non osservati direttamente |
 | Guide razze / SEO | `558e0d5` | Guide originali Shikoku, Clumber Spaniel e Dobermann, fonti e metadata specifici | Attendere riscontri Google; nessuna promessa di indicizzazione |
 
 Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
 [export](DOG_HISTORY_EXPORT_V1.md), [valutazioni](SERVICE_REVIEWS_V1.md).
 I vecchi testi «preparato localmente, da pubblicare» per questi tre blocchi sono superati.
 
-La base GitHub contiene **54 migration**, fino a
-`20261008220000_completed_service_reviews.sql`. Il nuovo incremento aggiunge
-`20261009140000_profile_images.sql` (55ª). La presenza di un file non dimostra
-che sia applicato nel database online.
+La base GitHub contiene **55 migration**, fino a
+`20261009140000_profile_images.sql`. Il nuovo gioco non aggiunge SQL. La presenza
+di un file non dimostra che sia applicato nel database online.
 
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati
 sintetici. Auth/Storage e API browser sono simulati nelle prove descritte;
@@ -46,7 +45,7 @@ osservati direttamente: **non segnalarli come falliti né come verificati**.
 | Area | Implementazione nel repository | Confine importante |
 | --- | --- | --- |
 | Home e ricerca | Home con immagine statica; percorso pre-cane facoltativo; aiuto diretto, Sport ed Esposizioni separati | Non ripristinare la porta animata o un selettore iniziale obbligatorio |
-| Impara | Otto lezioni, attività, quiz, quaderno e shaping; riordino su GitHub 1,3,4,5,6,7,8,2, rinumerato 1–8 | Slug e progressi preservati; nessun attestato ufficiale o sync account |
+| Impara | Rex e il Clicker sostituisce il vecchio laboratorio nella preparazione corrente; otto lezioni, attività, quiz e quaderno; riordino su GitHub 1,3,4,5,6,7,8,2, rinumerato 1–8 | Slug e progressi preservati; nessun attestato ufficiale o sync account |
 | Cani | Identità/razza FCI, data di nascita, scheda e foto private | Nessun tracciamento GPS continuo introdotto |
 | Account | Registrazione, recupero password, email/telefono modificabili, verifiche e conferme previste dal flusso | Modalità lancio email-only; SMS disattivati per contenere costi |
 | Profilo professionale | Procedura guidata, identità visiva, esperienza, credenziali, attività/servizi e visibilità | Dato dichiarato, approvazione profilo e qualifica verificata sono distinti |
@@ -80,7 +79,7 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 
 | Blocco | Stato reale | Per procedere |
 | --- | --- | --- |
-| IMG-01 | Foto professionali/banner e foto cliente privata preparate e testate | Rilascio mediante installer, migration prima del frontend; prova Storage reale dopo Ready |
+| IMG-01 | Foto professionali/banner e foto cliente privata su GitHub (`e6e38c9`) | Confermare soltanto gli esiti non osservati: applicazione migration, Ready e prova Storage reale; non ripetere lo sviluppo |
 | MEDIA-01 | Allegati delle sessioni rinviati per decisione di Luigi | Prima matrice quote per abbonamento, utilità dei file, compressione, conservazione e costo totale; nessuna pipeline audio/video avviata |
 | TEAM-01 | Manca attribuzione della prenotazione al singolo istruttore del centro | Modellare persona/team/assegnazione e storia delle modifiche; poi estendere REV-01 |
 | SPORT-02 | Basi presenti, flusso reale e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
@@ -94,7 +93,7 @@ learning/credenziali futuri, team, formazione ENCI, biblioteca, tessere/campagne
 editoria, ricerca, commercio e rete di centri. La loro presenza nel piano non è
 prova di implementazione. Priorità e criteri: [EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md).
 
-## Incremento immagini preparato il 9 ottobre
+## Incremento immagini preparato il 9 ottobre, ora presente su GitHub
 
 Foto/logo professionale visibile in ricerca e profilo, upload banner anche per
 individuali e handler; editor con anteprima, ridimensionamento e WebP. Una foto
@@ -110,8 +109,22 @@ compressione reale nel browser, TypeScript, build e HTML SEO: vedere la specific
 Non sono prove del database online, dei byte nello Storage reale o di concorrenza
 nativa. Nessun nuovo audit remoto Supabase è stato eseguito.
 
+Il fetch successivo osserva il commit remoto `e6e38c9` con questo incremento.
+Resta distinta la verifica del database e del deploy reali.
 Da questo ambiente manca l'autenticazione GitHub in scrittura. L'installer WSL
-prepara backup, verifica compatibilità e test, controlla il dry-run, crea il commit,
-applica soltanto la migration prevista e invia main. **Preparato non significa già
-online**: registrare output Supabase, commit remoto e Vercel Ready dopo l'esecuzione.
+ha consentito il passaggio a GitHub osservato nel fetch. Per chiudere la verifica
+di IMG-01 registrare gli esiti Supabase e Vercel effettivi, senza ripetere il rilascio
+in assenza di un difetto concreto.
 Nessuna spesa, invio esterno o modifica delle tariffe autorizzata da questo incremento.
+
+## Incremento Rex e il Clicker — 10 ottobre, preparato localmente
+
+Sostituisce il vecchio gioco dello shaping nella lezione 8 con il file HTML fornito
+da Luigi, conservando cane e scenario. Gioco isolato, nessuna richiesta a Supabase,
+progressi Rex per fase e compatibilità con il vecchio completamento. Audio
+facoltativo, pausa, tastiera/tocco, dimensioni responsive e modalità senza fretta.
+
+Superati TypeScript, build/SEO, test dei progressi e prova browser desktop/mobile:
+partita completa, click anticipato, ripresa parziale, vecchio completamento,
+quaderno/backup e isolamento del gioco. API browser simulate. Non è un collaudo
+online. Installer e limiti in [REX_CLICKER_V1](REX_CLICKER_V1.md); nessuna migration.

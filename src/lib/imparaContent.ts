@@ -1081,7 +1081,7 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
     "moduleOrder": 4,
     "moduleTitle": "Costruire la relazione",
     "title": "Osservazione e clicker: allenare il timing",
-    "summary": "Osserva il cane e scopri lo shaping: piccoli passi, dal guardare una piattaforma ad appoggiarvi entrambe le zampe anteriori.",
+    "summary": "Osserva il cane e scopri lo shaping: piccoli passi, dal guardare una pedana al salirci con Rex e il Clicker.",
     "durationMinutes": 12,
     "objectives": [
       "Descrivere ciò che il cane fa, prima di interpretarlo.",
@@ -1127,7 +1127,7 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
         "title": "Shaping: una forma costruita poco alla volta",
         "durationMinutes": 2,
         "paragraphs": [
-          "Lo shaping sviluppa un comportamento rinforzando approssimazioni successive. Nell’esempio il criterio cambia da orientarsi verso la piattaforma, ad avvicinarsi, a posare una zampa anteriore, infine entrambe. Non chiediamo subito il risultato finale.",
+          "Lo shaping sviluppa un comportamento rinforzando approssimazioni successive. Nel gioco, dopo un primo click di familiarizzazione durante l’arrivo di Rex, premi il guardare la pedana, l’avvicinarsi e infine l’esservi salito. Non chiediamo subito il risultato finale. Con un cane reale possiamo inserire passi più piccoli, come appoggiare prima una zampa e poi due.",
           "La sequenza è semplificata: nella realtà si ripete e si adatta ogni passo. Si aumenta la difficoltà quando il criterio attuale è facilmente ripetibile; se il cane fatica, si riduce il salto. Il laboratorio non richiede di guidare il cane con un boccone o di spingerlo sulla pedana."
         ],
         "example": "Se oggi premi l’avvicinamento, non devi aspettare già due zampe sopra. Decidi un solo piccolo obiettivo e riconosci quando compare.",
@@ -1138,14 +1138,14 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
       {
         "id": "video-lab",
         "type": "video-lab",
-        "title": "Laboratorio: shaping sulla piattaforma",
-        "summary": "Una dimostrazione semplice e guidata. Segna il piccolo obiettivo di ciascuna scena, fino a entrambe le zampe anteriori sopra.",
+        "title": "Rex e il Clicker: scopri lo shaping",
+        "summary": "Un minigioco per osservare Rex e premiare piccoli passi: arriva, guarda la pedana, si avvicina e sale.",
         "instructions": [
-          "Leggi il criterio del passaggio e avvia la scena.",
-          "Clicca quando il cane raggiunge quel criterio. Se anticipi o aspetti troppo, riprova con calma.",
-          "Dopo il click corretto osserva il premio e passa al criterio successivo."
+          "Premi Inizia e leggi quale comportamento premiare in questa fase.",
+          "Premi CLICK, tocca la scena o usa la barra spaziatrice nel gioco quando Rex esegue il comportamento richiesto.",
+          "Osserva il premio dopo il click corretto. Dopo i pochi esempi richiesti, il gioco passa al criterio successivo."
         ],
-        "completionHint": "Completa i quattro esempi. Puoi usare i fotogrammi guidati, senza alcuna fretta; il risultato indica soltanto la comprensione della dimostrazione.",
+        "completionHint": "Completa le quattro fasi. Puoi mettere in pausa o scegliere Senza fretta e avanzare un movimento alla volta. I punti sono soltanto parte della dimostrazione.",
         "labKind": "shaping"
       },
       {
@@ -1220,7 +1220,7 @@ export const STAGE_1_LESSONS: ImparaLesson[] = [
           "Quando il cane si stanca"
         ],
         "correctIndex": 0,
-        "explanation": "Un esempio per scena basta nel simulatore. Nella realtà servono ripetizioni e criteri individuali."
+        "explanation": "Il simulatore usa poche ripetizioni prestabilite. Nella realtà servono criteri e ripetizioni adattati al singolo cane."
       }
     ],
     "sources": [

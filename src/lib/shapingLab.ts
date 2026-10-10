@@ -8,6 +8,21 @@ export const SHAPING_STEPS = [
 ] as const;
 export type ShapingStepId = typeof SHAPING_STEPS[number]['id'];
 export type ShapingResult = { exercise: typeof SHAPING_VERSION; completed: ShapingStepId[] };
+// Rex has different criteria: never relabel a legacy attempt.
+export const REX_VERSION = 'rex-clicker-v1' as const;
+export const REX_STEPS = ['arrival', 'look', 'approach', 'platform'] as const;
+export const REX_TARGETS = [1, 3, 3, 1] as const;
+export type RexResult = { exercise: typeof REX_VERSION; completed: (typeof REX_STEPS[number])[]; hits: number };
+export function normalizeRexResult(value: unknown): RexResult | undefined {
+  if (!value || typeof value !== 'object') return;
+  const raw = value as { exercise?: unknown; completed?: unknown; hits?: unknown };
+  if (raw.exercise !== REX_VERSION || !Array.isArray(raw.completed) || raw.completed.length > 4 ||
+      !raw.completed.every((step, i) => step === REX_STEPS[i]) ||
+      typeof raw.hits !== 'number' || !Number.isInteger(raw.hits) || raw.hits < 0 ||
+      raw.hits >= (REX_TARGETS[raw.completed.length] ?? 1)) return;
+  return { exercise: REX_VERSION, completed: [...raw.completed], hits: raw.hits };
+}
+export const rexPassed = (value: unknown) => normalizeRexResult(value)?.completed.length === 4;
 export const TARGET_AT = 3.2;
 export const WINDOW_END = 5.2;
 export const SCENE_END = 6.3;

@@ -46,6 +46,9 @@ future per dimostrare quelle già utilizzabili.
 
 **Impara:** spostamento dell'ex lezione 2 alla posizione 8 su GitHub (`204441b`);
 criteri e rilascio in [IMPARA_LESSON_ORDER_V1](IMPARA_LESSON_ORDER_V1.md).
+Richiesta successiva: sostituzione del laboratorio con “Rex e il Clicker”, preparata
+e testata il 10 ottobre. Rilascio frontend e criteri in [REX_CLICKER_V1](REX_CLICKER_V1.md);
+nessuna nuova migration. IMG-01 è ora presente su GitHub (`e6e38c9`).
 
 Questi input non sono prerequisiti per consolidare le direttive, preparare uno
 storyboard o progettare un blocco indipendente. Non chiedere di rispiegare il prodotto.
