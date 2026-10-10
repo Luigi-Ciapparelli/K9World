@@ -1,7 +1,7 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **10 ottobre 2026**. Base verificata con fetch di `origin/main`:
-[`0f51f98`](https://github.com/Luigi-Ciapparelli/K9World/commit/0f51f980eaee2fb28662624b75f828caa226357a).
+[`82caa1c`](https://github.com/Luigi-Ciapparelli/K9World/commit/82caa1c6f2f5e0acac29f5384e87e289dc2ddf5a).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
@@ -19,9 +19,10 @@ Questo registro è mantenuto manualmente; il generatore scrive in
 | --- | --- | --- | --- |
 | NAV-01 / PRO-01 | `7f11610` | Ricerca quotidiana Addestratori/Pensioni; Esposizioni con Toelettatura/Handler; attività nel profilo guidato | Una categoria selezionata non certifica una qualifica |
 | EXP-01 | `3ec87ad` | Storico autorizzato in HTML stampabile in PDF e JSON; archivio autore e selezioni ricevute | Audio/video e documenti delle sessioni assenti; luoghi solo quando registrati nelle note; limiti dimensionali espliciti |
-| REV-01 | `fd619e4` | Recensioni dal secondo servizio con un addestratore individuale; pensione dal primo; voto sul cliente privato | Reciprocità per centri sospesa finché manca l'istruttore assegnato; moderazione completa futura |
+| REV-01 | `fd619e4` | Recensioni dal secondo servizio con un addestratore individuale; pensione dal primo; voto sul cliente privato | Modello precedente superato dalla decisione REV-02; vedere incremento preparato sotto |
 | Impara / diagnosi SEO | `204441b` | Timing spostato dalla posizione 2 alla 8; altre lezioni scalate; CSV e riscontri SEO conservati | Nessuna garanzia di indicizzazione; ordine e progressi preservati |
 | IMG-01 | `e6e38c9` | Foto/logo, banner professionali e ritratti privati dei clienti; compressione nel browser e controllo accessi | Push Git osservato; Storage reale, migration applicata e frontend Ready non osservati direttamente |
+| Recupero pagine | `82caa1c` | Pagina di recupero manuale, offline e caricamento lento; bozze preservate | Causa del vecchio downtime ignota; Ready non osservato |
 | Ottimizzazione foto | `0f51f98` | Foto cane WebP con anteprima esatta, sostituzione aggiornata e ritaglio serializzato | Frontend pubblico e Storage reale non collaudati da questo ambiente |
 | Rex e il Clicker | `d3517b5` | Minigioco fornito da Luigi nella lezione 8; progressi e isolamento | Gioco e lezione HTTP 200 il 10 ottobre; nessuna sessione utente reale collaudata online |
 | Guide razze / SEO | `558e0d5` | Guide originali Shikoku, Clumber Spaniel e Dobermann, fonti e metadata specifici | Attendere riscontri Google; nessuna promessa di indicizzazione |
@@ -84,10 +85,11 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 | --- | --- | --- |
 | IMG-01 | Foto professionali/banner e foto cliente privata su GitHub (`e6e38c9`) | Confermare soltanto gli esiti non osservati: applicazione migration, Ready e prova Storage reale; non ripetere lo sviluppo |
 | MEDIA-01 | Allegati delle sessioni rinviati per decisione di Luigi | Prima matrice quote per abbonamento, utilità dei file, compressione, conservazione e costo totale; nessuna pipeline audio/video avviata |
-| TEAM-01 | Manca attribuzione della prenotazione al singolo istruttore del centro | Modellare persona/team/assegnazione e storia delle modifiche; poi estendere REV-01 |
+| REV-02 | Preparato dopo correzione di Luigi: il voto riguarda il servizio svolto in una specifica prenotazione | Rilasciare migration e frontend con installer; prove e limiti in SERVICE_REVIEWS_V2 |
+| TEAM-01 | Manca attribuzione organizzativa della prenotazione al singolo istruttore del centro | Persona/team/assegnazione e storia; non necessario per REV-02 e nessun trasferimento dei voti |
 | SPORT-02 | Basi presenti, flusso reale e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
 | SEO-01 | Canonical ricevuta, redirect coerenti, richiesta inviata e sitemap riuscita; tre guide specifiche su GitHub | Osservare nuova scansione, canonical e pagine prioritarie. Non chiedere di nuovo i dati già ricevuti |
-| AFF-01 | Causa storica ignota; riprodotta separatamente una pagina bianca quando un modulo della UI fallisce | Recupero manuale preparato e testato, vedere PAGE_RECOVERY_V1; non dedurre la causa del vecchio episodio, raccogliere dati se ricapita |
+| AFF-01 | Causa storica ignota; riprodotta separatamente una pagina bianca quando un modulo della UI fallisce | Recupero manuale su GitHub (`82caa1c`) e testato, vedere PAGE_RECOVERY_V1; non dedurre la causa del vecchio episodio, raccogliere dati se ricapita |
 | SOC-01 | Concept approvato; possibile trial da 100 crediti comunicato, video non prodotto | Storyboard e scena campione; verificare crediti/costo reale della generazione prima dell’uso, nessuna spesa attivata |
 | ECO-01 / INT-01 | Modello economico e mercati da validare | Utilizzo reale, costi e disponibilità a pagare; fonti aggiornate prima di domande di fondi o spese |
 
@@ -153,7 +155,7 @@ Non ripetere l’installer per aggiornare lo stato. Resta distinto il collaudo
 del frontend pubblicato e dello Storage reale.
 [Specifica, limiti e rilascio](PHOTO_UPLOAD_OPTIMIZATION_V1.md).
 
-## Recupero pagine — 10 ottobre, preparato e testato localmente
+## Recupero pagine — 10 ottobre, presente su GitHub
 
 Riproduzione sulla build precedente: una risposta 404 al modulo di Impara
 svuotava l’interfaccia React. Aggiunti confini di errore per pagina e applicazione,
@@ -167,5 +169,20 @@ errore di rendering, ricarica manuale e navigazione. Regressioni pertinenti:
 profilo guidato con bozze e recupero password. API e guasti simulati; nessun
 servizio online o account modificato. TypeScript, build e HTML SEO superati.
 Nessuna nuova migration, dipendenza o spesa. Installer WSL:
-`aggiorna_recupero_pagine.py`. Push e deploy del correttivo non ancora osservati.
+`aggiorna_recupero_pagine.py`. Push osservato nel fetch: `82caa1c`. Deploy e pannello Ready non osservati.
 [Specifica, prove e limiti](PAGE_RECOVERY_V1.md).
+
+## Valutazioni per prestazione — 10 ottobre, preparate localmente
+
+La richiesta di Luigi sostituisce il voto al rapporto con un giudizio sulla
+singola lezione/servizio svolto. Centri inclusi dalla seconda prestazione formativa;
+altre categorie dal primo servizio. Contesto congelato all’accettazione, schede
+distinte, storico precedente preservato, voti privati isolati. Rimossi punteggi
+generali e filtri/ordinamenti per valutazione del professionista.
+
+Nuova migration `20261010113000_booking_service_reviews.sql`, successiva alle
+55 presenti nella base osservata. Test SQL su storia completa, API browser
+simulate, TypeScript e build/SEO; dettagli in [SERVICE_REVIEWS_V2](SERVICE_REVIEWS_V2.md).
+Installer `aggiorna_valutazioni_prestazioni.py` per il rilascio coordinato da WSL.
+Non ancora osservati push Git, applicazione online e deployment di REV-02.
+Nessun allegato multimediale, contatto esterno, nuova spesa o modello team aggiunto.

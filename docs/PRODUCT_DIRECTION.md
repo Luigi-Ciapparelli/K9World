@@ -144,18 +144,32 @@ Una revoca ferma accessi futuri, non richiama file già scaricati.
 
 ## Valutazioni dopo servizi effettivamente conclusi
 
-Regole correnti: [SERVICE_REVIEWS_V1](SERVICE_REVIEWS_V1.md). Scala 1–5 e commento
-facoltativo entro 500 caratteri. Per lo stesso cliente e addestratore individuale,
-dal secondo servizio concluso anche se diverso: cliente valuta l'attività e
-addestratore lascia un voto al cliente, visibile soltanto ai due. Pensione dal
-primo soggiorno, solo cliente → struttura. Nessun punteggio pubblico dei proprietari.
+Decisione esplicita di Luigi del **10 ottobre 2026**: il voto deve essere associato
+alla **lezione effettivamente svolta, relativa al servizio prenotato**, anche in un
+centro. Non è un voto all’addestratore, alla struttura né una reputazione trasferibile.
+Regole correnti e migrazione: [SERVICE_REVIEWS_V2](SERVICE_REVIEWS_V2.md).
 
-Completamento effettivo e fine prevista trascorsa; il solo orario, l'acquisto di
-un pacchetto o un annullamento non contano. Richieste nell'account, nessun invio
-esterno. Una recensione corrente per rapporto/tipo, aggiornamento volontario
-dopo una nuova esperienza; rettifica entro sette giorni senza prolungamento.
-Nessun sollecito arretrato automatico. Centri: reciprocità sospesa finché non
-si identifica il singolo istruttore. Recensioni non assegnano qualifiche o medaglie.
+Ogni prenotazione idonea ha una scheda distinta: una nuova lezione non sposta o
+sovrascrive la precedente recensione. Nome/tipo/identificativo del servizio sono
+conservati all’accettazione; i cambi nel catalogo non riscrivono l’esperienza.
+Scala 1–5, commento facoltativo entro 500 caratteri, rettifica entro sette giorni
+senza prolungamento. Nessuna media o classifica generale di persone/centri da questi voti.
+
+La soglia preesistente è conservata con ambito esplicito: dal secondo servizio
+**formativo** concluso tra cliente e attività prenotata (individuale o centro),
+anche se il servizio è diverso. Pensioni e altri servizi non contano come lezioni.
+Dalla seconda in avanti si valuta ciascuna prestazione, senza sbloccare inviti
+retroattivi alla prima. Per pensione/toelettatura/handler basta la prima prestazione
+conclusa, valuta solo il cliente. Il feedback professionale sulla collaborazione
+nella lezione resta privato fra account partecipanti, senza un voto globale al cliente.
+Nei centri lo scrive l’account che gestisce la prenotazione, non un istruttore inventato.
+
+Completamento effettivo e fine prevista trascorsa; il solo orario, l’acquisto di
+un pacchetto o un annullamento non bastano. Promemoria solo nell’account e ignorabili.
+Lo storico raccolto come giudizio sul rapporto resta etichettato come precedente,
+senza attribuzione retroattiva a una lezione o trasferimento dei voti su nuovi servizi.
+L’assegnazione istruttore/team rimane utile per l’organizzazione, **non è più una
+dipendenza per le valutazioni del servizio**. Nessuna qualifica o medaglia dai voti.
 Moderazione estesa/pubblicazione cieca non sono promesse implementate.
 
 ## Sport, Working-Dog e merito

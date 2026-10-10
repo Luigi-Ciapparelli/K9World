@@ -403,7 +403,7 @@ export function RankingPage() {
 
       <Section title="2. Ricerca per la vita quotidiana">
         <p>La ricerca normale mostra i professionisti approvati che offrono il servizio cercato e coprono la zona indicata. Per l’addestramento vengono inclusi quelli che hanno attivato la visibilità nella gestione del cane.</p>
-        <p className="mt-3">L’ordine iniziale segue la distanza, quando disponibile, poi il nome. È possibile ordinare anche per esperienza, prezzo o valutazioni. L’ordinamento scelto dall’utente viene rispettato.</p>
+        <p className="mt-3">L’ordine iniziale segue la distanza, quando disponibile, poi il nome. È possibile ordinare anche per esperienza o prezzo. L’ordinamento scelto dall’utente viene rispettato. Le valutazioni riguardano le singole prestazioni svolte: non formano un punteggio generale del professionista o del centro e non determinano l’ordine della ricerca.</p>
       </Section>
 
       <Section title="3. Sport cinofili">

@@ -7,7 +7,7 @@ assert.ok(['127.0.0.1','localhost'].includes(new URL(base).hostname));
 const browser=await chromium.launch({headless:true,...(process.env.PC_CHROMIUM_PATH?{executablePath:process.env.PC_CHROMIUM_PATH}:{}),args:['--no-sandbox','--disable-dev-shm-usage']});
 const uid='e8200000-0000-0000-0000-000000000004',thread='e8200000-0000-0000-0000-000000000801';
 const errors=[];
-const entry=()=>({id:thread,kind:'trainer',booking_id:'e8200000-0000-0000-0000-000000000402',completed_at:'2026-10-08T20:00:00Z',counterpart_name:'Professionista prova',service_name:'Lezione individuale',end_at:'2026-10-08T18:00:00Z',owner_rating:null,owner_comment:null,owner_updated_at:null,professional_rating:null,professional_updated_at:null,version:0,own_rating:null,own_comment:'',pending:true,can_write:true});
+const entry=()=>({id:thread,review_scope:'booking_service',kind:'trainer',booking_id:'e8200000-0000-0000-0000-000000000402',completed_at:'2026-10-08T20:00:00Z',counterpart_name:'Professionista prova',service_name:'Lezione individuale',end_at:'2026-10-08T18:00:00Z',owner_rating:null,owner_comment:null,owner_updated_at:null,professional_rating:null,professional_updated_at:null,version:0,own_rating:null,own_comment:'',pending:true,can_write:true});
 async function setup(width,professional=false){
  const context=await browser.newContext({viewport:{width,height:1000},serviceWorkers:'block'});
  await context.addInitScript(uid=>localStorage.setItem('sb-pc-home-test-auth-token',JSON.stringify({access_token:'synthetic-token',refresh_token:'synthetic-refresh',expires_at:Math.floor(Date.now()/1000)+3600,token_type:'bearer',user:{id:uid,email:'test@example.invalid',aud:'authenticated',role:'authenticated'}})),uid);
@@ -42,6 +42,8 @@ try{
   const {context,page,state}=await setup(width);
   await page.getByRole('button',{name:'Scrivi la recensione',exact:true}).click();
   const dialog=page.getByRole('dialog');await dialog.waitFor();
+  await dialog.getByText('Lezione individuale', {exact:false}).waitFor();
+  await dialog.getByText('Non diventano un voto all’addestratore o al centro.', {exact:false}).waitFor();
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Horizontal overflow');
   await dialog.getByRole('button',{name:'Pubblica recensione',exact:true}).click();
   await dialog.getByRole('alert').filter({hasText:'Scegli un voto'}).waitFor();assert.equal(state.writes.length,0);
@@ -76,7 +78,7 @@ try{
   const {context,page,state}=await setup(1440);
   await page.getByRole('button',{name:'Non ora',exact:true}).click();await page.getByText('Promemoria nascosto.').waitFor();
   assert.equal(state.items[0].pending,false);assert.equal(await page.getByRole('button',{name:'Scrivi la recensione',exact:true}).count(),1);
-  state.items=[];await page.getByRole('button',{name:'Aggiorna valutazioni'}).click();await page.getByText('Le valutazioni si attivano').waitFor();
+  state.items=[];await page.getByRole('button',{name:'Aggiorna valutazioni'}).click();await page.getByText('Le valutazioni delle lezioni si attivano').waitFor();
   assert.equal(await page.getByRole('button',{name:'Scrivi la recensione',exact:true}).count(),0);
   await context.close();
  }
@@ -88,6 +90,13 @@ try{
   await page.evaluate(async()=>{const {supabase}=await import('/src/lib/supabase.ts');await supabase.auth.signOut({scope:'local'});});
   await state.held.fulfill({status:200,json:{version:1}});await page.waitForTimeout(100);
   assert.equal(await page.getByRole('dialog').count(),0);assert.equal(await page.getByText('Recensione pubblicata.').count(),0);
+  await context.close();
+ }
+ {
+  const {context,page,state}=await setup(390);
+  state.items=[{...entry(),review_scope:'legacy_relationship',service_name:'Valutazione precedente',end_at:null,pending:false,can_write:false,owner_rating:3,own_rating:3}];
+  await page.getByRole('button',{name:'Aggiorna valutazioni'}).click();await page.getByText('Storico precedente',{exact:true}).waitFor();
+  assert.equal(await page.getByRole('button',{name:'Scrivi la recensione',exact:true}).count(),0);
   await context.close();
  }
  assert.deepEqual(errors,[]);console.log('OK: owner/pro desktop and mobile, stars, limits, retry nonce, version conflict, private vote, boarding, dismiss, escaping and logout.');

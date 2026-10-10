@@ -40,8 +40,10 @@ una lista di settembre usava quell'espressione.
 
 - **MEDIA-01:** allegati delle sessioni privati, compressione e quote, conservazione,
   condivisione e download; non basta la foto profilo del cane già esistente.
-- **TEAM-01:** professionisti nel centro e istruttore assegnato al servizio;
-  poi valutazioni reciproche senza sommare istruttori diversi.
+- **REV-02:** valutazioni riferite alla singola prestazione prenotata, anche nei centri,
+  senza voto a persona/struttura: [SERVICE_REVIEWS_V2](SERVICE_REVIEWS_V2.md).
+- **TEAM-01:** professionisti nel centro e istruttore assegnato al servizio per
+  organizzazione e tracciabilità. Non è una dipendenza delle valutazioni REV-02.
 - **SPORT-02:** identità/fonte reale e merito per disciplina, senza auto-verifiche.
 - **Tessere e campagne:** vecchi strumenti rimossi, non dichiarati ripristinati.
   Valutare il problema reale prima di riportarli nella navigazione; campagne

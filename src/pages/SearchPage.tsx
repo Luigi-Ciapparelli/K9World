@@ -7,7 +7,6 @@ import {
   MapPin,
   RotateCcw,
   SlidersHorizontal,
-  Star,
   UserRound,
   Award,
   Trophy,
@@ -75,7 +74,7 @@ interface ServizioResult {
 
 
 type SubjectFilter = 'all' | 'professional' | 'facility';
-type SortMode = 'relevance' | 'distance' | 'experience' | 'price' | 'rating';
+type SortMode = 'relevance' | 'distance' | 'experience' | 'price';
 
 const EXPERIENCE_STEPS = [0, 10, 20] as const;
 
@@ -123,11 +122,10 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
   const [pros, setPros] = useState<ProResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [maxPrice, setMaxPrice] = useState(() => bounded('max_price', 200, 10, 200));
-  const [minRating, setMinRating] = useState(() => bounded('min_rating', 0, 0, 5));
   const [loadError, setLoadError] = useState('');
   const [subjectFilter, setSubjectFilter] = useState<SubjectFilter>(() => ['professional', 'facility'].includes(qs.get('subject') || '') ? qs.get('subject') as SubjectFilter : 'all');
   const [experienceStep, setExperienceStep] = useState(() => Math.round(bounded('experience_step', 0, 0, 2)));
-  const [sortMode, setSortMode] = useState<SortMode>(() => ['distance', 'experience', 'price', 'rating'].includes(qs.get('sort') || '') ? qs.get('sort') as SortMode : 'relevance');
+  const [sortMode, setSortMode] = useState<SortMode>(() => ['distance', 'experience', 'price'].includes(qs.get('sort') || '') ? qs.get('sort') as SortMode : 'relevance');
 
   const journey = readJourneyContext();
   const typeFilter = sport ? 'trainer' : qs.get('type') || (exhibitions ? 'groomer' : 'trainer');
@@ -178,7 +176,7 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
         p_zone_text: selectedCoordinates?.explicit ? null : (selectedCity?.name ?? addressFilter?.trim()) || null,
         ...(sport ? { p_discipline_id: disciplineFilter || null } : { p_service_type: typeFilter }),
         p_max_price: maxPrice >= 200 ? null : maxPrice,
-        p_min_rating: minRating > 0 ? minRating : null,
+        p_min_rating: null,
       });
 
       if (cancelled) return;
@@ -212,7 +210,7 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [reloadKey, sport, exhibitions, unsupportedCategory, disciplineFilter, typeFilter, addressFilter, selectedCity, selectedCoordinates, maxPrice, minRating]);
+  }, [reloadKey, sport, exhibitions, unsupportedCategory, disciplineFilter, typeFilter, addressFilter, selectedCity, selectedCoordinates, maxPrice]);
 
   const filtered = useMemo(() => {
     const minExperience = EXPERIENCE_STEPS[experienceStep];
@@ -242,9 +240,6 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
         return (a.starting_price ?? Number.POSITIVE_INFINITY) -
           (b.starting_price ?? Number.POSITIVE_INFINITY);
       }
-      if (sortMode === 'rating') {
-        return (b.rating ?? -1) - (a.rating ?? -1);
-      }
       return 0;
     });
   }, [pros, subjectFilter, experienceStep, sortMode]);
@@ -267,21 +262,18 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
         }
       : null,
     maxPrice < 200 ? { key: 'price', label: `Massimo €${maxPrice}` } : null,
-    minRating > 0 ? { key: 'rating', label: `Rating ${minRating}+` } : null,
   ].filter(Boolean) as Array<{ key: string; label: string }>;
 
   const clearFilter = (key: string) => {
     if (key === 'subject') setSubjectFilter('all');
     if (key === 'experience') setExperienceStep(0);
     if (key === 'price') setMaxPrice(200);
-    if (key === 'rating') setMinRating(0);
   };
 
   const resetFilters = () => {
     setSubjectFilter('all');
     setExperienceStep(0);
     setMaxPrice(200);
-    setMinRating(0);
     setSortMode('relevance');
   };
   const resultsLabel =
@@ -437,17 +429,6 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
                 </div>
               </div>
 
-              <div className="mt-6">
-                <label className="text-sm font-semibold text-[var(--pc-ink-800)]">Valutazione minima</label>
-                <p className="text-xs text-[var(--pc-muted-600)] leading-5 mt-1">Filtro pratico secondario: non misura la competenza.</p>
-                <div className="grid grid-cols-4 gap-2 mt-3">
-                  {[0, 3, 4, 4.5].map((rating) => (
-                    <button key={rating} type="button" onClick={() => setMinRating(rating)} className={'py-2 rounded-lg text-xs font-semibold border transition ' + (minRating === rating ? 'border-[var(--pc-forest-700)] bg-[var(--pc-forest-100)] text-[var(--pc-forest-900)]' : 'border-[var(--pc-line)] text-[var(--pc-muted-600)]')}>
-                      {rating === 0 ? 'Tutte' : `${rating}+`}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </details>
           </aside>
 
@@ -472,7 +453,6 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
                     <option value="distance">Distanza</option>
                     <option value="experience">Esperienza / attività</option>
                     <option value="price">Prezzo crescente</option>
-                    <option value="rating">Valutazione</option>
                   </select>
                 </label>
               </div>
@@ -672,16 +652,11 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
                                     ? `Da €${pro.starting_price}`
                                     : 'Tariffe nel profilo'}
                                 </p>
-                                <p className="mt-1 inline-flex lg:justify-end items-center gap-1.5 text-sm text-[var(--pc-muted-600)]">
-                                  <Star className="w-4 h-4" />
-                                  {(pro.review_count || 0) > 0
-                                    ? `${(pro.rating || 0).toFixed(1)} · ${pro.review_count} ${(pro.review_count || 0) === 1 ? 'recensione' : 'recensioni'}`
-                                    : 'Nessuna recensione'}
-                                </p>
+
                               </div>
 
                               <RouteLink
-                                to={(() => { const params = new URLSearchParams(qs); if (sport) params.set('context', 'sport'); else if (exhibitions) params.set('context', 'exhibitions'); else params.delete('context'); params.set('type', typeFilter); params.set('max_price', String(maxPrice)); params.set('min_rating', String(minRating)); params.set('subject', subjectFilter); params.set('experience_step', String(experienceStep)); params.set('sort', sortMode); return '/p/' + pro.id + (params.toString() ? `?${params}` : ''); })()}
+                                to={(() => { const params = new URLSearchParams(qs); if (sport) params.set('context', 'sport'); else if (exhibitions) params.set('context', 'exhibitions'); else params.delete('context'); params.set('type', typeFilter); params.set('max_price', String(maxPrice)); params.delete('min_rating'); params.set('subject', subjectFilter); params.set('experience_step', String(experienceStep)); params.set('sort', sortMode); return '/p/' + pro.id + (params.toString() ? `?${params}` : ''); })()}
                                 className="pc-btn pc-btn-primary w-full sm:w-auto lg:w-full justify-center group/cta"
                               >
                                 Vedi profilo e competenze

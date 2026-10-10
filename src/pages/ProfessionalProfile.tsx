@@ -1,3 +1,4 @@
+import { PublicServiceReviews } from '../components/PublicServiceReviews';
 import { ProfessionalCredentialsPublic } from '../components/ProfessionalCredentialsPublic';
 import { continuityEnabled } from '../lib/continuity';
 import { useEffect, useRef, useState } from 'react';
@@ -8,7 +9,6 @@ import {
   Mail,
   MapPin,
   ShieldAlert,
-  Star,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/AuthContext';
@@ -25,7 +25,6 @@ import { JourneyContextNotice } from '../components/ecosystem/ProfessionalBridge
 export function ProfessionalProfile({ id }: { id: string }) {
   const [pro, setPro] = useState<any>(null);
   const [services, setServices] = useState<any[]>([]);
-  const [reviews, setReviews] = useState<any[]>([]);
   const [dogs, setDogs] = useState<any[]>([]);
   const [showBook, setShowBook] = useState(false);
   const [verifying, setVerifying] = useState<'email' | 'phone' | null>(null);
@@ -33,7 +32,6 @@ export function ProfessionalProfile({ id }: { id: string }) {
   const [profileError, setProfileError] = useState('');
   const [servicesError, setServicesError] = useState(false);
   const [sportOfferings, setSportOfferings] = useState<Array<{ id: string; label: string }>>([]);
-  const [reviewsError, setReviewsError] = useState(false);
   const [dogsLoadError, setDogsLoadError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const resumedBooking = useRef('');
@@ -53,32 +51,24 @@ export function ProfessionalProfile({ id }: { id: string }) {
       setLoadingProfile(true);
       setProfileError('');
       setServicesError(false);
-      setReviewsError(false);
       setDogsLoadError(false);
       setPro(null);
       setServices([]);
       setSportOfferings([]);
-      setReviews([]);
       setDogs([]);
       try {
 
-      const [profileRes, servicesRes, reviewsRes, sportsRes] = await Promise.all([
+      const [profileRes, servicesRes, sportsRes] = await Promise.all([
         supabase
           .from('public_professional_profiles')
           .select(
-            'id, display_name, avatar_url, professional_type, bio, zone_text, starting_price, cover_photo_url, rating, review_count'
+            'id, display_name, avatar_url, professional_type, bio, zone_text, starting_price, cover_photo_url'
           )
           .eq('id', id)
           .maybeSingle(),
         supabase.rpc('get_public_professional_services', {
           p_professional_id: id,
         }),
-        supabase
-          .from('public_reviews')
-          .select('id, professional_id, rating, comment, reviewer_name, created_at')
-          .eq('professional_id', id)
-          .order('created_at', { ascending: false })
-          .limit(10),
         supabase.rpc('get_public_professional_sports', { p_professional_id: id }),
       ]);
 
@@ -91,12 +81,10 @@ export function ProfessionalProfile({ id }: { id: string }) {
       }
 
       setServicesError(Boolean(servicesRes.error));
-      setReviewsError(Boolean(reviewsRes.error));
 
       setPro(profileRes.data);
       setServices(servicesRes.data || []);
       setSportOfferings(sportsRes.error ? [] : sportsRes.data || []);
-      setReviews(reviewsRes.data || []);
 
       if (user && profile?.role === 'owner') {
         const { data: dogRows, error: dogsError } = await supabase
@@ -196,13 +184,10 @@ export function ProfessionalProfile({ id }: { id: string }) {
   const coverUrl =
     pro.cover_photo_url ||
     'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1800';
-  const rating = Number(pro.rating || 0);
-  const reviewCount = Number(pro.review_count || 0);
   const servicePrices = services.map((service) => Number(service.price)).filter((price) => Number.isFinite(price) && price > 0);
   const listedPrice = Number(pro.starting_price);
   const startingPrice = Number.isFinite(listedPrice) && listedPrice > 0
     ? listedPrice : servicePrices.length ? Math.min(...servicePrices) : null;
-  const hasRating = reviewCount > 0 && Number.isFinite(rating) && rating >= 1 && rating <= 5;
   const professionalLabels: Record<string, string> = {
     trainer: 'Educazione e addestramento', walker: 'Dog walking',
     sitter: 'Dog sitting', boarding: 'Pensione per cani', handler: 'Handler per esposizioni',
@@ -250,12 +235,6 @@ export function ProfessionalProfile({ id }: { id: string }) {
               <span className="capitalize rounded-full bg-white/10 border border-white/20 px-3 py-1 font-semibold text-white">
                 {professionalLabels[pro.professional_type] || 'Professionista cinofilo'}
               </span>
-
-              {hasRating ? <span className="flex items-center gap-1">
-                <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                <b>{rating.toFixed(1)}</b>
-                <span className="text-stone-300">({reviewCount} {reviewCount === 1 ? 'recensione' : 'recensioni'})</span>
-              </span> : <span>Valutazione non ancora disponibile</span>}
 
               <span className="flex items-center gap-1">
                 <MapPin className="w-4 h-4" />
@@ -311,10 +290,9 @@ export function ProfessionalProfile({ id }: { id: string }) {
                     <p className="text-xs text-[var(--pc-muted-600)] mt-2">Attività dichiarate dal professionista. Qualifiche e risultati sono indicati con il loro stato di verifica.</p>
                   </div>}
 
-                  <div className="grid sm:grid-cols-3 gap-3 mt-6">
+                  <div className="grid sm:grid-cols-2 gap-3 mt-6">
                     <InfoPill label="Zona" value={pro.zone_text || 'Locale'} />
-                    <InfoPill label="Valutazione" value={hasRating ? rating.toFixed(1) : 'Non disponibile'} />
-                    <InfoPill label="Recensioni" value={String(reviewCount)} />
+                    <InfoPill label="Servizi attivi" value={String(services.length)} />
                   </div>
                 </div>
               </div>
@@ -345,40 +323,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
               )}
             </section>
 
-            <section className="bg-[var(--pc-paper)] rounded-[2rem] border border-[var(--pc-line)] shadow-sm p-6 md:p-8">
-              <h2 className="text-2xl font-bold text-stone-900 mb-5">Recensioni</h2>
-
-              {reviewsError ? (
-                <InlineLoadError text="Non è stato possibile caricare le recensioni." onRetry={() => setReloadKey((key) => key + 1)} />
-              ) : reviews.length === 0 ? (
-                <div className="rounded-2xl bg-stone-50 border border-stone-200 p-5">
-                  <p className="text-stone-600 text-sm">
-                    Nessuna recensione ancora. Le recensioni verranno mostrate dopo prenotazioni completate.
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {reviews.map((review) => (
-                    <div key={review.id} className="rounded-2xl border border-stone-200 p-5">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="font-semibold text-stone-900 text-sm">
-                          {review.reviewer_name || 'Cliente'}
-                        </div>
-                        <div className="flex">
-                          {Array.from({ length: Math.max(0, Math.min(5, Math.floor(Number(review.rating) || 0))) }).map((_, index) => (
-                            <Star
-                              key={index}
-                              className="w-3 h-3 fill-amber-400 text-amber-400"
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-sm text-stone-700">{review.comment}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
+            <PublicServiceReviews key={id} professionalId={id} services={services} />
           </div>
 
           <aside className="lg:sticky lg:top-24">

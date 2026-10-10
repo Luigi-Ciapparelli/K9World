@@ -1,4 +1,9 @@
-# Valutazioni dopo i servizi — REV-01
+# Valutazioni dopo i servizi — REV-01 (storico)
+
+**Superato dalla decisione del 10 ottobre 2026:** vedere
+[SERVICE_REVIEWS_V2](SERVICE_REVIEWS_V2.md). I vincoli sulla persona e la recensione
+unica aggiornabile qui descritti documentano la versione precedente, non le
+direttive attive. La migration V1 resta immutata nella storia Git.
 
 Stato al 9 ottobre 2026: implementazione presente su GitHub in `fd619e4`.
 La preparazione/test usavano come base `3ec87ad`. Presenza sul remoto,

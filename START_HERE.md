@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 10 ottobre 2026, dopo il controllo di `origin/main` a `0f51f98`.
+Aggiornamento del 10 ottobre 2026, dopo il controllo di `origin/main` a `82caa1c`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -38,9 +38,14 @@ Foto professionali, banner e ritratti privati dei clienti sono su GitHub (`e6e38
 usa il minigioco fornito da Luigi, “Rex e il Clicker”: [REX_CLICKER_V1](docs/REX_CLICKER_V1.md).
 La sostituzione è su GitHub (`d3517b5`) e gioco/lezione rispondono online al
 controllo pubblico del 10 ottobre. Anche l’[ottimizzazione delle foto](docs/PHOTO_UPLOAD_OPTIMIZATION_V1.md)
-è su GitHub (`0f51f98`). Correttivo successivo preparato: [recupero delle pagine
-in errore](docs/PAGE_RECOVERY_V1.md), per un difetto riprodotto localmente;
+è su GitHub (`0f51f98`). Anche il [recupero delle pagine
+in errore](docs/PAGE_RECOVERY_V1.md) è su GitHub (`82caa1c`), per un difetto riprodotto localmente;
 non è attribuita a questo difetto la causa del disservizio storico.
+
+Decisione del 10 ottobre: la valutazione riguarda la **singola prestazione prenotata**,
+anche nei centri, non il professionista o la struttura. Incremento preparato e
+verificato: [SERVICE_REVIEWS_V2](docs/SERVICE_REVIEWS_V2.md). Supera il vecchio
+vincolo che richiedeva prima l’assegnazione di un istruttore per attivare le recensioni.
 
 ## Primo controllo, senza modificare nulla
 
