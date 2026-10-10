@@ -9,6 +9,7 @@ import { ThemeProvider } from './lib/ThemeContext';
 import { PageMetadata } from './components/PageMetadata';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { usePasswordRecovery } from './lib/passwordRecovery';
+import { ConnectionNotice, PageErrorBoundary, PageLoading } from './components/PageRecovery';
 
 const AccountContactsPage = lazy(() => import('./pages/AccountContactsPage').then(module => ({ default: module.AccountContactsPage })));
 
@@ -163,13 +164,13 @@ function AppShell() {
         : '/owner';
 
   if (basePath === '/forgot-password' || basePath === '/reset-password' || recovery.status !== 'idle') {
-    return <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p role="status">Caricamento…</p></div>}>
+    return <PageErrorBoundary key={basePath}><Suspense fallback={<PageLoading />}>
       {basePath === '/forgot-password' && recovery.status === 'idle' ? <ForgotPasswordPage /> : <ResetPasswordPage />}
-    </Suspense>;
+    </Suspense></PageErrorBoundary>;
   }
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center bg-stone-50"><div className="text-stone-500">Loading...</div></div>;
+    return <PageLoading />;
   }
 
   if (isProtectedRoute) {
@@ -265,15 +266,12 @@ function AppShell() {
   return (
     <>
       <Navbar />
-      <Suspense
-        fallback={
-          <div className="min-h-[50vh] flex items-center justify-center bg-stone-50">
-            <div className="text-stone-500">Caricamento...</div>
-          </div>
-        }
-      >
+      <ConnectionNotice />
+      <PageErrorBoundary key={basePath}>
+      <Suspense fallback={<PageLoading />}>
         {content}
       </Suspense>
+      </PageErrorBoundary>
       {showFooter && <Footer />}
       {user && <Chatbot />}
     </>

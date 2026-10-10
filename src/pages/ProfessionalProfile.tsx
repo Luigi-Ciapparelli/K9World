@@ -138,6 +138,8 @@ export function ProfessionalProfile({ id }: { id: string }) {
       const page = pageMetadata(`/p/${id}`);
       if (!pro || profileError) applyPageMetadata({ ...page, title: 'Profilo non disponibile | PortaleCinofilo', index: false });
       else if (pro.id === id) applyPageMetadata({ ...page, title: `${pro.display_name}${pro.zone_text ? ` · ${pro.zone_text}` : ''} | PortaleCinofilo`, description: String(pro.bio || `Profilo, servizi e competenze di ${pro.display_name} su PortaleCinofilo.`).slice(0, 180) });
+    }).catch(() => {
+      // A failed metadata download must not interfere with the profile or booking.
     });
     return () => { active = false; };
   }, [id, pro, profileError, loadingProfile]);

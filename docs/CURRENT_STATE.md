@@ -1,7 +1,7 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **10 ottobre 2026**. Base verificata con fetch di `origin/main`:
-[`d3517b5`](https://github.com/Luigi-Ciapparelli/K9World/commit/d3517b5f8eb31318b20adb877b3f177e93956d58).
+[`0f51f98`](https://github.com/Luigi-Ciapparelli/K9World/commit/0f51f980eaee2fb28662624b75f828caa226357a).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
@@ -22,6 +22,7 @@ Questo registro è mantenuto manualmente; il generatore scrive in
 | REV-01 | `fd619e4` | Recensioni dal secondo servizio con un addestratore individuale; pensione dal primo; voto sul cliente privato | Reciprocità per centri sospesa finché manca l'istruttore assegnato; moderazione completa futura |
 | Impara / diagnosi SEO | `204441b` | Timing spostato dalla posizione 2 alla 8; altre lezioni scalate; CSV e riscontri SEO conservati | Nessuna garanzia di indicizzazione; ordine e progressi preservati |
 | IMG-01 | `e6e38c9` | Foto/logo, banner professionali e ritratti privati dei clienti; compressione nel browser e controllo accessi | Push Git osservato; Storage reale, migration applicata e frontend Ready non osservati direttamente |
+| Ottimizzazione foto | `0f51f98` | Foto cane WebP con anteprima esatta, sostituzione aggiornata e ritaglio serializzato | Frontend pubblico e Storage reale non collaudati da questo ambiente |
 | Rex e il Clicker | `d3517b5` | Minigioco fornito da Luigi nella lezione 8; progressi e isolamento | Gioco e lezione HTTP 200 il 10 ottobre; nessuna sessione utente reale collaudata online |
 | Guide razze / SEO | `558e0d5` | Guide originali Shikoku, Clumber Spaniel e Dobermann, fonti e metadata specifici | Attendere riscontri Google; nessuna promessa di indicizzazione |
 
@@ -36,8 +37,9 @@ di un file non dimostra che sia applicato nel database online.
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati
 sintetici. Auth/Storage e API browser sono simulati nelle prove descritte;
 non equivalgono a verifiche dei servizi reali. Per REV-01 non è attestata la
-concorrenza su due connessioni PostgreSQL native. In questo consolidamento non
-sono stati ripetuti test applicativi, eseguite migration o consultati pannelli privati.
+concorrenza su due connessioni PostgreSQL native. Il correttivo
+di recupero pagina ripete i test frontend pertinenti, non la storia SQL; nessuna
+migration eseguita o consultazione di pannelli privati.
 Vercel Ready e stato Supabase degli ultimi tre incrementi non sono stati
 osservati direttamente: **non segnalarli come falliti né come verificati**.
 
@@ -85,7 +87,7 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 | TEAM-01 | Manca attribuzione della prenotazione al singolo istruttore del centro | Modellare persona/team/assegnazione e storia delle modifiche; poi estendere REV-01 |
 | SPORT-02 | Basi presenti, flusso reale e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
 | SEO-01 | Canonical ricevuta, redirect coerenti, richiesta inviata e sitemap riuscita; tre guide specifiche su GitHub | Osservare nuova scansione, canonical e pagine prioritarie. Non chiedere di nuovo i dati già ricevuti |
-| AFF-01 | Luigi conferma che la causa è rimasta ignota; piano gratuito soltanto ipotizzato | Nessun acquisto basato sull’ipotesi; se ricapita raccogliere ora/URL/errore e correlare log |
+| AFF-01 | Causa storica ignota; riprodotta separatamente una pagina bianca quando un modulo della UI fallisce | Recupero manuale preparato e testato, vedere PAGE_RECOVERY_V1; non dedurre la causa del vecchio episodio, raccogliere dati se ricapita |
 | SOC-01 | Concept approvato; possibile trial da 100 crediti comunicato, video non prodotto | Storyboard e scena campione; verificare crediti/costo reale della generazione prima dell’uso, nessuna spesa attivata |
 | ECO-01 / INT-01 | Modello economico e mercati da validare | Utilizzo reale, costi e disponibilità a pagare; fonti aggiornate prima di domande di fondi o spese |
 
@@ -134,7 +136,7 @@ gioco (redirect a `/games/rex-clicker`) e della lezione
 Rex. Il gioco è noindex; la lezione è indicizzabile. Nessuna osservazione del
 pannello Vercel Ready. Dettagli in [REX_CLICKER_V1](REX_CLICKER_V1.md).
 
-## Ottimizzazione foto — 10 ottobre, preparata e testata localmente
+## Ottimizzazione foto — 10 ottobre, presente su GitHub
 
 Corretto il caricamento delle foto del cane: copia WebP entro 512 × 512 e
 160 KiB, anteprima dei byte effettivi, aggiornamento della scheda dopo una
@@ -146,6 +148,24 @@ Browser reale desktop/mobile con API simulate: formati falsi respinti, invio
 esattamente della copia mostrata, dimensioni/byte, sostituzione senza nuovo file,
 rimozione, annullamento e massimo un decoder attivo per editor. TypeScript,
 build e HTML SEO superati. Nessun nuovo test SQL: schema e policy invariati.
-L’installer `ottimizza_caricamento_foto.py` applica e pubblica solo questo incremento;
-nessun commit remoto o deploy dell’ottimizzazione è ancora osservato.
+Il fetch successivo osserva il commit remoto `0f51f98`; il rilascio Git è avvenuto.
+Non ripetere l’installer per aggiornare lo stato. Resta distinto il collaudo
+del frontend pubblicato e dello Storage reale.
 [Specifica, limiti e rilascio](PHOTO_UPLOAD_OPTIMIZATION_V1.md).
+
+## Recupero pagine — 10 ottobre, preparato e testato localmente
+
+Riproduzione sulla build precedente: una risposta 404 al modulo di Impara
+svuotava l’interfaccia React. Aggiunti confini di errore per pagina e applicazione,
+recupero manuale, avviso offline e indicazione dopo 10 secondi di caricamento.
+Navigazione fra le altre pagine mantenuta quando fallisce soltanto il contenuto.
+Nessun refresh automatico o reinvio di operazioni. Query dei passaggi guidati
+non rimontano il modulo, preservando le bozze esistenti.
+
+Browser reale: modulo mancante, rete assente e ripristinata, caricamento lento,
+errore di rendering, ricarica manuale e navigazione. Regressioni pertinenti:
+profilo guidato con bozze e recupero password. API e guasti simulati; nessun
+servizio online o account modificato. TypeScript, build e HTML SEO superati.
+Nessuna nuova migration, dipendenza o spesa. Installer WSL:
+`aggiorna_recupero_pagine.py`. Push e deploy del correttivo non ancora osservati.
+[Specifica, prove e limiti](PAGE_RECOVERY_V1.md).

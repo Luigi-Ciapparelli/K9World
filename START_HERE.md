@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 10 ottobre 2026, dopo il controllo di `origin/main` a `d3517b5`.
+Aggiornamento del 10 ottobre 2026, dopo il controllo di `origin/main` a `0f51f98`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -37,8 +37,10 @@ Foto professionali, banner e ritratti privati dei clienti sono su GitHub (`e6e38
 [PROFILE_IMAGES_V1](docs/PROFILE_IMAGES_V1.md). Il nuovo laboratorio della lezione 8
 usa il minigioco fornito da Luigi, “Rex e il Clicker”: [REX_CLICKER_V1](docs/REX_CLICKER_V1.md).
 La sostituzione è su GitHub (`d3517b5`) e gioco/lezione rispondono online al
-controllo pubblico del 10 ottobre. Incremento tecnico successivo preparato:
-[ottimizzazione delle foto](docs/PHOTO_UPLOAD_OPTIMIZATION_V1.md).
+controllo pubblico del 10 ottobre. Anche l’[ottimizzazione delle foto](docs/PHOTO_UPLOAD_OPTIMIZATION_V1.md)
+è su GitHub (`0f51f98`). Correttivo successivo preparato: [recupero delle pagine
+in errore](docs/PAGE_RECOVERY_V1.md), per un difetto riprodotto localmente;
+non è attribuita a questo difetto la causa del disservizio storico.
 
 ## Primo controllo, senza modificare nulla
 

@@ -8,6 +8,9 @@ export function PageMetadata() {
     let active = true;
     void import('../seo/metadata').then(({ applyPageMetadata, pageMetadata }) => {
       if (active) applyPageMetadata(pageMetadata(path));
+    }).catch(() => {
+      // Metadata is optional during a network failure; preserve the last known head.
+      // Public entry HTML already carries its own metadata. A full reload can retry.
     });
     return () => { active = false; };
   }, [path]);
