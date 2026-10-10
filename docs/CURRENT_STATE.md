@@ -6,6 +6,20 @@ Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
+## Incremento pronto, non ancora osservato su GitHub
+
+Pacchetto unico TRAIN-01 + SPORT-03: ricerca educatori immediata e specializzazioni
+facoltative; verifiche legate alla revisione dei dati e storico privato. Ripristinato
+il pannello di revisione nella dashboard admin. L’ultimo fetch osservato resta
+`3a6674b`: non presentare questi cambiamenti come già online.
+
+Dettagli: [TRAINER_SPECIALIZATIONS_V1](TRAINER_SPECIALIZATIONS_V1.md) e
+[CREDENTIAL_VERIFICATION_INTEGRITY_V1](CREDENTIAL_VERIFICATION_INTEGRITY_V1.md).
+Verifiche locali: 58 migrazioni ricostruite su PGlite, test Edge, browser desktop/mobile,
+TypeScript e build/SEO. Auth/Storage/provider simulati; concorrenza PostgreSQL nativa
+richiesta dall’installer sul PC di Luigi, non eseguita qui. Il pacchetto include
+anche la migrazione TRAIN-01, se ancora mancante. Nessuna fonte sportiva live verificata.
+
 ## Come leggere gli stati
 
 - **GitHub:** codice e documentazione inclusi nel commit remoto esaminato.

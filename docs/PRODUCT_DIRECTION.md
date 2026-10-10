@@ -71,7 +71,10 @@ le persone attive, con appartenenza e assegnazioni verificabili: non è tutto gi
 Evidenze strutturate: qualifiche, corsi, seminari, prove/brevetti e risultati con
 ente, data, disciplina, documento o fonte, stato e scadenza quando pertinente.
 Dichiarato, in verifica, verificato, rifiutato e revocato non sono equivalenti.
-L'utente non scrive il proprio stato verificato. Foto, follower, quantità di
+L'utente non scrive il proprio stato verificato. Una verifica riguarda la versione
+precisa dei fatti esaminati: modifiche sostanziali richiedono una nuova verifica;
+le decisioni iniziate su dati ormai cambiati devono essere respinte. Una variazione
+di sola visibilità non modifica il merito della prova. Foto, follower, quantità di
 corsi e recensioni non certificano competenza. La formazione continua e le
 letture di approfondimento non diventano una classifica per quantità.
 

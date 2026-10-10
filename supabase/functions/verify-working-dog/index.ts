@@ -352,7 +352,7 @@ Deno.serve(async (req) => {
     const { data: credential, error: credentialError } = await service
       .from('professional_credentials')
       .select(
-        'id, professional_id, credential_type, title, discipline, achievement, external_url, dog_name, event_name, issued_at, placement, score_text, verification_status'
+        'id, professional_id, credential_type, title, discipline, achievement, external_url, dog_name, event_name, issued_at, placement, score_text, verification_status, verification_version'
       )
       .eq('id', body.credentialId)
       .maybeSingle();
@@ -398,14 +398,14 @@ Deno.serve(async (req) => {
           ? error.message
           : 'Working-Dog non disponibile.';
 
-      await service
-        .from('professional_credentials')
-        .update({
-          source_provider: 'working_dog',
-          source_checked_at: new Date().toISOString(),
-          verification_note: reason,
-        })
-        .eq('id', credential.id);
+      const { error: checkError } = await service.rpc('commit_working_dog_check', {
+        p_credential_id: credential.id, p_expected_version: credential.verification_version,
+        p_actor_id: user.id, p_outcome: 'unavailable', p_fingerprint: null, p_reason: reason,
+      });
+      if (checkError) return json(checkError.code === '40001' ? 409 : 500, {
+        verified: false, error: 'credential_check_not_saved',
+        reason: checkError.code === '40001' ? 'I dati sono cambiati durante il controllo. Ricarica e riprova.' : 'Controllo non salvato. Riprova.',
+      });
 
       return json(200, {
         verified: false,
@@ -455,8 +455,6 @@ Deno.serve(async (req) => {
       dogMatch &&
       eventMatch;
 
-    const now = new Date().toISOString();
-
     const reason = verified
       ? 'Risultato verificato automaticamente: conduttore, cane, disciplina, livello e gara coincidono nella stessa riga della fonte Working-Dog.'
       : [
@@ -474,44 +472,21 @@ Deno.serve(async (req) => {
           .filter(Boolean)
           .join('; ');
 
-    const updatePayload = verified
-      ? {
-          source_provider: 'working_dog',
-          verification_status: 'verified',
-          verification_method: 'working_dog_auto',
-          source_verified_at: now,
-          source_checked_at: now,
-          source_fingerprint: source.fingerprint,
-          verification_note: reason,
-          reviewed_at: null,
-          reviewed_by: null,
-          placement: matchedResult?.placement ?? credential.placement,
-          score_text:
-            matchedResult?.score !== null && matchedResult?.score !== undefined
-              ? String(matchedResult.score)
-              : credential.score_text,
-        }
-      : {
-          source_provider: 'working_dog',
-          verification_status: 'pending',
-          verification_method: null,
-          source_verified_at: null,
-          source_checked_at: now,
-          source_fingerprint: source.fingerprint,
-          verification_note: reason || 'Corrispondenza automatica insufficiente.',
-        };
+    const { data: committed, error: updateError } = await service.rpc('commit_working_dog_check', {
+      p_credential_id: credential.id, p_expected_version: credential.verification_version,
+      p_actor_id: user.id, p_outcome: verified ? 'matched' : 'not_matched',
+      p_fingerprint: source.fingerprint, p_reason: reason || 'Corrispondenza automatica insufficiente.',
+      p_placement: verified ? matchedResult?.placement ?? null : null,
+      p_score_text: verified && matchedResult?.score !== null && matchedResult?.score !== undefined ? String(matchedResult.score) : null,
+    });
 
-    const { error: updateError } = await service
-      .from('professional_credentials')
-      .update(updatePayload)
-      .eq('id', credential.id);
-
-    if (updateError) {
-      return json(500, {
-        error: 'credential_update_failed',
-        detail: updateError.message,
-      });
-    }
+    if (updateError) return json(updateError.code === '40001' ? 409 : 500, {
+      verified: false, error: 'credential_update_failed',
+      reason: updateError.code === '40001' ? 'I dati sono cambiati durante il controllo. Ricarica e riprova.' : 'Verifica non salvata. Riprova.',
+    });
+    if (!committed || (verified && committed.verification_status !== 'verified')) return json(409, {
+      verified: false, reason: 'Verifica non confermata dal database. Ricarica e riprova.',
+    });
 
     return json(200, {
       verified,

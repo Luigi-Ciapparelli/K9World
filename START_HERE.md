@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 10 ottobre 2026, dopo il controllo di `origin/main` a `82caa1c`.
+Aggiornamento del 10 ottobre 2026, dopo il controllo di `origin/main` a `3a6674b`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -51,6 +51,9 @@ Priorità approvata successiva: **TRAIN-01**, ricerca immediata degli educatori,
 bestiame/caccia come collegamenti facoltativi e sezioni ENCI distinte dalle attività.
 Leggere [TRAINER_SPECIALIZATIONS_V1](docs/TRAINER_SPECIALIZATIONS_V1.md).
 Implementazione preparata; non dichiarare il sito aggiornato prima del rilascio.
+Il pacchetto aggiornato include anche [SPORT-03](docs/CREDENTIAL_VERIFICATION_INTEGRITY_V1.md):
+invalidazione delle credenziali modificate, verifica legata alla versione e pannello
+admin ripristinato. Non completa il collegamento Working-Dog o il nuovo ranking.
 
 ## Primo controllo, senza modificare nulla
 

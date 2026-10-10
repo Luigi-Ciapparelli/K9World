@@ -7,6 +7,8 @@ import { useAuth } from '../../lib/AuthContext';
 type CredentialRow = {
   id: string;
   professional_id: string;
+  verification_version: string;
+  evidence_revision: number;
   credential_type: string;
   enci_section: number | null;
   title: string;
@@ -47,7 +49,7 @@ export function CredentialReviewPanel() {
     const { data, error } = await supabase
       .from('professional_credentials')
       .select(
-        'id, professional_id, enci_section, credential_type, title, issuer_name, discipline, achievement, dog_name, event_name, external_url, document_path, source_provider, verification_method, verification_status, verification_note'
+        'id, professional_id, verification_version, evidence_revision, enci_section, credential_type, title, issuer_name, discipline, achievement, dog_name, event_name, external_url, document_path, source_provider, verification_method, verification_status, verification_note'
       )
       .in('verification_status', ['pending', 'rejected'])
       .order('created_at', { ascending: true });
@@ -97,32 +99,25 @@ export function CredentialReviewPanel() {
   ) => {
     if (!user || busyId) return;
 
+    const current = rows.find(row => row.id === credentialId);
+    if (!current) return;
     setBusyId(credentialId);
     setNotice('');
 
-    const { error } = await supabase.rpc(
-      'admin_review_professional_credential',
-      {
-        p_credential_id: credentialId,
-        p_status: status,
-        p_note: null,
+    try {
+      const { error } = await supabase.rpc('admin_review_credential_version', {
+        p_credential_id: credentialId, p_expected_version: current.verification_version,
+        p_status: status, p_note: null,
+      });
+      if (error) {
+        setNotice(error.code === '40001' ? 'La credenziale è cambiata. Premi Aggiorna e verifica la nuova versione prima di decidere.' : error.message);
+      } else {
+        setNotice(status === 'verified' ? 'Credenziale verificata.' : status === 'rejected' ? 'Credenziale rifiutata.' : 'Verifica revocata.');
+        await load();
       }
-    );
-
-    if (error) {
-      setNotice(error.message);
-    } else {
-      setNotice(
-        status === 'verified'
-          ? 'Credenziale verificata.'
-          : status === 'rejected'
-            ? 'Credenziale rifiutata.'
-            : 'Verifica revocata.'
-      );
-      await load();
-    }
-
-    setBusyId(null);
+    } catch {
+      setNotice('Verifica non confermata. Premi Aggiorna prima di riprovare.');
+    } finally { setBusyId(null); }
   };
 
   const retryWorkingDog = async (credentialId: string) => {

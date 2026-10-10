@@ -1,6 +1,14 @@
 # Risultati verificati e merito per disciplina — 26 settembre 2026
 
-## Stato reale
+## Aggiornamento del 10 ottobre 2026
+
+La protezione dalle modifiche è ora implementata nel pacchetto
+[CREDENTIAL_VERIFICATION_INTEGRITY_V1](CREDENTIAL_VERIFICATION_INTEGRITY_V1.md),
+con salvataggio atomico, versione attesa e storico privato. La proposta SQL
+originaria non va applicata separatamente. Stato remoto in CURRENT_STATE.
+I limiti del collegamento identità/provider e del ranking descritti sotto rimangono.
+
+## Stato storico del 26 settembre
 
 Base letta su GitHub: `8d1baf9` (area Sport separata). Questo incremento contiene
 un motore TypeScript server, test sintetici, criteri editoriali e una proposta SQL
@@ -138,7 +146,7 @@ corrente. Collegamento a ricerca, filtri e UI ancora da implementare.
 
 ## Protezione delle modifiche e test
 
-Il trigger attuale conserva la verifica quando il titolare cambia livello,
+Nel codice esaminato il 26 settembre il trigger conservava la verifica quando il titolare cambiava livello,
 disciplina o prova. Proposta correttiva:
 `docs/proposals/invalidate_changed_sport_evidence.sql`.
 Ogni modifica dell'evidenza, anche amministrativa, imposta `pending`; un cambio
