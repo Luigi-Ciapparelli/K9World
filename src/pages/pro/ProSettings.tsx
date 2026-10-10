@@ -18,6 +18,7 @@ import {
   Plus,
   Trophy,
 } from 'lucide-react';
+import { ENCI_SECTIONS, enciSectionLabel } from '../../lib/trainerSpecializations';
 import { loadItalianCities, cityLabel, normalizeCitySearch, type ItalianCity } from '../../lib/italianCities';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
@@ -44,6 +45,7 @@ type ProfessionalCredential = {
   id: string;
   professional_id: string;
   credential_type: CredentialType;
+  enci_section?: number | null;
   title: string;
   issuer_name: string | null;
   issued_at: string | null;
@@ -89,6 +91,7 @@ const CREDENTIAL_TYPES: Array<{ value: CredentialType; label: string }> = [
 
 const EMPTY_CREDENTIAL = {
   credential_type: 'course_certificate' as CredentialType,
+  enci_section: '',
   title: '',
   issuer_name: '',
   issued_at: '',
@@ -298,7 +301,7 @@ export function ProSettings() {
       supabase
         .from('professional_credentials')
         .select(
-          'id, professional_id, credential_type, title, issuer_name, issued_at, discipline, achievement, description, external_url, document_path, dog_name, event_name, event_scope, placement, score_text, source_provider, verification_method, source_verified_at, source_checked_at, verification_note, is_public, verification_status'
+          'id, professional_id, credential_type, enci_section, title, issuer_name, issued_at, discipline, achievement, description, external_url, document_path, dog_name, event_name, event_scope, placement, score_text, source_provider, verification_method, source_verified_at, source_checked_at, verification_note, is_public, verification_status'
         )
         .eq('professional_id', userId)
         .order('issued_at', { ascending: false, nullsFirst: false })
@@ -506,7 +509,8 @@ export function ProSettings() {
           professional_id: user.id,
           credential_type: credentialDraft.credential_type,
           title,
-          issuer_name: credentialDraft.issuer_name.trim() || null,
+          enci_section: credentialDraft.credential_type === 'professional_qualification' && credentialDraft.enci_section ? Number(credentialDraft.enci_section) : null,
+          issuer_name: credentialDraft.credential_type === 'professional_qualification' && credentialDraft.enci_section ? 'ENCI' : credentialDraft.issuer_name.trim() || null,
           issued_at: credentialDraft.issued_at || null,
           discipline: credentialDraft.discipline.trim() || null,
           achievement: credentialDraft.achievement.trim() || null,
@@ -1036,6 +1040,7 @@ export function ProSettings() {
                     setCredentialDraft({
                       ...credentialDraft,
                       credential_type: event.target.value as CredentialType,
+                      enci_section: '',
                     })
                   }
                   className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm bg-white"
@@ -1048,6 +1053,19 @@ export function ProSettings() {
                 </select>
               </label>
 
+              {credentialDraft.credential_type === 'professional_qualification' && isIndividualProfile && <label className="text-sm font-semibold text-stone-700">
+                Sezione ENCI (facoltativa)
+                <select value={credentialDraft.enci_section} onChange={event => {
+                  const section = event.target.value;
+                  setCredentialDraft({ ...credentialDraft, enci_section: section,
+                    ...(section ? { issuer_name: 'ENCI', title: `Addestratore ENCI · ${enciSectionLabel(Number(section))}` } : {}) });
+                }} className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm bg-white">
+                  <option value="">Altra qualifica / sezione non indicata</option>
+                  {ENCI_SECTIONS.map(section => <option key={section.id} value={section.id}>{enciSectionLabel(section.id)}</option>)}
+                </select>
+                <span className="block text-xs font-normal mt-2">Aggiungi una voce per ciascuna sezione in cui sei iscritto. Una selezione è una dichiarazione: serve una fonte o un documento da verificare. Non cambia le ricerche in cui compari.</span>
+              </label>}
+
               <Field
                 label="Titolo"
                 value={credentialDraft.title}
@@ -1056,13 +1074,13 @@ export function ProSettings() {
                 }
               />
 
-              <Field
+              {credentialDraft.enci_section ? <div className="text-sm font-semibold text-stone-700">Ente / organizzatore<p className="mt-2 font-normal">ENCI</p></div> : <Field
                 label="Ente / organizzatore"
                 value={credentialDraft.issuer_name}
                 onChange={(value) =>
                   setCredentialDraft({ ...credentialDraft, issuer_name: value })
                 }
-              />
+              />}
 
               <label className="text-sm font-semibold text-stone-700">
                 Data

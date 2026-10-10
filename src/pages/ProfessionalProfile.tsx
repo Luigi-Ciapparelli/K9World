@@ -1,5 +1,6 @@
 import { PublicServiceReviews } from '../components/PublicServiceReviews';
 import { ProfessionalCredentialsPublic } from '../components/ProfessionalCredentialsPublic';
+import { TrainingActivitiesPublic } from '../components/TrainingActivitiesPublic';
 import { continuityEnabled } from '../lib/continuity';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -298,7 +299,8 @@ export function ProfessionalProfile({ id }: { id: string }) {
               </div>
             </section>
 
-            <ProfessionalCredentialsPublic professionalId={id} />
+            <TrainingActivitiesPublic professionalId={id} />
+              <ProfessionalCredentialsPublic professionalId={id} />
 
             <section className="bg-[var(--pc-paper)] rounded-[2rem] border border-[var(--pc-line)] shadow-sm p-6 md:p-8">
               <div className="mb-5">

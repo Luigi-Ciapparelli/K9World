@@ -1,7 +1,7 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **10 ottobre 2026**. Base verificata con fetch di `origin/main`:
-[`82caa1c`](https://github.com/Luigi-Ciapparelli/K9World/commit/82caa1c6f2f5e0acac29f5384e87e289dc2ddf5a).
+[`3a6674b`](https://github.com/Luigi-Ciapparelli/K9World/commit/3a6674b1bf26235bb542c4d32891c4b1ba1e0e0a).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
@@ -31,8 +31,8 @@ Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
 [export](DOG_HISTORY_EXPORT_V1.md), [valutazioni](SERVICE_REVIEWS_V1.md).
 I vecchi testi «preparato localmente, da pubblicare» per questi tre blocchi sono superati.
 
-La base GitHub contiene **55 migration**, fino a
-`20261009140000_profile_images.sql`. Il nuovo gioco non aggiunge SQL. La presenza
+La base GitHub contiene **56 migration**, fino a
+`20261010113000_booking_service_reviews.sql`. Il nuovo gioco non aggiunge SQL. La presenza
 di un file non dimostra che sia applicato nel database online.
 
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati
@@ -83,9 +83,10 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 
 | Blocco | Stato reale | Per procedere |
 | --- | --- | --- |
+| TRAIN-01 | Priorità corrente: ricerca quotidiana immediata, collegamenti bestiame/caccia, qualifiche ENCI distinte; preparata localmente | Installer coordinato, poi registrare esiti Supabase/GitHub/Vercel; TRAINER_SPECIALIZATIONS_V1 |
 | IMG-01 | Foto professionali/banner e foto cliente privata su GitHub (`e6e38c9`) | Confermare soltanto gli esiti non osservati: applicazione migration, Ready e prova Storage reale; non ripetere lo sviluppo |
 | MEDIA-01 | Allegati delle sessioni rinviati per decisione di Luigi | Prima matrice quote per abbonamento, utilità dei file, compressione, conservazione e costo totale; nessuna pipeline audio/video avviata |
-| REV-02 | Preparato dopo correzione di Luigi: il voto riguarda il servizio svolto in una specifica prenotazione | Rilasciare migration e frontend con installer; prove e limiti in SERVICE_REVIEWS_V2 |
+| REV-02 | Presente su GitHub (`3a6674b`): voto alla specifica prestazione | Esiti online distinti; non ripetere sviluppo o rilascio senza un difetto |
 | TEAM-01 | Manca attribuzione organizzativa della prenotazione al singolo istruttore del centro | Persona/team/assegnazione e storia; non necessario per REV-02 e nessun trasferimento dei voti |
 | SPORT-02 | Basi presenti, flusso reale e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
 | SEO-01 | Canonical ricevuta, redirect coerenti, richiesta inviata e sitemap riuscita; tre guide specifiche su GitHub | Osservare nuova scansione, canonical e pagine prioritarie. Non chiedere di nuovo i dati già ricevuti |
@@ -172,7 +173,7 @@ Nessuna nuova migration, dipendenza o spesa. Installer WSL:
 `aggiorna_recupero_pagine.py`. Push osservato nel fetch: `82caa1c`. Deploy e pannello Ready non osservati.
 [Specifica, prove e limiti](PAGE_RECOVERY_V1.md).
 
-## Valutazioni per prestazione — 10 ottobre, preparate localmente
+## Valutazioni per prestazione — 10 ottobre, presenti su GitHub
 
 La richiesta di Luigi sostituisce il voto al rapporto con un giudizio sulla
 singola lezione/servizio svolto. Centri inclusi dalla seconda prestazione formativa;
@@ -184,5 +185,15 @@ Nuova migration `20261010113000_booking_service_reviews.sql`, successiva alle
 55 presenti nella base osservata. Test SQL su storia completa, API browser
 simulate, TypeScript e build/SEO; dettagli in [SERVICE_REVIEWS_V2](SERVICE_REVIEWS_V2.md).
 Installer `aggiorna_valutazioni_prestazioni.py` per il rilascio coordinato da WSL.
-Non ancora osservati push Git, applicazione online e deployment di REV-02.
+Fetch del 10 ottobre: push osservato nel commit `3a6674b`. Applicazione online
+e deployment di REV-02 non osservati direttamente.
 Nessun allegato multimediale, contatto esterno, nuova spesa o modello team aggiunto.
+
+## Ricerca addestratori — TRAIN-01, preparata il 10 ottobre
+
+Ricerca quotidiana immediata, collegamenti facoltativi bestiame/caccia, preferenze
+professionali indipendenti e sezioni ENCI con prova/stato distinti. Filtri aggiuntivi
+richiusi su mobile; guida in Impara senza cambiare ordine o progressi.
+[Specifica, prove e limiti](TRAINER_SPECIALIZATIONS_V1.md). Migration aggiuntiva
+`20261010170000_trainer_specializations.sql`; installer `aggiorna_ricerca_addestratori.py`.
+Nessun push, SQL online o deploy eseguito da questo ambiente per TRAIN-01.

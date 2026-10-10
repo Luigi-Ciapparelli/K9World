@@ -65,7 +65,9 @@ function TrainingSearchSettings() {
     inFlight.current = true;
     setSaving(true); setSaved(false); setSaveError('');
     try {
-      const { data, error } = await supabase.rpc('set_my_professional_search_modes', {
+      const { data, error } = await supabase.rpc('set_my_training_search_modes', {
+        p_show_livestock: modes.show_livestock,
+        p_show_hunting: modes.show_hunting,
         p_show_companion: modes.show_companion,
         p_show_sport: modes.show_sport,
         p_discipline_ids: modes.discipline_ids,
@@ -96,15 +98,22 @@ function TrainingSearchSettings() {
             <label className="flex items-start gap-3 rounded-2xl border border-[var(--pc-line)] p-4 cursor-pointer">
               <input type="checkbox" className="mt-1 accent-emerald-700" checked={modes.show_companion}
                 onChange={e => change({ ...modes, show_companion: e.target.checked })} />
-              <span><span className="block font-semibold">Mostrami in Trova aiuto per il cane</span>
+              <span><span className="block font-semibold">Educazione e vita quotidiana</span>
                 <span className="block text-sm text-[var(--pc-muted-600)] mt-1">Per chi cerca aiuto nella vita quotidiana e nella relazione con il cane.</span></span>
             </label>
             <label className="flex items-start gap-3 rounded-2xl border border-[var(--pc-line)] p-4 cursor-pointer">
               <input type="checkbox" className="mt-1 accent-emerald-700" checked={modes.show_sport}
                 onChange={e => change({ ...modes, show_sport: e.target.checked })} />
-              <span><span className="block font-semibold">Mostrami nella sezione Sport cinofili</span>
+              <span><span className="block font-semibold">Sport cinofili</span>
                 <span className="block text-sm text-[var(--pc-muted-600)] mt-1">Per chi cerca un percorso sportivo in una disciplina che insegni.</span></span>
             </label>
+            {(['livestock', 'hunting'] as const).map(area => <label key={area} className="flex items-start gap-3 rounded-2xl border border-[var(--pc-line)] p-4 cursor-pointer">
+              <input type="checkbox" className="mt-1 accent-emerald-700" checked={area === 'livestock' ? modes.show_livestock : modes.show_hunting}
+                onChange={e => change({ ...modes, [area === 'livestock' ? 'show_livestock' : 'show_hunting']: e.target.checked })} />
+              <span><span className="block font-semibold">{area === 'livestock' ? 'Lavoro con il bestiame' : 'Addestramento per la caccia'}</span>
+                <span className="block text-sm text-[var(--pc-muted-600)] mt-1">Compari nella ricerca dedicata a questa attività. Attiva anche Educazione se offri aiuto nella vita quotidiana.</span></span>
+            </label>)}
+            <p className="text-sm text-[var(--pc-muted-600)]">Queste sono le attività che offri. Le eventuali sezioni ENCI si aggiungono separatamente nel passaggio Attestati e risultati.</p>
             {modes.show_sport && <fieldset className="rounded-2xl bg-[var(--pc-bone-50)] p-4">
               <legend className="font-bold px-1">Quali discipline insegni?</legend>
               <p className="text-sm text-[var(--pc-muted-600)] mb-3">Seleziona le attività che offri. Questa scelta descrive i tuoi servizi e non assegna una qualifica o un badge.</p>
@@ -118,7 +127,7 @@ function TrainingSearchSettings() {
               </div>
             </fieldset>}
           </fieldset>
-          {!modes.show_companion && !modes.show_sport && <p className="text-sm mt-3">I servizi di addestramento saranno nascosti da queste due ricerche. Gli altri servizi restano disponibili.</p>}
+          {!modes.show_companion && !modes.show_sport && !modes.show_livestock && !modes.show_hunting && <p className="text-sm mt-3">I servizi di addestramento saranno nascosti dalle ricerche. Gli altri servizi restano disponibili.</p>}
           <p className="text-sm text-[var(--pc-muted-600)] mt-4">Per comparire negli elenchi servono un profilo approvato e almeno un servizio di addestramento attivo.</p>
           {saveError && <p role="alert" className="text-rose-700 mt-3">{saveError}</p>}
           {saved && <p role="status" className="text-emerald-800 mt-3">Visibilità e discipline salvate.</p>}

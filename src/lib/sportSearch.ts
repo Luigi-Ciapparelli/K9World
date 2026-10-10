@@ -11,6 +11,8 @@ export interface SportDiscipline {
 export interface ProfessionalSearchModes {
   show_companion: boolean;
   show_sport: boolean;
+  show_livestock: boolean;
+  show_hunting: boolean;
   discipline_ids: string[];
 }
 

@@ -1,3 +1,4 @@
+import { EnciTrainerGuide } from '../components/EnciTrainerGuide';
 import { useRef, useState } from 'react';
 import { ArrowRight, BookOpen, Check, Clock3, Download, Leaf, NotebookPen, Search, Target, Upload } from 'lucide-react';
 import { STAGE_1_LESSONS, STAGE_1_MODULES } from '../lib/imparaContent';
@@ -69,6 +70,7 @@ export function ImparaHomePage() {
           </section>;
         })}
       </section>
+      <EnciTrainerGuide />
       <section className="im-notebook" aria-labelledby="notebook-title"><NotebookPen size={30}/><div><p className="im-eyebrow">DALLE LEZIONI ALLA TUA GIORNATA</p><h2 id="notebook-title">Il tuo quaderno di osservazione.</h2><p>Raccogli appunti, casi e domande durante le attività. Puoi scaricarli e portarli a un professionista. Restano in questo browser: chi usa lo stesso dispositivo può leggerli.</p>
         <div className="im-actions"><button className="im-button secondary" onClick={()=>downloadText('PortaleCinofilo-il-mio-quaderno.txt',notebookText(progress))}><Download size={17}/>Scarica il quaderno</button><button className="im-link" onClick={()=>navigate('/search?type=trainer&from=impara')}>Trova un addestratore<ArrowRight size={16}/></button></div>
         <details className="im-storage"><summary>Gestisci progressi e backup</summary><p>I progressi non sono sincronizzati con un account. Per spostarli su un altro browser esporta il backup e importalo lì. Cancellare i dati del browser può eliminarli.</p><div className="im-actions"><button className="im-button secondary" onClick={()=>downloadText('PortaleCinofilo-progressi.json',JSON.stringify({format:'portalecinofilo-impara-backup',exportedAt:new Date().toISOString(),progress},null,2),'application/json')}><Download size={16}/>Esporta backup</button><button className="im-button secondary" onClick={()=>upload.current?.click()}><Upload size={16}/>Importa backup</button><button className="im-link" onClick={()=>setReset(!reset)}>Azzera il percorso</button></div><input ref={upload} type="file" accept=".json,application/json" hidden onChange={e=>{const file=e.target.files?.[0];if(file)void restore(file);e.target.value='';}}/>

@@ -8,6 +8,7 @@ import {
   GraduationCap,
   Navigation,
 } from 'lucide-react';
+import { readTrainingFocus, TRAINING_ACTIVITIES, type TrainingFocus } from '../lib/trainerSpecializations';
 import { useSportDisciplines } from '../lib/sportSearch';
 import { useRouter } from '../lib/RouterContext';
 import { cityLabel, loadItalianCities, normalizeCitySearch, type ItalianCity } from '../lib/italianCities';
@@ -27,6 +28,7 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
   const services = exhibitions ? exhibitionServices : dailyServices;
   const catalog = useSportDisciplines(sport);
   const [discipline, setDiscipline] = useState('');
+  const [trainingFocus, setTrainingFocus] = useState<TrainingFocus>('companion');
   const { path, navigate } = useRouter();
   const [service, setServizio] = useState<ServiceCategoryType>(exhibitions ? 'groomer' : 'trainer');
   const [address, setAddress] = useState('');
@@ -53,6 +55,7 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
 
     setServizio(sport ? 'trainer' : type ? type as ServiceCategoryType : exhibitions ? 'groomer' : 'trainer');
     setDiscipline(params.get('discipline') || '');
+    setTrainingFocus(readTrainingFocus(params.get('training')) || 'companion');
     setAddress(nextAddress);
     setSelectedCity(null);
     setGpsCoords(hasCoords ? { lat, lng } : null);
@@ -96,7 +99,7 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
       .slice(0, 8);
   }, [address, cities, selectedCity, gpsCoords]);
 
-  const handleCerca = () => {
+  const handleCerca = (focusOverride?: TrainingFocus) => {
     let city = selectedCity;
 
     if (!city && address.trim()) {
@@ -115,7 +118,7 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
       (city ? { lat: city.lat, lng: city.lng } : null);
 
     const params = new URLSearchParams({
-      type: sport ? 'trainer' : service,
+      type: sport || focusOverride ? 'trainer' : service,
       address,
     });
 
@@ -132,6 +135,10 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
       params.set('lng', String(coords.lng));
     }
 
+    if (!sport && !exhibitions && (focusOverride || service === 'trainer')) {
+      const focus = focusOverride || trainingFocus;
+      if (focus !== 'companion') params.set('training', focus);
+    }
     if (sport && discipline) params.set('discipline', discipline);
     if (sport) params.set('context', 'sport');
     if (exhibitions) params.set('context', 'exhibitions');
@@ -258,7 +265,7 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
             <button
               key={s.id}
               type="button"
-              onClick={() => setServizio(s.id)}
+              onClick={() => { setServizio(s.id); setTrainingFocus('companion'); }}
               aria-pressed={active}
               className={`flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl border-2 transition ${
                 active
@@ -275,6 +282,10 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
 
       </>}
 
+      {!sport && !exhibitions && service === 'trainer' && trainingFocus !== 'companion' && <div className="mb-4">
+        <p className="font-semibold">{TRAINING_ACTIVITIES.find(item => item.id === trainingFocus)?.label}</p>
+        <button type="button" onClick={() => handleCerca('companion')} className="text-sm underline min-h-[44px] text-[var(--pc-forest-700)]">Torna all’educazione quotidiana</button>
+      </div>}
       <div className="flex flex-col md:flex-row gap-3">
         <div className="relative flex-1">
           <MapPin className="absolute left-3 top-6 -translate-y-1/2 w-4 h-4 text-stone-400" />
@@ -295,7 +306,7 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
           />
 
           {suggestions.length > 0 && (
-            <div className="relative md:absolute left-0 right-0 md:top-full mt-1 z-30 bg-[var(--pc-paper)] text-[var(--pc-ink-950)] border border-[var(--pc-line)] rounded-xl shadow-xl max-h-60 overflow-y-auto">
+            <div className="relative mt-1 bg-[var(--pc-paper)] text-[var(--pc-ink-950)] border border-[var(--pc-line)] rounded-xl shadow-xl max-h-60 overflow-y-auto">
               {suggestions.map((city) => (
                 <button
                   key={city.code}
@@ -334,13 +345,19 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
 
         <button
           type="button"
-          onClick={handleCerca}
-          className="pc-btn pc-btn-primary px-6"
+          onClick={() => handleCerca()}
+          className="pc-btn pc-btn-primary px-6 md:self-start"
         >
           <Search className="w-4 h-4" />
           {sport ? 'Trova addestratore per disciplina' : 'Cerca'}
         </button>
       </div>
+      {!sport && !exhibitions && service === 'trainer' && <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[var(--pc-muted-600)]" aria-label="Attività specifiche">
+        <span>Cerchi un’attività specifica?</span>
+        {TRAINING_ACTIVITIES.filter(item => item.id !== 'companion').map(item => <button key={item.id} type="button"
+          aria-pressed={trainingFocus === item.id} onClick={() => handleCerca(item.id)}
+          className="min-h-[44px] underline underline-offset-4 hover:text-[var(--pc-forest-700)]">{item.label}</button>)}
+      </div>}
     </div>
   );
 }

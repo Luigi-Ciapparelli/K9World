@@ -43,9 +43,14 @@ in errore](docs/PAGE_RECOVERY_V1.md) è su GitHub (`82caa1c`), per un difetto ri
 non è attribuita a questo difetto la causa del disservizio storico.
 
 Decisione del 10 ottobre: la valutazione riguarda la **singola prestazione prenotata**,
-anche nei centri, non il professionista o la struttura. Incremento preparato e
-verificato: [SERVICE_REVIEWS_V2](docs/SERVICE_REVIEWS_V2.md). Supera il vecchio
+anche nei centri, non il professionista o la struttura. Presente su GitHub
+(`3a6674b`): [SERVICE_REVIEWS_V2](docs/SERVICE_REVIEWS_V2.md). Supera il vecchio
 vincolo che richiedeva prima l’assegnazione di un istruttore per attivare le recensioni.
+
+Priorità approvata successiva: **TRAIN-01**, ricerca immediata degli educatori,
+bestiame/caccia come collegamenti facoltativi e sezioni ENCI distinte dalle attività.
+Leggere [TRAINER_SPECIALIZATIONS_V1](docs/TRAINER_SPECIALIZATIONS_V1.md).
+Implementazione preparata; non dichiarare il sito aggiornato prima del rilascio.
 
 ## Primo controllo, senza modificare nulla
 

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ExternalLink, FileText, RefreshCw, ShieldCheck, XCircle } from 'lucide-react';
+import { enciSectionLabel } from '../../lib/trainerSpecializations';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
 
@@ -7,6 +8,7 @@ type CredentialRow = {
   id: string;
   professional_id: string;
   credential_type: string;
+  enci_section: number | null;
   title: string;
   issuer_name: string | null;
   discipline: string | null;
@@ -45,7 +47,7 @@ export function CredentialReviewPanel() {
     const { data, error } = await supabase
       .from('professional_credentials')
       .select(
-        'id, professional_id, credential_type, title, issuer_name, discipline, achievement, dog_name, event_name, external_url, document_path, source_provider, verification_method, verification_status, verification_note'
+        'id, professional_id, enci_section, credential_type, title, issuer_name, discipline, achievement, dog_name, event_name, external_url, document_path, source_provider, verification_method, verification_status, verification_note'
       )
       .in('verification_status', ['pending', 'rejected'])
       .order('created_at', { ascending: true });
@@ -211,7 +213,7 @@ export function CredentialReviewPanel() {
                     {names[row.professional_id] || row.professional_id.slice(0, 8)}
                   </p>
                   <h3 className="text-lg font-extrabold text-[var(--pc-ink-950)] mt-1">
-                    {row.title}
+                    {row.title}{row.enci_section && <span className="block text-sm">Registro ENCI: {enciSectionLabel(row.enci_section)}. Controlla persona, sezione e fonte prima di verificare.</span>}
                   </h3>
                   <p className="text-sm text-[var(--pc-muted-600)] mt-2">
                     {[

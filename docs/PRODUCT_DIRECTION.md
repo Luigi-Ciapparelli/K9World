@@ -103,10 +103,14 @@ aspettative e funzioni selezionate. Risultati/risposte possono diventare contest
 condivisibile con il professionista solo per scelta esplicita e revocabile.
 Questa condivisione persistente non va presunta già completa.
 
-Resta richiesta la spiegazione degli addestratori ENCI: sezione 1 compagnia/utilità,
-sezione 2 conduzione del bestiame, sezione 3 caccia, insieme alla distinzione
-dell'handler da esposizione. Quando affrontata, verificare denominazioni e
-requisiti sulle fonti ufficiali aggiornate; non attribuire qualifiche per categoria.
+Direttiva prioritaria TRAIN-01 del 10 ottobre: il proprietario cerca subito un
+educatore/addestratore nella zona, senza selezionare sezioni ENCI. Bestiame e
+caccia sono collegamenti facoltativi secondari che mantengono la zona; Sport
+resta separato. Il professionista sceglie indipendentemente le attività offerte.
+Le sezioni ENCI sono qualifiche personali con fonte e stato di verifica, distinte
+da visibilità e servizi: 1 utilità/compagnia/agility/sport, 2 cani da bestiame,
+3 cani da caccia. Impara ne spiega la differenza e distingue gli handler.
+Implementazione e denominazioni ufficiali: [TRAINER_SPECIALIZATIONS_V1](TRAINER_SPECIALIZATIONS_V1.md).
 Un eventuale catalogo dei corsi ENCI deve usare riferimenti leciti/aggiornati,
 fonte, date e stato, senza simulare accreditamento o copiare materiale riservato.
 

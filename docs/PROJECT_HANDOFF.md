@@ -1,6 +1,6 @@
 # PortaleCinofilo — passaggio di consegne
 
-9 ottobre 2026. Leggere prima [CURRENT_STATE](CURRENT_STATE.md) e
+10 ottobre 2026. Leggere prima [CURRENT_STATE](CURRENT_STATE.md) e
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questo documento spiega come lavorare;
 lo stato e l'ordine delle priorità non sono duplicati qui.
 
@@ -71,6 +71,7 @@ per rifare una verifica email. Usare i documenti recapiti per il flusso effettiv
 
 | Lavoro | Documenti da leggere |
 | --- | --- |
+| Ricerca addestratori / ENCI | [TRAINER_SPECIALIZATIONS_V1](TRAINER_SPECIALIZATIONS_V1.md); ricerca diretta, attività e qualifiche distinte |
 | Home e navigazione | [HOME_PORTAL_V1](HOME_PORTAL_V1.md), [EXHIBITIONS_RELEASE_V1](EXHIBITIONS_RELEASE_V1.md) |
 | Impara e scelta del cane | [REX_CLICKER_V1](REX_CLICKER_V1.md), [IMPARA_LESSON_ORDER_V1](IMPARA_LESSON_ORDER_V1.md), [IMPARA_RELEASE_V3](IMPARA_RELEASE_V3.md), [IMPARA_SHAPING_V1](IMPARA_SHAPING_V1.md), [LEARNING_CREDENTIAL_CORE](LEARNING_CREDENTIAL_CORE.md) |
 | Profilo e strumenti | [PROFESSIONAL_GUIDED_WORKSPACE_V1](PROFESSIONAL_GUIDED_WORKSPACE_V1.md), [PROFESSIONAL_OPERATIONS_NEXT](PROFESSIONAL_OPERATIONS_NEXT.md) |

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Award, BadgeCheck, ExternalLink, Medal, Trophy } from 'lucide-react';
+import { enciSectionLabel } from '../lib/trainerSpecializations';
 import { supabase } from '../lib/supabase';
 
 type PublicCredential = {
   id: string;
   credential_type: string;
+  enci_section?: number | null;
   title: string;
   issuer_name: string | null;
   issued_at: string | null;
@@ -69,15 +71,18 @@ export function ProfessionalCredentialsPublic({
   const [merit, setMerit] = useState<SportMerit | null>(null);
   const [identities, setIdentities] = useState<ExternalIdentity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let active = true;
 
     const load = async () => {
-      setLoading(true);
-
+      setLoading(true); setLoadError(false);
+      setCredentials([]); setMerit(null); setIdentities([]);
+      try {
       const [credentialsRes, meritRes, identitiesRes] = await Promise.all([
-        supabase.rpc('get_public_professional_credentials', {
+        supabase.rpc('get_public_professional_credentials_v2', {
           p_professional_id: professionalId,
         }),
         supabase
@@ -93,6 +98,7 @@ export function ProfessionalCredentialsPublic({
       ]);
 
       if (!active) return;
+      if (credentialsRes.error || meritRes.error || identitiesRes.error) throw new Error('Credentials unavailable');
 
       if (!credentialsRes.error) {
         setCredentials((credentialsRes.data || []) as PublicCredential[]);
@@ -106,7 +112,8 @@ export function ProfessionalCredentialsPublic({
         setIdentities((identitiesRes.data || []) as ExternalIdentity[]);
       }
 
-      setLoading(false);
+      } catch { if (active) setLoadError(true); }
+      finally { if (active) setLoading(false); }
     };
 
     void load();
@@ -114,7 +121,7 @@ export function ProfessionalCredentialsPublic({
     return () => {
       active = false;
     };
-  }, [professionalId]);
+  }, [professionalId, attempt]);
 
   if (loading) {
     return (
@@ -125,6 +132,8 @@ export function ProfessionalCredentialsPublic({
       </section>
     );
   }
+
+  if (loadError) return <section className="pc-card p-6" role="status"><p>Qualifiche e risultati non disponibili in questo momento.</p><button type="button" className="pc-btn pc-btn-secondary mt-3" onClick={() => setAttempt(n => n + 1)}>Riprova</button></section>;
 
   if (credentials.length === 0 && !merit && identities.length === 0) {
     return null;
@@ -220,6 +229,7 @@ export function ProfessionalCredentialsPublic({
                       </span>
                     </div>
 
+                    {credential.enci_section && <p className="mt-2 text-sm">Registro addestratori ENCI · {enciSectionLabel(credential.enci_section)}</p>}
                     <p className="mt-2 text-sm text-[var(--pc-muted-600)]">
                       {[
                         credential.discipline?.toUpperCase(),

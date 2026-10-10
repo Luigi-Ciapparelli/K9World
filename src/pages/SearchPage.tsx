@@ -12,6 +12,7 @@ import {
   Trophy,
   Info,
 } from 'lucide-react';
+import { readTrainingFocus } from '../lib/trainerSpecializations';
 import { supabase } from '../lib/supabase';
 import { useRouter } from '../lib/RouterContext';
 import { SearchCard } from '../components/SearchCard';
@@ -119,6 +120,7 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
     return raw !== null && Number.isFinite(value) && value >= low && value <= high ? value : fallback;
   };
   const [reloadKey, setReloadKey] = useState(0);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [pros, setPros] = useState<ProResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [maxPrice, setMaxPrice] = useState(() => bounded('max_price', 200, 10, 200));
@@ -130,6 +132,10 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
   const journey = readJourneyContext();
   const typeFilter = sport ? 'trainer' : qs.get('type') || (exhibitions ? 'groomer' : 'trainer');
   const unsupportedCategory = !sport && !(exhibitions ? EXHIBITION_SERVICE_TYPES : DAILY_SERVICE_TYPES).some(type => type === typeFilter);
+  const trainingSearch = !sport && !exhibitions && typeFilter === 'trainer';
+  const trainingFocus = trainingSearch ? readTrainingFocus(qs.get('training')) : 'companion';
+  const invalidTrainingFocus = trainingSearch && trainingFocus === null;
+  const specialistSearch = trainingSearch && trainingFocus !== null && trainingFocus !== 'companion';
   const disciplineFilter = sport ? qs.get('discipline') : null;
   const addressFilter = qs.get('address');
   const latParam = qs.get('lat');
@@ -165,18 +171,18 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
     let cancelled = false;
 
     const load = async () => {
-      if (unsupportedCategory) { setPros([]); setLoading(false); setLoadError(''); return; }
+      if (unsupportedCategory || invalidTrainingFocus) { setPros([]); setLoading(false); setLoadError(''); return; }
       setLoading(true);
       setLoadError('');
 
       try {
-      const { data, error } = await supabase.rpc(sport ? 'search_sport_professionals' : exhibitions ? 'search_exhibition_professionals' : 'search_public_professionals', {
+      const { data, error } = await supabase.rpc(specialistSearch ? 'search_training_professionals' : sport ? 'search_sport_professionals' : exhibitions ? 'search_exhibition_professionals' : 'search_public_professionals', {
         p_lat: selectedCoordinates?.lat ?? null,
         p_lng: selectedCoordinates?.lng ?? null,
         p_zone_text: selectedCoordinates?.explicit ? null : (selectedCity?.name ?? addressFilter?.trim()) || null,
-        ...(sport ? { p_discipline_id: disciplineFilter || null } : { p_service_type: typeFilter }),
+        ...(specialistSearch ? { p_focus: trainingFocus } : sport ? { p_discipline_id: disciplineFilter || null } : { p_service_type: typeFilter }),
         p_max_price: maxPrice >= 200 ? null : maxPrice,
-        p_min_rating: null,
+        ...(!specialistSearch ? { p_min_rating: null } : {}),
       });
 
       if (cancelled) return;
@@ -210,7 +216,7 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [reloadKey, sport, exhibitions, unsupportedCategory, disciplineFilter, typeFilter, addressFilter, selectedCity, selectedCoordinates, maxPrice]);
+  }, [reloadKey, sport, exhibitions, specialistSearch, trainingSearch, trainingFocus, invalidTrainingFocus, unsupportedCategory, disciplineFilter, typeFilter, addressFilter, selectedCity, selectedCoordinates, maxPrice]);
 
   const filtered = useMemo(() => {
     const minExperience = EXPERIENCE_STEPS[experienceStep];
@@ -293,7 +299,7 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
     ? `vicino a ${addressFilter.trim()}`
     : selectedCoordinates?.explicit
       ? 'vicino alla posizione selezionata'
-      : 'disponibili';
+      : filtered.length === 1 ? 'disponibile' : 'disponibili';
 
   return (
     <div className="min-h-screen bg-[var(--pc-bone-50)]">
@@ -314,10 +320,15 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
           <p className="mt-2">Pet sitting e passeggiate non sono più offerti su PortaleCinofilo. Le prenotazioni precedenti restano nella tua area. Seleziona uno dei servizi disponibili qui sotto e premi Cerca.</p>
           <RouteLink to="/esposizioni" className="inline-block mt-3 underline">Cerchi toelettatura o un handler? Vai a Esposizioni</RouteLink>
         </div>}
+        {invalidTrainingFocus && <p role="alert" className="pc-card p-4 mb-4">Attività non riconosciuta. Premi Cerca per tornare all’educazione quotidiana.</p>}
         <SearchCard compact sport={sport} exhibitions={exhibitions} />
 
         <div className="grid lg:grid-cols-[280px_1fr] gap-6 mt-8">
           <aside className="pc-card p-5 md:p-6 h-fit lg:sticky lg:top-24">
+            <button type="button" className="lg:hidden w-full min-h-[44px] flex items-center justify-between gap-3 font-semibold" aria-expanded={mobileFiltersOpen} aria-controls="optional-search-filters" onClick={() => setMobileFiltersOpen(value => !value)}>
+              <span><SlidersHorizontal className="w-4 h-4 inline mr-2" />Filtri facoltativi{activeFilterChips.length ? ` (${activeFilterChips.length})` : ''}</span><span aria-hidden="true">{mobileFiltersOpen ? '−' : '+'}</span>
+            </button>
+            <div id="optional-search-filters" className={`${mobileFiltersOpen ? 'block' : 'hidden'} lg:block`}>
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-[var(--pc-forest-700)]" />
@@ -430,6 +441,7 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
               </div>
 
             </details>
+            </div>
           </aside>
 
           <main>
