@@ -1,7 +1,7 @@
 # PortaleCinofilo — stato corrente
 
-Aggiornato il **13 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`7521dd3` (ultimo incremento privacy; TRAIN-01 e SPORT-03 già inclusi).
+Aggiornato il **14 ottobre 2026**. Base verificata con fetch di `origin/main`:
+`8a482aa` (titolarità Working-Dog; TRAIN-01 e SPORT-03 già inclusi).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
@@ -21,7 +21,7 @@ TypeScript e build/SEO. Auth/Storage/provider simulati; concorrenza PostgreSQL n
 richiesta dall’installer sul PC di Luigi, non eseguita qui. Il pacchetto include
 anche la migrazione TRAIN-01, se ancora mancante. Nessuna fonte sportiva live verificata.
 
-## Working-Dog — incremento preparato il 13 ottobre
+## Working-Dog — presente su GitHub
 
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md): collegamento tramite
 identificativo stabile, revisione della titolarità, storico privato e invalidazione
@@ -43,8 +43,30 @@ TypeScript, build/SEO e browser desktop/mobile con API simulate. Il test nativo
 include due casi concorrenti e deve passare sul PC di Luigi prima del rilascio.
 Supabase online, accesso reale al provider e deployment non verificati da questi test.
 
-Pacchetto locale pronto per test nativi → commit → SQL → Edge → push GitHub.
-Il rilascio effettivo e Vercel Ready vanno registrati dopo l’output del terminale.
+Il fetch del 13 ottobre osserva il commit remoto `8a482aa`. La presenza su
+GitHub non dimostra da sola esito SQL, deploy Edge o Vercel Ready. Non ripetere
+il rilascio senza un difetto: registrare gli esiti effettivi quando disponibili.
+
+## Istruttori del centro — incremento corrente
+
+[CENTRE_INSTRUCTORS_V1](CENTRE_INSTRUCTORS_V1.md): area `/pro/team`, nomi
+interni attivi/inattivi, assegnazione facoltativa alle lezioni accettate da
+richieste e calendario, lettura del cliente e nome storico nell’export del cane.
+Le assegnazioni concluse sono bloccate; rinomina e inattività non cambiano il
+nome salvato. Le recensioni restano sulla singola prestazione.
+
+60ª migration locale: `20261013180000_centre_instructor_assignments.sql`.
+PGlite: storia completa, ruoli, versioni, isolamento, export, cancellazione centro
+e compatibilità recensioni. Browser desktop/mobile con API simulate: creazione,
+conflitto e ricaricamento, calendario e lettura proprietario. TypeScript, build e
+SEO superati. Due casi concorrenti PostgreSQL nativi sono forniti e richiesti
+dall’installer: non eseguiti in questo ambiente. Nessun test online effettuato.
+
+Pacchetto pronto per verifica nativa → commit locale → SQL → push GitHub.
+Questo stato descrive la preparazione; esito del comando e Vercel Ready sono
+ancora da registrare. Nessuna funzione Edge o nuova spesa necessaria.
+Prima fase TEAM-01: non include account del personale, conferma di appartenenza,
+permessi delegati o disponibilità del singolo istruttore.
 
 ## Email sospese
 
@@ -78,9 +100,9 @@ Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
 [export](DOG_HISTORY_EXPORT_V1.md), [valutazioni](SERVICE_REVIEWS_V1.md).
 I vecchi testi «preparato localmente, da pubblicare» per questi tre blocchi sono superati.
 
-La base GitHub contiene **58 migration**, fino a
-`20261010190000_versioned_credential_verification.sql`. La nuova correzione Working-Dog aggiunge una 59ª migration locale. La presenza
-di un file non dimostra che sia applicato nel database online.
+La base GitHub contiene **59 migration**, fino a
+`20261013083000_working_dog_identity_binding.sql`. Il pacchetto istruttori
+aggiunge la 60ª. Un file nel repository non dimostra l’applicazione online.
 
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati
 sintetici. Auth/Storage e API browser sono simulati nelle prove descritte;
@@ -134,8 +156,8 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 | IMG-01 | Foto professionali/banner e foto cliente privata su GitHub (`e6e38c9`) | Confermare soltanto gli esiti non osservati: applicazione migration, Ready e prova Storage reale; non ripetere lo sviluppo |
 | MEDIA-01 | Allegati delle sessioni rinviati per decisione di Luigi | Prima matrice quote per abbonamento, utilità dei file, compressione, conservazione e costo totale; nessuna pipeline audio/video avviata |
 | REV-02 | Presente su GitHub (`3a6674b`): voto alla specifica prestazione | Esiti online distinti; non ripetere sviluppo o rilascio senza un difetto |
-| TEAM-01 | Manca attribuzione organizzativa della prenotazione al singolo istruttore del centro | Persona/team/assegnazione e storia; non necessario per REV-02 e nessun trasferimento dei voti |
-| SPORT-02 | Basi presenti, flusso reale e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
+| TEAM-01 | Elenco interno e assegnazione nominativa implementati nel pacchetto corrente | Rilascio coordinato; successivamente account personali, appartenenze confermate e deleghe. Nessun voto alla persona |
+| SPORT-02 | Titolarità/versioni su GitHub (`8a482aa`); fonte live e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
 | SEO-01 | Canonical ricevuta, redirect coerenti, richiesta inviata e sitemap riuscita; tre guide specifiche su GitHub | Osservare nuova scansione, canonical e pagine prioritarie. Non chiedere di nuovo i dati già ricevuti |
 | AFF-01 | Causa storica ignota; riprodotta separatamente una pagina bianca quando un modulo della UI fallisce | Recupero manuale su GitHub (`82caa1c`) e testato, vedere PAGE_RECOVERY_V1; non dedurre la causa del vecchio episodio, raccogliere dati se ricapita |
 | SOC-01 | Concept approvato; possibile trial da 100 crediti comunicato, video non prodotto | Storyboard e scena campione; verificare crediti/costo reale della generazione prima dell’uso, nessuna spesa attivata |

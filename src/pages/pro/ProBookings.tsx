@@ -1,3 +1,5 @@
+import { BookingInstructor, InstructorLoadError } from '../../components/BookingInstructor';
+import { useBookingInstructors } from '../../lib/centreTeam';
 import { ClientPortrait, useClientPortraits } from '../../components/ClientPortrait';
 import { ServiceReviewPanel } from '../../components/ServiceReviews';
 import { useEffect, useRef, useState } from 'react';
@@ -37,6 +39,7 @@ export function ProBookings() {
   const lock = useRef(false);
   const session = useRef(0);
   const portraits = useClientPortraits([], bookings.map(booking => booking.id), reloadKey);
+  const instructors = useBookingInstructors(bookings.map(b => b.id), reloadKey);
   const messageSummaries = useBookingMessageSummaries(bookings.map((booking) => booking.id));
 
   useEffect(() => {
@@ -134,6 +137,7 @@ export function ProBookings() {
         </form>
 
         {notice && <p role={notice.error ? 'alert' : 'status'} className="pc-card p-4 mb-4 text-sm">{notice.text}</p>}
+        {instructors.error && <InstructorLoadError retry={instructors.reload} />}
         <section aria-label="Elenco prenotazioni" aria-busy={loading} className="space-y-4">
           {loading ? <p role="status" className="pc-card p-6">Caricamento…</p> : loadError ? (
             <div role="alert" className="pc-card p-6"><p>Non è stato possibile caricare le prenotazioni.</p><button type="button" onClick={reload} className="mt-3 font-bold underline">Riprova</button></div>
@@ -151,6 +155,7 @@ export function ProBookings() {
                 <h3 className="text-sm font-bold">Note della richiesta</h3>
                 <p className="whitespace-pre-wrap break-words text-sm mt-1">{booking.notes?.trim() || 'Nessuna nota inserita.'}</p>
               </div>
+              <BookingInstructor row={instructors.rows[booking.id]} professional onSaved={instructors.reload} />
               {busyId === booking.id && <p role="status" className="text-sm mt-3">Aggiornamento…</p>}
               <div className="flex flex-wrap gap-2 mt-4">
                 <BookingConversation bookingId={booking.id} professional summary={messageSummaries[booking.id]} requestNotes={booking.notes} />

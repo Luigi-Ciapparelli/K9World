@@ -87,6 +87,7 @@ const ProBookings = lazy(() =>
     default: module.ProBookings,
   }))
 );
+const ProTeam = lazy(() => import('./pages/pro/ProTeam').then(module => ({ default: module.ProTeam })));
 const ProCalendar = lazy(() =>
   import('./pages/pro/ProCalendar').then((module) => ({ default: module.ProCalendar }))
 );
@@ -250,6 +251,7 @@ function AppShell() {
   else if (basePath === '/pro') content = <ProDashboard />;
   else if (basePath === '/pro/archive' && continuityEnabled) content = <ContinuityPage professional />;
   else if (basePath === '/pro/bookings') content = <ProBookings />;
+  else if (basePath === '/pro/team') content = <ProTeam />;
   else if (basePath === '/pro/calendar') content = <ProCalendar />;
   else if (basePath === '/pro/subscriptions') content = <SubscriptionsPage professional />;
   else if (basePath === '/pro/passes') content = <PassesPage professional />;

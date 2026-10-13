@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 13 ottobre 2026, base `origin/main` osservata a `7521dd3`.
+Aggiornamento del 14 ottobre 2026, base `origin/main` osservata a `8a482aa`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -56,10 +56,12 @@ invalidazione delle credenziali modificate, verifica legata alla versione e pann
 admin ripristinato. Non completa il collegamento Working-Dog o il nuovo ranking.
 
 Email e raccolta contatti sospese su richiesta di Luigi. Prosegue il lavoro tecnico.
-Il nuovo incremento [WORKING_DOG_IDENTITY_V1](docs/WORKING_DOG_IDENTITY_V1.md)
-lega i risultati a un’identità verificata e protegge le revoche. Preparato e
-collaudato localmente; non dichiararlo online senza gli esiti di pubblicazione.
-La verifica automatica della fonte resta disattivata; il ranking è ancora separato.
+[WORKING_DOG_IDENTITY_V1](docs/WORKING_DOG_IDENTITY_V1.md) è presente su GitHub
+(`8a482aa`): titolarità, versioni e revoche. Esiti SQL/Edge/Vercel distinti;
+verifica automatica della fonte disattivata e ranking ancora separato.
+Incremento corrente: [CENTRE_INSTRUCTORS_V1](docs/CENTRE_INSTRUCTORS_V1.md),
+elenco interno e assegnazione nominativa alla lezione. Account del personale,
+appartenenze verificate e accessi delegati restano una fase successiva di TEAM-01.
 
 ## Primo controllo, senza modificare nulla
 

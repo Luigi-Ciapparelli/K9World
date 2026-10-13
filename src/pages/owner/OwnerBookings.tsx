@@ -1,3 +1,5 @@
+import { BookingInstructor, InstructorLoadError } from '../../components/BookingInstructor';
+import { useBookingInstructors } from '../../lib/centreTeam';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Star } from 'lucide-react';
 import { ServiceReviewPanel, ReviewEditor } from '../../components/ServiceReviews';
@@ -24,6 +26,7 @@ function OwnerBookingsBody() {
   const [reload, setReload] = useState(0);
   const loadGeneration = useRef(0);
   const userId = user?.id;
+  const instructors = useBookingInstructors(bookings.map(b => b.id), reload);
   const summaries = useBookingMessageSummaries(bookings.map((booking) => booking.id));
 
   const load = useCallback(async () => {
@@ -64,6 +67,7 @@ function OwnerBookingsBody() {
       <div className="max-w-5xl mx-auto px-6 py-10">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3"><h1 className="text-3xl font-bold text-stone-900">Prenotazioni e messaggi</h1><button type="button" disabled={loading} onClick={() => void load()} className="text-sm font-semibold underline">Aggiorna</button></div>
         <ServiceReviewPanel refresh={reload} />
+        {instructors.error && <InstructorLoadError retry={instructors.reload} />}
         {loading ? <p role="status">Caricamento prenotazioni…</p> : loadError ? <div role="alert" className="rounded-xl border border-rose-200 bg-white p-5">Prenotazioni non caricate. <button type="button" onClick={() => void load()} className="font-semibold underline">Riprova</button></div> : bookings.length === 0 ? (
           <div className="bg-white rounded-2xl p-10 text-center border border-stone-200 text-stone-600">Non hai ancora prenotazioni.</div>
         ) : (
@@ -76,6 +80,7 @@ function OwnerBookingsBody() {
                   <div className="text-sm text-stone-600">{new Date(b.start_at).toLocaleString('it-IT')}</div>
                   <div className="text-xs text-stone-500 mt-1">{Number(b.price || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</div>
                   <p className="mt-2 whitespace-pre-wrap break-words text-sm text-stone-600">{b.notes || 'Nessuna nota alla richiesta.'}</p>
+                  <BookingInstructor row={instructors.rows[b.id]} onSaved={instructors.reload} />
                 </div>
                 <StatusBadge status={b.status} />
                 <div className="flex flex-wrap gap-2">

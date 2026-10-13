@@ -1,3 +1,4 @@
+import { supabase } from '../../lib/supabase';
 import { continuityEnabled } from '../../lib/continuity';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { LayoutDashboard, Calendar, CalendarDays, Package, RefreshCw, Users, BarChart3, Compass, Menu, X, ArrowUpRight } from 'lucide-react';
@@ -8,13 +9,23 @@ import '../../professional-workspace.css';
 
 export function ProLayout({ children, active }: { children: ReactNode; active: string }) {
   const { navigate } = useRouter();
-  const { profile } = useAuth();
+  const { user, profile } = useAuth();
+  const [centreUser, setCentreUser] = useState<string | null>(null);
+  useEffect(() => {
+    let active = true; setCentreUser(null);
+    if (!user) return;
+    void supabase.from('professionals').select('listing_type').eq('id', user.id).maybeSingle().then(({data, error}) => {
+      if (active && !error && data?.listing_type === 'center') setCentreUser(user.id);
+    });
+    return () => { active = false; };
+  }, [user?.id]);
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLButtonElement>(null);
   const nav = [
     { id: 'dashboard', label: 'La tua giornata', icon: LayoutDashboard, path: '/pro', group: 'IL TUO LAVORO' },
     { id: 'bookings', label: 'Richieste e messaggi', icon: Calendar, path: '/pro/bookings' },
     { id: 'calendar', label: 'Calendario', icon: CalendarDays, path: '/pro/calendar' },
+    ...(centreUser === user?.id ? [{ id: 'team', label: 'Istruttori del centro', icon: Users, path: '/pro/team' }] : []),
     { id: 'crm', label: 'Clienti', icon: Users, path: '/pro/crm', group: 'I PERCORSI DEI CLIENTI' },
     ...(continuityEnabled ? [{ id: 'archive', label: 'Relazioni e archivio', icon: Users, path: '/pro/archive' }] : []),
     { id: 'passes', label: 'Pacchetti', icon: Package, path: '/pro/passes' },

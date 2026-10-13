@@ -1,6 +1,6 @@
 # Strumenti professionali — mappa e lavoro residuo
 
-Consolidato il 9 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
+Consolidato il 14 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
 [CURRENT_STATE](CURRENT_STATE.md); l'ordine è in
 [EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md).
 
@@ -17,7 +17,8 @@ Consolidato il 9 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
 | Condivisione selettiva e archivio scaricabile | Relazione/storico ricevuto; [sharing](CONTINUITY_SHARING_V1.md), [export](DOG_HISTORY_EXPORT_V1.md) |
 | Pacchetti | `/pro/passes`; [specifica](PROFESSIONAL_PASSES_V1.md) |
 | Abbonamenti | `/pro/subscriptions`; [specifica](PROFESSIONAL_SUBSCRIPTIONS_V1.md) |
-| Valutazioni | Dashboard e «Le vostre esperienze»; [specifica](SERVICE_REVIEWS_V1.md) |
+| Valutazioni | Singola prestazione prenotata; [specifica](SERVICE_REVIEWS_V2.md) |
+| Istruttori del centro | `/pro/team`; elenco interno e assegnazioni, [specifica](CENTRE_INSTRUCTORS_V1.md); rilascio nel registro corrente |
 | Statistiche | `/pro/analytics`; leggere il codice prima di promettere metriche ulteriori |
 
 ## Chiarimenti che evitano diagnosi errate
@@ -40,10 +41,10 @@ una lista di settembre usava quell'espressione.
 
 - **MEDIA-01:** allegati delle sessioni privati, compressione e quote, conservazione,
   condivisione e download; non basta la foto profilo del cane già esistente.
-- **REV-02:** valutazioni riferite alla singola prestazione prenotata, anche nei centri,
-  senza voto a persona/struttura: [SERVICE_REVIEWS_V2](SERVICE_REVIEWS_V2.md).
-- **TEAM-01:** professionisti nel centro e istruttore assegnato al servizio per
-  organizzazione e tracciabilità. Non è una dipendenza delle valutazioni REV-02.
+- **TEAM-01, fase successiva:** collegare gli account delle persone al centro con
+  appartenenze confermate e permessi delegati. L’elenco e l’assegnazione nominativa
+  della prima fase non certificano queste relazioni e non spostano le valutazioni.
+  Non attribuire accesso ai clienti a un nome inserito dal centro.
 - **SPORT-02:** identità/fonte reale e merito per disciplina, senza auto-verifiche.
 - **Tessere e campagne:** vecchi strumenti rimossi, non dichiarati ripristinati.
   Valutare il problema reale prima di riportarli nella navigazione; campagne
