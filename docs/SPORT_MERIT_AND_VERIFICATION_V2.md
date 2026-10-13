@@ -1,5 +1,13 @@
 # Risultati verificati e merito per disciplina — 26 settembre 2026
 
+## Aggiornamento del 13 ottobre 2026
+
+[WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) corregge il collegamento
+dell’identità e la revoca dei risultati. Prova della titolarità distinta dal nome,
+ID stabile del conduttore nella stessa riga del cane, versioni attese e fetch
+limitato. Automazione disattivata fino a prova della fonte reale. Non attiva
+le soglie editoriali o il ranking descritti sotto.
+
 ## Aggiornamento del 10 ottobre 2026
 
 La protezione dalle modifiche è ora implementata nel pacchetto

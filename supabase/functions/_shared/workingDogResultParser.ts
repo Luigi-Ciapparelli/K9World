@@ -10,6 +10,8 @@ export type WorkingDogResultRow = {
   classCode: string | null;
   dogName: string | null;
   handlerName: string | null;
+  handlerId: string | null;
+  dogId: string | null;
   eventName: string | null;
 };
 
@@ -50,6 +52,7 @@ function findPlacement(text: string) {
 }
 
 function findQualification(text: string) {
+  if (/\b(DQ|DSQ|Disqualified|Squalificato|Failed|Disq|Not passed|Ritirat[oa]|Withdrawn)\b/i.test(text)) return 'DQ';
   const match = text.match(/\b(EX|Eccellente|Excellent|Sehr gut|Very good|Molto buono|Buono|Good|DQ|Disqualified|Squalificato)\b/i);
   return match?.[1] || null;
 }
@@ -64,9 +67,19 @@ function extractCells(rowHtml: string) {
     .map(match => normalizeResultText(match[1]));
 }
 
-function cellWithLink(rowHtml: string, pattern: RegExp) {
-  const match = rowHtml.match(pattern);
-  return match ? normalizeResultText(match[1]) : null;
+function resultLinks(rowHtml: string, kind: 'user' | 'dogs-details') {
+  const found: { id: string; name: string }[] = [];
+  for (const link of rowHtml.matchAll(/<a\b[^>]*\bhref\s*=\s*["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)) {
+    try {
+      const url = new URL(decode(link[1]), 'https://www.working-dog.com');
+      if (url.protocol !== 'https:' || !['working-dog.com','www.working-dog.com','working-dog.eu','www.working-dog.eu'].includes(url.hostname) || url.port || url.username || url.password || url.search || url.hash) continue;
+      const id = kind === 'user' ? url.pathname.match(/^\/user\/[^/?#@]+-([1-9][0-9]{0,19})\/?$/)?.[1]
+        : url.pathname.match(/^\/dogs-details\/([1-9][0-9]{0,19})\/[^/?#@]+\/?$/)?.[1];
+      if (id) found.push({ id, name: normalizeResultText(link[2]) });
+    } catch { /* Invalid provider links never identify a competitor. */ }
+  }
+  const unique = [...new Map(found.map(link => [link.id, link])).values()];
+  return unique.length === 1 ? unique[0] : null;
 }
 
 export function parseWorkingDogResultRows(html: string, eventName: string | null = null): WorkingDogResultRow[] {
@@ -79,22 +92,21 @@ export function parseWorkingDogResultRows(html: string, eventName: string | null
     const cells = extractCells(rowHtml);
     if (cells.length < 2) continue;
     const rawText = normalizeResultText(rowHtml);
-    const score = findScore(rawText) ?? number(cells.find(cell => /^\d{2,3}(?:[.,]\d{1,2})?$/.test(cell)));
+    const score = findScore(rawText);
     const qualification = findQualification(rawText);
     if (!score && !qualification) continue;
-    const linked = Array.from(rowHtml.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/gi))
-      .map(match => normalizeResultText(match[1]))
-      .filter(Boolean);
-    const dogName = linked[0] || cells.find(cell => /\b(?:dog|cane|border collie|rottweiler|malinois)\b/i.test(cell)) || null;
-    const handlerName = linked[1] || null;
+    const dog = resultLinks(rowHtml, 'dogs-details');
+    const handler = resultLinks(rowHtml, 'user');
     rows.push({
       rawText,
       placement: findPlacement(rawText),
       score,
       qualification,
       classCode: findClassCode(rawText) || pageClassCode,
-      dogName,
-      handlerName,
+      dogName: dog?.name || null,
+      handlerName: handler?.name || null,
+      dogId: dog?.id || null,
+      handlerId: handler?.id || null,
       eventName,
     });
   }
@@ -102,18 +114,17 @@ export function parseWorkingDogResultRows(html: string, eventName: string | null
 }
 
 export function findMatchingWorkingDogResult(rows: WorkingDogResultRow[], personName: string,
-  dogName: string | null, eventName: string | null) {
+  dogName: string | null, eventName: string | null, handlerId?: string) {
   const normalize = (value: string) => value.toLocaleLowerCase().normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
   const person = normalize(personName);
   const dog = dogName ? normalize(dogName) : '';
   if (!person || person.split(' ').length < 2) return null;
   const candidates = rows.filter(row => {
-    const rowText = normalize(row.rawText);
     const rowPerson = row.handlerName ? normalize(row.handlerName) : '';
-    const personMatch = rowPerson === person || (rowPerson && rowPerson.includes(person));
+    const personMatch = rowPerson === person && (!handlerId || row.handlerId === handlerId);
     const rowDog = row.dogName ? normalize(row.dogName) : '';
-    const dogMatch = !dog || rowDog === dog || rowDog.includes(dog) || rowText.includes(dog);
+    const dogMatch = !dog || rowDog === dog;
     return personMatch && dogMatch && (!eventName || normalize(row.eventName || '').includes(normalize(eventName)) || !row.eventName);
   });
   return candidates.length === 1 ? candidates[0] : null;

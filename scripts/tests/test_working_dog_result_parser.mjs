@@ -33,6 +33,12 @@ try {
   assert.equal(findMatchingWorkingDogResult(rows, 'Valentina Balli', 'Other dog', null), null);
   const duplicate = parseWorkingDogResultRows(html + html, '2025 FCI Obedience World Championship 2025 - Finale');
   assert.equal(findMatchingWorkingDogResult(duplicate, 'Valentina Balli', 'Mind the Dog Cattivissimo Me', null), null);
-  console.log('OK: 9 controlli su riga, conduttore, cane, punteggio, qualifica, gara e ambiguità.');
+  assert.equal(rows[0].handlerId, '164835'); assert.equal(rows[0].dogId, '7848989');
+  assert.equal(findMatchingWorkingDogResult(rows, 'Valentina Balli', null, null, '999'), null);
+  const spoof = parseWorkingDogResultRows(html.replace('/user/Valentina-Balli-164835', 'https://evil.invalid/user/Valentina-Balli-164835'));
+  assert.equal(spoof[0].handlerId, null);
+  const extra = parseWorkingDogResultRows(html.replace('Total</td>', '<a href="/user/Other-999">Other person</a>Total</td>'));
+  assert.equal(extra[0].handlerId, null);
+  console.log('OK: controlli su riga, conduttore, cane, punteggio, qualifica, gara e ambiguità.');
   console.log('Fixture sintetica basata sul risultato fornito; provider reale non contattato.');
 } finally { await fs.rm(dir, { recursive: true, force: true }); }

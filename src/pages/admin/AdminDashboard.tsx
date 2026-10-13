@@ -1,4 +1,5 @@
 import { CredentialReviewPanel } from '../../components/admin/CredentialReviewPanel';
+import { WorkingDogIdentityReview } from '../../components/admin/WorkingDogIdentityReview';
 import { useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { supabase } from '../../lib/supabase';
@@ -198,6 +199,7 @@ export function AdminDashboard() {
           </button>
         </div>
 
+        <WorkingDogIdentityReview />
         <CredentialReviewPanel />
 
         {error && (

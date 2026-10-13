@@ -22,7 +22,7 @@ try {
   const parser = await import(pathToFileURL(parserFile).href);
   const { evaluateMerit } = await import(pathToFileURL(meritFile).href);
   const html = `<title>2025 FCI Obedience World Championship 2025 - Finale</title><h2>Class 3</h2>
-    <tr><td>4</td><td><a>Mind the Dog Cattivissimo Me</a></td><td><a>Valentina Balli</a></td><td>Total</td><td>264,38</td><td>EX</td></tr>`;
+    <tr><td>4</td><td><a href="/dogs-details/7848989/Mind-the-Dog-Cattivissimo-Me">Mind the Dog Cattivissimo Me</a></td><td><a href="/user/Valentina-Balli-164835">Valentina Balli</a></td><td>Total</td><td>264,38</td><td>EX</td></tr>`;
   const [row] = parser.parseWorkingDogResultRows(html, '2025 FCI Obedience World Championship 2025 - Finale');
   const match = parser.findMatchingWorkingDogResult([row], 'Valentina Balli', 'Mind the Dog Cattivissimo Me', null);
   assert.equal(match?.placement, 4);

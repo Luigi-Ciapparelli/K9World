@@ -10,7 +10,7 @@ const corsHeaders = {
     'authorization, x-client-info, apikey, content-type',
 };
 
-const WORKING_DOG_HOSTS = ['working-dog.com', 'working-dog.eu'];
+import { workingDogUrl, fetchWorkingDogHtml } from '../_shared/workingDogSource.ts';
 
 function json(status: number, body: Record<string, unknown>) {
   return new Response(JSON.stringify(body), {
@@ -74,31 +74,6 @@ function sourceText(html: string) {
   return decodeEntities(`${title} ${description} ${jsonLd} ${body}`);
 }
 
-function isWorkingDogHost(hostname: string) {
-  const host = hostname.toLowerCase();
-  return WORKING_DOG_HOSTS.some(
-    (base) => host === base || host.endsWith(`.${base}`)
-  );
-}
-
-function canonicalWorkingDogUrl(raw: string) {
-  const url = new URL(raw);
-  if (!['http:', 'https:'].includes(url.protocol)) {
-    throw new Error('URL Working-Dog non valido.');
-  }
-
-  if (!isWorkingDogHost(url.hostname)) {
-    throw new Error('La fonte non appartiene a Working-Dog.');
-  }
-
-  url.hash = '';
-  if (url.pathname.length > 1) {
-    url.pathname = url.pathname.replace(/\/+$/, '');
-  }
-
-  return url.toString();
-}
-
 async function sha256(value: string) {
   const bytes = new TextEncoder().encode(value);
   const digest = await crypto.subtle.digest('SHA-256', bytes);
@@ -108,73 +83,10 @@ async function sha256(value: string) {
 }
 
 async function fetchWorkingDog(rawUrl: string) {
-  const url = canonicalWorkingDogUrl(rawUrl);
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 12000);
-
-  try {
-    const response = await fetch(url, {
-      redirect: 'follow',
-      signal: controller.signal,
-      headers: {
-        Accept: 'text/html,application/xhtml+xml',
-        'User-Agent':
-          'PortaleCinofilo/1.0 source-verifier (+professional credential verification)',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Working-Dog non raggiungibile (${response.status}).`);
-    }
-
-    const finalUrl = new URL(response.url);
-    if (!isWorkingDogHost(finalUrl.hostname)) {
-      throw new Error('Working-Dog ha reindirizzato verso un dominio non autorizzato.');
-    }
-
-    const contentType = response.headers.get('content-type') || '';
-    if (!contentType.toLowerCase().includes('text/html')) {
-      throw new Error('La fonte Working-Dog non è una pagina HTML verificabile.');
-    }
-
-    const html = await response.text();
-    if (html.length > 2_500_000) {
-      throw new Error('Pagina Working-Dog troppo grande per la verifica automatica.');
-    }
-
-    const text = sourceText(html);
-
-    return {
-      url: finalUrl.toString(),
-      html,
-      text,
-      normalized: normalize(text),
-      fingerprint: await sha256(text),
-      title: decodeEntities(
-        html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || ''
-      ).trim(),
-    };
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
-function meaningfulNameTokens(name: string) {
-  return normalize(name)
-    .split(' ')
-    .filter((token) => token.length >= 2);
-}
-
-function personMatches(fullName: string, pageText: string) {
-  const tokens = meaningfulNameTokens(fullName);
-  if (tokens.length < 2) return false;
-
-  const normalizedPage = normalize(pageText);
-  const phrase = normalize(fullName);
-
-  if (phrase && normalizedPage.includes(phrase)) return true;
-
-  return tokens.every((token) => normalizedPage.includes(token));
+  const {url, html} = await fetchWorkingDogHtml(rawUrl);
+  const text = sourceText(html);
+  return {url, html, text, fingerprint: await sha256(html),
+    title: decodeEntities(html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || '').trim()};
 }
 
 function valueMatches(value: string | null | undefined, pageText: string) {
@@ -211,7 +123,8 @@ Deno.serve(async (req) => {
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
   const authorization = req.headers.get('Authorization');
 
-  if (!supabaseUrl || !anonKey || !serviceRoleKey || !authorization) {
+  if (!authorization) return json(401, { error: 'authentication_required' });
+  if (!supabaseUrl || !anonKey || !serviceRoleKey) {
     return json(500, { error: 'server_configuration_missing' });
   }
 
@@ -261,6 +174,7 @@ Deno.serve(async (req) => {
 
   try {
     body = await req.json();
+    if (!body || typeof body !== 'object' || Array.isArray(body)) return json(400, { error: 'invalid_json' });
   } catch {
     return json(400, { error: 'invalid_json' });
   }
@@ -276,72 +190,13 @@ Deno.serve(async (req) => {
       });
     }
 
-    let source;
-    try {
-      source = await fetchWorkingDog(body.profileUrl);
-    } catch (error) {
-      return json(200, {
-        verified: false,
-        reason:
-          error instanceof Error
-            ? error.message
-            : 'Working-Dog non disponibile.',
-      });
-    }
-
-    const { data: duplicate } = await service
-      .from('professional_external_identities')
-      .select('professional_id')
-      .eq('provider', 'working_dog')
-      .eq('profile_url', source.url)
-      .neq('professional_id', user.id)
-      .maybeSingle();
-
-    if (duplicate) {
-      return json(409, {
-        verified: false,
-        reason:
-          'Questo profilo Working-Dog è già collegato a un altro account PortaleCinofilo.',
-      });
-    }
-
-    const nameMatch = personMatches(accountProfile.full_name || '', source.text);
-    const now = new Date().toISOString();
-
-    const identityPayload = {
-      professional_id: user.id,
-      provider: 'working_dog',
-      profile_url: source.url,
-      external_display_name: source.title || null,
-      verification_status: nameMatch ? 'verified' : 'pending',
-      verification_method: nameMatch ? 'working_dog_auto' : null,
-      verified_at: nameMatch ? now : null,
-      last_checked_at: now,
-      verification_note: nameMatch
-        ? 'Identità verificata automaticamente tramite corrispondenza del profilo pubblico Working-Dog.'
-        : 'Il nome del profilo PortaleCinofilo non coincide in modo sufficiente con la pagina Working-Dog.',
-      source_fingerprint: source.fingerprint,
-      updated_at: now,
-    };
-
-    const { error: upsertError } = await service
-      .from('professional_external_identities')
-      .upsert(identityPayload, {
-        onConflict: 'provider,professional_id',
-      });
-
-    if (upsertError) {
-      return json(500, {
-        error: 'identity_upsert_failed',
-        detail: upsertError.message,
-      });
-    }
-
-    return json(200, {
-      verified: nameMatch,
-      reason: identityPayload.verification_note,
-      profileUrl: source.url,
-    });
+    let profileUrl: string;
+    try { profileUrl = workingDogUrl(body.profileUrl, 'user'); }
+    catch (error) { return json(400, { verified: false, reason: error instanceof Error ? error.message : 'URL non valido.' }); }
+    const {data: identity, error} = await userClient.rpc('request_working_dog_identity', {p_url: profileUrl});
+    if (error) return json(error.code === '23505' ? 409 : 400, {verified: false, reason: error.message});
+    return json(200, {verified: identity?.verification_status === 'verified',
+      reason: identity?.verification_note || 'Collegamento ricevuto. La titolarità deve essere verificata: il solo nome non basta.', profileUrl});
   }
 
   if (body.mode === 'credential') {
@@ -376,6 +231,10 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (['rejected', 'revoked'].includes(credential.verification_status)) {
+      return json(200, { verified: false, reason: 'Questo risultato richiede una nuova revisione amministrativa.' });
+    }
+
     if (!credential.external_url) {
       return json(200, {
         verified: false,
@@ -383,12 +242,17 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { data: professionalProfile } = await service
-      .from('profiles')
-      .select('full_name')
-      .eq('id', credential.professional_id)
-      .maybeSingle();
-
+    const { data: identity, error: identityError } = await service.from('professional_external_identities')
+      .select('provider_user_id, verification_version, verification_status, verification_method')
+      .eq('professional_id', credential.professional_id).eq('provider', 'working_dog').maybeSingle();
+    if (identityError) return json(500, {verified: false, reason: 'Non è stato possibile controllare il collegamento Working-Dog.'});
+    if (!identity || identity.verification_status !== 'verified' || identity.verification_method !== 'manual_admin' || !identity.provider_user_id) {
+      return json(200, {verified: false, reason: 'Prima dei risultati, la titolarità del profilo Working-Dog deve essere verificata. Aggiungi il collegamento nelle tue credenziali.'});
+    }
+    if (Deno.env.get('WORKING_DOG_RESULT_AUTOVERIFY_ENABLED') !== 'true') {
+      return json(200, { verified: false, reason: 'Il collegamento è verificato. Il risultato sarà controllato manualmente: la verifica automatica della fonte non è ancora attiva.' });
+    }
+    const { data: professionalProfile } = await service.from('profiles').select('full_name').eq('id', credential.professional_id).maybeSingle();
     let source;
     try {
       source = await fetchWorkingDog(credential.external_url);
@@ -398,7 +262,8 @@ Deno.serve(async (req) => {
           ? error.message
           : 'Working-Dog non disponibile.';
 
-      const { error: checkError } = await service.rpc('commit_working_dog_check', {
+      const { error: checkError } = await service.rpc('commit_bound_working_dog_check', {
+        p_identity_version: identity.verification_version, p_handler_id: identity.provider_user_id,
         p_credential_id: credential.id, p_expected_version: credential.verification_version,
         p_actor_id: user.id, p_outcome: 'unavailable', p_fingerprint: null, p_reason: reason,
       });
@@ -422,7 +287,8 @@ Deno.serve(async (req) => {
       resultRows,
       professionalProfile?.full_name || '',
       credential.dog_name,
-      credential.event_name || source.title || null
+      credential.event_name || source.title || null,
+      identity.provider_user_id
     );
     const personMatch = Boolean(matchedResult?.handlerName);
 
@@ -439,7 +305,7 @@ Deno.serve(async (req) => {
 
     const disciplineMatch = Boolean(matchedResult) && valueMatches(credential.discipline, source.title);
 
-    const dogRequired = discipline === 'igp';
+    const dogRequired = true;
     const dogMatch = credential.dog_name
       ? Boolean(matchedResult?.dogName)
       : !dogRequired;
@@ -448,7 +314,12 @@ Deno.serve(async (req) => {
       ? valueMatches(credential.event_name, source.title)
       : true);
 
-    const verified =
+    // Only the currently supported positive outcome is automatic. Other disciplines,
+    // ambiguous qualifiers and failed/disqualified trials stay for manual review.
+    const positiveOutcome = Boolean(matchedResult && discipline === 'obedience' &&
+      /^[123]$/.test(matchedResult.classCode || '') && /^(EX|Excellent|Eccellente)$/i.test(matchedResult.qualification || '') &&
+      matchedResult.score !== null && matchedResult.score >= 256 && matchedResult.score <= 320);
+    const verified = positiveOutcome &&
       personMatch &&
       disciplineMatch &&
       levelMatch &&
@@ -458,13 +329,14 @@ Deno.serve(async (req) => {
     const reason = verified
       ? 'Risultato verificato automaticamente: conduttore, cane, disciplina, livello e gara coincidono nella stessa riga della fonte Working-Dog.'
       : [
-          !personMatch ? 'identità non coincidente' : null,
+          !personMatch ? 'identificativo del conduttore non coincidente' : null,
+          !positiveOutcome ? 'esito o disciplina da verificare manualmente' : null,
           !disciplineMatch ? 'disciplina non coincidente' : null,
           !levelMatch ? 'livello/risultato non coincidente' : null,
           !dogMatch
             ? credential.dog_name
               ? 'cane non coincidente'
-              : 'cane obbligatorio per IGP'
+              : 'cane obbligatorio per verificare il binomio'
             : null,
           !eventMatch ? 'prova/gara non coincidente' : null,
           !matchedResult ? 'riga risultato non identificata in modo univoco' : null,
@@ -472,7 +344,8 @@ Deno.serve(async (req) => {
           .filter(Boolean)
           .join('; ');
 
-    const { data: committed, error: updateError } = await service.rpc('commit_working_dog_check', {
+    const { data: committed, error: updateError } = await service.rpc('commit_bound_working_dog_check', {
+        p_identity_version: identity.verification_version, p_handler_id: identity.provider_user_id,
       p_credential_id: credential.id, p_expected_version: credential.verification_version,
       p_actor_id: user.id, p_outcome: verified ? 'matched' : 'not_matched',
       p_fingerprint: source.fingerprint, p_reason: reason || 'Corrispondenza automatica insufficiente.',

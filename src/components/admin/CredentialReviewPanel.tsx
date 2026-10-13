@@ -172,8 +172,9 @@ export function CredentialReviewPanel() {
             Credenziali che richiedono intervento
           </h2>
           <p className="text-[var(--pc-muted-600)] leading-7 mt-3 max-w-3xl">
-            Working-Dog viene verificato automaticamente quando identità e fatto sportivo
-            coincidono. Qui arrivano soltanto i casi ambigui, le altre fonti e le eccezioni.
+            La titolarità Working-Dog va verificata nel pannello dedicato. Ogni risultato
+            richiede poi un controllo distinto della fonte, del binomio e dell’esito della prova.
+            I casi non supportati dalla verifica automatica restano qui per la revisione.
           </p>
         </div>
 

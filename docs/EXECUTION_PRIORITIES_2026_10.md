@@ -1,6 +1,7 @@
 # PortaleCinofilo — ordine operativo
 
-10 ottobre 2026. Stato e prove in [CURRENT_STATE](CURRENT_STATE.md); decisioni in
+13 ottobre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
+Stato e prove in [CURRENT_STATE](CURRENT_STATE.md); decisioni in
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questa è la coda operativa unica,
 non un'autorizzazione generale a spendere, pubblicare o contattare terzi.
 
@@ -22,15 +23,15 @@ future per dimostrare quelle già utilizzabili.
 
 | ID | Priorità e ambito | Dipendenza / prossimo risultato concreto | Criterio di chiusura |
 | --- | --- | --- | --- |
-| TRAIN-01 | Prima direttiva da eseguire, approvata da Luigi | Ricerca quotidiana diretta, bestiame/caccia facoltativi e qualifiche ENCI distinte; implementazione locale TRAINER_SPECIALIZATIONS_V1 | Rilascio coordinato senza scelta obbligatoria per il proprietario; fonti e stati delle qualifiche verificabili |
+| TRAIN-01 | Presente su GitHub (`d21abc5`, `d2f5b2b`) | Ricerca quotidiana diretta, bestiame/caccia facoltativi e qualifiche ENCI distinte; TRAINER_SPECIALIZATIONS_V1 | Rilascio coordinato senza scelta obbligatoria per il proprietario; fonti e stati delle qualifiche verificabili |
 | AFF-01 | Recupero frontend prioritario per un difetto riprodotto | Pagina vuota quando fallisce un modulo: correttivo manuale su GitHub (`82caa1c`); PAGE_RECOVERY_V1. Causa del downtime storico ancora ignota | Rilascio del correttivo testato; nessuna attribuzione causale al vecchio episodio o acquisto di hosting |
 | SEO-01 | Canonical ricevuta; richiesta inviata e sitemap riuscita; guide specifiche su GitHub | Osservazione di nuova scansione/canonical, poi pagine prioritarie; vedere SEO_INDEXATION_2026_10_09 | Diagnosi per famiglia/URL, interventi mirati e misurazione successiva; nessuna promessa di indicizzare tutto |
 | IMG-01 | Identità visiva (`e6e38c9`) e ottimizzazione (`0f51f98`) su GitHub | Foto cani compresse e aggiornate dopo sostituzione, anteprime serializzate; PHOTO_UPLOAD_OPTIMIZATION_V1 | Non ripetere sviluppo/rilascio; restano distinti gli esiti Storage reali non osservati |
 | MEDIA-01 | Implementazione rinviata per decisione del 9 ottobre | Quote per piano di abbonamento, tipi di file utili, compressione misurata, conservazione e costo totale prima della pipeline | Matrice approvata; solo dopo costruire flusso privato, revoca/download, limiti, cancellazione e ripristino |
 | REV-02 | Presente su GitHub (`3a6674b`); esiti online distinti | Valutazioni per singola prestazione, anche nei centri; SERVICE_REVIEWS_V2 | Migration e frontend coordinati; un voto non si sposta sulla lezione successiva e non genera una media dell’attività |
 | TEAM-01 | Successivo o anticipato da un centro reale | Persona, appartenenza al team e istruttore assegnato alla prenotazione; indipendente da REV-02 | Tracciabilità organizzativa e permessi limitati; nessun trasferimento di meriti o voti dal servizio alla persona |
-| SPORT-03 | Correzione sicurezza preparata con TRAIN-01 | Credenziali modificate tornano da verificare; revisione e commit atomico, storico privato, pannello admin ripristinato; CREDENTIAL_VERIFICATION_INTEGRITY_V1 | Test nativi del pacchetto e rilascio DB → Edge → frontend; non dichiarare completato SPORT-02 |
-| SPORT-02 | Blocco separato dopo verifica dei consumer esistenti | Identità Working-Dog, accesso ammesso alla fonte, parser reale e regole per disciplina | Collegamento → verifica → badge/ranking e revoca, con prova reale; casi ambigui rimangono non verificati |
+| SPORT-03 | Presente su GitHub (`d2f5b2b`) | Credenziali modificate tornano da verificare; revisione e commit atomico, storico privato, pannello admin ripristinato; CREDENTIAL_VERIFICATION_INTEGRITY_V1 | Test nativi del pacchetto e rilascio DB → Edge → frontend; non dichiarare completato SPORT-02 |
+| SPORT-02 | Incremento identità preparato; fonte live e ranking restano separati | WORKING_DOG_IDENTITY_V1: revisione titolarità, ID stabile, versioni/revoche; automazione disattivata. Poi fonte ammessa e parser reale, regole per disciplina | Collegamento → verifica → badge/ranking e revoca, con prova reale; casi ambigui rimangono non verificati |
 | SOC-01 | Preparazione commerciale in parallelo; trazione solo TikTok segnalata | Storyboard e scena campione; possibile trial 100 crediti, costo monetario proposto zero; verificare disponibilità effettiva prima di generare | Prodotto riconoscibile, contenuto corretto, ritagli/testi curati, destinazione funzionante e misurazione distinta dalle visualizzazioni |
 | ECO-01 | In parallelo all'utilizzo italiano | Conversazioni autorizzate e un problema professionale concreto; costi reali | Offerta B2B facoltativa e disponibilità a pagare documentate, senza attivare incassi automaticamente |
 | INT-01 | Dopo una prima prova utile italiana | Confronto di due mercati, lingua/assistenza/offerta e costo incrementale | Un mercato testato con decisione motivata; nessuna rete di siti acquistata in anticipo |

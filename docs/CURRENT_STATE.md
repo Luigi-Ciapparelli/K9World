@@ -1,7 +1,7 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **13 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`d2f5b2b` (specializzazioni addestratori e verifiche legate alla versione).
+`7521dd3` (ultimo incremento privacy; TRAIN-01 e SPORT-03 già inclusi).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
@@ -21,18 +21,37 @@ TypeScript e build/SEO. Auth/Storage/provider simulati; concorrenza PostgreSQL n
 richiesta dall’installer sul PC di Luigi, non eseguita qui. Il pacchetto include
 anche la migrazione TRAIN-01, se ancora mancante. Nessuna fonte sportiva live verificata.
 
-## Inviti professionali e privacy — incremento preparato il 13 ottobre
+## Working-Dog — incremento preparato il 13 ottobre
 
-Il foglio esistente e lo script sono installati; Luigi ha confermato mittente
-`accounts@portalecinofilo.com` e risposte a `info@portalecinofilo.com`.
-Nessuna campagna a prospect risulta inviata. Preparata l'integrazione di
-`/privacy` per contatti professionali, provenienza, Google, autorizzazioni,
-conservazione e opposizione. Il link nello script si completa dopo il rilascio.
+[WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md): collegamento tramite
+identificativo stabile, revisione della titolarità, storico privato e invalidazione
+dei risultati quando il collegamento cambia. Il semplice nome non è più una prova.
+Le richieste pendenti non riservano il profilo di altri professionisti. La revisione
+admin e il verificatore usano versioni attese; un controllo automatico non annulla
+una revoca amministrativa. Pannello admin e messaggi al professionista aggiornati.
 
-[Stato, passaggi e limiti](PROFESSIONAL_CONTACT_INVITATIONS_V1.md).
-La raccolta di recapiti pubblici non equivale a consenso: rimane da valutare
-anche la base della conservazione delle liste e l'informazione agli interessati.
-Verifiche locali e pubblicazione sono distinte; nessun dato dei destinatari in Git.
+La nuova migration è `20261013083000_working_dog_identity_binding.sql`:
+59ª nella storia locale. Riporta da verificare tutti i vecchi collegamenti
+verificati, il cui URL era modificabile, e i risultati attestati automaticamente.
+Conserva dati e storico; le credenziali verificate manualmente restano tali.
+`WORKING_DOG_RESULT_AUTOVERIFY_ENABLED=false` nel rilascio: fonte live non
+collaudata, nessun nuovo ranking o badge attivato. Verifica manuale disponibile.
+
+Prove: 58 migration precedenti più la nuova su PGlite con ruoli, isolamento,
+invalidazione e compatibilità ricerca; Edge/parser/fetch con fixture sintetiche;
+TypeScript, build/SEO e browser desktop/mobile con API simulate. Il test nativo
+include due casi concorrenti e deve passare sul PC di Luigi prima del rilascio.
+Supabase online, accesso reale al provider e deployment non verificati da questi test.
+
+Pacchetto locale pronto per test nativi → commit → SQL → Edge → push GitHub.
+Il rilascio effettivo e Vercel Ready vanno registrati dopo l’output del terminale.
+
+## Email sospese
+
+Luigi ha chiesto di lasciare da parte le email e proseguire le direttive tecniche.
+Non inviare inviti e non riprendere raccolta contatti, fogli o campagne.
+L’aggiornamento privacy è su GitHub (`7521dd3`); non prova un invio.
+Il materiale precedente rimane in [PROFESSIONAL_CONTACT_INVITATIONS_V1](PROFESSIONAL_CONTACT_INVITATIONS_V1.md).
 
 ## Come leggere gli stati
 
@@ -60,7 +79,7 @@ Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
 I vecchi testi «preparato localmente, da pubblicare» per questi tre blocchi sono superati.
 
 La base GitHub contiene **58 migration**, fino a
-`20261010190000_versioned_credential_verification.sql`. Questo aggiornamento privacy non aggiunge SQL. La presenza
+`20261010190000_versioned_credential_verification.sql`. La nuova correzione Working-Dog aggiunge una 59ª migration locale. La presenza
 di un file non dimostra che sia applicato nel database online.
 
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati

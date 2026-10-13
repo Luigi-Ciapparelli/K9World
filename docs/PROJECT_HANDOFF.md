@@ -1,8 +1,13 @@
 # PortaleCinofilo — passaggio di consegne
 
-10 ottobre 2026. Leggere prima [CURRENT_STATE](CURRENT_STATE.md) e
+13 ottobre 2026. Leggere prima [CURRENT_STATE](CURRENT_STATE.md) e
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questo documento spiega come lavorare;
 lo stato e l'ordine delle priorità non sono duplicati qui.
+
+Email sospese su richiesta esplicita. Incremento corrente:
+[WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md). Non confondere
+controllo del nome, titolarità dell’account e verifica di un risultato.
+Il flag della verifica automatica resta spento fino alla prova sulla fonte reale.
 
 ## Identità e ambiente
 

@@ -367,9 +367,9 @@ export function ProSettings() {
 
       setWorkingDogNotice(
         data?.verified
-          ? 'Profilo Working-Dog collegato e verificato automaticamente.'
+          ? 'Titolarità del profilo Working-Dog già verificata.'
           : data?.reason ||
-              'Profilo collegato, ma la corrispondenza automatica non è ancora sufficiente.'
+              'Collegamento ricevuto. La titolarità deve essere verificata prima dei risultati.'
       );
 
       await loadCredentials();
@@ -954,10 +954,9 @@ export function ProSettings() {
                   Collega Working-Dog
                 </h3>
                 <p className="text-sm text-[var(--pc-muted-600)] leading-6 mt-2 max-w-3xl">
-                  PortaleCinofilo controlla il profilo pubblico Working-Dog lato server.
-                  Se nome e fonte coincidono, il collegamento viene verificato automaticamente.
-                  Per ogni brevetto o risultato con URL Working-Dog il sistema controlla anche
-                  disciplina, livello e cane prima di assegnare lo stato verificato.
+                  Inserisci il tuo profilo Working-Dog. Prima di verificare i risultati,
+                  controlliamo che il profilo appartenga davvero a te: la sola corrispondenza
+                  del nome non basta. Ogni risultato viene poi controllato separatamente.
                 </p>
               </div>
 
@@ -991,7 +990,7 @@ export function ProSettings() {
                 className="pc-btn pc-btn-primary shrink-0"
               >
                 <ExternalLink className="w-4 h-4" />
-                {workingDogBusy ? 'Controllo…' : 'Collega e verifica'}
+                {workingDogBusy ? 'Invio…' : 'Invia collegamento'}
               </button>
             </div>
 
@@ -1000,6 +999,7 @@ export function ProSettings() {
                 {workingDogNotice}
               </p>
             )}
+            {!workingDogNotice && workingDogIdentity?.verification_note && <p className="mt-3 text-sm">{workingDogIdentity.verification_note}</p>}
 
             <p className="mt-3 text-xs leading-5 text-[var(--pc-muted-600)]">
               Un semplice link non basta: se la pagina non permette di confermare in modo
