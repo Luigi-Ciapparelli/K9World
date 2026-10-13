@@ -17,7 +17,14 @@ export function PrivacyPage() {
       subtitle="Come PortaleCinofilo tratta i dati personali."
       icon={<ShieldCheck className="w-7 h-7" />}
     >
-      <VersionStamp />
+      <VersionStamp updated="13 ottobre 2026" />
+
+      <p className="mb-8 text-[#3F4943]">
+        Sei un professionista e vuoi sapere come gestiamo i tuoi recapiti?{' '}
+        <a className="font-semibold underline" href="#contatti-professionali">
+          Leggi la sezione su contatti e inviti.
+        </a>
+      </p>
 
       <Section title="1. Titolare del trattamento">
         <p>
@@ -44,6 +51,7 @@ export function PrivacyPage() {
           <li>richieste inviate, stati operativi e comunicazioni legate al servizio;</li>
           <li>foto, note e altri contenuti caricati volontariamente;</li>
           <li>dati tecnici, log e informazioni necessarie a sicurezza e funzionamento.</li>
+          <li>recapiti professionali, provenienza, richieste e autorizzazioni agli inviti, come descritto nella sezione 9.</li>
         </ul>
       </Section>
 
@@ -60,7 +68,8 @@ export function PrivacyPage() {
           </li>
           <li>adempiere a eventuali obblighi di legge;</li>
           <li>
-            svolgere attività opzionali che richiedano consenso, solo quando e se verranno introdotte.
+            rispondere alle richieste dei professionisti e gestire gli inviti autorizzati,
+            con le finalità e le basi distinte descritte nella sezione 9.
           </li>
         </ul>
       </Section>
@@ -91,9 +100,23 @@ export function PrivacyPage() {
           all'erogazione dei rispettivi servizi.
         </p>
         <p className="mt-3">
+          Per il registro privato dei contatti professionali e gli inviti utilizziamo anche Google:
+          Fogli Google, Apps Script e il servizio di posta. Il registro non è un elenco pubblico
+          di iscritti e non viene pubblicato sul sito.
+        </p>
+        <p className="mt-3">
           Qualora un fornitore comporti trasferimenti di dati fuori dallo Spazio Economico Europeo,
           tali trasferimenti devono avvenire secondo uno dei meccanismi previsti dalla normativa
           applicabile. L'informativa viene aggiornata quando cambiano fornitori o trattamenti rilevanti.
+        </p>
+        <p className="mt-3">
+          Google dichiara l'utilizzo di infrastrutture internazionali e descrive le garanzie
+          applicabili nelle sue{' '}
+          <a className="font-semibold underline" href="https://policies.google.com/privacy/frameworks?hl=it">
+            norme sul trasferimento dei dati
+          </a>
+          . Puoi chiedere al titolare informazioni sui fornitori, sui trasferimenti e sulle
+          garanzie applicabili al trattamento che ti riguarda.
         </p>
       </Section>
 
@@ -130,7 +153,94 @@ export function PrivacyPage() {
         </p>
       </Section>
 
-      <Section title="9. Aggiornamenti">
+      <Section id="contatti-professionali" title="9. Contatti professionali e inviti">
+        <p>
+          Questa sezione riguarda anche addestratori, pensioni, centri cinofili e loro referenti
+          che non hanno un account PortaleCinofilo. La presenza di un'attività nel registro
+          interno non crea un profilo pubblico e non comporta l'iscrizione al portale.
+        </p>
+
+        <h3 className="mt-5 font-bold text-[#18211C]">Dati e provenienza</h3>
+        <p className="mt-2">
+          Possiamo registrare nome del referente o dell'attività, categoria, zona, recapiti
+          professionali, sito e fonte del dato. Le informazioni possono essere fornite
+          direttamente dall'interessato oppure provenire dai registri professionali ENCI o CSEN
+          e dai siti pubblici delle attività. Nel registro conserviamo anche, quando presenti,
+          data e prova della richiesta o del consenso, messaggi inviati, risposte ed eventuale
+          opposizione. Puoi chiedere la fonte specifica dei tuoi dati al contatto indicato sotto.
+        </p>
+        <p className="mt-3">
+          La disponibilità pubblica di un recapito non costituisce consenso alle email promozionali.
+          I dati reperiti nelle fonti pubbliche sono distinti dai contatti autorizzati all'invio:
+          la loro raccolta e conservazione richiedono una finalità e una base giuridica proprie,
+          oltre al rispetto degli obblighi di informazione. Questa informativa non attribuisce
+          automaticamente tali requisiti a un elenco di indirizzi.
+        </p>
+
+        <h3 className="mt-5 font-bold text-[#18211C]">Perché trattiamo i dati</h3>
+        <ul>
+          <li>
+            <strong>Rispondere a una richiesta:</strong> usiamo i dati necessari a fornire
+            le informazioni o l'assistenza richieste e alle misure precontrattuali richieste
+            dall'interessato (art. 6, par. 1, lett. b GDPR). Per un referente che agisce per
+            un'organizzazione, la gestione del contatto si basa sull'interesse legittimo a
+            rispondere alla sua richiesta professionale (lett. f), senza iscriverlo a campagne.
+          </li>
+          <li>
+            <strong>Inviare presentazioni e inviti promozionali:</strong> sulla base di un
+            consenso preventivo, specifico e documentato (art. 6, par. 1, lett. a GDPR e
+            art. 130 del Codice privacy). Una richiesta di ricevere una presentazione autorizza
+            la risposta pertinente, non una newsletter o successivi invii estranei alla richiesta.
+          </li>
+          <li>
+            <strong>Gestire prove ed esclusioni:</strong> conserviamo le informazioni minime
+            per dimostrare le autorizzazioni e rispettare revoche e opposizioni, in adempimento
+            degli obblighi applicabili (lett. c); la prevenzione di duplicati e la tutela in
+            caso di contestazioni si basano sul legittimo interesse del titolare (lett. f).
+          </li>
+        </ul>
+        <p className="mt-3">
+          Il consenso agli inviti è facoltativo: rifiutarlo o revocarlo non impedisce di usare
+          le funzioni del portale disponibili senza comunicazioni promozionali.
+        </p>
+
+        <h3 className="mt-5 font-bold text-[#18211C]">Modalità e conservazione</h3>
+        <p className="mt-2">
+          Gli inviti sono preparati per categoria di attività e controllati prima dell'invio.
+          Questo flusso non usa pixel per sapere se apri la mail, né attribuisce punteggi personali
+          o prende decisioni con effetti giuridici su di te. Il registro serve a evitare doppioni,
+          gestire le risposte e rispettare le tue scelte.
+        </p>
+        <p className="mt-3">
+          I dati delle richieste sono conservati per gestire il confronto e il suo seguito
+          richiesto; concluso questo scopo, restano solo quelli necessari per obblighi o
+          contestazioni concrete. I dati per gli inviti sono utilizzati finché il consenso
+          e la finalità restano validi, e cessano di essere utilizzati per invii in caso di
+          revoca o opposizione. L'inserimento in una lista di ricerca non giustifica una
+          conservazione indefinita: i dati privi di una necessità e di una base documentabili
+          devono essere rimossi. Nessun profilo pubblico viene creato da queste liste.
+        </p>
+        <p className="mt-3">
+          Dopo una richiesta di non essere contattato, può rimanere un registro minimo
+          dell'indirizzo e dell'opposizione per impedirne la reimportazione e rispettare la tua
+          scelta finché viene gestito il canale di invito. Eventuali prove conservate per una
+          contestazione sono limitate a quanto necessario e separate dall'uso promozionale.
+        </p>
+
+        <h3 className="mt-5 font-bold text-[#18211C]">Come interrompere i contatti</h3>
+        <p className="mt-2">
+          Puoi rispondere alla mail ricevuta chiedendo di non essere più contattato oppure scrivere
+          a{' '}
+          <a className="font-semibold underline" href={`mailto:${CONTACT_EMAIL}`}>
+            {CONTACT_EMAIL}
+          </a>
+          . Non servono un account, una motivazione o un pagamento. Puoi inoltre esercitare
+          i diritti descritti nella sezione 7, compresa l'opposizione al marketing in qualsiasi
+          momento e al trattamento fondato sul legittimo interesse nei casi previsti dal GDPR.
+        </p>
+      </Section>
+
+      <Section title="10. Aggiornamenti">
         <p>
           Questa informativa può essere aggiornata quando cambiano funzioni, fornitori o modalità di
           trattamento. La data di revisione riportata nella pagina consente di identificare la versione
@@ -526,14 +636,14 @@ function LegalLayout({
   );
 }
 
-function VersionStamp() {
+function VersionStamp({ updated = '30 settembre 2026' }: { updated?: string }) {
   return (
     <div className="mb-8 rounded-2xl border border-[#D5A33A]/30 bg-[#D5A33A]/10 p-4 flex gap-3 text-[#58451A]">
       <AlertTriangle className="w-5 h-5 mt-0.5 shrink-0" />
       <div>
         <div className="font-bold">Informazioni sul servizio</div>
         <p className="text-sm mt-1">
-          Ultimo aggiornamento: 30 settembre 2026. I testi saranno sottoposti a revisione professionale
+          Ultimo aggiornamento: {updated}. I testi saranno sottoposti a revisione professionale
           prima della monetizzazione o del lancio commerciale su larga scala.
         </p>
       </div>
@@ -541,9 +651,9 @@ function VersionStamp() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ id, title, children }: { id?: string; title: string; children: React.ReactNode }) {
   return (
-    <section className="mb-7 last:mb-0">
+    <section id={id} className="mb-7 last:mb-0 scroll-mt-28">
       <h2 className="text-xl font-bold text-[#18211C] mb-2">{title}</h2>
       <div className="prose max-w-none text-[#3F4943] prose-ul:my-2 prose-li:my-1 prose-strong:text-[#18211C]">
         {children}

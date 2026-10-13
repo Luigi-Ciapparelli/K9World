@@ -1,17 +1,18 @@
 # PortaleCinofilo — stato corrente
 
-Aggiornato il **10 ottobre 2026**. Base verificata con fetch di `origin/main`:
-[`3a6674b`](https://github.com/Luigi-Ciapparelli/K9World/commit/3a6674b1bf26235bb542c4d32891c4b1ba1e0e0a).
+Aggiornato il **13 ottobre 2026**. Base verificata con fetch di `origin/main`:
+`d2f5b2b` (specializzazioni addestratori e verifiche legate alla versione).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Incremento pronto, non ancora osservato su GitHub
+## Ultimo incremento osservato su GitHub
 
 Pacchetto unico TRAIN-01 + SPORT-03: ricerca educatori immediata e specializzazioni
 facoltative; verifiche legate alla revisione dei dati e storico privato. Ripristinato
-il pannello di revisione nella dashboard admin. L’ultimo fetch osservato resta
-`3a6674b`: non presentare questi cambiamenti come già online.
+il pannello di revisione nella dashboard admin. Il fetch del 13 ottobre osserva
+`d21abc5` e `d2f5b2b` su `origin/main`. Applicazione SQL, deploy Edge e Vercel
+restano esiti distinti, non verificati con il solo fetch.
 
 Dettagli: [TRAINER_SPECIALIZATIONS_V1](TRAINER_SPECIALIZATIONS_V1.md) e
 [CREDENTIAL_VERIFICATION_INTEGRITY_V1](CREDENTIAL_VERIFICATION_INTEGRITY_V1.md).
@@ -19,6 +20,19 @@ Verifiche locali: 58 migrazioni ricostruite su PGlite, test Edge, browser deskto
 TypeScript e build/SEO. Auth/Storage/provider simulati; concorrenza PostgreSQL nativa
 richiesta dall’installer sul PC di Luigi, non eseguita qui. Il pacchetto include
 anche la migrazione TRAIN-01, se ancora mancante. Nessuna fonte sportiva live verificata.
+
+## Inviti professionali e privacy — incremento preparato il 13 ottobre
+
+Il foglio esistente e lo script sono installati; Luigi ha confermato mittente
+`accounts@portalecinofilo.com` e risposte a `info@portalecinofilo.com`.
+Nessuna campagna a prospect risulta inviata. Preparata l'integrazione di
+`/privacy` per contatti professionali, provenienza, Google, autorizzazioni,
+conservazione e opposizione. Il link nello script si completa dopo il rilascio.
+
+[Stato, passaggi e limiti](PROFESSIONAL_CONTACT_INVITATIONS_V1.md).
+La raccolta di recapiti pubblici non equivale a consenso: rimane da valutare
+anche la base della conservazione delle liste e l'informazione agli interessati.
+Verifiche locali e pubblicazione sono distinte; nessun dato dei destinatari in Git.
 
 ## Come leggere gli stati
 
@@ -45,8 +59,8 @@ Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
 [export](DOG_HISTORY_EXPORT_V1.md), [valutazioni](SERVICE_REVIEWS_V1.md).
 I vecchi testi «preparato localmente, da pubblicare» per questi tre blocchi sono superati.
 
-La base GitHub contiene **56 migration**, fino a
-`20261010113000_booking_service_reviews.sql`. Il nuovo gioco non aggiunge SQL. La presenza
+La base GitHub contiene **58 migration**, fino a
+`20261010190000_versioned_credential_verification.sql`. Questo aggiornamento privacy non aggiunge SQL. La presenza
 di un file non dimostra che sia applicato nel database online.
 
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati
@@ -97,7 +111,7 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 
 | Blocco | Stato reale | Per procedere |
 | --- | --- | --- |
-| TRAIN-01 | Priorità corrente: ricerca quotidiana immediata, collegamenti bestiame/caccia, qualifiche ENCI distinte; preparata localmente | Installer coordinato, poi registrare esiti Supabase/GitHub/Vercel; TRAINER_SPECIALIZATIONS_V1 |
+| TRAIN-01 | Ricerca quotidiana immediata, collegamenti bestiame/caccia e qualifiche ENCI distinte su GitHub (`d21abc5`, `d2f5b2b`) | Registrare solo gli esiti Supabase/Vercel non osservati; non ripetere lo sviluppo |
 | IMG-01 | Foto professionali/banner e foto cliente privata su GitHub (`e6e38c9`) | Confermare soltanto gli esiti non osservati: applicazione migration, Ready e prova Storage reale; non ripetere lo sviluppo |
 | MEDIA-01 | Allegati delle sessioni rinviati per decisione di Luigi | Prima matrice quote per abbonamento, utilità dei file, compressione, conservazione e costo totale; nessuna pipeline audio/video avviata |
 | REV-02 | Presente su GitHub (`3a6674b`): voto alla specifica prestazione | Esiti online distinti; non ripetere sviluppo o rilascio senza un difetto |
@@ -203,11 +217,12 @@ Fetch del 10 ottobre: push osservato nel commit `3a6674b`. Applicazione online
 e deployment di REV-02 non osservati direttamente.
 Nessun allegato multimediale, contatto esterno, nuova spesa o modello team aggiunto.
 
-## Ricerca addestratori — TRAIN-01, preparata il 10 ottobre
+## Ricerca addestratori — TRAIN-01, presente su GitHub al 13 ottobre
 
 Ricerca quotidiana immediata, collegamenti facoltativi bestiame/caccia, preferenze
 professionali indipendenti e sezioni ENCI con prova/stato distinti. Filtri aggiuntivi
 richiusi su mobile; guida in Impara senza cambiare ordine o progressi.
 [Specifica, prove e limiti](TRAINER_SPECIALIZATIONS_V1.md). Migration aggiuntiva
 `20261010170000_trainer_specializations.sql`; installer `aggiorna_ricerca_addestratori.py`.
-Nessun push, SQL online o deploy eseguito da questo ambiente per TRAIN-01.
+Il fetch del 13 ottobre osserva TRAIN-01 su `origin/main` (`d21abc5` e `d2f5b2b`).
+Applicazione SQL e deploy non sono verificati dal solo fetch.

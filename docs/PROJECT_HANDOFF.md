@@ -83,6 +83,7 @@ per rifare una verifica email. Usare i documenti recapiti per il flusso effettiv
 | Integrità credenziali | [CREDENTIAL_VERIFICATION_INTEGRITY_V1](CREDENTIAL_VERIFICATION_INTEGRITY_V1.md); revisione, concorrenza, storico privato e rilascio coordinato |
 | Sport / Working-Dog | [SPORT_SEARCH_AND_WORKING_DOG_V1](SPORT_SEARCH_AND_WORKING_DOG_V1.md), [SPORT_MERIT_AND_VERIFICATION_V2](SPORT_MERIT_AND_VERIFICATION_V2.md) |
 | Accesso e recapiti | [ACCOUNT_CONTACTS_V1](ACCOUNT_CONTACTS_V1.md), [PASSWORD_RECOVERY_V1](PASSWORD_RECOVERY_V1.md), [BOOKING_ENTRY_V1](BOOKING_ENTRY_V1.md) |
+| Foglio inviti e privacy | [PROFESSIONAL_CONTACT_INVITATIONS_V1](PROFESSIONAL_CONTACT_INVITATIONS_V1.md): mittente e risposte già provati; registro privato, autorizzazioni e collegamento dell'informativa |
 | API e sicurezza | [SUPABASE_PRIVATE_API_V2](SUPABASE_PRIVATE_API_V2.md), [SUPABASE_AUDIT_FIXES_V1](SUPABASE_AUDIT_FIXES_V1.md) |
 | Recupero errori frontend | [PAGE_RECOVERY_V1](PAGE_RECOVERY_V1.md): pagine mancanti/in errore, offline, bozze, prove e limiti |
 | SEO / disponibilità / mercati | [SEO_INDEXATION_2026_10_09](SEO_INDEXATION_2026_10_09.md), [BREED_GUIDES_V1](BREED_GUIDES_V1.md), [SEO_VISIBILITY_V1](SEO_VISIBILITY_V1.md), [INTERNATIONAL_SEO_AND_HOSTING_V1](INTERNATIONAL_SEO_AND_HOSTING_V1.md) |
