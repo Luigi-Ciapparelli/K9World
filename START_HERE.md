@@ -86,3 +86,8 @@ il lavoro locale. Non serve ripetere build o test SQL per leggere le direttive.
 Per un nuovo account: dare accesso al repository e chiedere di seguire questa
 pagina, confrontando il commit effettivo prima di agire. Le chat, i segreti e le
 sessioni degli account esterni non vengono trasferiti dai documenti Git.
+
+## Disponibilità del team — 14 ottobre 2026
+
+Il prossimo rilascio è descritto in [Indisponibilità istruttori](docs/INSTRUCTOR_TIME_OFF_V1.md).
+Base GitHub osservata `b08aabf`; database online e Vercel restano da verificare dopo il rilascio.

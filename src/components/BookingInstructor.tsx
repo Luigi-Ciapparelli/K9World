@@ -32,6 +32,7 @@ function InstructorContent({row,professional,onSaved}:{row:BookingInstructorRow;
   <p><strong>Istruttore:</strong> {row.instructor_name||'Non ancora indicato dal centro'}</p>
   <p className="mt-1 text-xs text-[var(--pc-muted-600)]">Indicazione del centro per questa lezione.</p>
   {professional&&row.instructor_active===false&&row.instructor_name&&<p className="mt-2 text-amber-800">Questo istruttore è inattivo nell’elenco. L’assegnazione registrata resta conservata.</p>}
+  {professional&&row.instructor_unavailable&&<p role="status" className="mt-2 font-semibold text-amber-900">Istruttore assente in questa data: la lezione è ancora confermata. Controlla l’assegnazione e concorda eventuali cambiamenti con il cliente.</p>}
   {professional&&row.overlap_confirmed&&<p className="mt-2 text-xs text-amber-900">Sovrapposizione di orario confermata dal centro al momento dell’assegnazione.</p>}
   {notice&&<p role="alert" className="mt-2">{notice} <button type="button" className="underline" disabled={busy} onClick={onSaved}>Aggiorna</button></p>}
   {professional&&row.can_assign&&!editing&&<button type="button" disabled={busy} onClick={()=>void open()} className="mt-2 font-semibold underline">{busy?'Caricamento…':row.instructor_name?'Cambia istruttore':'Assegna istruttore'}</button>}

@@ -124,3 +124,8 @@ La cronologia precedente è indicizzata in [PROJECT_HISTORY](PROJECT_HISTORY.md)
 Password, sessioni, pagamenti, file esterni esclusi e bozze non committate non
 si trasferiscono con questo handoff. Una nuova AI deve dichiarare eventuali
 limiti di accesso, senza inventare verifiche o chiedere da capo tutta la visione.
+
+## Disponibilità del team — 14 ottobre 2026
+
+Il prossimo rilascio è descritto in [Indisponibilità istruttori](INSTRUCTOR_TIME_OFF_V1.md).
+Base GitHub osservata `b08aabf`; database online e Vercel restano da verificare dopo il rilascio.

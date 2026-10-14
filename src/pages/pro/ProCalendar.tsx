@@ -42,6 +42,9 @@ function CalendarContent() {
   const [team, setTeam] = useState<CentreTeam | null>(null);
   const [teamError, setTeamError] = useState(false);
   const [instructor, setInstructor] = useState('all');
+  const [absences, setAbsences] = useState<{start_date:string;end_date:string}[]>([]);
+  const [absenceError, setAbsenceError] = useState(false);
+  const [absenceLoading, setAbsenceLoading] = useState(false);
   const [showClosed, setShowClosed] = useState(false);
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
@@ -72,6 +75,22 @@ function CalendarContent() {
     })();
     return () => { active = false; };
   }, [reload]);
+
+  useEffect(() => {
+    let active = true;
+    setAbsences([]); setAbsenceError(false); setAbsenceLoading(false);
+    if (!team?.enabled || ['all','unassigned'].includes(instructor)) return;
+    setAbsenceLoading(true);
+    void (async () => {
+      try {
+        const {data,error}=await supabase.rpc('get_instructor_time_off',{p_instructor_id:instructor,p_from:from,p_until:to});
+        if(error)throw error;
+        if(active)setAbsences(data||[]);
+      }catch{if(active)setAbsenceError(true);}
+      finally{if(active)setAbsenceLoading(false);}
+    })();
+    return()=>{active=false;};
+  },[instructor,from,to,reload,team?.enabled]);
 
   useEffect(() => {
     mounted.current = true;
@@ -214,6 +233,9 @@ function CalendarContent() {
         <label className="flex items-center gap-2 pb-2 text-sm"><input type="checkbox" checked={showClosed} onChange={(e) => setShowClosed(e.target.checked)} />Mostra anche annullate e rifiutate</label>
       </div>
       {team?.enabled && <p className="px-4 pb-3 text-xs text-stone-600">Il filtro istruttore riguarda le lezioni assegnate. Colori per servizio e indisponibilità dell’intero centro restano visibili.</p>}
+      {team?.enabled && <p className="px-4 pb-3 text-sm"><button className="underline" onClick={()=>navigate('/pro/team')}>Gestisci indisponibilità degli istruttori</button></p>}
+      {absenceLoading && <p role="status" className="px-4 pb-3 text-sm">Caricamento assenze dell’istruttore…</p>}
+      {absenceError && <p role="alert" className="px-4 pb-3 text-sm">Assenze dell’istruttore non caricate: non considerare liberi i giorni senza lezioni. <button className="underline" onClick={refresh}>Riprova</button></p>}
       {teamError && <p role="alert" className="px-4 pb-3 text-sm">Elenco istruttori non caricato: sono mostrati tutti gli impegni. <button className="underline" onClick={refresh}>Riprova</button></p>}
       {instructors.error && <div className="px-4"><InstructorLoadError retry={instructors.reload} />{instructor !== 'all' && <button className="mb-3 underline text-sm" onClick={() => setInstructor('all')}>Mostra tutti gli impegni</button>}</div>}
       <div className="flex flex-wrap gap-x-4 gap-y-2 px-4 pb-4 text-xs">{legend.map(([id, booking]) => <span key={id} className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full border border-stone-300" aria-hidden="true" style={{ backgroundColor: serviceColor(booking.calendar_color) }} />{booking.service_name}</span>)}</div>
@@ -221,13 +243,15 @@ function CalendarContent() {
         <div className="grid grid-cols-7 border-t border-stone-200 bg-stone-50 text-center text-xs font-bold">{['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'].map((day) => <div key={day} className="py-2">{day}</div>)}</div>
         <div className="grid grid-cols-7">{days.map((day) => {
           const events = visible.filter((booking) => bookingOnDay(booking, day));
-          const blocked = schedule?.periods.some((period) => period.start_date <= day && period.end_date >= day);
+          const instructorAbsent = absences.some(p=>p.start_date<=day&&p.end_date>=day);
+            const blocked = schedule?.periods.some((period) => period.start_date <= day && period.end_date >= day);
           const selectedDay = day === selected;
           return <button type="button" key={day} onClick={() => setSelected(day)} aria-pressed={selectedDay}
-            aria-label={`${dayLabel(day, true)}: ${events.length} impegni${blocked ? ', indisponibile' : ''}`}
+            aria-label={`${dayLabel(day, true)}: ${events.length} impegni${blocked ? ', indisponibile' : ''}${instructorAbsent ? ', istruttore assente' : ''}`}
             className={`min-w-0 border-t border-r border-stone-200 p-1 text-left align-top sm:p-2 ${selectedDay ? 'bg-emerald-50 ring-2 ring-inset ring-emerald-800' : blocked ? 'bg-amber-50' : 'bg-white'} ${day.slice(0, 7) !== month ? 'text-stone-400' : 'text-stone-900'}`}>
             <div className="min-h-20 sm:min-h-28"><span className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold ${day === today ? 'bg-emerald-900 text-white' : ''}`}>{Number(day.slice(-2))}</span>
               {blocked && <span className="block truncate text-[10px] font-bold text-amber-900" title="Indisponibile">Indisponibile</span>}
+              {instructorAbsent && <span className="block break-words rounded bg-amber-100 px-1 text-[10px] text-amber-950">Istruttore assente</span>}
               {events.slice(0, 3).map((booking) => <span key={booking.id} className="mt-1 block truncate border-l-4 pl-1 text-[10px] text-stone-800 sm:text-xs" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
                 {romeDay(booking.start_at) === day ? calendarTime(booking.start_at) : '↳'} <span className="hidden sm:inline">{booking.client_name} · {booking.service_name}{instructors.rows[booking.id]?.instructor_name ? ` · ${instructors.rows[booking.id].instructor_name}` : ''}</span><span className="sm:hidden">{booking.service_name}</span>
               </span>)}

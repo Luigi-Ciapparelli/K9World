@@ -1,3 +1,4 @@
+import { InstructorTimeOff } from '../components/InstructorTimeOff';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {useAuth} from '../lib/AuthContext';
 import {useRouter} from '../lib/RouterContext';
@@ -42,6 +43,7 @@ function Collaborations(){
    {loading?<p role="status" className="mt-4">Caricamento…</p>:error?<p role="alert" className="mt-4">{error}</p>:!memberships.length?<p className="pc-card mt-4 p-5">Non hai ancora proposte. Condividi il codice con il centro con cui collabori.</p>:<div className="mt-4 space-y-3">{memberships.map(row=><article key={row.id} className="pc-card p-5"><h3 className="text-lg font-semibold">{row.centre_name}</h3><p className="mt-1 text-sm">{row.instructor_name} · {membershipLabels[row.status]}</p>
     {row.status==='pending'&&<><p className="mt-3 text-sm leading-relaxed">Accettando confermi la collaborazione con questo centro. Potrai leggere data, orario, servizio e nomi del cliente e del cane per le lezioni assegnate che iniziano dopo la conferma. Il centro vedrà il nome del tuo account. Questo collegamento non verifica qualifiche professionali.</p><div className="mt-4 flex flex-wrap gap-3"><button disabled={busy||!row.instructor_active} className="pc-btn pc-btn-primary" onClick={()=>void action(row,'accept')}>Accetta collegamento</button><button disabled={busy} className="pc-btn pc-btn-secondary" onClick={()=>void action(row,'decline')}>Rifiuta</button></div></>}
     {row.status==='active'&&<div className="mt-3 flex flex-wrap items-center justify-between gap-3"><p className="text-sm">{row.instructor_active?'Accesso alla tua agenda attivo.':'Accesso sospeso dal centro.'}</p><button disabled={busy} className="text-sm underline" onClick={()=>void action(row,'revoke')}>Lascia il centro</button></div>}
+    {row.status==='active'&&row.instructor_active&&<InstructorTimeOff instructorId={row.instructor_id} name={row.instructor_name}/>}
    </article>)}</div>}
   </section>
   <section className="mt-8" aria-labelledby="assigned-agenda-heading"><h2 id="assigned-agenda-heading" className="text-2xl font-semibold">La tua agenda nei centri</h2><p className="mt-2 text-sm">Orari nel fuso del dispositivo. Per modificare una lezione, contatta il centro.</p>

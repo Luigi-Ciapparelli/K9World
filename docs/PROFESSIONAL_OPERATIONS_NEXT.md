@@ -43,7 +43,8 @@ una lista di settembre usava quell'espressione.
 - **MEDIA-01:** allegati delle sessioni privati, compressione e quote, conservazione,
   condivisione e download; non basta la foto profilo del cane già esistente.
 - **TEAM-01:** collegamenti bilaterali e agenda in sola lettura nel pacchetto
-  corrente. Restano deleghe operative, ruoli e disponibilità personali.
+  pubblicato su GitHub (`b08aabf`). Indisponibilità a giornate intere nel nuovo
+  [pacchetto](INSTRUCTOR_TIME_OFF_V1.md). Restano deleghe operative, ruoli e turni orari.
   Le note dovranno conservare l’autore reale; un’appartenenza non certifica qualifiche.
 - **SPORT-02:** identità/fonte reale e merito per disciplina, senza auto-verifiche.
 - **Tessere e campagne:** vecchi strumenti rimossi, non dichiarati ripristinati.

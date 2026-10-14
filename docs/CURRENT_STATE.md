@@ -1,10 +1,19 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **14 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`b6b4c0c` (istruttori e calendario del centro; blocchi precedenti inclusi).
+`b08aabf` (account istruttore confermati e agenda assegnata; blocchi precedenti inclusi).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
+
+## Indisponibilità istruttori — pacchetto locale corrente
+
+[INSTRUCTOR_TIME_OFF_V1](INSTRUCTOR_TIME_OFF_V1.md): date di assenza per singolo
+istruttore, inseribili dal centro o dalla persona collegata. Blocco nuove assegnazioni,
+avvisi sulle lezioni già fissate, calendario filtrato e audit privato. Migrazione 63ª.
+Prove SQL PGlite, UI desktop/mobile simulate, TypeScript e build/SEO. Test nativi
+concorrenti predisposti e richiesti dall’installer sul PC di Luigi; non eseguiti qui.
+Nessun database online o deploy modificato durante la preparazione.
 
 ## Ricerca e verifica credenziali — presenti su GitHub
 

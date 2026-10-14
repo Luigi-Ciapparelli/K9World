@@ -26,6 +26,7 @@ try{for(const width of [1440,390]){
    if(['get_professional_bookings','get_my_owner_bookings'].includes(name))data=[bookingRow];
    if(name==='get_my_booking_calendar')data=[bookingRow,{...bookingRow,id:secondBooking,client_name:'Secondo cliente di prova'}];
    if(name==='get_my_service_reviews')data={items:[],count:0,pending_count:0};
+   if(name==='get_instructor_time_off')data=[{start_date:'2000-01-01',end_date:'2099-12-31'}];
    if(name==='get_my_schedule')data={paused:false,periods:[]};
    if(name==='get_booking_instructors'){
     if(failInstructors)return route.fulfill({status:503,json:{code:'503',message:'Synthetic unavailable'}});
@@ -56,6 +57,7 @@ try{for(const width of [1440,390]){
  const events=page.getByRole('region',{name:'Impegni del giorno'});
  await page.getByLabel('Istruttore',{exact:true}).selectOption('unassigned');assert.equal(await events.locator('article').count(),1);await events.getByRole('heading',{name:/Secondo cliente di prova/}).waitFor();
  await page.getByLabel('Istruttore',{exact:true}).selectOption(members[0].id);await events.getByRole('heading',{name:/Cliente di prova/}).waitFor();assert.equal(await events.locator('article').count(),1);
+ await page.getByText('Istruttore assente',{exact:true}).first().waitFor();
  if(process.env.PC_SCREENSHOTS)await page.screenshot({path:process.env.PC_SCREENSHOTS+'/calendar-filter-'+width+'.png',fullPage:true});
  failInstructors=true;await page.getByRole('button',{name:'Aggiorna',exact:true}).click();await page.getByRole('button',{name:'Mostra tutti gli impegni',exact:true}).waitFor();assert.equal(await page.getByRole('region',{name:'Impegni del giorno'}).count(),0);
  await page.getByRole('button',{name:'Mostra tutti gli impegni',exact:true}).click();assert.equal(await events.locator('article').count(),2);failInstructors=false;
