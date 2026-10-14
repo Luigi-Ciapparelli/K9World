@@ -26,10 +26,10 @@ try{for(const width of [1440,390]){
    if(name==='get_my_service_reviews')data={items:[],count:0,pending_count:0};
    if(name==='get_my_schedule')data={paused:false,periods:[]};
    if(name==='get_booking_instructors')data=[{booking_id:booking,instructor_id:assignment?.id||null,instructor_name:assignment?.name||null,version:assignment?.version||null,instructor_active:true,can_assign:role==='professional'}];
-   if(name==='assign_booking_instructor'){
+   if(name==='assign_booking_instructor_checked'){
     const p=req.postDataJSON();writes.push(p);
     if(stale){stale=false;assignment={id:null,name:null,version};return route.fulfill({status:409,json:{code:'40001',message:'Version changed'}});}
-    assert.equal(p.p_expected_version,version);const member=members.find(m=>m.id===p.p_instructor_id);assert.ok(member);assignment={id:member.id,name:member.display_name,version:'e8310000-0000-0000-0006-000000000098'};data={};
+    assert.equal(p.p_allow_overlap,false);assert.equal(p.p_expected_version,version);const member=members.find(m=>m.id===p.p_instructor_id);assert.ok(member);assignment={id:member.id,name:member.display_name,version:'e8310000-0000-0000-0006-000000000098'};data={};
    }
    return route.fulfill({status:200,json:data,headers:{'content-range':'0-0/1','access-control-expose-headers':'content-range'}});
   });return ctx;

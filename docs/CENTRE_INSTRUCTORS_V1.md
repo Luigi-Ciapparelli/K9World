@@ -2,6 +2,8 @@
 
 14 ottobre 2026. Base esaminata: `origin/main` a `8a482aa`.
 Stato del rilascio in [CURRENT_STATE](CURRENT_STATE.md).
+Il pacchetto corrente include anche [CENTRE_CALENDAR_V1](CENTRE_CALENDAR_V1.md):
+filtri per istruttore e conferma esplicita delle sovrapposizioni.
 
 ## Comportamento
 
@@ -69,9 +71,11 @@ Auth e Storage simulati. Queste prove non attestano Supabase online o Vercel.
 
 ## Rilascio
 
-Installer: `aggiorna_istruttori_centro.py ~/K9World --publish`, da WSL.
+Installer corrente: `aggiorna_calendario_istruttori.py ~/K9World --publish`, da WSL.
+Include questa prima fase: sostituisce il precedente `aggiorna_istruttori_centro.py`.
+Usa `test_centre_calendar.py`, che comprende le verifiche di entrambi i blocchi.
 Verifica compatibilità, conserva backup, esegue test SQL nativi/TypeScript/build/SEO,
-controlla che il dry-run contenga soltanto questa migration. Prepara il commit
+controlla che il dry-run contenga soltanto le migration dei due blocchi ancora mancanti. Prepara il commit
 locale recuperabile, applica SQL, quindi pubblica i soli file del pacchetto.
 Non distribuisce Edge Functions. Attendere Vercel Ready per il commit risultante.
 

@@ -18,7 +18,7 @@ Consolidato il 14 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
 | Pacchetti | `/pro/passes`; [specifica](PROFESSIONAL_PASSES_V1.md) |
 | Abbonamenti | `/pro/subscriptions`; [specifica](PROFESSIONAL_SUBSCRIPTIONS_V1.md) |
 | Valutazioni | Singola prestazione prenotata; [specifica](SERVICE_REVIEWS_V2.md) |
-| Istruttori del centro | `/pro/team`; elenco interno e assegnazioni, [specifica](CENTRE_INSTRUCTORS_V1.md); rilascio nel registro corrente |
+| Istruttori del centro | `/pro/team`; elenco e assegnazioni, [specifica](CENTRE_INSTRUCTORS_V1.md); [calendario per istruttore](CENTRE_CALENDAR_V1.md), rilascio nel registro corrente |
 | Statistiche | `/pro/analytics`; leggere il codice prima di promettere metriche ulteriori |
 
 ## Chiarimenti che evitano diagnosi errate

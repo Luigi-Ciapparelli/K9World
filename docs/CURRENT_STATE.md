@@ -54,15 +54,23 @@ interni attivi/inattivi, assegnazione facoltativa alle lezioni accettate da
 richieste e calendario, lettura del cliente e nome storico nell’export del cane.
 Le assegnazioni concluse sono bloccate; rinomina e inattività non cambiano il
 nome salvato. Le recensioni restano sulla singola prestazione.
+[CENTRE_CALENDAR_V1](CENTRE_CALENDAR_V1.md) aggiunge filtri per istruttore e
+lezioni accettate da assegnare. Le sovrapposizioni richiedono una conferma
+esplicita del centro, registrata nell’audit, per consentire le lezioni di gruppo.
 
-60ª migration locale: `20261013180000_centre_instructor_assignments.sql`.
-PGlite: storia completa, ruoli, versioni, isolamento, export, cancellazione centro
-e compatibilità recensioni. Browser desktop/mobile con API simulate: creazione,
-conflitto e ricaricamento, calendario e lettura proprietario. TypeScript, build e
-SEO superati. Due casi concorrenti PostgreSQL nativi sono forniti e richiesti
-dall’installer: non eseguiti in questo ambiente. Nessun test online effettuato.
+60ª e 61ª migration locali: `20261013180000_centre_instructor_assignments.sql`
+e `20261014004500_centre_instructor_calendar.sql`. PGlite: storia completa,
+ruoli, versioni, isolamento, export, cancellazione centro, recensioni e
+sovrapposizioni, compresi retry e compatibilità della vecchia RPC. Browser
+desktop/mobile con API simulate: creazione, conflitto, conferma di gruppo,
+filtri, errore di lettura e vista proprietario. TypeScript, build e SEO superati.
+Tre casi concorrenti PostgreSQL nativi sono forniti e richiesti dall’installer:
+non eseguiti in questo ambiente. Nessun test online effettuato.
 
-Pacchetto pronto per verifica nativa → commit locale → SQL → push GitHub.
+Pacchetto unico `aggiorna_calendario_istruttori.py`, compatibile sia con la base
+`8a482aa` sia con l’aggiornamento istruttori appena consegnato. Include entrambi
+i blocchi: non richiede di eseguire il precedente script.
+Pronto per verifica nativa → commit locale → SQL → push GitHub.
 Questo stato descrive la preparazione; esito del comando e Vercel Ready sono
 ancora da registrare. Nessuna funzione Edge o nuova spesa necessaria.
 Prima fase TEAM-01: non include account del personale, conferma di appartenenza,
@@ -102,7 +110,7 @@ I vecchi testi «preparato localmente, da pubblicare» per questi tre blocchi so
 
 La base GitHub contiene **59 migration**, fino a
 `20261013083000_working_dog_identity_binding.sql`. Il pacchetto istruttori
-aggiunge la 60ª. Un file nel repository non dimostra l’applicazione online.
+aggiunge la 60ª e la 61ª. Un file nel repository non dimostra l’applicazione online.
 
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati
 sintetici. Auth/Storage e API browser sono simulati nelle prove descritte;

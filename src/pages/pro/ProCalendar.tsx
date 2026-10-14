@@ -1,5 +1,5 @@
 import { BookingInstructor, InstructorLoadError } from '../../components/BookingInstructor';
-import { useBookingInstructors } from '../../lib/centreTeam';
+import { useBookingInstructors, type CentreTeam } from '../../lib/centreTeam';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { ClientPortrait, useClientPortraits } from '../../components/ClientPortrait';
 import { CalendarDays, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
@@ -39,6 +39,9 @@ function CalendarContent() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<{ error: boolean; text: string } | null>(null);
   const [service, setService] = useState('all');
+  const [team, setTeam] = useState<CentreTeam | null>(null);
+  const [teamError, setTeamError] = useState(false);
+  const [instructor, setInstructor] = useState('all');
   const [showClosed, setShowClosed] = useState(false);
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
@@ -51,6 +54,24 @@ function CalendarContent() {
   const from = days[0];
   const to = addDays(days[41], 1);
   const refresh = () => setReload((n) => n + 1);
+  const instructors = useBookingInstructors(bookings.map(b => b.id), reload);
+
+  useEffect(() => {
+    let active = true;
+    setTeamError(false);
+    void (async () => {
+      try {
+        const {data, error} = await supabase.rpc('get_my_centre_team');
+        if (error || !data) throw error || new Error('Missing roster');
+        if (active) {
+          const current = data as CentreTeam;
+          setTeam(current);
+          setInstructor(value => current.enabled && (['all', 'unassigned'].includes(value) || current.members.some(m => m.id === value)) ? value : 'all');
+        }
+      } catch { if (active) { setTeamError(true); setTeam(null); setInstructor('all'); } }
+    })();
+    return () => { active = false; };
+  }, [reload]);
 
   useEffect(() => {
     mounted.current = true;
@@ -83,10 +104,13 @@ function CalendarContent() {
     return () => { active = false; };
   }, [from, to, reload]);
 
+  const instructorFilterReady = instructor === 'all' || (!instructors.loading && !instructors.error);
   const visible = bookings.filter((booking) => (showClosed || !['cancelled', 'declined'].includes(booking.status))
-    && (service === 'all' || (booking.service_id || 'deleted') === service));
+    && (service === 'all' || (booking.service_id || 'deleted') === service)
+    && instructorFilterReady && (instructor === 'all' || (instructor === 'unassigned'
+      ? instructors.rows[booking.id]?.can_assign && !instructors.rows[booking.id]?.instructor_id
+      : instructors.rows[booking.id]?.instructor_id === instructor)));
   const selectedBookings = visible.filter((booking) => bookingOnDay(booking, selected));
-  const instructors = useBookingInstructors(selectedBookings.map(b => b.id), reload);
   const portraits = useClientPortraits([], selectedBookings.map(booking => booking.id), reload);
   const selectedPeriods = schedule?.periods.filter((period) => period.start_date <= selected && period.end_date >= selected) || [];
   const legend = Array.from(new Map(bookings.map((booking) => [booking.service_id || 'deleted', booking])).entries());
@@ -183,10 +207,17 @@ function CalendarContent() {
       </div>
       <div className="flex flex-wrap items-end gap-4 border-t border-stone-100 px-4 py-3">
         <label className="text-sm font-semibold">Servizio<select value={service} onChange={(e) => setService(e.target.value)} className={input}><option value="all">Tutti i servizi</option>{legend.map(([id, booking]) => <option key={id} value={id}>{booking.service_name}</option>)}</select></label>
+        {team?.enabled && <div className="min-w-0 max-w-full"><label htmlFor="calendar-instructor" className="text-sm font-semibold">Istruttore</label><select id="calendar-instructor" value={instructor} onChange={e => setInstructor(e.target.value)} disabled={loading || instructors.loading || instructors.error} className={`${input} max-w-full`}>
+          <option value="all">Tutti gli impegni del centro</option><option value="unassigned">Lezioni accettate da assegnare</option>
+          {team.members.map(member => <option key={member.id} value={member.id}>{member.display_name}{member.active ? '' : ' (inattivo)'}</option>)}
+        </select></div>}
         <label className="flex items-center gap-2 pb-2 text-sm"><input type="checkbox" checked={showClosed} onChange={(e) => setShowClosed(e.target.checked)} />Mostra anche annullate e rifiutate</label>
       </div>
+      {team?.enabled && <p className="px-4 pb-3 text-xs text-stone-600">Il filtro istruttore riguarda le lezioni assegnate. Colori per servizio e indisponibilità dell’intero centro restano visibili.</p>}
+      {teamError && <p role="alert" className="px-4 pb-3 text-sm">Elenco istruttori non caricato: sono mostrati tutti gli impegni. <button className="underline" onClick={refresh}>Riprova</button></p>}
+      {instructors.error && <div className="px-4"><InstructorLoadError retry={instructors.reload} />{instructor !== 'all' && <button className="mb-3 underline text-sm" onClick={() => setInstructor('all')}>Mostra tutti gli impegni</button>}</div>}
       <div className="flex flex-wrap gap-x-4 gap-y-2 px-4 pb-4 text-xs">{legend.map(([id, booking]) => <span key={id} className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full border border-stone-300" aria-hidden="true" style={{ backgroundColor: serviceColor(booking.calendar_color) }} />{booking.service_name}</span>)}</div>
-      {loading ? <p role="status" className="p-6 text-stone-600">Caricamento impegni…</p> : !loadError && <>
+      {loading || !instructorFilterReady ? <p role="status" className="p-6 text-stone-600">{instructors.error ? 'Ripristina il caricamento degli istruttori o mostra tutti gli impegni.' : 'Caricamento impegni…'}</p> : !loadError && <>
         <div className="grid grid-cols-7 border-t border-stone-200 bg-stone-50 text-center text-xs font-bold">{['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'].map((day) => <div key={day} className="py-2">{day}</div>)}</div>
         <div className="grid grid-cols-7">{days.map((day) => {
           const events = visible.filter((booking) => bookingOnDay(booking, day));
@@ -198,7 +229,7 @@ function CalendarContent() {
             <div className="min-h-20 sm:min-h-28"><span className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold ${day === today ? 'bg-emerald-900 text-white' : ''}`}>{Number(day.slice(-2))}</span>
               {blocked && <span className="block truncate text-[10px] font-bold text-amber-900" title="Indisponibile">Indisponibile</span>}
               {events.slice(0, 3).map((booking) => <span key={booking.id} className="mt-1 block truncate border-l-4 pl-1 text-[10px] text-stone-800 sm:text-xs" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
-                {romeDay(booking.start_at) === day ? calendarTime(booking.start_at) : '↳'} <span className="hidden sm:inline">{booking.client_name} · {booking.service_name}</span><span className="sm:hidden">{booking.service_name}</span>
+                {romeDay(booking.start_at) === day ? calendarTime(booking.start_at) : '↳'} <span className="hidden sm:inline">{booking.client_name} · {booking.service_name}{instructors.rows[booking.id]?.instructor_name ? ` · ${instructors.rows[booking.id].instructor_name}` : ''}</span><span className="sm:hidden">{booking.service_name}</span>
               </span>)}
               {events.length > 3 && <span className="mt-1 block text-xs font-semibold text-stone-700">+{events.length - 3}</span>}
             </div>
@@ -206,11 +237,10 @@ function CalendarContent() {
         })}</div>
       </>}
     </section>
-    {!loading && !loadError && <section aria-label="Impegni del giorno" className="space-y-3">
+    {!loading && !loadError && instructorFilterReady && <section aria-label="Impegni del giorno" className="space-y-3">
       <h2 className="text-xl font-bold capitalize">{dayLabel(selected, true)}</h2>
       {selectedPeriods.length > 0 && <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950">Giorno segnato come indisponibile. Gli impegni già accettati restano confermati.</p>}
       {!selectedBookings.length && <p className="rounded-xl border border-stone-200 bg-white p-5 text-sm text-stone-600">Nessun impegno per questo giorno e questi filtri.</p>}
-      {instructors.error && <InstructorLoadError retry={instructors.reload} />}
       {selectedBookings.map((booking) => <article key={booking.id} className="rounded-2xl border border-stone-200 border-l-4 bg-white p-5" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
         <div className="flex flex-wrap items-start justify-between gap-3"><div><h3 className="font-bold flex items-center gap-3"><ClientPortrait src={portraits[booking.id]} name={booking.client_name} />{booking.client_name}</h3><p className="mt-1 text-sm">{booking.service_name}</p></div><StatusBadge status={booking.status} /></div>
         <p className="mt-3 text-sm text-stone-600">{calendarDateTime(booking.start_at)} – {calendarDateTime(booking.end_at)} · {Number(booking.price || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>

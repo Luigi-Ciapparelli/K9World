@@ -60,7 +60,8 @@ Email e raccolta contatti sospese su richiesta di Luigi. Prosegue il lavoro tecn
 (`8a482aa`): titolarità, versioni e revoche. Esiti SQL/Edge/Vercel distinti;
 verifica automatica della fonte disattivata e ranking ancora separato.
 Incremento corrente: [CENTRE_INSTRUCTORS_V1](docs/CENTRE_INSTRUCTORS_V1.md),
-elenco interno e assegnazione nominativa alla lezione. Account del personale,
+elenco interno e assegnazione nominativa alla lezione, con
+[calendario per istruttore](docs/CENTRE_CALENDAR_V1.md) e conferma delle sovrapposizioni. Account del personale,
 appartenenze verificate e accessi delegati restano una fase successiva di TEAM-01.
 
 ## Primo controllo, senza modificare nulla
