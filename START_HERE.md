@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 14 ottobre 2026, base `origin/main` osservata a `8a482aa`.
+Aggiornamento del 14 ottobre 2026, base `origin/main` osservata a `b6b4c0c`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -59,10 +59,11 @@ Email e raccolta contatti sospese su richiesta di Luigi. Prosegue il lavoro tecn
 [WORKING_DOG_IDENTITY_V1](docs/WORKING_DOG_IDENTITY_V1.md) è presente su GitHub
 (`8a482aa`): titolarità, versioni e revoche. Esiti SQL/Edge/Vercel distinti;
 verifica automatica della fonte disattivata e ranking ancora separato.
-Incremento corrente: [CENTRE_INSTRUCTORS_V1](docs/CENTRE_INSTRUCTORS_V1.md),
-elenco interno e assegnazione nominativa alla lezione, con
-[calendario per istruttore](docs/CENTRE_CALENDAR_V1.md) e conferma delle sovrapposizioni. Account del personale,
-appartenenze verificate e accessi delegati restano una fase successiva di TEAM-01.
+Elenco e [calendario per istruttore](docs/CENTRE_CALENDAR_V1.md) sono su GitHub
+(`5abbe6f`, `b6b4c0c`). Incremento corrente:
+[CENTRE_MEMBERSHIPS_V1](docs/CENTRE_MEMBERSHIPS_V1.md), collegamenti confermati
+dai due account e agenda delle sole lezioni assegnate. Deleghe di scrittura,
+ruoli organizzativi e disponibilità individuali restano successivi.
 
 ## Primo controllo, senza modificare nulla
 

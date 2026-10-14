@@ -1,12 +1,12 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **14 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`8a482aa` (titolarità Working-Dog; TRAIN-01 e SPORT-03 già inclusi).
+`b6b4c0c` (istruttori e calendario del centro; blocchi precedenti inclusi).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Ultimo incremento osservato su GitHub
+## Ricerca e verifica credenziali — presenti su GitHub
 
 Pacchetto unico TRAIN-01 + SPORT-03: ricerca educatori immediata e specializzazioni
 facoltative; verifiche legate alla revisione dei dati e storico privato. Ripristinato
@@ -47,7 +47,7 @@ Il fetch del 13 ottobre osserva il commit remoto `8a482aa`. La presenza su
 GitHub non dimostra da sola esito SQL, deploy Edge o Vercel Ready. Non ripetere
 il rilascio senza un difetto: registrare gli esiti effettivi quando disponibili.
 
-## Istruttori del centro — incremento corrente
+## Istruttori e calendario del centro — presenti su GitHub
 
 [CENTRE_INSTRUCTORS_V1](CENTRE_INSTRUCTORS_V1.md): area `/pro/team`, nomi
 interni attivi/inattivi, assegnazione facoltativa alle lezioni accettate da
@@ -67,14 +67,29 @@ filtri, errore di lettura e vista proprietario. TypeScript, build e SEO superati
 Tre casi concorrenti PostgreSQL nativi sono forniti e richiesti dall’installer:
 non eseguiti in questo ambiente. Nessun test online effettuato.
 
-Pacchetto unico `aggiorna_calendario_istruttori.py`, compatibile sia con la base
-`8a482aa` sia con l’aggiornamento istruttori appena consegnato. Include entrambi
-i blocchi: non richiede di eseguire il precedente script.
-Pronto per verifica nativa → commit locale → SQL → push GitHub.
-Questo stato descrive la preparazione; esito del comando e Vercel Ready sono
-ancora da registrare. Nessuna funzione Edge o nuova spesa necessaria.
-Prima fase TEAM-01: non include account del personale, conferma di appartenenza,
-permessi delegati o disponibilità del singolo istruttore.
+Il fetch del 14 ottobre osserva `5abbe6f` (elenco e assegnazioni) e
+`b6b4c0c` (calendario e sovrapposizioni) su `origin/main`. Non ripetere i vecchi
+installer. SQL online e Vercel Ready restano evidenze distinte dal push.
+
+## Collegamento degli account istruttore — incremento corrente
+
+[CENTRE_MEMBERSHIPS_V1](CENTRE_MEMBERSHIPS_V1.md): codice personale a scadenza,
+proposta del centro, accettazione/rifiuto e revoca da entrambe le parti. L’account
+collegato legge soltanto l’agenda delle lezioni assegnate che iniziano dopo
+l’accettazione, con servizio e nomi di cliente/cane. Nessun accesso a recapiti,
+note, messaggi o modifiche delle prenotazioni. I ruoli account restano invariati.
+
+Nuova 62ª migration `20261014090000_centre_account_memberships.sql`.
+PGlite: 61 precedenti più nuova, consenso/versioni, permessi, scadenze e revoche,
+calendario e storico preservati. Browser desktop/mobile con API simulate,
+TypeScript e build/SEO passati. Il test nativo comprende cinque casi concorrenti,
+forniti per il PC di Luigi, non eseguiti qui. Nessuna prova online implicita.
+
+Pacchetto `aggiorna_account_istruttori.py`: preparato sulla base `b6b4c0c`, con
+verifica nativa → commit locale → SQL → push GitHub. Applicazione e Ready da
+registrare dopo il comando. Nessuna Edge Function, email o nuova spesa.
+TEAM-01 prosegue: agenda in sola lettura; deleghe di scrittura, autori personali
+nelle note e disponibilità individuali rimangono da sviluppare.
 
 ## Email sospese
 
@@ -108,9 +123,9 @@ Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
 [export](DOG_HISTORY_EXPORT_V1.md), [valutazioni](SERVICE_REVIEWS_V1.md).
 I vecchi testi «preparato localmente, da pubblicare» per questi tre blocchi sono superati.
 
-La base GitHub contiene **59 migration**, fino a
-`20261013083000_working_dog_identity_binding.sql`. Il pacchetto istruttori
-aggiunge la 60ª e la 61ª. Un file nel repository non dimostra l’applicazione online.
+La base GitHub contiene **61 migration**, fino a
+`20261014004500_centre_instructor_calendar.sql`. Il pacchetto account istruttori
+aggiunge la 62ª. Un file nel repository non dimostra l’applicazione online.
 
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati
 sintetici. Auth/Storage e API browser sono simulati nelle prove descritte;

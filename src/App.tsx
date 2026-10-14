@@ -11,6 +11,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { usePasswordRecovery } from './lib/passwordRecovery';
 import { ConnectionNotice, PageErrorBoundary, PageLoading } from './components/PageRecovery';
 
+const CentreCollaborationsPage = lazy(() => import('./pages/CentreCollaborationsPage').then(module => ({default:module.CentreCollaborationsPage})));
 const AccountContactsPage = lazy(() => import('./pages/AccountContactsPage').then(module => ({ default: module.AccountContactsPage })));
 
 const ForgotPasswordPage = lazy(() => import('./pages/PasswordRecoveryPages').then(module => ({ default: module.ForgotPasswordPage })));
@@ -154,7 +155,7 @@ function AppShell() {
   const isAdminRoute = basePath === '/admin' || basePath.startsWith('/admin/');
   const isProRoute = basePath === '/pro' || basePath.startsWith('/pro/');
   const isOwnerRoute = basePath === '/owner' || basePath.startsWith('/owner/');
-  const isAccountRoute = basePath === '/account/contacts';
+  const isAccountRoute = ['/account/contacts','/account/centres'].includes(basePath);
   const isProtectedRoute = isAdminRoute || isProRoute || isOwnerRoute || isAccountRoute;
 
   const roleHome =
@@ -236,6 +237,7 @@ function AppShell() {
   else if (basePath === '/professional-terms') content = <ProfessionalTermsPage />;
   else if (basePath === '/ranking') content = <RankingPage />;
   else if (basePath === '/contact') content = <ContactPage />;
+  else if (basePath === '/account/centres') content = <CentreCollaborationsPage />;
   else if (basePath === '/account/contacts') content = <AccountContactsPage />;
   else if (basePath === '/admin') content = <AdminDashboard />;
   else if (basePath === '/owner') content = <OwnerDashboard />;

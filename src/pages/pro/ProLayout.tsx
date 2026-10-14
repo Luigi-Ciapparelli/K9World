@@ -26,6 +26,7 @@ export function ProLayout({ children, active }: { children: ReactNode; active: s
     { id: 'bookings', label: 'Richieste e messaggi', icon: Calendar, path: '/pro/bookings' },
     { id: 'calendar', label: 'Calendario', icon: CalendarDays, path: '/pro/calendar' },
     ...(centreUser === user?.id ? [{ id: 'team', label: 'Istruttori del centro', icon: Users, path: '/pro/team' }] : []),
+    { id: 'collaborations', label: 'Le mie collaborazioni', icon: Users, path: '/account/centres' },
     { id: 'crm', label: 'Clienti', icon: Users, path: '/pro/crm', group: 'I PERCORSI DEI CLIENTI' },
     ...(continuityEnabled ? [{ id: 'archive', label: 'Relazioni e archivio', icon: Users, path: '/pro/archive' }] : []),
     { id: 'passes', label: 'Pacchetti', icon: Package, path: '/pro/passes' },
