@@ -1,6 +1,6 @@
 # Strumenti professionali — mappa e lavoro residuo
 
-Consolidato il 14 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
+Consolidato il 16 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
 [CURRENT_STATE](CURRENT_STATE.md); l'ordine è in
 [EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md).
 
@@ -19,7 +19,7 @@ Consolidato il 14 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
 | Abbonamenti | `/pro/subscriptions`; [specifica](PROFESSIONAL_SUBSCRIPTIONS_V1.md) |
 | Valutazioni | Singola prestazione prenotata; [specifica](SERVICE_REVIEWS_V2.md) |
 | Istruttori del centro | `/pro/team`; elenco e assegnazioni, [specifica](CENTRE_INSTRUCTORS_V1.md); [calendario per istruttore](CENTRE_CALENDAR_V1.md), rilascio nel registro corrente |
-| Account istruttori | `/account/centres`; consenso e agenda assegnata, [specifica](CENTRE_MEMBERSHIPS_V1.md); rilascio nel registro corrente |
+| Account istruttori | `/account/centres`; [consenso/agenda](CENTRE_MEMBERSHIPS_V1.md), [assenze](INSTRUCTOR_TIME_OFF_V1.md), [permesso di completamento](CENTRE_LESSON_PERMISSIONS_V1.md); rilascio nel registro corrente |
 | Statistiche | `/pro/analytics`; leggere il codice prima di promettere metriche ulteriori |
 
 ## Chiarimenti che evitano diagnosi errate
@@ -42,10 +42,9 @@ una lista di settembre usava quell'espressione.
 
 - **MEDIA-01:** allegati delle sessioni privati, compressione e quote, conservazione,
   condivisione e download; non basta la foto profilo del cane già esistente.
-- **TEAM-01:** collegamenti bilaterali e agenda in sola lettura nel pacchetto
-  pubblicato su GitHub (`b08aabf`). Indisponibilità a giornate intere nel nuovo
-  [pacchetto](INSTRUCTOR_TIME_OFF_V1.md). Restano deleghe operative, ruoli e turni orari.
-  Le note dovranno conservare l’autore reale; un’appartenenza non certifica qualifiche.
+- **TEAM-01:** account/agenda e assenze su GitHub; [permesso di completamento](CENTRE_LESSON_PERMISSIONS_V1.md)
+  nel pacchetto corrente. Restano messaggi, note con autore personale, ruoli e turni orari.
+  Il permesso per una lezione non apre gli altri archivi; un’appartenenza non certifica qualifiche.
 - **SPORT-02:** identità/fonte reale e merito per disciplina, senza auto-verifiche.
 - **Tessere e campagne:** vecchi strumenti rimossi, non dichiarati ripristinati.
   Valutare il problema reale prima di riportarli nella navigazione; campagne

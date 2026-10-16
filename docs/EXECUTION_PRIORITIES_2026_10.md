@@ -1,6 +1,6 @@
 # PortaleCinofilo — ordine operativo
 
-14 ottobre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
+16 ottobre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
 Stato e prove in [CURRENT_STATE](CURRENT_STATE.md); decisioni in
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questa è la coda operativa unica,
 non un'autorizzazione generale a spendere, pubblicare o contattare terzi.
@@ -29,7 +29,7 @@ future per dimostrare quelle già utilizzabili.
 | IMG-01 | Identità visiva (`e6e38c9`) e ottimizzazione (`0f51f98`) su GitHub | Foto cani compresse e aggiornate dopo sostituzione, anteprime serializzate; PHOTO_UPLOAD_OPTIMIZATION_V1 | Non ripetere sviluppo/rilascio; restano distinti gli esiti Storage reali non osservati |
 | MEDIA-01 | Implementazione rinviata per decisione del 9 ottobre | Quote per piano di abbonamento, tipi di file utili, compressione misurata, conservazione e costo totale prima della pipeline | Matrice approvata; solo dopo costruire flusso privato, revoca/download, limiti, cancellazione e ripristino |
 | REV-02 | Presente su GitHub (`3a6674b`); esiti online distinti | Valutazioni per singola prestazione, anche nei centri; SERVICE_REVIEWS_V2 | Migration e frontend coordinati; un voto non si sposta sulla lezione successiva e non genera una media dell’attività |
-| TEAM-01 | Account e agenda su GitHub (`b08aabf`); indisponibilità individuali nel pacchetto corrente | INSTRUCTOR_TIME_OFF_V1: assenze per centro, blocco assegnazioni e avvisi. Poi deleghe operative, ruoli e turni orari | Consenso, permesso minimo, revoca effettiva e storico; nessuna cancellazione automatica delle lezioni |
+| TEAM-01 | Account, agenda e assenze su GitHub (`b08aabf`, `9216c48`); delega di completamento nel pacchetto corrente | CENTRE_LESSON_PERMISSIONS_V1: confermare le proprie lezioni concluse con permesso esplicito e autore; poi messaggi, note, ruoli e turni | Consenso, permesso minimo, revoca e storico; valutazione per prestazione e nessuna cancellazione automatica delle lezioni |
 | SPORT-03 | Presente su GitHub (`d2f5b2b`) | Credenziali modificate tornano da verificare; revisione e commit atomico, storico privato, pannello admin ripristinato; CREDENTIAL_VERIFICATION_INTEGRITY_V1 | Test nativi del pacchetto e rilascio DB → Edge → frontend; non dichiarare completato SPORT-02 |
 | SPORT-02 | Identità su GitHub (`8a482aa`); fonte live e ranking restano separati | WORKING_DOG_IDENTITY_V1: revisione titolarità, ID stabile, versioni/revoche; automazione disattivata. Poi fonte ammessa e parser reale, regole per disciplina | Collegamento → verifica → badge/ranking e revoca, con prova reale; casi ambigui rimangono non verificati |
 | SOC-01 | Preparazione commerciale in parallelo; trazione solo TikTok segnalata | Storyboard e scena campione; possibile trial 100 crediti, costo monetario proposto zero; verificare disponibilità effettiva prima di generare | Prodotto riconoscibile, contenuto corretto, ritagli/testi curati, destinazione funzionante e misurazione distinta dalle visualizzazioni |

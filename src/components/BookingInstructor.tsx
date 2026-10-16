@@ -31,6 +31,7 @@ function InstructorContent({row,professional,onSaved}:{row:BookingInstructorRow;
  return <div className="mt-3 rounded-xl border border-[var(--pc-line)] p-3 text-sm" aria-label="Istruttore della lezione">
   <p><strong>Istruttore:</strong> {row.instructor_name||'Non ancora indicato dal centro'}</p>
   <p className="mt-1 text-xs text-[var(--pc-muted-600)]">Indicazione del centro per questa lezione.</p>
+  {professional&&row.completed_by&&<p className="mt-2 text-sm">Segnata come svolta da <strong>{row.completed_by}</strong>.</p>}
   {professional&&row.instructor_active===false&&row.instructor_name&&<p className="mt-2 text-amber-800">Questo istruttore è inattivo nell’elenco. L’assegnazione registrata resta conservata.</p>}
   {professional&&row.instructor_unavailable&&<p role="status" className="mt-2 font-semibold text-amber-900">Istruttore assente in questa data: la lezione è ancora confermata. Controlla l’assegnazione e concorda eventuali cambiamenti con il cliente.</p>}
   {professional&&row.overlap_confirmed&&<p className="mt-2 text-xs text-amber-900">Sovrapposizione di orario confermata dal centro al momento dell’assegnazione.</p>}

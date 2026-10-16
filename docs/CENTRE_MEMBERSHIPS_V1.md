@@ -21,7 +21,14 @@ secondo account o una falsa attività pubblica per collaborare. La email deve
 risultare confermata in Auth. Gli amministratori non ricevono accessi impliciti.
 Il flusso non invia email, messaggi o notifiche esterne.
 
-## Permesso concesso
+## Estensione del 16 ottobre
+
+La lettura descritta sotto rimane il permesso iniziale. Le [indisponibilità](INSTRUCTOR_TIME_OFF_V1.md)
+sono un incremento già su GitHub. Il nuovo [permesso di completamento](CENTRE_LESSON_PERMISSIONS_V1.md)
+richiede una scelta esplicita del centro; non deriva dall’accettazione del collegamento.
+Per il rilascio effettivo prevale CURRENT_STATE.
+
+## Permesso iniziale concesso
 
 Solo lettura di data/ora, servizio, stato, centro, nome assegnato dell’istruttore,
 nome del cliente e nomi dei cani. Sono visibili lezioni accettate o completate,
@@ -86,7 +93,7 @@ GitHub, backup, test nativi/TypeScript/build/SEO, commit locale recuperabile,
 dry-run della sola migration nuova, SQL e push GitHub. Nessuna Edge Function,
 nuova dipendenza npm, SMS o costo aggiuntivo attivato. Attendere Vercel Ready.
 
-TEAM-01 comprende ora un primo accesso personale alla sola agenda. Restano
-future deleghe operative (modifica lezioni, messaggi, note con autore personale),
-ruoli organizzativi e disponibilità del singolo. Non descrivere questo blocco
-come una gestione completa delle autorizzazioni del centro.
+Il collegamento conserva un accesso iniziale alla sola agenda. Le estensioni
+successive sono documentate sopra; messaggi, note con autore personale, modifica
+di date/assegnazioni, ruoli organizzativi e turni orari rimangono separati.
+Non descrivere questo blocco come una gestione completa delle autorizzazioni del centro.

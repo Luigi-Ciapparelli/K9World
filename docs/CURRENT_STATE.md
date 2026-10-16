@@ -1,19 +1,36 @@
 # PortaleCinofilo — stato corrente
 
-Aggiornato il **14 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`b08aabf` (account istruttore confermati e agenda assegnata; blocchi precedenti inclusi).
+Aggiornato il **16 ottobre 2026**. Base verificata con fetch di `origin/main`:
+`9216c48` (account istruttore, agenda e indisponibilità; blocchi precedenti inclusi).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Indisponibilità istruttori — pacchetto locale corrente
+## Conferma delle lezioni assegnate — pacchetto locale corrente
+
+[CENTRE_LESSON_PERMISSIONS_V1](CENTRE_LESSON_PERMISSIONS_V1.md): il centro concede
+un permesso esplicito, inizialmente disattivato. L’istruttore collegato può segnare
+come svolte solo le proprie lezioni accettate, dopo l’orario di fine. Versioni,
+revoca e audit con autore reale; nessun accesso aggiuntivo a note o messaggi.
+La valutazione resta riferita alla singola prestazione, con le soglie già previste.
+Nuova migration `20261014210000_centre_lesson_completion_permissions.sql` (64ª).
+
+Prove locali: storia SQL completa su PGlite e regressioni team/calendario/assenze;
+UI desktop/mobile con API simulate, concessione, conflitto recuperabile, conferma
+con autore e revoca contro pagina obsoleta; TypeScript e build/SEO passati.
+Il test PostgreSQL nativo include undici casi concorrenti, quattro nuovi su
+completamento/revoca e completamento/riassegnazione. Non eseguito qui: è un gate
+dell’installer sul PC di Luigi. Auth/Storage simulati, nessuna prova online implicita.
+Pacchetto `aggiorna_permessi_istruttori.py`, preparato sulla base `9216c48`;
+SQL online e push non eseguiti durante questa preparazione.
+
+## Indisponibilità istruttori — presenti su GitHub
 
 [INSTRUCTOR_TIME_OFF_V1](INSTRUCTOR_TIME_OFF_V1.md): date di assenza per singolo
 istruttore, inseribili dal centro o dalla persona collegata. Blocco nuove assegnazioni,
 avvisi sulle lezioni già fissate, calendario filtrato e audit privato. Migrazione 63ª.
-Prove SQL PGlite, UI desktop/mobile simulate, TypeScript e build/SEO. Test nativi
-concorrenti predisposti e richiesti dall’installer sul PC di Luigi; non eseguiti qui.
-Nessun database online o deploy modificato durante la preparazione.
+Il fetch del 16 ottobre osserva `9216c48`. Non ripetere l’installer precedente.
+Applicazione SQL e Ready di Vercel non sono dimostrati dal fetch.
 
 ## Ricerca e verifica credenziali — presenti su GitHub
 
@@ -80,13 +97,14 @@ Il fetch del 14 ottobre osserva `5abbe6f` (elenco e assegnazioni) e
 `b6b4c0c` (calendario e sovrapposizioni) su `origin/main`. Non ripetere i vecchi
 installer. SQL online e Vercel Ready restano evidenze distinte dal push.
 
-## Collegamento degli account istruttore — incremento corrente
+## Collegamento degli account istruttore — presente su GitHub
 
 [CENTRE_MEMBERSHIPS_V1](CENTRE_MEMBERSHIPS_V1.md): codice personale a scadenza,
 proposta del centro, accettazione/rifiuto e revoca da entrambe le parti. L’account
 collegato legge soltanto l’agenda delle lezioni assegnate che iniziano dopo
 l’accettazione, con servizio e nomi di cliente/cane. Nessun accesso a recapiti,
-note, messaggi o modifiche delle prenotazioni. I ruoli account restano invariati.
+note o messaggi. Il completamento è ora una delega separata nel pacchetto corrente;
+il collegamento da solo non la concede. I ruoli account restano invariati.
 
 Nuova 62ª migration `20261014090000_centre_account_memberships.sql`.
 PGlite: 61 precedenti più nuova, consenso/versioni, permessi, scadenze e revoche,
@@ -94,11 +112,10 @@ calendario e storico preservati. Browser desktop/mobile con API simulate,
 TypeScript e build/SEO passati. Il test nativo comprende cinque casi concorrenti,
 forniti per il PC di Luigi, non eseguiti qui. Nessuna prova online implicita.
 
-Pacchetto `aggiorna_account_istruttori.py`: preparato sulla base `b6b4c0c`, con
-verifica nativa → commit locale → SQL → push GitHub. Applicazione e Ready da
-registrare dopo il comando. Nessuna Edge Function, email o nuova spesa.
-TEAM-01 prosegue: agenda in sola lettura; deleghe di scrittura, autori personali
-nelle note e disponibilità individuali rimangono da sviluppare.
+Il fetch del 16 ottobre osserva `b08aabf` su GitHub. Non ripetere il pacchetto
+account. SQL online e Ready restano evidenze distinte. Le indisponibilità sono
+ora su GitHub; la delega di completamento è nel pacchetto corrente. Restano
+successivi messaggi, note con autore personale, ruoli e turni orari.
 
 ## Email sospese
 
@@ -132,9 +149,9 @@ Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
 [export](DOG_HISTORY_EXPORT_V1.md), [valutazioni](SERVICE_REVIEWS_V1.md).
 I vecchi testi «preparato localmente, da pubblicare» per questi tre blocchi sono superati.
 
-La base GitHub contiene **61 migration**, fino a
-`20261014004500_centre_instructor_calendar.sql`. Il pacchetto account istruttori
-aggiunge la 62ª. Un file nel repository non dimostra l’applicazione online.
+La base GitHub contiene **63 migration**, fino a
+`20261014100000_centre_instructor_time_off.sql`. Il pacchetto corrente aggiunge
+la 64ª. Un file nel repository non dimostra l’applicazione online.
 
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati
 sintetici. Auth/Storage e API browser sono simulati nelle prove descritte;
@@ -188,7 +205,7 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 | IMG-01 | Foto professionali/banner e foto cliente privata su GitHub (`e6e38c9`) | Confermare soltanto gli esiti non osservati: applicazione migration, Ready e prova Storage reale; non ripetere lo sviluppo |
 | MEDIA-01 | Allegati delle sessioni rinviati per decisione di Luigi | Prima matrice quote per abbonamento, utilità dei file, compressione, conservazione e costo totale; nessuna pipeline audio/video avviata |
 | REV-02 | Presente su GitHub (`3a6674b`): voto alla specifica prestazione | Esiti online distinti; non ripetere sviluppo o rilascio senza un difetto |
-| TEAM-01 | Elenco interno e assegnazione nominativa implementati nel pacchetto corrente | Rilascio coordinato; successivamente account personali, appartenenze confermate e deleghe. Nessun voto alla persona |
+| TEAM-01 | Elenco, calendario, account e assenze su GitHub; delega di completamento nel pacchetto corrente | Rilasciare permesso minimo e autore della conferma; restano note, messaggi, ruoli e turni. Nessun voto alla persona |
 | SPORT-02 | Titolarità/versioni su GitHub (`8a482aa`); fonte live e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
 | SEO-01 | Canonical ricevuta, redirect coerenti, richiesta inviata e sitemap riuscita; tre guide specifiche su GitHub | Osservare nuova scansione, canonical e pagine prioritarie. Non chiedere di nuovo i dati già ricevuti |
 | AFF-01 | Causa storica ignota; riprodotta separatamente una pagina bianca quando un modulo della UI fallisce | Recupero manuale su GitHub (`82caa1c`) e testato, vedere PAGE_RECOVERY_V1; non dedurre la causa del vecchio episodio, raccogliere dati se ricapita |

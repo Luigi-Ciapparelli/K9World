@@ -1,13 +1,14 @@
 # PortaleCinofilo — passaggio di consegne
 
-14 ottobre 2026. Leggere prima [CURRENT_STATE](CURRENT_STATE.md) e
+16 ottobre 2026. Leggere prima [CURRENT_STATE](CURRENT_STATE.md) e
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questo documento spiega come lavorare;
 lo stato e l'ordine delle priorità non sono duplicati qui.
 
 Email sospese su richiesta esplicita. Incremento corrente:
-[CENTRE_MEMBERSHIPS_V1](CENTRE_MEMBERSHIPS_V1.md): consenso bilaterale e agenda
-assegnata in sola lettura. Elenco e calendario del centro sono su GitHub;
-le deleghe di scrittura restano successive.
+[CENTRE_LESSON_PERMISSIONS_V1](CENTRE_LESSON_PERMISSIONS_V1.md): permesso esplicito
+per confermare le proprie lezioni svolte, con revoca e autore registrato.
+Elenco, calendario, account confermati e indisponibilità sono su GitHub.
+Messaggi, note, ruoli organizzativi e turni restano separati.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);
 il flag della verifica automatica resta spento fino alla prova sulla fonte reale.
 
@@ -83,7 +84,7 @@ per rifare una verifica email. Usare i documenti recapiti per il flusso effettiv
 | Impara e scelta del cane | [REX_CLICKER_V1](REX_CLICKER_V1.md), [IMPARA_LESSON_ORDER_V1](IMPARA_LESSON_ORDER_V1.md), [IMPARA_RELEASE_V3](IMPARA_RELEASE_V3.md), [IMPARA_SHAPING_V1](IMPARA_SHAPING_V1.md), [LEARNING_CREDENTIAL_CORE](LEARNING_CREDENTIAL_CORE.md) |
 | Profilo e strumenti | [PROFESSIONAL_GUIDED_WORKSPACE_V1](PROFESSIONAL_GUIDED_WORKSPACE_V1.md), [PROFESSIONAL_OPERATIONS_NEXT](PROFESSIONAL_OPERATIONS_NEXT.md) |
 | Foto dei profili | [PROFILE_IMAGES_V1](PROFILE_IMAGES_V1.md): pubblico professionale, privato cliente; [PHOTO_UPLOAD_OPTIMIZATION_V1](PHOTO_UPLOAD_OPTIMIZATION_V1.md): foto cani, anteprime, cache e rilascio |
-| Istruttori dei centri | [CENTRE_INSTRUCTORS_V1](CENTRE_INSTRUCTORS_V1.md), [CENTRE_CALENDAR_V1](CENTRE_CALENDAR_V1.md): nomi storici, filtri e conferme; [account/agenda](CENTRE_MEMBERSHIPS_V1.md), deleghe operative successive |
+| Istruttori dei centri | [CENTRE_INSTRUCTORS_V1](CENTRE_INSTRUCTORS_V1.md), [CENTRE_CALENDAR_V1](CENTRE_CALENDAR_V1.md): nomi storici, filtri e conferme; [account/agenda](CENTRE_MEMBERSHIPS_V1.md), [assenze](INSTRUCTOR_TIME_OFF_V1.md) e [delega di completamento](CENTRE_LESSON_PERMISSIONS_V1.md) |
 | Calendario / messaggi | [PROFESSIONAL_CALENDAR_V1](PROFESSIONAL_CALENDAR_V1.md), [BOOKING_MESSAGES_V1](BOOKING_MESSAGES_V1.md) |
 | Pacchetti / abbonamenti | [PROFESSIONAL_PASSES_V1](PROFESSIONAL_PASSES_V1.md), [PROFESSIONAL_SUBSCRIPTIONS_V1](PROFESSIONAL_SUBSCRIPTIONS_V1.md) |
 | Archivio e media | [PROFESSIONAL_CONTINUITY_MEDIA](PROFESSIONAL_CONTINUITY_MEDIA.md), [CONTINUITY_SHARING_V1](CONTINUITY_SHARING_V1.md), [DOG_HISTORY_EXPORT_V1](DOG_HISTORY_EXPORT_V1.md) |
@@ -124,8 +125,3 @@ La cronologia precedente è indicizzata in [PROJECT_HISTORY](PROJECT_HISTORY.md)
 Password, sessioni, pagamenti, file esterni esclusi e bozze non committate non
 si trasferiscono con questo handoff. Una nuova AI deve dichiarare eventuali
 limiti di accesso, senza inventare verifiche o chiedere da capo tutta la visione.
-
-## Disponibilità del team — 14 ottobre 2026
-
-Il prossimo rilascio è descritto in [Indisponibilità istruttori](INSTRUCTOR_TIME_OFF_V1.md).
-Base GitHub osservata `b08aabf`; database online e Vercel restano da verificare dopo il rilascio.

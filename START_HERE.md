@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 14 ottobre 2026, base `origin/main` osservata a `b6b4c0c`.
+Aggiornamento del 16 ottobre 2026, base `origin/main` osservata a `9216c48`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -60,10 +60,12 @@ Email e raccolta contatti sospese su richiesta di Luigi. Prosegue il lavoro tecn
 (`8a482aa`): titolarità, versioni e revoche. Esiti SQL/Edge/Vercel distinti;
 verifica automatica della fonte disattivata e ranking ancora separato.
 Elenco e [calendario per istruttore](docs/CENTRE_CALENDAR_V1.md) sono su GitHub
-(`5abbe6f`, `b6b4c0c`). Incremento corrente:
-[CENTRE_MEMBERSHIPS_V1](docs/CENTRE_MEMBERSHIPS_V1.md), collegamenti confermati
-dai due account e agenda delle sole lezioni assegnate. Deleghe di scrittura,
-ruoli organizzativi e disponibilità individuali restano successivi.
+(`5abbe6f`, `b6b4c0c`). Anche gli [account confermati e l’agenda assegnata](docs/CENTRE_MEMBERSHIPS_V1.md)
+(`b08aabf`) e le [indisponibilità individuali](docs/INSTRUCTOR_TIME_OFF_V1.md)
+(`9216c48`) sono su GitHub. Incremento corrente:
+[CENTRE_LESSON_PERMISSIONS_V1](docs/CENTRE_LESSON_PERMISSIONS_V1.md), permesso
+esplicito e revocabile per confermare le proprie lezioni svolte, con autore registrato.
+Note, messaggi, ruoli organizzativi e turni orari restano separati.
 
 ## Primo controllo, senza modificare nulla
 
@@ -86,8 +88,3 @@ il lavoro locale. Non serve ripetere build o test SQL per leggere le direttive.
 Per un nuovo account: dare accesso al repository e chiedere di seguire questa
 pagina, confrontando il commit effettivo prima di agire. Le chat, i segreti e le
 sessioni degli account esterni non vengono trasferiti dai documenti Git.
-
-## Disponibilità del team — 14 ottobre 2026
-
-Il prossimo rilascio è descritto in [Indisponibilità istruttori](docs/INSTRUCTOR_TIME_OFF_V1.md).
-Base GitHub osservata `b08aabf`; database online e Vercel restano da verificare dopo il rilascio.
