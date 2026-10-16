@@ -1,3 +1,4 @@
+import {absenceTimeLabel,type InstructorAbsence} from '../../lib/instructorTimeOff';
 import { BookingInstructor, InstructorLoadError } from '../../components/BookingInstructor';
 import { useBookingInstructors, type CentreTeam } from '../../lib/centreTeam';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
@@ -42,7 +43,7 @@ function CalendarContent() {
   const [team, setTeam] = useState<CentreTeam | null>(null);
   const [teamError, setTeamError] = useState(false);
   const [instructor, setInstructor] = useState('all');
-  const [absences, setAbsences] = useState<{start_date:string;end_date:string}[]>([]);
+  const [absences, setAbsences] = useState<InstructorAbsence[]>([]);
   const [absenceError, setAbsenceError] = useState(false);
   const [absenceLoading, setAbsenceLoading] = useState(false);
   const [showClosed, setShowClosed] = useState(false);
@@ -235,7 +236,7 @@ function CalendarContent() {
       {team?.enabled && <p className="px-4 pb-3 text-xs text-stone-600">Il filtro istruttore riguarda le lezioni assegnate. Colori per servizio e indisponibilità dell’intero centro restano visibili.</p>}
       {team?.enabled && <p className="px-4 pb-3 text-sm"><button className="underline" onClick={()=>navigate('/pro/team')}>Gestisci indisponibilità degli istruttori</button></p>}
       {absenceLoading && <p role="status" className="px-4 pb-3 text-sm">Caricamento assenze dell’istruttore…</p>}
-      {absenceError && <p role="alert" className="px-4 pb-3 text-sm">Assenze dell’istruttore non caricate: non considerare liberi i giorni senza lezioni. <button className="underline" onClick={refresh}>Riprova</button></p>}
+      {absenceError && <p role="alert" className="px-4 pb-3 text-sm">Assenze dell’istruttore non caricate: non considerare libere le fasce senza lezioni. <button className="underline" onClick={refresh}>Riprova</button></p>}
       {teamError && <p role="alert" className="px-4 pb-3 text-sm">Elenco istruttori non caricato: sono mostrati tutti gli impegni. <button className="underline" onClick={refresh}>Riprova</button></p>}
       {instructors.error && <div className="px-4"><InstructorLoadError retry={instructors.reload} />{instructor !== 'all' && <button className="mb-3 underline text-sm" onClick={() => setInstructor('all')}>Mostra tutti gli impegni</button>}</div>}
       <div className="flex flex-wrap gap-x-4 gap-y-2 px-4 pb-4 text-xs">{legend.map(([id, booking]) => <span key={id} className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full border border-stone-300" aria-hidden="true" style={{ backgroundColor: serviceColor(booking.calendar_color) }} />{booking.service_name}</span>)}</div>
@@ -243,15 +244,18 @@ function CalendarContent() {
         <div className="grid grid-cols-7 border-t border-stone-200 bg-stone-50 text-center text-xs font-bold">{['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'].map((day) => <div key={day} className="py-2">{day}</div>)}</div>
         <div className="grid grid-cols-7">{days.map((day) => {
           const events = visible.filter((booking) => bookingOnDay(booking, day));
-          const instructorAbsent = absences.some(p=>p.start_date<=day&&p.end_date>=day);
+          const dayAbsences = absences.filter(p=>p.start_date<=day&&p.end_date>=day);
+          const instructorAbsent = dayAbsences.some(p=>!p.start_time);
+          const instructorPartial = !instructorAbsent && dayAbsences.length>0;
             const blocked = schedule?.periods.some((period) => period.start_date <= day && period.end_date >= day);
           const selectedDay = day === selected;
           return <button type="button" key={day} onClick={() => setSelected(day)} aria-pressed={selectedDay}
-            aria-label={`${dayLabel(day, true)}: ${events.length} impegni${blocked ? ', indisponibile' : ''}${instructorAbsent ? ', istruttore assente' : ''}`}
+            aria-label={`${dayLabel(day, true)}: ${events.length} impegni${blocked ? ', indisponibile' : ''}${instructorAbsent ? ', istruttore assente' : ''}${instructorPartial ? ', fasce orarie non disponibili' : ''}`}
             className={`min-w-0 border-t border-r border-stone-200 p-1 text-left align-top sm:p-2 ${selectedDay ? 'bg-emerald-50 ring-2 ring-inset ring-emerald-800' : blocked ? 'bg-amber-50' : 'bg-white'} ${day.slice(0, 7) !== month ? 'text-stone-400' : 'text-stone-900'}`}>
             <div className="min-h-20 sm:min-h-28"><span className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold ${day === today ? 'bg-emerald-900 text-white' : ''}`}>{Number(day.slice(-2))}</span>
               {blocked && <span className="block truncate text-[10px] font-bold text-amber-900" title="Indisponibile">Indisponibile</span>}
               {instructorAbsent && <span className="block break-words rounded bg-amber-100 px-1 text-[10px] text-amber-950">Istruttore assente</span>}
+              {instructorPartial && <span className="block break-words rounded bg-amber-100 px-1 text-[10px] text-amber-950">Orari bloccati</span>}
               {events.slice(0, 3).map((booking) => <span key={booking.id} className="mt-1 block truncate border-l-4 pl-1 text-[10px] text-stone-800 sm:text-xs" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
                 {romeDay(booking.start_at) === day ? calendarTime(booking.start_at) : '↳'} <span className="hidden sm:inline">{booking.client_name} · {booking.service_name}{instructors.rows[booking.id]?.instructor_name ? ` · ${instructors.rows[booking.id].instructor_name}` : ''}</span><span className="sm:hidden">{booking.service_name}</span>
               </span>)}
@@ -263,6 +267,7 @@ function CalendarContent() {
     </section>
     {!loading && !loadError && instructorFilterReady && <section aria-label="Impegni del giorno" className="space-y-3">
       <h2 className="text-xl font-bold capitalize">{dayLabel(selected, true)}</h2>
+      {absences.filter(p=>p.start_date<=selected&&p.end_date>=selected).length>0&&<div className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950"><p className="font-semibold">Indisponibilità dell’istruttore selezionato</p><ul className="mt-2 space-y-1">{absences.filter(p=>p.start_date<=selected&&p.end_date>=selected).map((p,index)=><li key={index}>{absenceTimeLabel(p)}</li>)}</ul><p className="mt-2">Le lezioni già fissate restano confermate. Le schede segnalano quelle che si sovrappongono.</p></div>}
       {selectedPeriods.length > 0 && <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950">Giorno segnato come indisponibile. Gli impegni già accettati restano confermati.</p>}
       {!selectedBookings.length && <p className="rounded-xl border border-stone-200 bg-white p-5 text-sm text-stone-600">Nessun impegno per questo giorno e questi filtri.</p>}
       {selectedBookings.map((booking) => <article key={booking.id} className="rounded-2xl border border-stone-200 border-l-4 bg-white p-5" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>

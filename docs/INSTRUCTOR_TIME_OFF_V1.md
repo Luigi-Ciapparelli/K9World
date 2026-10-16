@@ -2,6 +2,12 @@
 
 14 ottobre 2026. Incremento TEAM-01 successivo a `b08aabf`.
 
+## Estensione del 16 ottobre
+
+[INSTRUCTOR_HOURLY_TIME_OFF_V1](INSTRUCTOR_HOURLY_TIME_OFF_V1.md) aggiunge fasce
+orarie dello stesso giorno e mantiene il flusso delle giornate intere descritto qui.
+Per stato del rilascio e prove correnti leggere CURRENT_STATE.
+
 ## Uso
 
 - Centro: **Istruttori del centro → Gestisci indisponibilità**, sotto il nome.

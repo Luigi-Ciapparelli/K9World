@@ -7,8 +7,9 @@ assert.ok(['127.0.0.1','localhost'].includes(new URL(base).hostname));
 const browser=await chromium.launch({headless:true,...(process.env.PC_CHROMIUM_PATH?{executablePath:process.env.PC_CHROMIUM_PATH}:{}),args:['--no-sandbox','--disable-dev-shm-usage']});
 const centre='e8310000-0000-0000-0000-000000000006',owner='e8310000-0000-0000-0000-000000000007',booking='e8310000-0000-0000-0005-000000000001';
 const version='e8310000-0000-0000-0006-000000000099';const errors=[];
+const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Rome',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 try{for(const width of [1440,390]){
- let members=[],assignment=null,stale=true,overlapSeen=false,failInstructors=false;const writes=[];
+ let members=[],assignment=null,stale=true,overlapSeen=false,failInstructors=false,hourly=false;const writes=[];
  const secondBooking='e8310000-0000-0000-0005-000000000002';
  const bookingRow={id:booking,start_at:new Date().toISOString(),end_at:new Date(Date.now()+3600000).toISOString(),status:'accepted',client_name:'Cliente di prova',professional_name:'Centro di prova',price:25,notes:'Nota cliente di prova',service_id:booking,service_name:'Lezione di prova',service_type:'trainer',calendar_color:'#047857'};
  async function context(role){
@@ -26,7 +27,7 @@ try{for(const width of [1440,390]){
    if(['get_professional_bookings','get_my_owner_bookings'].includes(name))data=[bookingRow];
    if(name==='get_my_booking_calendar')data=[bookingRow,{...bookingRow,id:secondBooking,client_name:'Secondo cliente di prova'}];
    if(name==='get_my_service_reviews')data={items:[],count:0,pending_count:0};
-   if(name==='get_instructor_time_off')data=[{start_date:'2000-01-01',end_date:'2099-12-31'}];
+   if(name==='get_instructor_time_off')data=[{start_date:today,end_date:today,start_time:hourly?'14:00:00':null,end_time:hourly?'16:00:00':null}];
    if(name==='get_my_schedule')data={paused:false,periods:[]};
    if(name==='get_booking_instructors'){
     if(failInstructors)return route.fulfill({status:503,json:{code:'503',message:'Synthetic unavailable'}});
@@ -58,6 +59,12 @@ try{for(const width of [1440,390]){
  await page.getByLabel('Istruttore',{exact:true}).selectOption('unassigned');assert.equal(await events.locator('article').count(),1);await events.getByRole('heading',{name:/Secondo cliente di prova/}).waitFor();
  await page.getByLabel('Istruttore',{exact:true}).selectOption(members[0].id);await events.getByRole('heading',{name:/Cliente di prova/}).waitFor();assert.equal(await events.locator('article').count(),1);
  await page.getByText('Istruttore assente',{exact:true}).first().waitFor();
+ hourly=true;await page.getByRole('button',{name:'Aggiorna',exact:true}).click();
+ await page.getByText('Orari bloccati',{exact:true}).first().waitFor();
+ assert.equal(await page.getByText('Orari bloccati',{exact:true}).count(),1,'Only the affected day has the partial absence marker');
+ await events.getByText('Dalle 14:00 alle 16:00 · ora italiana',{exact:true}).waitFor();
+ assert.equal(await page.getByText('Istruttore assente',{exact:true}).count(),0);
+ assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Hourly calendar overflow');
  if(process.env.PC_SCREENSHOTS)await page.screenshot({path:process.env.PC_SCREENSHOTS+'/calendar-filter-'+width+'.png',fullPage:true});
  failInstructors=true;await page.getByRole('button',{name:'Aggiorna',exact:true}).click();await page.getByRole('button',{name:'Mostra tutti gli impegni',exact:true}).waitFor();assert.equal(await page.getByRole('region',{name:'Impegni del giorno'}).count(),0);
  await page.getByRole('button',{name:'Mostra tutti gli impegni',exact:true}).click();assert.equal(await events.locator('article').count(),2);failInstructors=false;
