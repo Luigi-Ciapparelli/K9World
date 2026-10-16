@@ -97,6 +97,9 @@ export function PrivacyPage() {
           nella conversazione del cliente e del centro con il nome dell'autore al momento dell'invio.
           Questo permesso non apre le note private dell'archivio o i recapiti del profilo.
         </p>
+        <p className="mt-3">
+          Le note del lavoro svolto, se abilitate dal centro e autorizzate dalla relazione con il cane, sono attribuite all’istruttore e conservate negli archivi del centro e dell’autore. Gli altri istruttori non accedono a questi appunti. La condivisione di una revisione richiede anche il consenso del suo autore; il ritiro interrompe le nuove letture, senza richiamare copie già scaricate.
+        </p>
       </Section>
 
       <Section title="5. Fornitori tecnici">

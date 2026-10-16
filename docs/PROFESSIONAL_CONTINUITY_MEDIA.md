@@ -200,3 +200,14 @@ esistenti; per l'aggiunta dei media progettare soltanto l'estensione necessaria.
 Le proposte SQL iniziali in `docs/proposals` sono fonti storiche, non nuove
 migration da eseguire. L'assenza di pipeline audio/video non implica assenza
 di sessioni, condivisione o archivio professionale.
+
+## Note scritte dagli istruttori dei centri
+
+Incremento del 16 ottobre: [CENTRE_LESSON_NOTES_V1](CENTRE_LESSON_NOTES_V1.md).
+Il centro conserva le sessioni della propria relazione; l’autore conserva i soli
+contributi personali e le relative revisioni. L’accesso all’intero archivio del
+centro non viene delegato. La condivisione richiede il consenso dell’autore per
+revisione, poi selezione del centro e concessione del proprietario al successore.
+La revoca del permesso blocca nuove scritture, non cancella lo storico; il ritiro
+del consenso chiude le nuove letture condivise. I media restano rinviati secondo
+le quote e le misure di compressione ancora da definire.

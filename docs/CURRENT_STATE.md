@@ -1,25 +1,32 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **16 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`b4b8b6f` (assenze per fasce orarie; completamento, account e agenda inclusi).
+`9855c8f` (messaggi degli istruttori; assenze, completamento, account e agenda inclusi).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Messaggi delle lezioni assegnate — pacchetto locale corrente
+## Note delle lezioni assegnate — pacchetto locale corrente
 
-[CENTRE_INSTRUCTOR_MESSAGES_V1](CENTRE_INSTRUCTOR_MESSAGES_V1.md): permesso separato,
-inizialmente spento, per leggere e rispondere nella conversazione delle sole lezioni
-assegnate. Nome dell'autore visibile a centro/cliente e nell'export; letture distinte,
-revoca/versioni e conservazione dei messaggi quando viene cancellato l'account
-istruttore. Nessun accesso aggiuntivo a note, recapiti o modelli del centro.
+[CENTRE_LESSON_NOTES_V1](CENTRE_LESSON_NOTES_V1.md): permesso separato e spento
+inizialmente. Istruttore autore, archivio del centro, rettifiche con cronologia e
+archivio personale consultabile/scaricabile dopo la revoca. Condivisione di una
+revisione subordinata al consenso dell’autore e alla selezione del centro; il
+proprietario mantiene il controllo delle concessioni al successore.
 
-66ª migration `20261016110000_centre_instructor_messages.sql`. Prove PGlite sulla
-storia completa e regressioni team; browser desktop/mobile con API simulate,
-TypeScript, build/SEO e lint mirato passati. Cinque casi concorrenti PostgreSQL
-nativi inclusi e richiesti dall'installer sul PC di Luigi, non eseguiti qui.
-Pacchetto `aggiorna_messaggi_istruttori.py`, base `b4b8b6f`. Nessun invio reale,
-SQL online, push o deployment effettuato durante la preparazione.
+67ª migration `20261016170000_centre_lesson_notes.sql`. Storia completa e
+regressioni su PGlite, UI desktop/mobile con API simulate, TypeScript, lint mirato,
+build/SEO. Otto casi PostgreSQL a due connessioni inclusi e richiesti dall’installer
+sul PC di Luigi, non eseguiti qui. Pacchetto `aggiorna_note_istruttori.py`, base
+`9855c8f`; nessun SQL online, push o deployment effettuato durante la preparazione.
+
+## Messaggi delle lezioni assegnate — presenti su GitHub
+
+[CENTRE_INSTRUCTOR_MESSAGES_V1](CENTRE_INSTRUCTOR_MESSAGES_V1.md): permesso separato
+per le conversazioni delle sole lezioni assegnate, autore reale e letture distinte.
+66ª migration `20261016110000_centre_instructor_messages.sql`. Il fetch del
+16 ottobre osserva `9855c8f`; non ripetere il pacchetto precedente. SQL online e
+Vercel Ready restano evidenze distinte dal fetch.
 
 ## Indisponibilità per fasce orarie — presenti su GitHub
 

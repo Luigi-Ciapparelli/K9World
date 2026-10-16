@@ -5,10 +5,10 @@
 lo stato e l'ordine delle priorità non sono duplicati qui.
 
 Email sospese su richiesta esplicita. Incremento corrente:
-[CENTRE_INSTRUCTOR_MESSAGES_V1](CENTRE_INSTRUCTOR_MESSAGES_V1.md): permesso
-esplicito, conversazione delle lezioni assegnate e autore reale nelle risposte.
-Elenco, calendario, account, assenze anche orarie e completamento sono su GitHub.
-Note, ruoli organizzativi e turni ricorrenti restano separati.
+[CENTRE_LESSON_NOTES_V1](CENTRE_LESSON_NOTES_V1.md): note con autore reale,
+revisioni, archivio personale e del centro e consenso per revisione.
+Elenco, calendario, account, assenze anche orarie, completamento e messaggi
+sono su GitHub (`9855c8f`). Ruoli organizzativi e turni ricorrenti restano separati.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);
 il flag della verifica automatica resta spento fino alla prova sulla fonte reale.
 

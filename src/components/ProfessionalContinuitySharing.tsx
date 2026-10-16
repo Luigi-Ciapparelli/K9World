@@ -68,7 +68,7 @@ function OwnPublications({ refreshKey }: { refreshKey: number }) {
       <details><summary className="cursor-pointer text-sm font-semibold underline">Leggi la revisione corrente</summary><p className="mt-2 whitespace-pre-wrap break-words text-sm">{note.body}</p></details>
       {note.publication_id ? <button type="button" disabled={busy || selected !== null} onClick={() => void withdraw(note)} className={sharingSecondary}>Ritira dallo storico condiviso</button>
         : <button type="button" disabled={!note.can_publish || busy || selected !== null} onClick={() => { setSelected(note); setNotice(''); setFailure(''); }} className={sharingButton}>Prepara per lo storico</button>}
-      {!note.can_publish && !note.publication_id && <p className="text-xs text-stone-600">La condivisione richiede un profilo professionale approvato e lo stesso proprietario che autorizzò la sessione. Il tuo archivio resta consultabile.</p>}
+      {!note.can_publish && !note.publication_id && <p className="text-xs text-stone-600">La condivisione richiede un profilo approvato, lo stesso proprietario e, per una nota dell’istruttore, il suo consenso a questa revisione. Il tuo archivio resta consultabile.</p>}
     </article>)}
     <SharingPager page={page} total={Number(rows[0]?.total_count || 0)} count={rows.length} busy={loading || busy || selected !== null} onPage={setPage} />
   </div>;

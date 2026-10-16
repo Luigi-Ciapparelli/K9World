@@ -11,7 +11,7 @@ export interface Relationship {
   accepted_at: string | null; ended_at: string | null; revoked_at: string | null;
 }
 export interface NoteRevision {
-  session_id: string; note_id: string; dog_name: string; author_name: string;
+  can_revise?: boolean; session_id: string; note_id: string; dog_name: string; author_name: string;
   occurred_at: string; activity: string; revision_number: number;
   body: string; change_reason: string | null; revision_created_at: string;
 }

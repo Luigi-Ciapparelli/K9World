@@ -44,7 +44,7 @@ function ContinuityWorkspace({ professional, userId, verified }: { professional:
     } catch (e) { if (current === generation.current) { setError(continuityError(e)); setRelations([]); } }
     finally { if (current === generation.current) setLoading(false); }
   }, []);
-  useEffect(() => { void reload(); return () => { generation.current++; }; }, [reload]);
+  useEffect(() => { const requests = generation; void reload(); return () => { requests.current++; }; }, [reload]);
   async function act(r: Relationship, accept?: boolean) {
     if (lock.current) return;
     if (accept === undefined && !window.confirm(professional
@@ -175,7 +175,7 @@ function Archive({ refreshKey }: { refreshKey: number }) {
   useEffect(() => { setPage(0); }, [refreshKey]);
   useEffect(() => {
     let active = true; setLoading(true); setError(''); setRows([]);
-    void continuityRpc<NoteRevision[]>('list_own_professional_note_revisions', { p_limit: 50, p_offset: page * 50 })
+    void continuityRpc<NoteRevision[]>('list_professional_note_revisions_v2', { p_limit: 50, p_offset: page * 50 })
       .then(data => { if (active) setRows(data); })
       .catch(e => { if (active) setError(continuityError(e)); })
       .finally(() => { if (active) setLoading(false); });
@@ -193,7 +193,7 @@ function Archive({ refreshKey }: { refreshKey: number }) {
       <p className="text-sm">Revisione {r.revision_number} · Registrata il {displayDate(r.revision_created_at)}</p>
       <p className="whitespace-pre-wrap break-words">{r.body}</p>
       {r.change_reason && <p className="whitespace-pre-wrap break-words text-sm text-stone-600">Motivo della rettifica: {r.change_reason}</p>}
-      <button className={secondary} disabled={editing !== null} onClick={() => setEditing(r)}>Rettifica da questa revisione</button>
+      <p className="text-sm text-stone-600">{r.can_revise === false ? 'Contributo dell’istruttore: solo l’autore può rettificarlo con il permesso attivo. Il centro può registrare una propria osservazione separata.' : ''}</p>{r.can_revise !== false && <button className={secondary} disabled={editing !== null} onClick={() => setEditing(r)}>Rettifica da questa revisione</button>}
     </article>)}
     <div className="flex flex-wrap items-center gap-3"><button className={secondary} disabled={loading || page === 0} onClick={() => setPage(p => p - 1)}>Precedenti</button><span>Pagina {page + 1} · fino a 50 revisioni</span><button className={secondary} disabled={loading || !!error || rows.length < 50} onClick={() => setPage(p => p + 1)}>Successive</button></div>
   </section>;

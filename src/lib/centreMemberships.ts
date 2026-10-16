@@ -3,9 +3,9 @@ import { supabase } from './supabase';
 export type CentreMembership = {
  id:string; instructor_id:string; instructor_name:string; account_name:string; centre_name:string;
  version:string; status:'pending'|'active'|'declined'|'revoked'|'expired'; is_centre:boolean;
- can_complete_lessons?:boolean; can_message_clients?:boolean; instructor_active:boolean; invited_at:string; expires_at:string; accepted_at:string|null;
+ can_record_notes?:boolean; can_complete_lessons?:boolean; can_message_clients?:boolean; instructor_active:boolean; invited_at:string; expires_at:string; accepted_at:string|null;
 };
-export type CentreLesson = {id:string; start_at:string; end_at:string; status:string; service_name:string; centre_name:string; instructor_name:string; client_name:string; dog_names:string[]; membership_id?:string; membership_version?:string; assignment_version?:string; can_complete?:boolean; can_message?:boolean; message_count?:number; unread_count?:number; completed_by?:string|null};
+export type CentreLesson = {id:string; start_at:string; end_at:string; status:string; service_name:string; centre_name:string; instructor_name:string; client_name:string; dog_names:string[]; membership_id?:string; membership_version?:string; assignment_version?:string; can_record_notes?:boolean; can_complete?:boolean; can_message?:boolean; message_count?:number; unread_count?:number; completed_by?:string|null};
 export const membershipLabels = {pending:'Da confermare',active:'Collegato',declined:'Rifiutato',revoked:'Revocato',expired:'Scaduto'};
 export function membershipError(error:unknown){
  const code=(error as {code?:string})?.code;
