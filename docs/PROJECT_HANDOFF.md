@@ -5,10 +5,10 @@
 lo stato e l'ordine delle priorità non sono duplicati qui.
 
 Email sospese su richiesta esplicita. Incremento corrente:
-[INSTRUCTOR_HOURLY_TIME_OFF_V1](INSTRUCTOR_HOURLY_TIME_OFF_V1.md): indisponibilità
-per alcune ore, calendario e blocco delle sole assegnazioni sovrapposte.
-Elenco, calendario, account, assenze giornaliere e completamento sono su GitHub.
-Messaggi, note, ruoli organizzativi e turni ricorrenti restano separati.
+[CENTRE_INSTRUCTOR_MESSAGES_V1](CENTRE_INSTRUCTOR_MESSAGES_V1.md): permesso
+esplicito, conversazione delle lezioni assegnate e autore reale nelle risposte.
+Elenco, calendario, account, assenze anche orarie e completamento sono su GitHub.
+Note, ruoli organizzativi e turni ricorrenti restano separati.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);
 il flag della verifica automatica resta spento fino alla prova sulla fonte reale.
 
@@ -84,7 +84,7 @@ per rifare una verifica email. Usare i documenti recapiti per il flusso effettiv
 | Impara e scelta del cane | [REX_CLICKER_V1](REX_CLICKER_V1.md), [IMPARA_LESSON_ORDER_V1](IMPARA_LESSON_ORDER_V1.md), [IMPARA_RELEASE_V3](IMPARA_RELEASE_V3.md), [IMPARA_SHAPING_V1](IMPARA_SHAPING_V1.md), [LEARNING_CREDENTIAL_CORE](LEARNING_CREDENTIAL_CORE.md) |
 | Profilo e strumenti | [PROFESSIONAL_GUIDED_WORKSPACE_V1](PROFESSIONAL_GUIDED_WORKSPACE_V1.md), [PROFESSIONAL_OPERATIONS_NEXT](PROFESSIONAL_OPERATIONS_NEXT.md) |
 | Foto dei profili | [PROFILE_IMAGES_V1](PROFILE_IMAGES_V1.md): pubblico professionale, privato cliente; [PHOTO_UPLOAD_OPTIMIZATION_V1](PHOTO_UPLOAD_OPTIMIZATION_V1.md): foto cani, anteprime, cache e rilascio |
-| Istruttori dei centri | [CENTRE_INSTRUCTORS_V1](CENTRE_INSTRUCTORS_V1.md), [CENTRE_CALENDAR_V1](CENTRE_CALENDAR_V1.md): nomi storici, filtri e conferme; [account/agenda](CENTRE_MEMBERSHIPS_V1.md), [assenze](INSTRUCTOR_TIME_OFF_V1.md), [fasce orarie](INSTRUCTOR_HOURLY_TIME_OFF_V1.md) e [delega di completamento](CENTRE_LESSON_PERMISSIONS_V1.md) |
+| Istruttori dei centri | [CENTRE_INSTRUCTORS_V1](CENTRE_INSTRUCTORS_V1.md), [CENTRE_CALENDAR_V1](CENTRE_CALENDAR_V1.md): nomi storici, filtri e conferme; [account/agenda](CENTRE_MEMBERSHIPS_V1.md), [assenze](INSTRUCTOR_TIME_OFF_V1.md), [fasce orarie](INSTRUCTOR_HOURLY_TIME_OFF_V1.md) e [delega di completamento](CENTRE_LESSON_PERMISSIONS_V1.md); [messaggi delegati](CENTRE_INSTRUCTOR_MESSAGES_V1.md) |
 | Calendario / messaggi | [PROFESSIONAL_CALENDAR_V1](PROFESSIONAL_CALENDAR_V1.md), [BOOKING_MESSAGES_V1](BOOKING_MESSAGES_V1.md) |
 | Pacchetti / abbonamenti | [PROFESSIONAL_PASSES_V1](PROFESSIONAL_PASSES_V1.md), [PROFESSIONAL_SUBSCRIPTIONS_V1](PROFESSIONAL_SUBSCRIPTIONS_V1.md) |
 | Archivio e media | [PROFESSIONAL_CONTINUITY_MEDIA](PROFESSIONAL_CONTINUITY_MEDIA.md), [CONTINUITY_SHARING_V1](CONTINUITY_SHARING_V1.md), [DOG_HISTORY_EXPORT_V1](DOG_HISTORY_EXPORT_V1.md) |

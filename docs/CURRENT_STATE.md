@@ -1,12 +1,27 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **16 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`b8b30c2` (permesso di completamento lezioni; account, agenda e assenze inclusi).
+`b4b8b6f` (assenze per fasce orarie; completamento, account e agenda inclusi).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Indisponibilità per fasce orarie — pacchetto locale corrente
+## Messaggi delle lezioni assegnate — pacchetto locale corrente
+
+[CENTRE_INSTRUCTOR_MESSAGES_V1](CENTRE_INSTRUCTOR_MESSAGES_V1.md): permesso separato,
+inizialmente spento, per leggere e rispondere nella conversazione delle sole lezioni
+assegnate. Nome dell'autore visibile a centro/cliente e nell'export; letture distinte,
+revoca/versioni e conservazione dei messaggi quando viene cancellato l'account
+istruttore. Nessun accesso aggiuntivo a note, recapiti o modelli del centro.
+
+66ª migration `20261016110000_centre_instructor_messages.sql`. Prove PGlite sulla
+storia completa e regressioni team; browser desktop/mobile con API simulate,
+TypeScript, build/SEO e lint mirato passati. Cinque casi concorrenti PostgreSQL
+nativi inclusi e richiesti dall'installer sul PC di Luigi, non eseguiti qui.
+Pacchetto `aggiorna_messaggi_istruttori.py`, base `b4b8b6f`. Nessun invio reale,
+SQL online, push o deployment effettuato durante la preparazione.
+
+## Indisponibilità per fasce orarie — presenti su GitHub
 
 [INSTRUCTOR_HOURLY_TIME_OFF_V1](INSTRUCTOR_HOURLY_TIME_OFF_V1.md): centro e persona
 collegata possono indicare alcune ore dello stesso giorno, oltre alle giornate intere.
@@ -20,8 +35,8 @@ completamento e assenze; test di confini, isolamento, retry e ora legale/solare.
 Browser desktop/mobile con API simulate, anche con fuso del browser estero;
 TypeScript e build/SEO. Test nativo incluso con tredici casi concorrenti,
 non eseguito qui; richiesto dall’installer sul PC di Luigi. Auth/Storage simulati.
-Pacchetto `aggiorna_assenze_orarie_istruttori.py` sulla base `b8b30c2`.
-Nessun SQL online o deploy eseguito durante la preparazione.
+Il fetch del 16 ottobre osserva `b4b8b6f` su `origin/main`. Non ripetere il
+pacchetto precedente; esiti SQL online e Ready restano distinti dal fetch.
 
 ## Conferma delle lezioni assegnate — presente su GitHub
 
@@ -132,7 +147,7 @@ forniti per il PC di Luigi, non eseguiti qui. Nessuna prova online implicita.
 Il fetch del 16 ottobre osserva `b08aabf` su GitHub. Non ripetere il pacchetto
 account. SQL online e Ready restano evidenze distinte. Le indisponibilità sono
 ora su GitHub, insieme alla delega di completamento; le assenze per alcune ore
-sono nel pacchetto corrente. Restano messaggi, note, ruoli e turni ricorrenti.
+sono su GitHub. Messaggi nel pacchetto corrente; restano note, ruoli e turni ricorrenti.
 
 ## Email sospese
 
@@ -222,7 +237,7 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 | IMG-01 | Foto professionali/banner e foto cliente privata su GitHub (`e6e38c9`) | Confermare soltanto gli esiti non osservati: applicazione migration, Ready e prova Storage reale; non ripetere lo sviluppo |
 | MEDIA-01 | Allegati delle sessioni rinviati per decisione di Luigi | Prima matrice quote per abbonamento, utilità dei file, compressione, conservazione e costo totale; nessuna pipeline audio/video avviata |
 | REV-02 | Presente su GitHub (`3a6674b`): voto alla specifica prestazione | Esiti online distinti; non ripetere sviluppo o rilascio senza un difetto |
-| TEAM-01 | Elenco, calendario, account, assenze giornaliere e completamento su GitHub; fasce orarie nel pacchetto corrente | Rilascio delle fasce; poi note, messaggi, ruoli e turni ricorrenti. Nessun voto alla persona |
+| TEAM-01 | Elenco, calendario, account, assenze anche orarie e completamento su GitHub; messaggi nel pacchetto corrente | Rilascio messaggi delegati; poi note, ruoli e turni ricorrenti. Nessun voto alla persona |
 | SPORT-02 | Titolarità/versioni su GitHub (`8a482aa`); fonte live e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
 | SEO-01 | Canonical ricevuta, redirect coerenti, richiesta inviata e sitemap riuscita; tre guide specifiche su GitHub | Osservare nuova scansione, canonical e pagine prioritarie. Non chiedere di nuovo i dati già ricevuti |
 | AFF-01 | Causa storica ignota; riprodotta separatamente una pagina bianca quando un modulo della UI fallisce | Recupero manuale su GitHub (`82caa1c`) e testato, vedere PAGE_RECOVERY_V1; non dedurre la causa del vecchio episodio, raccogliere dati se ricapita |

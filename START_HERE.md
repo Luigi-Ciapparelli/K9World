@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 16 ottobre 2026, base `origin/main` osservata a `b8b30c2`.
+Aggiornamento del 16 ottobre 2026, base `origin/main` osservata a `b4b8b6f`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -63,10 +63,11 @@ Elenco e [calendario per istruttore](docs/CENTRE_CALENDAR_V1.md) sono su GitHub
 (`5abbe6f`, `b6b4c0c`). Anche gli [account confermati e l’agenda assegnata](docs/CENTRE_MEMBERSHIPS_V1.md)
 (`b08aabf`) e le [indisponibilità individuali](docs/INSTRUCTOR_TIME_OFF_V1.md)
 (`9216c48`) sono su GitHub. Anche il [permesso di completamento](docs/CENTRE_LESSON_PERMISSIONS_V1.md)
-è presente (`b8b30c2`). Incremento corrente:
-[INSTRUCTOR_HOURLY_TIME_OFF_V1](docs/INSTRUCTOR_HOURLY_TIME_OFF_V1.md), indisponibilità
-per alcune ore, calendario e blocco delle sole assegnazioni sovrapposte.
-Note, messaggi, ruoli organizzativi e turni ricorrenti restano separati.
+è presente (`b8b30c2`). Anche le [fasce orarie](docs/INSTRUCTOR_HOURLY_TIME_OFF_V1.md)
+sono su GitHub (`b4b8b6f`). Incremento corrente:
+[CENTRE_INSTRUCTOR_MESSAGES_V1](docs/CENTRE_INSTRUCTOR_MESSAGES_V1.md), permesso
+esplicito per rispondere ai clienti delle lezioni assegnate con autore reale.
+Note, ruoli organizzativi e turni ricorrenti restano separati.
 
 ## Primo controllo, senza modificare nulla
 

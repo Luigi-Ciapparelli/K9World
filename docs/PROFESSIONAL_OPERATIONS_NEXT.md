@@ -19,7 +19,7 @@ Consolidato il 16 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
 | Abbonamenti | `/pro/subscriptions`; [specifica](PROFESSIONAL_SUBSCRIPTIONS_V1.md) |
 | Valutazioni | Singola prestazione prenotata; [specifica](SERVICE_REVIEWS_V2.md) |
 | Istruttori del centro | `/pro/team`; elenco e assegnazioni, [specifica](CENTRE_INSTRUCTORS_V1.md); [calendario per istruttore](CENTRE_CALENDAR_V1.md), rilascio nel registro corrente |
-| Account istruttori | `/account/centres`; [consenso/agenda](CENTRE_MEMBERSHIPS_V1.md), [assenze](INSTRUCTOR_TIME_OFF_V1.md), [fasce orarie](INSTRUCTOR_HOURLY_TIME_OFF_V1.md), [permesso di completamento](CENTRE_LESSON_PERMISSIONS_V1.md); rilascio nel registro corrente |
+| Account istruttori | `/account/centres`; [consenso/agenda](CENTRE_MEMBERSHIPS_V1.md), [assenze](INSTRUCTOR_TIME_OFF_V1.md), [fasce orarie](INSTRUCTOR_HOURLY_TIME_OFF_V1.md), [permesso di completamento](CENTRE_LESSON_PERMISSIONS_V1.md), [messaggi delegati](CENTRE_INSTRUCTOR_MESSAGES_V1.md); rilascio nel registro corrente |
 | Statistiche | `/pro/analytics`; leggere il codice prima di promettere metriche ulteriori |
 
 ## Chiarimenti che evitano diagnosi errate
@@ -43,8 +43,9 @@ una lista di settembre usava quell'espressione.
 - **MEDIA-01:** allegati delle sessioni privati, compressione e quote, conservazione,
   condivisione e download; non basta la foto profilo del cane già esistente.
 - **TEAM-01:** account/agenda, assenze giornaliere e [completamento](CENTRE_LESSON_PERMISSIONS_V1.md)
-  su GitHub. [Fasce orarie](INSTRUCTOR_HOURLY_TIME_OFF_V1.md) nel pacchetto corrente;
-  restano messaggi, note con autore personale, ruoli e turni ricorrenti.
+  su GitHub, insieme alle [fasce orarie](INSTRUCTOR_HOURLY_TIME_OFF_V1.md).
+  [Messaggi delegati](CENTRE_INSTRUCTOR_MESSAGES_V1.md) nel pacchetto corrente;
+  restano note con autore personale, ruoli e turni ricorrenti.
   Il permesso per una lezione non apre gli altri archivi; un’appartenenza non certifica qualifiche.
 - **SPORT-02:** identità/fonte reale e merito per disciplina, senza auto-verifiche.
 - **Tessere e campagne:** vecchi strumenti rimossi, non dichiarati ripristinati.

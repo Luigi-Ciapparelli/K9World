@@ -36,7 +36,7 @@ try{for(const width of [1440,390]){
  }
  const cc=await session(true),pc=await session(false),centrePage=await cc.newPage(),page=await pc.newPage();
  for(const p of [centrePage,page]){p.setDefaultTimeout(12000);p.on('pageerror',e=>errors.push(e.message));p.on('dialog',d=>d.accept());}
- await centrePage.goto(base+'/pro/team');await centrePage.getByText('Agenda in sola lettura',{exact:true}).waitFor();
+ await centrePage.goto(base+'/pro/team');await centrePage.getByText('Completamento non abilitato',{exact:true}).waitFor();
  await page.goto(base+'/account/centres');await page.getByRole('heading',{name:'Lezione 1',exact:true}).waitFor();assert.equal(await page.getByRole('button',{name:'Segna lezione svolta'}).count(),0);
  await centrePage.getByRole('button',{name:'Consenti completamento lezioni'}).click();await centrePage.getByText('Permesso attivato per le sole lezioni assegnate.').waitFor();
  await page.getByRole('button',{name:'Aggiorna',exact:true}).click();await page.getByRole('button',{name:'Segna lezione svolta'}).first().click();await page.getByText('I dati sono cambiati. Aggiorna e controlla prima di riprovare.').waitFor();assert.equal(successes,0);

@@ -1,5 +1,9 @@
 # Messaggi delle prenotazioni e risposte professionali
 
+Estensione del 16 ottobre: [messaggi degli istruttori assegnati](CENTRE_INSTRUCTOR_MESSAGES_V1.md).
+Il documento originario sotto descrive cliente e professionista; la nuova delega
+è separata e inizialmente disattivata.
+
 ## Stato e dipendenze
 
 Incremento successivo al calendario `a712352`, confermato su `main` dal terminale dell'utente. La disponibilità del deployment Vercel non è stata verificata dall'ambiente di sviluppo dell'assistente.

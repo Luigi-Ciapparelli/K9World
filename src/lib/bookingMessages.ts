@@ -3,7 +3,7 @@ import { useAuth } from './AuthContext';
 import { supabase } from './supabase';
 
 export type BookingMessage = {
-  id: string; sequence: number; sender_name: string; sender_kind: 'owner' | 'professional';
+  id: string; sequence: number; sender_name: string; sender_kind: 'owner' | 'professional' | 'instructor';
   body: string; from_me: boolean; is_automatic: boolean; created_at: string;
 };
 export type ReplyTemplate = { id: string; title: string; body: string; automatic_event: string | null };

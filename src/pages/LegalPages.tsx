@@ -89,6 +89,14 @@ export function PrivacyPage() {
           La documentazione privata usata per verificare qualifiche o risultati non viene resa
           pubblica per impostazione predefinita.
         </p>
+        <p className="mt-3">
+          Per le lezioni presso un centro, gli istruttori collegati possono consultare l'agenda
+          delle lezioni assegnate. Se il centro li autorizza espressamente, possono leggere
+          la conversazione di quelle prenotazioni, inclusi i messaggi precedenti, e rispondere
+          con il proprio nome. La revoca interrompe l'accesso; le risposte già inviate restano
+          nella conversazione del cliente e del centro con il nome dell'autore al momento dell'invio.
+          Questo permesso non apre le note private dell'archivio o i recapiti del profilo.
+        </p>
       </Section>
 
       <Section title="5. Fornitori tecnici">
