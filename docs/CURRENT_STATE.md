@@ -1,31 +1,36 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **17 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`9855c8f` (messaggi degli istruttori; assenze, completamento, account e agenda inclusi).
+`10163b9` (note attribuite e turni settimanali degli istruttori inclusi).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Note e turni degli istruttori — pacchetto locale corrente
+## Coordinamento agenda — incremento locale corrente
 
-Il fetch continua a mostrare `9855c8f`: il precedente pacchetto delle note non
-risulta pubblicato. `aggiorna_turni_istruttori.py` include **entrambi** gli incrementi
-ed è compatibile sia con quella base sia con le note già installate (`64159fa`).
-Non eseguire due installer. SQL online, push e Vercel non eseguiti in preparazione.
+[CENTRE_AGENDA_DELEGATION_V1](CENTRE_AGENDA_DELEGATION_V1.md): il centro può concedere
+un permesso revocabile a un collega già collegato. Agenda giornaliera e assegnazioni
+future agli altri istruttori, autore reale e versioni. Nessun accesso aggiuntivo a
+note, messaggi, recapiti, prezzi o archivi. Le proprie lezioni restano al centro.
+Turni, assenze e conferma di gruppo hanno gli stessi controlli del titolare.
+Migration 69ª `20261017093000_centre_agenda_delegation.sql`.
 
-- [CENTRE_LESSON_NOTES_V1](CENTRE_LESSON_NOTES_V1.md): note con autore personale,
-  revisioni, archivio del centro/persona e consenso selettivo. Migration 67ª.
-- [INSTRUCTOR_WEEKLY_SHIFTS_V1](INSTRUCTOR_WEEKLY_SHIFTS_V1.md): giorni e fasce
-  ricorrenti gestiti dal centro, leggibili dall’istruttore collegato; calendario
-  filtrato e blocco server delle nuove assegnazioni fuori fascia. Migration 68ª
-  `20261016230000_instructor_weekly_shifts.sql`. Lezioni già fissate conservate.
+Prove: storia SQL completa/regressioni su PGlite; browser 1440/390 con API simulate;
+TypeScript, lint mirato, build e SEO. Il runner PostgreSQL nativo incluso aggiunge
+sei casi concorrenti e costituisce il gate dell’installer sul PC di Luigi: qui
+non disponibile, quindi non dichiarato superato. Auth/Storage sono simulati.
+SQL online, commit remoto e Vercel di questo incremento non eseguiti in preparazione.
+Installer: `aggiorna_coordinamento_agenda.py`; non ripetere quello dei turni.
 
-Storia SQL completa e regressioni su PGlite, TypeScript, build/SEO e UI desktop/mobile
-con API simulate. Lint mirato: nessun errore; un warning preesistente sul cleanup
-in ProTeam, non introdotto da questo incremento. Il test nativo incluso richiede
-PostgreSQL locale: otto casi concorrenti delle note e quattro dei turni, prima
-della migration online. Qui verificati in sequenza i quattro scenari dei turni;
-non è una prova dei lock a due connessioni. Auth/Storage e browser usano fixture.
+## Note e turni degli istruttori — presenti su GitHub
+
+Il fetch del 17 ottobre osserva `10163b9`, che comprende anche `7b0603d`.
+[CENTRE_LESSON_NOTES_V1](CENTRE_LESSON_NOTES_V1.md): note con autore personale,
+revisioni, archivio del centro/persona e consenso selettivo, migration 67ª.
+[INSTRUCTOR_WEEKLY_SHIFTS_V1](INSTRUCTOR_WEEKLY_SHIFTS_V1.md): giorni e fasce
+ricorrenti gestiti dal centro, lettura per il collega e blocco delle nuove
+assegnazioni fuori fascia, migration 68ª. Lezioni già fissate conservate.
+Il push osservato non certifica da solo SQL online e deployment Ready.
 
 ## Messaggi delle lezioni assegnate — presenti su GitHub
 

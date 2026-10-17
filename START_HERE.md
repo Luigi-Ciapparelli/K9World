@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 17 ottobre 2026, base `origin/main` osservata a `9855c8f`.
+Aggiornamento del 17 ottobre 2026, base `origin/main` osservata a `10163b9`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -65,10 +65,12 @@ Elenco e [calendario per istruttore](docs/CENTRE_CALENDAR_V1.md) sono su GitHub
 (`9216c48`) sono su GitHub. Anche il [permesso di completamento](docs/CENTRE_LESSON_PERMISSIONS_V1.md)
 è presente (`b8b30c2`). Anche le [fasce orarie](docs/INSTRUCTOR_HOURLY_TIME_OFF_V1.md)
 sono su GitHub (`b4b8b6f`), insieme ai [messaggi delegati](docs/CENTRE_INSTRUCTOR_MESSAGES_V1.md)
-(`9855c8f`). Pacchetto corrente: [note delle lezioni](docs/CENTRE_LESSON_NOTES_V1.md) e
-[turni settimanali](docs/INSTRUCTOR_WEEKLY_SHIFTS_V1.md), con calendario integrato
-e nuove assegnazioni limitate agli orari salvati. Le lezioni già accettate restano
-confermate. Ruoli organizzativi più ampi restano separati.
+(`9855c8f`). [Note delle lezioni](docs/CENTRE_LESSON_NOTES_V1.md) e
+[turni settimanali](docs/INSTRUCTOR_WEEKLY_SHIFTS_V1.md) sono su GitHub (`10163b9`).
+Incremento corrente: [coordinamento agenda](docs/CENTRE_AGENDA_DELEGATION_V1.md),
+permesso revocabile per assegnare lezioni future agli altri istruttori, con autore
+reale e controlli su turni/assenze. Gli altri accessi restano separati.
+Le lezioni già accettate sono conservate.
 
 ## Primo controllo, senza modificare nulla
 

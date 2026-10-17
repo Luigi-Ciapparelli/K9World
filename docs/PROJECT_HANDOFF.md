@@ -4,14 +4,13 @@
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questo documento spiega come lavorare;
 lo stato e l'ordine delle priorità non sono duplicati qui.
 
-Email sospese su richiesta esplicita. Incremento corrente:
-[CENTRE_LESSON_NOTES_V1](CENTRE_LESSON_NOTES_V1.md): note con autore reale,
-revisioni, archivio personale e del centro e consenso per revisione.
-Elenco, calendario, account, assenze anche orarie, completamento e messaggi
-sono su GitHub (`9855c8f`). Il pacchetto corrente comprende anche
-[INSTRUCTOR_WEEKLY_SHIFTS_V1](INSTRUCTOR_WEEKLY_SHIFTS_V1.md): settimana tipo,
-lettura per la persona collegata e guardia server sulle nuove assegnazioni.
-Un solo installer sostituisce quello delle note. Ruoli organizzativi restano separati.
+Email sospese su richiesta esplicita. Elenco, agenda, account, assenze anche orarie,
+completamento, messaggi, [note attribuite](CENTRE_LESSON_NOTES_V1.md) e
+[turni settimanali](INSTRUCTOR_WEEKLY_SHIFTS_V1.md) sono su GitHub (`10163b9`).
+Incremento corrente: [CENTRE_AGENDA_DELEGATION_V1](CENTRE_AGENDA_DELEGATION_V1.md),
+coordinamento revocabile delle assegnazioni, con minimo accesso e autore reale.
+La persona deve già essere collegata al centro; non si condividono credenziali.
+Segreteria generale e altre azioni amministrative non sono incluse.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);
 il flag della verifica automatica resta spento fino alla prova sulla fonte reale.
 
