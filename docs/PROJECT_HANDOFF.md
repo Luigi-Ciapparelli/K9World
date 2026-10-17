@@ -1,6 +1,6 @@
 # PortaleCinofilo — passaggio di consegne
 
-16 ottobre 2026. Leggere prima [CURRENT_STATE](CURRENT_STATE.md) e
+17 ottobre 2026. Leggere prima [CURRENT_STATE](CURRENT_STATE.md) e
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questo documento spiega come lavorare;
 lo stato e l'ordine delle priorità non sono duplicati qui.
 
@@ -8,7 +8,10 @@ Email sospese su richiesta esplicita. Incremento corrente:
 [CENTRE_LESSON_NOTES_V1](CENTRE_LESSON_NOTES_V1.md): note con autore reale,
 revisioni, archivio personale e del centro e consenso per revisione.
 Elenco, calendario, account, assenze anche orarie, completamento e messaggi
-sono su GitHub (`9855c8f`). Ruoli organizzativi e turni ricorrenti restano separati.
+sono su GitHub (`9855c8f`). Il pacchetto corrente comprende anche
+[INSTRUCTOR_WEEKLY_SHIFTS_V1](INSTRUCTOR_WEEKLY_SHIFTS_V1.md): settimana tipo,
+lettura per la persona collegata e guardia server sulle nuove assegnazioni.
+Un solo installer sostituisce quello delle note. Ruoli organizzativi restano separati.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);
 il flag della verifica automatica resta spento fino alla prova sulla fonte reale.
 

@@ -29,7 +29,7 @@ SELECT pg_temp.team_check((public.get_booking_instructors(ARRAY['e8310000-0000-0
 SELECT pg_temp.team_check(NOT (public.get_booking_instructors(ARRAY['e8310000-0000-0000-0005-000000000042']::uuid[])#>>'{0,instructor_unavailable}')::boolean,'adjacent lesson unblocked');
 SELECT pg_temp.team_reject($q$SELECT public.add_instructor_time_off_hours(gen_random_uuid(),'e8310000-0000-0000-0006-000000000020',(SELECT d FROM hour_dates),'16:00','14:00')$q$,'22023');
 SELECT pg_temp.team_reject($q$SELECT public.add_instructor_time_off_hours(gen_random_uuid(),'e8310000-0000-0000-0006-000000000020',current_date-1,'09:00','11:00')$q$,'22023');
-SELECT pg_temp.team_reject($q$SELECT public.add_instructor_time_off_hours(gen_random_uuid(),'e8310000-0000-0000-0006-000000000020',current_date+731,'09:00','11:00')$q$,'22023');
+SELECT pg_temp.team_reject($q$SELECT public.add_instructor_time_off_hours(gen_random_uuid(),'e8310000-0000-0000-0006-000000000020',(now() AT TIME ZONE 'Europe/Rome')::date+731,'09:00','11:00')$q$,'22023');
 SELECT pg_temp.team_reject($q$SELECT public.add_instructor_time_off_hours(gen_random_uuid(),'e8310000-0000-0000-0006-000000000020',(SELECT d FROM hour_dates),'09:00:30','11:00')$q$,'22023');
 SELECT pg_temp.team_reject($q$SELECT public.add_instructor_time_off_hours(gen_random_uuid(),'e8310000-0000-0000-0006-000000000020',(SELECT spring FROM hour_dates),'02:30','03:30')$q$,'PCX03');
 SELECT pg_temp.team_reject($q$SELECT public.add_instructor_time_off_hours(gen_random_uuid(),'e8310000-0000-0000-0006-000000000020',(SELECT autumn FROM hour_dates),'02:15','03:30')$q$,'PCX03');

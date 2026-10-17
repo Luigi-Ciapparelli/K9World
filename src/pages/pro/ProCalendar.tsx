@@ -1,3 +1,4 @@
+import {shiftsForDay,type InstructorShifts} from '../../lib/instructorShifts';
 import {absenceTimeLabel,type InstructorAbsence} from '../../lib/instructorTimeOff';
 import { BookingInstructor, InstructorLoadError } from '../../components/BookingInstructor';
 import { useBookingInstructors, type CentreTeam } from '../../lib/centreTeam';
@@ -46,6 +47,9 @@ function CalendarContent() {
   const [absences, setAbsences] = useState<InstructorAbsence[]>([]);
   const [absenceError, setAbsenceError] = useState(false);
   const [absenceLoading, setAbsenceLoading] = useState(false);
+  const [weekly,setWeekly]=useState<InstructorShifts|null>(null);
+  const [weeklyError,setWeeklyError]=useState(false);
+  const [weeklyLoading,setWeeklyLoading]=useState(false);
   const [showClosed, setShowClosed] = useState(false);
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
@@ -92,6 +96,16 @@ function CalendarContent() {
     })();
     return()=>{active=false;};
   },[instructor,from,to,reload,team?.enabled]);
+
+  useEffect(()=>{
+    let active=true;setWeekly(null);setWeeklyError(false);setWeeklyLoading(false);
+    if(!team?.enabled||['all','unassigned'].includes(instructor))return;
+    setWeeklyLoading(true);
+    void Promise.resolve(supabase.rpc('get_instructor_weekly_shifts',{p_instructor_id:instructor})).then(({data,error})=>{
+      if(!active)return;if(error||!data||!Array.isArray(data.slots)){setWeeklyError(true);return;}setWeekly(data as InstructorShifts);
+    }).catch(()=>{if(active)setWeeklyError(true);}).finally(()=>{if(active)setWeeklyLoading(false);});
+    return()=>{active=false;};
+  },[instructor,reload,team?.enabled]);
 
   useEffect(() => {
     mounted.current = true;
@@ -235,6 +249,8 @@ function CalendarContent() {
       </div>
       {team?.enabled && <p className="px-4 pb-3 text-xs text-stone-600">Il filtro istruttore riguarda le lezioni assegnate. Colori per servizio e indisponibilità dell’intero centro restano visibili.</p>}
       {team?.enabled && <p className="px-4 pb-3 text-sm"><button className="underline" onClick={()=>navigate('/pro/team')}>Gestisci indisponibilità degli istruttori</button></p>}
+      {weeklyLoading&&<p role="status" className="px-4 pb-3 text-sm">Caricamento turni…</p>}
+      {weeklyError&&<p role="alert" className="px-4 pb-3 text-sm">Turni non caricati: non considerare libere le fasce senza lezioni. <button className="underline" onClick={refresh}>Riprova turni</button></p>}
       {absenceLoading && <p role="status" className="px-4 pb-3 text-sm">Caricamento assenze dell’istruttore…</p>}
       {absenceError && <p role="alert" className="px-4 pb-3 text-sm">Assenze dell’istruttore non caricate: non considerare libere le fasce senza lezioni. <button className="underline" onClick={refresh}>Riprova</button></p>}
       {teamError && <p role="alert" className="px-4 pb-3 text-sm">Elenco istruttori non caricato: sono mostrati tutti gli impegni. <button className="underline" onClick={refresh}>Riprova</button></p>}
@@ -254,6 +270,7 @@ function CalendarContent() {
             className={`min-w-0 border-t border-r border-stone-200 p-1 text-left align-top sm:p-2 ${selectedDay ? 'bg-emerald-50 ring-2 ring-inset ring-emerald-800' : blocked ? 'bg-amber-50' : 'bg-white'} ${day.slice(0, 7) !== month ? 'text-stone-400' : 'text-stone-900'}`}>
             <div className="min-h-20 sm:min-h-28"><span className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold ${day === today ? 'bg-emerald-900 text-white' : ''}`}>{Number(day.slice(-2))}</span>
               {blocked && <span className="block truncate text-[10px] font-bold text-amber-900" title="Indisponibile">Indisponibile</span>}
+              {weekly?.enabled&&!shiftsForDay(weekly.slots,day).length&&<span className="block break-words rounded bg-stone-100 px-1 text-[10px] text-stone-700">Fuori turno</span>}
               {instructorAbsent && <span className="block break-words rounded bg-amber-100 px-1 text-[10px] text-amber-950">Istruttore assente</span>}
               {instructorPartial && <span className="block break-words rounded bg-amber-100 px-1 text-[10px] text-amber-950">Orari bloccati</span>}
               {events.slice(0, 3).map((booking) => <span key={booking.id} className="mt-1 block truncate border-l-4 pl-1 text-[10px] text-stone-800 sm:text-xs" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
@@ -267,6 +284,7 @@ function CalendarContent() {
     </section>
     {!loading && !loadError && instructorFilterReady && <section aria-label="Impegni del giorno" className="space-y-3">
       <h2 className="text-xl font-bold capitalize">{dayLabel(selected, true)}</h2>
+      {weekly&&<div className="rounded-xl bg-stone-50 p-3 text-sm"><p className="font-semibold">Turni dell’istruttore · ora italiana</p><p className="mt-1">{weekly.enabled?(shiftsForDay(weekly.slots,selected).map(s=>`${s.start}–${s.end}`).join(' · ')||'Fuori turno per questo giorno'):'Nessun limite settimanale attivo'}</p><p className="mt-2">Le assenze restano valide. Le lezioni già fissate sono conservate.</p></div>}
       {absences.filter(p=>p.start_date<=selected&&p.end_date>=selected).length>0&&<div className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950"><p className="font-semibold">Indisponibilità dell’istruttore selezionato</p><ul className="mt-2 space-y-1">{absences.filter(p=>p.start_date<=selected&&p.end_date>=selected).map((p,index)=><li key={index}>{absenceTimeLabel(p)}</li>)}</ul><p className="mt-2">Le lezioni già fissate restano confermate. Le schede segnalano quelle che si sovrappongono.</p></div>}
       {selectedPeriods.length > 0 && <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950">Giorno segnato come indisponibile. Gli impegni già accettati restano confermati.</p>}
       {!selectedBookings.length && <p className="rounded-xl border border-stone-200 bg-white p-5 text-sm text-stone-600">Nessun impegno per questo giorno e questi filtri.</p>}

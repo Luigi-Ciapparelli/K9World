@@ -73,18 +73,10 @@ richiede sul PC di Luigi **prima** di applicare la migration online.
 
 ## Rilascio
 
-Scaricare `aggiorna_note_istruttori.py` ed eseguirlo da WSL:
-
-```bash
-cd ~/K9World && python3 /mnt/c/Users/Lugi/Downloads/aggiorna_note_istruttori.py ~/K9World --publish
-```
-
-Controlla compatibilità con `9855c8f`, preserva file estranei, crea backup, esegue
-test nativo/TypeScript/build/SEO e dry-run limitato. Crea il commit prima del push
-SQL, quindi pubblica i file su main. Ammette soltanto la precedente migration
-messaggi e quella delle note; altre migration pendenti interrompono il rilascio.
-In caso di errore conserva file e commit; non esegue reset o rollback distruttivi.
+Il pacchetto del 17 ottobre `aggiorna_turni_istruttori.py` include anche queste
+note e sostituisce l’installer precedente. Procedura, compatibilità e limiti in
+[INSTRUCTOR_WEEKLY_SHIFTS_V1](INSTRUCTOR_WEEKLY_SHIFTS_V1.md).
 Dopo Ready, il centro abilita il permesso per la collaborazione desiderata.
 
-Restano separati: ruoli organizzativi più ampi, turni ricorrenti e media delle
-sessioni con quote/compressione. Nessuna email o campagna inviata.
+Restano separati i ruoli organizzativi più ampi e i media delle sessioni con
+quote/compressione. Nessuna email o campagna inviata.

@@ -3,9 +3,10 @@ import { useAuth } from './AuthContext';
 import { supabase } from './supabase';
 export type CentreInstructor = {id: string; display_name: string; active: boolean; version: string; assigned_bookings?: number};
 export type CentreTeam = {enabled: boolean; members: CentreInstructor[]};
-export type BookingInstructorRow = {booking_id: string; instructor_id: string | null; instructor_name: string | null; version: string | null; instructor_active: boolean | null; overlap_confirmed?: boolean; instructor_unavailable?: boolean; completed_by?: string | null; can_assign: boolean};
+export type BookingInstructorRow = {booking_id: string; instructor_id: string | null; instructor_name: string | null; version: string | null; instructor_active: boolean | null; overlap_confirmed?: boolean; instructor_unavailable?: boolean; outside_shift?: boolean; completed_by?: string | null; can_assign: boolean};
 export function teamError(error: unknown) {
  const code=(error as {code?: string})?.code;
+ if(code==='PCX04') return 'La lezione è fuori dai turni settimanali. Scegli un altro istruttore o controlla i turni nel centro; la conferma di gruppo non supera questo limite.';
  if(code==='PCX02') return 'Istruttore indisponibile in questo orario. Scegline un altro o controlla le date di assenza in Istruttori del centro.';
  if(code==='PCX01') return 'Questo istruttore ha già una lezione nello stesso orario. Scegline un altro oppure conferma che gli impegni possono essere svolti insieme.';
  if(code==='40001') return 'I dati sono cambiati in un’altra sessione. Aggiorna e controlla prima di salvare di nuovo.';
