@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 17 ottobre 2026, base `origin/main` osservata a `3b62ddd`.
+Aggiornamento del 17 ottobre 2026, base `origin/main` osservata a `216c760`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -69,8 +69,9 @@ sono su GitHub (`b4b8b6f`), insieme ai [messaggi delegati](docs/CENTRE_INSTRUCTO
 [turni settimanali](docs/INSTRUCTOR_WEEKLY_SHIFTS_V1.md) sono su GitHub (`10163b9`).
 Anche il [coordinamento agenda](docs/CENTRE_AGENDA_DELEGATION_V1.md) è su GitHub
 (`3b62ddd`), con permessi separati e autore reale.
-Incremento corrente: [statistiche professionali](docs/PROFESSIONAL_ANALYTICS_V1.md),
-aggregati privati per periodo, calcoli corretti e importi distinti dagli incassi.
+Le [statistiche professionali](docs/PROFESSIONAL_ANALYTICS_V1.md) sono su GitHub (`216c760`).
+Incremento corrente: [Clienti e cani](docs/PROFESSIONAL_CLIENTS_V2.md), salvataggi
+con conferma, ricerca e pagine, riepiloghi corretti e protezione dei cani trasferiti.
 
 ## Primo controllo, senza modificare nulla
 

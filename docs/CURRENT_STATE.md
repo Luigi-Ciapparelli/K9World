@@ -1,25 +1,32 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **17 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`3b62ddd` (coordinamento agenda incluso).
+`216c760` (statistiche professionali incluse).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Statistiche professionali — incremento locale corrente
+## Clienti e cani — incremento locale corrente
 
-[PROFESSIONAL_ANALYTICS_V1](PROFESSIONAL_ANALYTICS_V1.md): corretto il vecchio
-strumento analytics. Calcoli nel database, periodo in ora italiana, denominatore
-completo per i clienti tornati, importi in euro distinti dagli incassi. Risposta
-aggregata senza nomi/ID/note dei clienti; errori distinti da assenza di attività.
-70ª migration `20261017170000_professional_activity_statistics.sql`.
+[PROFESSIONAL_CLIENTS_V2](PROFESSIONAL_CLIENTS_V2.md): appunti e tag confermati dal
+server, retry con UUID stabile, schede e ricerca paginata, euro e ultimo/prossimo
+appuntamento distinti. Protezione dei cani passati a un altro proprietario anche
+nella API legacy. Nessuna estensione della condivisione delle note private.
+71ª migration `20261017220000_professional_client_workspace.sql`.
 
-Prove locali: storia SQL completa e casi mirati su PGlite (oltre 1.000 righe,
-isolamento, prezzi, servizi storici e giorni di 23/25 ore), contratti Node,
-browser 1440/390 con API simulate, TypeScript, lint mirato e build/SEO.
-Il runner PostgreSQL nativo è incluso come gate dell’installer, non eseguito qui.
-Auth/Storage simulati; SQL online, push remoto e Vercel non eseguiti in preparazione.
-Installer corrente: `aggiorna_statistiche_professionali.py`.
+Prove locali: 70 migration precedenti più nuova su PGlite, fixture di permessi,
+ricerca, retry, revoca e cani trasferiti; browser 1440/390 con API simulate;
+contratti Node, TypeScript, lint mirato e build/SEO. Runner PostgreSQL nativo
+incluso come gate dell'installer, non eseguito qui. Nessuna prova online dichiarata.
+Installer corrente: `aggiorna_clienti_professionali.py`.
+
+## Statistiche professionali — presenti su GitHub
+
+Il fetch del 17 ottobre osserva `216c760`. [PROFESSIONAL_ANALYTICS_V1](PROFESSIONAL_ANALYTICS_V1.md):
+aggregati privati per periodo italiano, clienti tornati calcolati sul totale,
+valore dei servizi distinto dagli incassi; 70ª migration.
+Non ripetere l'installer precedente. Il push non certifica applicazione SQL
+online, test nativo sul PC di Luigi o Vercel Ready.
 
 ## Coordinamento agenda — presente su GitHub
 

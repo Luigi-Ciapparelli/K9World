@@ -1,220 +1,75 @@
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { ArrowRight, Search, Users } from 'lucide-react';
 import { ClientPortrait, useClientPortraits } from '../../components/ClientPortrait';
-import { useEffect, useState } from 'react';
-import { Search as SearchIcon, Tag, StickyNote, X, Users } from 'lucide-react';
+import { ProfessionalClientDialog } from '../../components/ProfessionalClientDialog';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
+import { ClientPage, ProfessionalClient, clientDate, clientFailure, parseClientPage } from '../../lib/professionalClients';
 import { ProLayout } from './ProLayout';
-import { DogPhoto } from '../../components/DogPhoto';
-
-interface ClienteRow {
-  id: string;
-  full_name: string;
-  email: string;
-  phone: string;
-  avatar_url: string;
-  bookingCount: number;
-  totalSpend: number;
-  lastVisit: string | null;
-  dogs: any[];
-  tags: string[];
-}
 
 export function ProCRM() {
-  const { user } = useAuth();
-  const [clients, setClientes] = useState<ClienteRow[]>([]);
-  const [q, setQ] = useState('');
-  const [selected, setSelected] = useState<ClienteRow | null>(null);
-
-  const load = async () => {
-    if (!user) return;
-
-    const { data, error } = await supabase.rpc('get_professional_clients');
-
-    if (error) {
-      console.warn('Professional CRM unavailable:', error);
-      setClientes([]);
-      return;
-    }
-
-    const rows: ClienteRow[] = (data || []).map((client: any) => ({
-      id: client.id,
-      full_name: client.full_name || 'Cliente',
-      email: client.email || '',
-      phone: client.phone || '',
-      avatar_url: client.avatar_url || '',
-      bookingCount: Number(client.booking_count || 0),
-      totalSpend: Number(client.total_spend || 0),
-      lastVisit: client.last_visit || null,
-      dogs: Array.isArray(client.dogs) ? client.dogs : [],
-      tags: Array.isArray(client.tags) ? client.tags : [],
-    }));
-
-    setClientes(rows);
-  };
-
-  useEffect(() => { load(); }, [user]);
-
-  const portraits = useClientPortraits(clients.map(client => client.id));
-  const filtered = clients.filter((c) => !q || c.full_name.toLowerCase().includes(q.toLowerCase()));
-
-  return (
-    <ProLayout active="crm">
-      <div className="p-8 max-w-7xl">
-        <h1 className="text-3xl font-bold text-stone-900 mb-1">Cliente Management</h1>
-        <p className="text-stone-600 mb-6">Your real-time client database. Consolidated, searchable, always current.</p>
-
-        <div className="relative mb-5 max-w-md">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search clients..." className="w-full pl-10 pr-3 py-2 border border-stone-300 rounded-lg text-sm" />
-        </div>
-
-        {filtered.length === 0 ? (
-          <div className="bg-white border border-stone-200 rounded-2xl p-10 text-center">
-            <Users className="w-10 h-10 mx-auto text-stone-400 mb-3" />
-            <p className="text-stone-600">No clients yet. They will appear here after their first booking.</p>
-          </div>
-        ) : (
-          <div className="bg-white border border-stone-200 rounded-2xl overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-stone-50 text-xs uppercase text-stone-500">
-                <tr>
-                  <th className="text-left p-4">Cliente</th>
-                  <th className="text-left p-4">Dogs</th>
-                  <th className="text-right p-4">Bookings</th>
-                  <th className="text-right p-4">Total spend</th>
-                  <th className="text-left p-4">Tags</th>
-                  <th className="text-left p-4">Last visit</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((c) => (
-                  <tr key={c.id} onClick={() => setSelected(c)} className="border-t border-stone-100 hover:bg-stone-50 cursor-pointer">
-                    <td className="p-4">
-                      <div className="font-semibold flex items-center gap-3"><ClientPortrait src={portraits[c.id]} name={c.full_name} />{c.full_name}</div>
-                      <div className="text-xs text-stone-500">{c.email}</div>
-                    </td>
-                    <td className="p-4 text-stone-600">{c.dogs.map((d) => d.name).join(', ')}</td>
-                    <td className="p-4 text-right">{c.bookingCount}</td>
-                    <td className="p-4 text-right font-bold">${c.totalSpend.toFixed(0)}</td>
-                    <td className="p-4">
-                      <div className="flex gap-1 flex-wrap">
-                        {c.tags.slice(0, 3).map((t) => <span key={t} className="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full">{t}</span>)}
-                      </div>
-                    </td>
-                    <td className="p-4 text-stone-500">{c.lastVisit ? new Date(c.lastVisit).toLocaleDateString() : '-'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-      {selected && <ClienteDrawer portrait={portraits[selected.id]} client={selected} onClose={() => { setSelected(null); load(); }} />}
-    </ProLayout>
-  );
+  const { user, profile } = useAuth();
+  return <ProLayout active="crm">{user && profile?.role === 'professional' && <ClientWorkspace key={user.id} userId={user.id} />}</ProLayout>;
 }
-
-function ClienteDrawer({ client, onClose, portrait }: { client: ClienteRow; onClose: () => void; portrait?: string }) {
-  const { user } = useAuth();
-  const [notes, setNotes] = useState<any[]>([]);
-  const [newNote, setNewNote] = useState('');
-  const [newTag, setNewTag] = useState('');
-  const [tags, setTags] = useState<string[]>(client.tags);
-
+function ClientWorkspace({ userId }: { userId: string }) {
+  const [input, setInput] = useState('');
+  const [search, setSearch] = useState({ query: '', page: 0, revision: 0 });
+  const [result, setResult] = useState<{ key: string; data?: ClientPage; error?: string }>({ key: '' });
+  const [selected, setSelected] = useState<ProfessionalClient | null>(null);
+  const opener = useRef<HTMLButtonElement | null>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const key = JSON.stringify([userId, search]);
   useEffect(() => {
-    (async () => {
-      const { data } = await supabase.from('client_notes').select('*').eq('professional_id', user!.id).eq('client_id', client.id).order('created_at', { ascending: false });
-      setNotes(data || []);
+    let current = true;
+    const controller = new AbortController();
+    void (async () => {
+      try {
+        const response = await supabase.rpc('get_professional_client_page', { p_query: search.query, p_page: search.page }).abortSignal(controller.signal);
+        if (response.error) throw response.error;
+        const data = parseClientPage(response.data, search.page);
+        if (current) setResult({ key, data });
+      } catch (error) {
+        if (current) setResult({ key, error: clientFailure(error, 'Non è stato possibile caricare i clienti. Riprova.') });
+      }
     })();
-  }, [client.id]);
-
-  const addNote = async () => {
-    if (!newNote.trim()) return;
-    await supabase.from('client_notes').insert({ professional_id: user!.id, client_id: client.id, content: newNote });
-    setNewNote('');
-    const { data } = await supabase.from('client_notes').select('*').eq('professional_id', user!.id).eq('client_id', client.id).order('created_at', { ascending: false });
-    setNotes(data || []);
-  };
-
-  const addTag = async () => {
-    if (!newTag.trim()) return;
-    await supabase.from('client_tags').insert({ professional_id: user!.id, client_id: client.id, tag: newTag });
-    setTags([...tags, newTag]);
-    setNewTag('');
-  };
-
-  return (
-    <div className="fixed inset-0 bg-stone-900/50 z-50 flex justify-end">
-      <div className="bg-white w-full max-w-lg h-full overflow-y-auto">
-        <div className="p-6 border-b border-stone-200 flex justify-between items-center">
-          <h2 className="text-xl font-bold flex items-center gap-3"><ClientPortrait src={portrait} name={client.full_name} />{client.full_name}</h2>
-          <button onClick={onClose}><X className="w-5 h-5" /></button>
-        </div>
-        <div className="p-6 space-y-6">
-          <div>
-            <div className="text-xs font-semibold text-stone-500 uppercase mb-1">Contact</div>
-            <div className="text-sm text-stone-800">{client.email}</div>
-            <div className="text-sm text-stone-800">{client.phone}</div>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            <Mini label="Bookings" value={client.bookingCount} />
-            <Mini label="Total spend" value={`$${client.totalSpend.toFixed(0)}`} />
-            <Mini label="Dogs" value={client.dogs.length} />
-          </div>
-          <div>
-            <div className="text-xs font-semibold text-stone-500 uppercase mb-2">Dogs</div>
-            <div className="space-y-2">
-              {client.dogs.map((d: any) => (
-                <div key={d.id} className="flex items-center gap-3 p-3 rounded-lg border border-stone-100">
-                  <DogPhoto
-                    photoPath={d.photo_url}
-                    fallbackUrl="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=200"
-                    className="w-10 h-10 rounded-full object-cover"
-                    alt={d.name || ''}
-                  />
-                  <div className="flex-1 text-sm">
-                    <div className="font-semibold">{d.name}</div>
-                    <div className="text-stone-500 text-xs">{d.breed} • {d.age}y • {d.weight}kg</div>
-                  </div>
-                  {d.aggressive && <span className="text-xs bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full">Reactive</span>}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div>
-            <div className="text-xs font-semibold text-stone-500 uppercase mb-2 flex items-center gap-1"><Tag className="w-3 h-3" /> Tags</div>
-            <div className="flex gap-1 flex-wrap mb-2">
-              {tags.map((t) => <span key={t} className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full">{t}</span>)}
-            </div>
-            <div className="flex gap-2">
-              <input value={newTag} onChange={(e) => setNewTag(e.target.value)} placeholder="Add tag..." className="flex-1 px-3 py-2 border border-stone-300 rounded-lg text-sm" />
-              <button onClick={addTag} className="px-3 py-2 bg-stone-900 text-white rounded-lg text-sm font-semibold">Add</button>
-            </div>
-          </div>
-          <div>
-            <div className="text-xs font-semibold text-stone-500 uppercase mb-2 flex items-center gap-1"><StickyNote className="w-3 h-3" /> Notes</div>
-            <textarea value={newNote} onChange={(e) => setNewNote(e.target.value)} rows={3} className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm mb-2" placeholder="Write a note..." />
-            <button onClick={addNote} className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold">Save note</button>
-            <div className="mt-4 space-y-2">
-              {notes.map((n) => (
-                <div key={n.id} className="p-3 rounded-lg bg-stone-50 text-sm">
-                  <div className="text-xs text-stone-500 mb-1">{new Date(n.created_at).toLocaleString()}</div>
-                  {n.content}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+    return () => { current = false; controller.abort(); };
+  }, [key, search.query, search.page]);
+  const ready = result.key === key;
+  const data = ready ? result.data : undefined;
+  const error = ready ? result.error : undefined;
+  const portraits = useClientPortraits(data?.rows.map(row => row.id) || []);
+  function submit(event: FormEvent) { event.preventDefault(); setSearch({ query: input.trim(), page: 0, revision: search.revision + 1 }); }
+  function refresh() { setSearch(old => ({ ...old, revision: old.revision + 1 })); }
+  return <div className="mx-auto max-w-6xl p-4 sm:p-8">
+    <div className="mb-7 flex flex-wrap items-start justify-between gap-4">
+      <div><p className="mb-2 text-xs font-bold uppercase tracking-widest text-emerald-700">La tua attività</p>
+        <h1 ref={heading} tabIndex={-1} className="text-3xl font-bold text-stone-900">Clienti e cani</h1>
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-stone-600">Ritrova i tuoi clienti, i cani seguiti e i tuoi appunti privati. Compaiono qui dopo una prenotazione accettata.</p></div>
+      <button type="button" onClick={refresh} className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm font-semibold">Aggiorna clienti</button>
     </div>
-  );
-}
-
-function Mini({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="bg-stone-50 rounded-lg p-3 text-center">
-      <div className="text-xs text-stone-500">{label}</div>
-      <div className="text-lg font-bold text-stone-900">{value}</div>
-    </div>
-  );
+    <form onSubmit={submit} className="mb-6 flex max-w-2xl flex-wrap items-end gap-2">
+      <div className="min-w-0 flex-1 basis-48"><label htmlFor="client-search" className="mb-2 block text-sm font-semibold text-stone-700">Cerca per cliente, cane o etichetta</label>
+        <div className="relative"><Search aria-hidden="true" className="absolute left-3 top-3.5 h-4 w-4 text-stone-400" />
+          <input id="client-search" maxLength={100} value={input} onChange={event => setInput(event.target.value)} placeholder="Ad esempio: Kyros" className="w-full rounded-xl border border-stone-300 bg-white py-3 pl-9 pr-3 text-sm" /></div></div>
+      <button className="rounded-xl bg-emerald-900 px-5 py-3 text-sm font-semibold text-white">Cerca</button>
+    </form>
+    {!ready && <p role="status" className="rounded-2xl border border-stone-200 bg-white p-8">Caricamento dei clienti…</p>}
+    {error && <div role="alert" className="rounded-2xl border border-amber-200 bg-amber-50 p-6"><p>{error}</p><button type="button" onClick={refresh} className="mt-3 font-semibold underline">Riprova</button></div>}
+    {data && <>
+      <p role="status" className="mb-4 text-sm text-stone-500">{data.total} {data.total === 1 ? 'cliente' : 'clienti'}{search.query && ` · Ricerca: ${search.query}`}</p>
+      {data.rows.length === 0 ? <div className="rounded-2xl border border-stone-200 bg-white p-8 text-center"><Users aria-hidden="true" className="mx-auto mb-3 h-8 w-8 text-emerald-700" />
+        <h2 className="text-lg font-semibold">{search.page > 0 ? 'Questa pagina non contiene più clienti' : search.query ? 'Nessun risultato per questa ricerca' : 'I tuoi clienti compariranno qui'}</h2>
+        <p className="mt-2 text-sm text-stone-600">{search.query ? 'Prova un altro nome oppure elimina la ricerca.' : 'Le richieste ancora in attesa non aggiungono un cliente alla rubrica.'}</p>
+        {(search.query || search.page > 0) && <button type="button" onClick={() => { setInput(''); setSearch({ query: '', page: 0, revision: search.revision + 1 }); }} className="mt-4 font-semibold text-emerald-800 underline">Mostra tutti i clienti</button>}
+      </div> : <div className="grid gap-4 md:grid-cols-2">
+        {data.rows.map(client => <button key={client.id} type="button" aria-label={`Apri scheda di ${client.full_name}`} onClick={event => { opener.current = event.currentTarget; setSelected(client); }} className="group min-w-0 rounded-2xl border border-stone-200 bg-white p-5 text-left transition hover:border-emerald-600 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-700">
+          <span className="flex items-center gap-3"><ClientPortrait src={portraits[client.id]} name={client.full_name} /><span className="min-w-0 flex-1"><span className="block break-words text-lg font-bold text-stone-900">{client.full_name}</span><span className="block break-words text-sm text-stone-600">{client.dogs.map(dog => dog.name).join(', ') || 'Nessun cane attualmente collegato'}</span></span><ArrowRight aria-hidden="true" className="h-5 w-5 shrink-0 text-emerald-700" /></span>
+          <span className="mt-4 grid gap-2 border-t border-stone-100 pt-4 text-xs leading-relaxed text-stone-500"><span>Ultimo servizio svolto <strong className="block text-sm font-medium text-stone-800">{client.last_visit ? clientDate(client.last_visit) : 'Nessun servizio segnato come svolto'}</strong></span>{client.next_booking && <span>Prossimo appuntamento <strong className="block text-sm font-medium text-emerald-800">{clientDate(client.next_booking)}</strong></span>}</span>
+          {!!client.tags.length && <span className="mt-4 flex flex-wrap gap-1.5">{client.tags.slice(0, 3).map(tag => <span key={tag} className="max-w-full break-words rounded-lg bg-emerald-50 px-2 py-1 text-xs text-emerald-900">{tag}</span>)}{client.tags.length > 3 && <span className="p-1 text-xs text-stone-500">+{client.tags.length - 3}</span>}</span>}
+        </button>)}
+      </div>}
+      {(data.total > 20 || search.page > 0) && <nav aria-label="Pagine clienti" className="mt-6 flex items-center justify-between gap-2 text-sm"><button type="button" disabled={search.page === 0} onClick={() => setSearch(old => ({ ...old, page: old.page - 1 }))} className="rounded-xl border px-4 py-3 disabled:opacity-40">Precedente</button><span>Pagina {search.page + 1}</span><button type="button" disabled={(search.page + 1) * 20 >= data.total} onClick={() => setSearch(old => ({ ...old, page: old.page + 1 }))} className="rounded-xl border px-4 py-3 disabled:opacity-40">Successiva</button></nav>}
+    </>}
+    {selected && <ProfessionalClientDialog key={selected.id} client={selected} userId={userId} portrait={portraits[selected.id]} onClose={changed => { setSelected(null); if (changed) refresh(); window.requestAnimationFrame(() => { const target = opener.current; if (target?.isConnected) target.focus(); else heading.current?.focus(); }); }} />}
+  </div>;
 }
