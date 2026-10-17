@@ -1,6 +1,6 @@
 # Strumenti professionali — mappa e lavoro residuo
 
-Consolidato il 16 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
+Consolidato il 17 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
 [CURRENT_STATE](CURRENT_STATE.md); l'ordine è in
 [EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md).
 
@@ -20,7 +20,7 @@ Consolidato il 16 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
 | Valutazioni | Singola prestazione prenotata; [specifica](SERVICE_REVIEWS_V2.md) |
 | Istruttori del centro | `/pro/team`; elenco e assegnazioni, [specifica](CENTRE_INSTRUCTORS_V1.md); [calendario per istruttore](CENTRE_CALENDAR_V1.md), rilascio nel registro corrente |
 | Account istruttori | `/account/centres`; [consenso/agenda](CENTRE_MEMBERSHIPS_V1.md), [assenze](INSTRUCTOR_TIME_OFF_V1.md), [fasce orarie](INSTRUCTOR_HOURLY_TIME_OFF_V1.md), [permesso di completamento](CENTRE_LESSON_PERMISSIONS_V1.md), [messaggi delegati](CENTRE_INSTRUCTOR_MESSAGES_V1.md), [note attribuite](CENTRE_LESSON_NOTES_V1.md), [turni](INSTRUCTOR_WEEKLY_SHIFTS_V1.md), [coordinamento agenda](CENTRE_AGENDA_DELEGATION_V1.md); rilascio nel registro corrente |
-| Statistiche | `/pro/analytics`; leggere il codice prima di promettere metriche ulteriori |
+| Statistiche | `/pro/analytics`; [aggregati per periodo](PROFESSIONAL_ANALYTICS_V1.md), valori delle prenotazioni e non incassi; rilascio nel registro corrente |
 
 ## Chiarimenti che evitano diagnosi errate
 
@@ -47,7 +47,7 @@ una lista di settembre usava quell'espressione.
   [Messaggi delegati](CENTRE_INSTRUCTOR_MESSAGES_V1.md) su GitHub (`9855c8f`).
   [Note con autore personale](CENTRE_LESSON_NOTES_V1.md) e
   [turni settimanali](INSTRUCTOR_WEEKLY_SHIFTS_V1.md) su GitHub (`10163b9`).
-  Incremento corrente: [coordinamento agenda](CENTRE_AGENDA_DELEGATION_V1.md).
+  Anche il [coordinamento agenda](CENTRE_AGENDA_DELEGATION_V1.md) è su GitHub (`3b62ddd`).
   Eventuali ruoli più ampi restano distinti dal permesso sulle assegnazioni.
   Il permesso per una lezione non apre gli altri archivi; un’appartenenza non certifica qualifiche.
 - **SPORT-02:** identità/fonte reale e merito per disciplina, senza auto-verifiche.

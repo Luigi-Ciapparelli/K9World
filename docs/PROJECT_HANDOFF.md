@@ -7,8 +7,10 @@ lo stato e l'ordine delle priorità non sono duplicati qui.
 Email sospese su richiesta esplicita. Elenco, agenda, account, assenze anche orarie,
 completamento, messaggi, [note attribuite](CENTRE_LESSON_NOTES_V1.md) e
 [turni settimanali](INSTRUCTOR_WEEKLY_SHIFTS_V1.md) sono su GitHub (`10163b9`).
-Incremento corrente: [CENTRE_AGENDA_DELEGATION_V1](CENTRE_AGENDA_DELEGATION_V1.md),
-coordinamento revocabile delle assegnazioni, con minimo accesso e autore reale.
+Anche [CENTRE_AGENDA_DELEGATION_V1](CENTRE_AGENDA_DELEGATION_V1.md) è su GitHub
+(`3b62ddd`): coordinamento revocabile con minimo accesso e autore reale.
+Incremento corrente: [PROFESSIONAL_ANALYTICS_V1](PROFESSIONAL_ANALYTICS_V1.md),
+statistiche private corrette; valore delle prenotazioni distinto dagli incassi.
 La persona deve già essere collegata al centro; non si condividono credenziali.
 Segreteria generale e altre azioni amministrative non sono incluse.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);
@@ -95,6 +97,7 @@ per rifare una verifica email. Usare i documenti recapiti per il flusso effettiv
 | Sport / Working-Dog | [SPORT_SEARCH_AND_WORKING_DOG_V1](SPORT_SEARCH_AND_WORKING_DOG_V1.md), [SPORT_MERIT_AND_VERIFICATION_V2](SPORT_MERIT_AND_VERIFICATION_V2.md) |
 | Accesso e recapiti | [ACCOUNT_CONTACTS_V1](ACCOUNT_CONTACTS_V1.md), [PASSWORD_RECOVERY_V1](PASSWORD_RECOVERY_V1.md), [BOOKING_ENTRY_V1](BOOKING_ENTRY_V1.md) |
 | Foglio inviti e privacy | [PROFESSIONAL_CONTACT_INVITATIONS_V1](PROFESSIONAL_CONTACT_INVITATIONS_V1.md): mittente e risposte già provati; registro privato, autorizzazioni e collegamento dell'informativa |
+| Statistiche professionali | [PROFESSIONAL_ANALYTICS_V1](PROFESSIONAL_ANALYTICS_V1.md): aggregati privati, periodo italiano, clienti tornati e valore dei servizi |
 | API e sicurezza | [SUPABASE_PRIVATE_API_V2](SUPABASE_PRIVATE_API_V2.md), [SUPABASE_AUDIT_FIXES_V1](SUPABASE_AUDIT_FIXES_V1.md) |
 | Recupero errori frontend | [PAGE_RECOVERY_V1](PAGE_RECOVERY_V1.md): pagine mancanti/in errore, offline, bozze, prove e limiti |
 | SEO / disponibilità / mercati | [SEO_INDEXATION_2026_10_09](SEO_INDEXATION_2026_10_09.md), [BREED_GUIDES_V1](BREED_GUIDES_V1.md), [SEO_VISIBILITY_V1](SEO_VISIBILITY_V1.md), [INTERNATIONAL_SEO_AND_HOSTING_V1](INTERNATIONAL_SEO_AND_HOSTING_V1.md) |

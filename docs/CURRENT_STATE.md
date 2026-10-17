@@ -1,26 +1,33 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **17 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`10163b9` (note attribuite e turni settimanali degli istruttori inclusi).
+`3b62ddd` (coordinamento agenda incluso).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Coordinamento agenda — incremento locale corrente
+## Statistiche professionali — incremento locale corrente
 
-[CENTRE_AGENDA_DELEGATION_V1](CENTRE_AGENDA_DELEGATION_V1.md): il centro può concedere
-un permesso revocabile a un collega già collegato. Agenda giornaliera e assegnazioni
-future agli altri istruttori, autore reale e versioni. Nessun accesso aggiuntivo a
-note, messaggi, recapiti, prezzi o archivi. Le proprie lezioni restano al centro.
-Turni, assenze e conferma di gruppo hanno gli stessi controlli del titolare.
-Migration 69ª `20261017093000_centre_agenda_delegation.sql`.
+[PROFESSIONAL_ANALYTICS_V1](PROFESSIONAL_ANALYTICS_V1.md): corretto il vecchio
+strumento analytics. Calcoli nel database, periodo in ora italiana, denominatore
+completo per i clienti tornati, importi in euro distinti dagli incassi. Risposta
+aggregata senza nomi/ID/note dei clienti; errori distinti da assenza di attività.
+70ª migration `20261017170000_professional_activity_statistics.sql`.
 
-Prove: storia SQL completa/regressioni su PGlite; browser 1440/390 con API simulate;
-TypeScript, lint mirato, build e SEO. Il runner PostgreSQL nativo incluso aggiunge
-sei casi concorrenti e costituisce il gate dell’installer sul PC di Luigi: qui
-non disponibile, quindi non dichiarato superato. Auth/Storage sono simulati.
-SQL online, commit remoto e Vercel di questo incremento non eseguiti in preparazione.
-Installer: `aggiorna_coordinamento_agenda.py`; non ripetere quello dei turni.
+Prove locali: storia SQL completa e casi mirati su PGlite (oltre 1.000 righe,
+isolamento, prezzi, servizi storici e giorni di 23/25 ore), contratti Node,
+browser 1440/390 con API simulate, TypeScript, lint mirato e build/SEO.
+Il runner PostgreSQL nativo è incluso come gate dell’installer, non eseguito qui.
+Auth/Storage simulati; SQL online, push remoto e Vercel non eseguiti in preparazione.
+Installer corrente: `aggiorna_statistiche_professionali.py`.
+
+## Coordinamento agenda — presente su GitHub
+
+Il fetch del 17 ottobre osserva `3b62ddd`. [CENTRE_AGENDA_DELEGATION_V1](CENTRE_AGENDA_DELEGATION_V1.md):
+permesso revocabile per agenda e assegnazioni future agli altri istruttori,
+autore reale, turni/assenze e versioni. Migration 69ª.
+Non ripetere l’installer precedente. Il push non certifica da solo applicazione
+SQL online, test nativi eseguiti sul PC di Luigi o deployment Ready.
 
 ## Note e turni degli istruttori — presenti su GitHub
 
