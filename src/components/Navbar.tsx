@@ -10,6 +10,8 @@ export function Navbar() {
   const { user, profile, signOut } = useAuth();
   const { path, navigate } = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [logoutError, setLogoutError] = useState('');
+  const [leaving, setLeaving] = useState(false);
   const header = useRef<HTMLElement>(null);
   const mobileButton = useRef<HTMLButtonElement>(null);
   const basePath = path.split('?')[0];
@@ -36,7 +38,13 @@ export function Navbar() {
     };
   }, [mobileOpen]);
 
-  const leave = async () => { await signOut(); close(); navigate('/'); };
+  const leave = async () => {
+    if (leaving) return;
+    setLeaving(true); setLogoutError('');
+    try { await signOut(); close(); navigate('/'); }
+    catch { setLogoutError('Uscita non riuscita. Controlla la connessione e riprova.'); }
+    finally { setLeaving(false); }
+  };
   const links = [
     { to: '/search?type=trainer', label: 'Trova aiuto per il cane', icon: Search, active: basePath === '/search', kind: 'help' },
     { to: '/impara', label: 'Impara', icon: BookOpen, active: basePath.startsWith('/impara') || basePath === '/prima-del-cane', kind: 'learn' },
@@ -59,7 +67,7 @@ export function Navbar() {
           {user ? <>
             <RouteLink to={dashboard} className="pc-account-link"><User size={17} aria-hidden="true" /><span>{profile?.full_name || 'La tua area'}</span></RouteLink>
             <RouteLink to="/account/contacts" className="pc-login-link">Profilo e recapiti</RouteLink>
-            <button type="button" onClick={leave} className="pc-icon-button" aria-label="Esci dall’account"><LogOut size={19} /></button>
+            <button type="button" disabled={leaving} onClick={leave} className="pc-icon-button" aria-label="Esci dall’account"><LogOut size={19} /></button>
           </> : <>
             <RouteLink to="/signin" className="pc-login-link">Accedi</RouteLink>
             <RouteLink to="/signup" className="pc-register-link">Registrati</RouteLink>
@@ -74,6 +82,7 @@ export function Navbar() {
           </button>
         </div>
       </div>
+      {logoutError && <p role="alert" className="pc-entry-container py-3 text-sm text-rose-700">{logoutError}</p>}
       <nav id="pc-primary-navigation" aria-label="Navigazione principale" className="pc-primary-nav pc-entry-container">
         {links.map(({ to, label, icon: Icon, active, kind }) => (
           <RouteLink key={to} to={to} onClick={close} className={`pc-nav-tile pc-nav-${kind}${active ? ' is-current' : ''}`} aria-current={active ? 'page' : undefined}>
@@ -85,7 +94,7 @@ export function Navbar() {
           {user ? <>
             <RouteLink to={dashboard} onClick={close} className="pc-account-link"><User size={18} aria-hidden="true" /> {profile?.full_name || 'La tua area'}</RouteLink>
             <RouteLink to="/account/contacts" onClick={close} className="pc-pro-link">Profilo e recapiti</RouteLink>
-            <button type="button" onClick={leave} className="pc-pro-link"><LogOut size={18} aria-hidden="true" /> Esci</button>
+            <button type="button" disabled={leaving} onClick={leave} className="pc-pro-link"><LogOut size={18} aria-hidden="true" /> Esci</button>
           </> : <RouteLink to="/signup" onClick={close} className="pc-register-link">Crea il tuo account</RouteLink>}
           <div className="pc-mobile-theme"><span>Aspetto</span><ThemeToggle /></div>
         </div>

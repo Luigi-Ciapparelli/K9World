@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, type ReactNode } from 'react';
 import { AuthProvider, useAuth } from './lib/AuthContext';
 import { RouterProvider, useRouter } from './lib/RouterContext';
 import { Navbar } from './components/Navbar';
+import { AccountProfileRecovery } from './components/AccountProfileRecovery';
 import { Chatbot } from './components/Chatbot';
 import { Footer } from './components/Footer';
 import { continuityEnabled } from './lib/continuity';
@@ -182,13 +183,7 @@ function AppShell() {
       return null;
     }
 
-    if (!profile) {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-stone-50">
-          <div className="text-stone-600">Profilo account non disponibile.</div>
-        </div>
-      );
-    }
+    if (!profile) return <AccountProfileRecovery key={user.id} />;
 
     const canAccessAdmin = isAdminRoute && profile.role === 'admin';
     const canAccessPro =
@@ -273,7 +268,7 @@ function AppShell() {
     <>
       <Navbar />
       <ConnectionNotice />
-      <PageErrorBoundary key={basePath}>
+      <PageErrorBoundary key={`${user?.id || 'visitor'}:${basePath}`}>
       <Suspense fallback={<PageLoading />}>
         {content}
       </Suspense>

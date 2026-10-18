@@ -1,11 +1,13 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, ReactNode } from 'react';
 import { supabase } from './supabase';
 import type { Profile, Role, ProfessionalType } from './types';
+import { createAccountProfileState, emptyAccount } from './accountProfileState';
 
 interface AuthContextType {
   user: { id: string; email: string } | null;
   profile: Profile | null;
   loading: boolean;
+  profileError: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null; role: Role | null }>;
   signUp: (args: SignUpArgs) => Promise<{ error: string | null; needsEmailConfirmation?: boolean }>;
   signOut: () => Promise<void>;
@@ -33,51 +35,22 @@ interface SignUpArgs {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<{ id: string; email: string } | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(typeof window !== 'undefined');
-
-  const loadProfile = async (userId: string): Promise<Profile | null> => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle();
-
-    if (error) {
-      console.error('Profile load error:', error);
-      setProfile(null);
-      return null;
-    }
-
-    const nextProfile = data ? (data as Profile) : null;
-    setProfile(nextProfile);
-    return nextProfile;
-  };
+  const [account, setAccount] = useState({ ...emptyAccount, loading: typeof window !== 'undefined' });
+  const state = useRef<ReturnType<typeof createAccountProfileState> | null>(null);
+  const { user, profile, loading, profileError } = account;
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setUser({ id: session.user.id, email: session.user.email || '' });
-        loadProfile(session.user.id).finally(() => setLoading(false));
-      } else {
-        setLoading(false);
-      }
+    const current = createAccountProfileState(async (userId, signal) => {
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).abortSignal(signal).maybeSingle();
+      if (error) throw error;
+      return data;
+    }, setAccount);
+    state.current = current;
+    // INITIAL_SESSION handles the initial state; a second getSession can race it.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      current.acceptUser(session?.user ? { id: session.user.id, email: session.user.email || '' } : null, event === 'USER_UPDATED');
     });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      (async () => {
-        if (session?.user) {
-          setUser({ id: session.user.id, email: session.user.email || '' });
-          await loadProfile(session.user.id);
-        } else {
-          setUser(null);
-          setProfile(null);
-        }
-      })();
-    });
-
-    return () => subscription.unsubscribe();
+    return () => { subscription.unsubscribe(); current.dispose(); if (state.current === current) state.current = null; };
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -94,25 +67,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: 'Impossibile completare l’accesso', role: null };
     }
 
-    setUser({
-      id: data.user.id,
-      email: data.user.email || '',
-    });
-
-    const nextProfile = await loadProfile(data.user.id);
-
-    if (!nextProfile) {
-      await supabase.auth.signOut();
-      return {
-        error: 'Profilo account non trovato. Contatta l’assistenza.',
-        role: null,
-      };
+    const current = state.current;
+    if (!current || current.getSnapshot().user?.id !== data.user.id) {
+      return { error: 'La sessione è cambiata. Riprova ad accedere.', role: null };
     }
-
-    return {
-      error: null,
-      role: nextProfile.role,
-    };
+    const nextProfile = await current.refresh();
+    if (current.getSnapshot().user?.id !== data.user.id) {
+      return { error: 'La sessione è cambiata. Riprova ad accedere.', role: null };
+    }
+    // Authentication succeeded even if a temporary profile read failed.
+    // The protected area offers retry; do not sign out a valid session.
+    return { error: null, role: nextProfile?.role || null };
   };
 
   const signUp = async ({
@@ -168,20 +133,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: null, needsEmailConfirmation: true };
     }
 
-    await loadProfile(data.user.id);
+    if (state.current?.getSnapshot().user?.id === data.user.id) await state.current.refresh();
     return { error: null, needsEmailConfirmation: false };
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error && state.current?.getSnapshot().user) throw new Error('Uscita non riuscita. Controlla la connessione e riprova.');
   };
 
   const refreshProfile = async () => {
-    if (user) await loadProfile(user.id);
+    await state.current?.refresh();
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signIn, signUp, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{ user, profile, loading, profileError, signIn, signUp, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

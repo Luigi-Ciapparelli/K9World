@@ -11,8 +11,9 @@ Anche [CENTRE_AGENDA_DELEGATION_V1](CENTRE_AGENDA_DELEGATION_V1.md) è su GitHub
 (`3b62ddd`): coordinamento revocabile con minimo accesso e autore reale.
 Anche [PROFESSIONAL_ANALYTICS_V1](PROFESSIONAL_ANALYTICS_V1.md) è su GitHub (`216c760`).
 Anche [PROFESSIONAL_CLIENTS_V2](PROFESSIONAL_CLIENTS_V2.md) è su GitHub (`f79320f`).
-Incremento corrente: [SITE_HELP_V1](SITE_HELP_V1.md), guida italiana per ruolo
-al posto delle promesse inesatte del vecchio assistente. Solo frontend.
+Anche [SITE_HELP_V1](SITE_HELP_V1.md) è su GitHub (`eb21b04`).
+Incremento corrente: [ACCOUNT_STATE_RECOVERY_V1](ACCOUNT_STATE_RECOVERY_V1.md),
+risposte tardive al cambio account e recupero da profilo non caricato. Solo frontend.
 La persona deve già essere collegata al centro; non si condividono credenziali.
 Segreteria generale e altre azioni amministrative non sono incluse.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);
@@ -86,6 +87,7 @@ per rifare una verifica email. Usare i documenti recapiti per il flusso effettiv
 | Lavoro | Documenti da leggere |
 | --- | --- |
 | Ricerca addestratori / ENCI | [TRAINER_SPECIALIZATIONS_V1](TRAINER_SPECIALIZATIONS_V1.md); ricerca diretta, attività e qualifiche distinte |
+| Sessione e recupero del profilo | [ACCOUNT_STATE_RECOVERY_V1](ACCOUNT_STATE_RECOVERY_V1.md) |
 | Aiuto e orientamento | [SITE_HELP_V1](SITE_HELP_V1.md), guida locale per ruolo e link reali |
 | Home e navigazione | [HOME_PORTAL_V1](HOME_PORTAL_V1.md), [EXHIBITIONS_RELEASE_V1](EXHIBITIONS_RELEASE_V1.md) |
 | Impara e scelta del cane | [REX_CLICKER_V1](REX_CLICKER_V1.md), [IMPARA_LESSON_ORDER_V1](IMPARA_LESSON_ORDER_V1.md), [IMPARA_RELEASE_V3](IMPARA_RELEASE_V3.md), [IMPARA_SHAPING_V1](IMPARA_SHAPING_V1.md), [LEARNING_CREDENTIAL_CORE](LEARNING_CREDENTIAL_CORE.md) |

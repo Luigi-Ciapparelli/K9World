@@ -1,12 +1,28 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **18 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`f79320f` (Clienti e cani incluso).
+`eb21b04` (Guida rapida inclusa).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Guida rapida — incremento locale corrente
+## Stato account — incremento locale corrente
+
+[ACCOUNT_STATE_RECOVERY_V1](ACCOUNT_STATE_RECOVERY_V1.md): riprodotto su
+`eb21b04` il caso in cui la risposta del vecchio profilo A sostituisce il nome
+del profilo B dopo un cambio account. Corretto l'aggiornamento concorrente,
+annullate le letture superate, aggiunto recupero dagli errori/timeout senza
+uscire automaticamente da una sessione valida. Dati delle pagine personali
+ricreati quando cambia account; API e autorizzazioni database invariate.
+
+Test Node di concorrenza, browser desktop/mobile con SDK reale e API simulate,
+registrazione, recupero password, TypeScript, lint mirato e build/SEO.
+Installer: `aggiorna_stato_account.py`; nessun comando Supabase.
+Preparato localmente, rilascio di questo incremento ancora da eseguire.
+
+## Guida rapida — presente su GitHub
+
+Il fetch del 18 ottobre osserva `eb21b04`; non ripetere l'installer precedente.
 
 [SITE_HELP_V1](SITE_HELP_V1.md): il vecchio assistente inglese prometteva
 rimborsi, sconti e prenotazioni ricorrenti non implementati. Sostituito da una
@@ -14,8 +30,8 @@ guida italiana disponibile prima e dopo l'accesso, con argomenti per ruolo,
 ricerca sul dispositivo e collegamenti alle pagine effettive.
 Test Node, TypeScript, lint mirato, build/SEO e browser 1440/390 per quattro
 ruoli con API simulate. Nessuna migration, provider AI o invio automatico.
-Installer: `aggiorna_guida_portale.py`. Pubblicazione di questo incremento
-ancora da eseguire; il test locale non certifica Vercel Ready.
+Installer precedente: `aggiorna_guida_portale.py`. Presenza su GitHub
+verificata; il fetch non certifica Vercel Ready.
 
 ## Clienti e cani — presente su GitHub
 

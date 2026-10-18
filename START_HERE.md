@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 18 ottobre 2026, base `origin/main` osservata a `f79320f`.
+Aggiornamento del 18 ottobre 2026, base `origin/main` osservata a `eb21b04`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -71,9 +71,10 @@ Anche il [coordinamento agenda](docs/CENTRE_AGENDA_DELEGATION_V1.md) è su GitHu
 (`3b62ddd`), con permessi separati e autore reale.
 Le [statistiche professionali](docs/PROFESSIONAL_ANALYTICS_V1.md) sono su GitHub (`216c760`).
 Anche [Clienti e cani](docs/PROFESSIONAL_CLIENTS_V2.md) è su GitHub (`f79320f`).
-Incremento corrente: [Guida rapida](docs/SITE_HELP_V1.md), assistenza italiana
-per ruolo, collegamenti reali e ricerca locale; sostituisce le risposte inesatte
-del vecchio assistente. Nessuna migration.
+La [Guida rapida](docs/SITE_HELP_V1.md) è su GitHub (`eb21b04`).
+Incremento corrente: [stato account](docs/ACCOUNT_STATE_RECOVERY_V1.md), risposte
+profilo tardive scartate, isolamento al cambio account e recupero dagli errori
+di lettura. Nessuna migration.
 
 ## Primo controllo, senza modificare nulla
 
