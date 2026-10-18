@@ -279,7 +279,7 @@ function AppShell() {
       </Suspense>
       </PageErrorBoundary>
       {showFooter && <Footer />}
-      {user && <Chatbot />}
+      <Chatbot key={user?.id || 'visitor'} />
     </>
   );
 }

@@ -1,6 +1,6 @@
 # PortaleCinofilo — ordine operativo
 
-17 ottobre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
+18 ottobre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
 Stato e prove in [CURRENT_STATE](CURRENT_STATE.md); decisioni in
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questa è la coda operativa unica,
 non un'autorizzazione generale a spendere, pubblicare o contattare terzi.
@@ -24,7 +24,8 @@ future per dimostrare quelle già utilizzabili.
 | ID | Priorità e ambito | Dipendenza / prossimo risultato concreto | Criterio di chiusura |
 | --- | --- | --- | --- |
 | TRAIN-01 | Presente su GitHub (`d21abc5`, `d2f5b2b`) | Ricerca quotidiana diretta, bestiame/caccia facoltativi e qualifiche ENCI distinte; TRAINER_SPECIALIZATIONS_V1 | Rilascio coordinato senza scelta obbligatoria per il proprietario; fonti e stati delle qualifiche verificabili |
-| CRM-01 | Correttivo concreto preparato | PROFESSIONAL_CLIENTS_V2: errori di salvataggio, retry, schede paginabili, dati dei cani trasferiti | Test locali mirati e rilascio coordinato DB/frontend; privacy delle note conservata |
+| HELP-01 | Correttivo locale preparato | SITE_HELP_V1: sostituire risposte inglesi e promesse inesatte con guida italiana per ruolo | Link effettivi, ricerca locale, tastiera e mobile verificati; rilascio frontend |
+| CRM-01 | Presente su GitHub (`f79320f`) | PROFESSIONAL_CLIENTS_V2: errori di salvataggio, retry, schede paginabili, dati dei cani trasferiti | Test locali mirati e rilascio coordinato DB/frontend; privacy delle note conservata |
 | STAT-01 | Presente su GitHub (`216c760`) | PROFESSIONAL_ANALYTICS_V1: eliminare metriche inesatte e falsi zeri; aggregati privati per periodo, valore distinto dagli incassi | Conteggi completi, confini italiani, accesso limitato e UI desktop/mobile verificati; rilascio coordinato |
 | AFF-01 | Recupero frontend prioritario per un difetto riprodotto | Pagina vuota quando fallisce un modulo: correttivo manuale su GitHub (`82caa1c`); PAGE_RECOVERY_V1. Causa del downtime storico ancora ignota | Rilascio del correttivo testato; nessuna attribuzione causale al vecchio episodio o acquisto di hosting |
 | SEO-01 | Canonical ricevuta; richiesta inviata e sitemap riuscita; guide specifiche su GitHub | Osservazione di nuova scansione/canonical, poi pagine prioritarie; vedere SEO_INDEXATION_2026_10_09 | Diagnosi per famiglia/URL, interventi mirati e misurazione successiva; nessuna promessa di indicizzare tutto |

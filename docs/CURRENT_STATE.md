@@ -1,12 +1,26 @@
 # PortaleCinofilo — stato corrente
 
-Aggiornato il **17 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`216c760` (statistiche professionali incluse).
+Aggiornato il **18 ottobre 2026**. Base verificata con fetch di `origin/main`:
+`f79320f` (Clienti e cani incluso).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Clienti e cani — incremento locale corrente
+## Guida rapida — incremento locale corrente
+
+[SITE_HELP_V1](SITE_HELP_V1.md): il vecchio assistente inglese prometteva
+rimborsi, sconti e prenotazioni ricorrenti non implementati. Sostituito da una
+guida italiana disponibile prima e dopo l'accesso, con argomenti per ruolo,
+ricerca sul dispositivo e collegamenti alle pagine effettive.
+Test Node, TypeScript, lint mirato, build/SEO e browser 1440/390 per quattro
+ruoli con API simulate. Nessuna migration, provider AI o invio automatico.
+Installer: `aggiorna_guida_portale.py`. Pubblicazione di questo incremento
+ancora da eseguire; il test locale non certifica Vercel Ready.
+
+## Clienti e cani — presente su GitHub
+
+Il fetch del 18 ottobre osserva `f79320f`. Non ripetere il pacchetto precedente.
+Presenza su GitHub, SQL online e deployment Ready sono evidenze distinte.
 
 [PROFESSIONAL_CLIENTS_V2](PROFESSIONAL_CLIENTS_V2.md): appunti e tag confermati dal
 server, retry con UUID stabile, schede e ricerca paginata, euro e ultimo/prossimo
@@ -18,7 +32,7 @@ Prove locali: 70 migration precedenti più nuova su PGlite, fixture di permessi,
 ricerca, retry, revoca e cani trasferiti; browser 1440/390 con API simulate;
 contratti Node, TypeScript, lint mirato e build/SEO. Runner PostgreSQL nativo
 incluso come gate dell'installer, non eseguito qui. Nessuna prova online dichiarata.
-Installer corrente: `aggiorna_clienti_professionali.py`.
+Installer precedente: `aggiorna_clienti_professionali.py`; ora presente su GitHub.
 
 ## Statistiche professionali — presenti su GitHub
 
