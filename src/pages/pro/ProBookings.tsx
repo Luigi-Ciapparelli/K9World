@@ -1,3 +1,6 @@
+import { BookingDetails } from '../../components/BookingDetails';
+import { useBookingDetails } from '../../lib/useBookingDetails';
+import { bookingDateTime, bookingPrice } from '../../lib/bookingDetails';
 import { BookingInstructor, InstructorLoadError } from '../../components/BookingInstructor';
 import { useBookingInstructors } from '../../lib/centreTeam';
 import { ClientPortrait, useClientPortraits } from '../../components/ClientPortrait';
@@ -38,6 +41,7 @@ export function ProBookings() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const lock = useRef(false);
   const session = useRef(0);
+  const details = useBookingDetails(bookings.map(booking => booking.id), reloadKey);
   const portraits = useClientPortraits([], bookings.map(booking => booking.id), reloadKey);
   const instructors = useBookingInstructors(bookings.map(b => b.id), reloadKey);
   const messageSummaries = useBookingMessageSummaries(bookings.map((booking) => booking.id));
@@ -84,7 +88,7 @@ export function ProBookings() {
 
   const reload = () => setReloadKey((key) => key + 1);
   const updateStatus = async (id: string, status: 'accepted' | 'declined' | 'completed') => {
-    if (!userId || lock.current) return;
+    if (!userId || lock.current || !details.rows[id]) return;
     if (status === 'completed' && !confirm('Confermi che il servizio è stato effettivamente svolto? Non segnare come completata una mancata presenza.')) return;
     lock.current = true;
     const currentSession = session.current;
@@ -114,7 +118,7 @@ export function ProBookings() {
           <h1 className="pc-display text-3xl sm:text-4xl font-semibold mt-2">Richieste e prenotazioni</h1>
           <button type="button" disabled={loading || busyId !== null} onClick={reload} className="text-sm font-semibold underline disabled:opacity-50">Aggiorna richieste</button>
         </div>
-        <p className="text-[var(--pc-muted-600)] mt-3 mb-6">Prima le richieste in attesa, poi gli appuntamenti accettati e lo storico. In ogni gruppo, le date più vicine all’inizio dell’elenco.</p>
+        <p className="text-[var(--pc-muted-600)] mt-3 mb-6">Prima le richieste in attesa, poi gli appuntamenti accettati e lo storico. In ogni gruppo, le date più vicine all’inizio dell’elenco. Orari italiani, come nel calendario.</p>
 
         <ServiceReviewPanel professional refresh={reloadKey} />
         <div aria-label="Filtra per stato" className="flex flex-wrap gap-2 mb-4">
@@ -146,11 +150,12 @@ export function ProBookings() {
               <div className="flex flex-wrap justify-between gap-3">
                 <div>
                   <h2 className="font-bold text-lg break-words flex items-center gap-3"><ClientPortrait src={portraits[booking.id]} name={booking.client_name || 'Cliente'} />{booking.client_name || 'Nome non indicato'}</h2>
-                  <p className="text-sm mt-1">{new Date(booking.start_at).toLocaleString('it-IT', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                  <p className="text-sm mt-1">{bookingDateTime(booking.start_at)}</p>
                   <p className="text-xs text-[var(--pc-muted-600)] mt-1">Riferimento {booking.id.slice(0, 8)}</p>
                 </div>
-                <div className="flex items-start gap-3"><StatusBadge status={booking.status} /><span className="text-sm font-semibold">{formatPrice(booking.price)}</span></div>
+                <div className="flex items-start gap-3"><StatusBadge status={booking.status} /><span className="text-sm font-semibold">{bookingPrice(booking.price)}</span></div>
               </div>
+              <BookingDetails row={details.rows[booking.id]} loading={details.loading} onRetry={details.retry} />
               <div className="mt-4 rounded-xl bg-[var(--pc-bone-50)] p-4">
                 <h3 className="text-sm font-bold">Note della richiesta</h3>
                 <p className="whitespace-pre-wrap break-words text-sm mt-1">{booking.notes?.trim() || 'Nessuna nota inserita.'}</p>
@@ -160,10 +165,10 @@ export function ProBookings() {
               <div className="flex flex-wrap gap-2 mt-4">
                 <BookingConversation bookingId={booking.id} professional summary={messageSummaries[booking.id]} requestNotes={booking.notes} />
                 {booking.status === 'pending' && <>
-                  <Action disabled={busyId !== null} onClick={() => void updateStatus(booking.id, 'accepted')}>Accetta</Action>
-                  <Action disabled={busyId !== null} onClick={() => void updateStatus(booking.id, 'declined')}>Rifiuta</Action>
+                  <Action disabled={busyId !== null || !details.rows[booking.id]} onClick={() => void updateStatus(booking.id, 'accepted')}>Accetta</Action>
+                  <Action disabled={busyId !== null || !details.rows[booking.id]} onClick={() => void updateStatus(booking.id, 'declined')}>Rifiuta</Action>
                 </>}
-                {booking.status === 'accepted' && <Action disabled={busyId !== null} onClick={() => void updateStatus(booking.id, 'completed')}>Segna completata</Action>}
+                {booking.status === 'accepted' && <Action disabled={busyId !== null || !details.rows[booking.id]} onClick={() => void updateStatus(booking.id, 'completed')}>Segna completata</Action>}
               </div>
             </article>
           ))}
@@ -176,10 +181,6 @@ export function ProBookings() {
       </div>
     </ProLayout>
   );
-}
-function formatPrice(value: number | string | null) {
-  const price = Number(value);
-  return Number.isFinite(price) && price > 0 ? price.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' }) : 'Prezzo da confermare';
 }
 function Action({ children, disabled, onClick }: { children: string; disabled: boolean; onClick: () => void }) {
   return <button type="button" disabled={disabled} onClick={onClick} className="px-4 py-2 rounded-full border border-[var(--pc-forest-700)] text-[var(--pc-forest-900)] font-bold text-sm disabled:opacity-50">{children}</button>;

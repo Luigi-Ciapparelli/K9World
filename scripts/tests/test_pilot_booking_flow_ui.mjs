@@ -58,6 +58,8 @@ async function setup(id = null, width = 390) {
       const selected = rows.filter(b => !filter || filter === 'eq.' + b.status).map(b=>rowFor(b,actor));
       return counted(selected);
     }
+    if (name === 'get_my_service_reviews') return ok({items:[],count:0,pending_count:0});
+    if (name === 'get_booking_details') return ok(rows.filter(b=>(body.p_booking_ids||[]).includes(b.id)).map(b=>({booking_id:b.id,end_at:b.end_at,service_name:service.name,service_source:b.status==='pending'?'catalogue':'recorded',dog_names:['Cane di prova'],dogs_unavailable:false})));
     if (name === 'change_booking_status') {
       assert.equal(actor,proId); assert.equal(body.p_booking_id,bookingId); assert.equal(body.p_new_status,'accepted');
       rows[0].status=body.p_new_status; return ok(rows[0]);
@@ -126,7 +128,7 @@ try {
   await owner.page.getByRole('button',{name:'Chiudi messaggi'}).click();
   ownerLoadError=true;await owner.page.getByRole('button',{name:'Aggiorna',exact:true}).click();
   await owner.page.getByRole('alert').filter({hasText:'Prenotazioni non caricate'}).waitFor();
-  await owner.page.getByRole('button',{name:'Riprova',exact:true}).click();await owner.page.getByText('Accettata',{exact:true}).waitFor();
+  await owner.page.getByRole('alert').filter({hasText:'Prenotazioni non caricate'}).getByRole('button',{name:'Riprova',exact:true}).click();await owner.page.getByText('Accettata',{exact:true}).waitFor();
   await pro.page.goto(base+'/#/pro/calendar');await pro.page.getByRole('heading',{name:'Calendario e disponibilità',exact:true}).waitFor();
   const currentMonth=new Date().toISOString().slice(0,7);if(tomorrow.slice(0,7)!==currentMonth)await pro.page.getByRole('button',{name:'Mese successivo'}).click();
   const dayLabel=new Intl.DateTimeFormat('it-IT',{timeZone:'UTC',weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(tomorrow+'T12:00:00Z'));

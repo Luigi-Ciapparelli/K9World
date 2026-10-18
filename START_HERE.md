@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 18 ottobre 2026, base `origin/main` osservata a `eb21b04`.
+Aggiornamento del 18 ottobre 2026, base `origin/main` osservata a `f3e8aa2`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -72,9 +72,11 @@ Anche il [coordinamento agenda](docs/CENTRE_AGENDA_DELEGATION_V1.md) è su GitHu
 Le [statistiche professionali](docs/PROFESSIONAL_ANALYTICS_V1.md) sono su GitHub (`216c760`).
 Anche [Clienti e cani](docs/PROFESSIONAL_CLIENTS_V2.md) è su GitHub (`f79320f`).
 La [Guida rapida](docs/SITE_HELP_V1.md) è su GitHub (`eb21b04`).
-Incremento corrente: [stato account](docs/ACCOUNT_STATE_RECOVERY_V1.md), risposte
-profilo tardive scartate, isolamento al cambio account e recupero dagli errori
-di lettura. Nessuna migration.
+Anche lo [stato account](docs/ACCOUNT_STATE_RECOVERY_V1.md) è su GitHub (`f3e8aa2`):
+isolamento al cambio account e recupero dagli errori di lettura.
+Incremento corrente: [dettagli prenotazioni](docs/BOOKING_DETAILS_V1.md), servizio,
+cane e fine prevista nelle richieste; orari italiani e annullamento recuperabile.
+Nuova proiezione privata, senza apertura delle note o accessi estesi al team.
 
 ## Primo controllo, senza modificare nulla
 

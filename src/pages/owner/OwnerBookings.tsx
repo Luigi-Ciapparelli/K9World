@@ -1,3 +1,6 @@
+import { BookingDetails } from '../../components/BookingDetails';
+import { useBookingDetails } from '../../lib/useBookingDetails';
+import { bookingDateTime, bookingPrice } from '../../lib/bookingDetails';
 import { BookingInstructor, InstructorLoadError } from '../../components/BookingInstructor';
 import { useBookingInstructors } from '../../lib/centreTeam';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -9,6 +12,8 @@ import { StatusBadge } from './OwnerDashboard';
 import { BookingConversation } from '../../components/BookingConversation';
 import { useBookingMessageSummaries } from '../../lib/bookingMessages';
 
+type OwnerBooking = { id: string; professional_name: string; start_at: string; status: string; price: number | string | null; notes: string | null };
+
 export function OwnerBookings() {
   const { user } = useAuth();
   return user ? <OwnerBookingsBody key={user.id} /> : null;
@@ -16,8 +21,8 @@ export function OwnerBookings() {
 
 function OwnerBookingsBody() {
   const { user } = useAuth();
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [reviewing, setReviewing] = useState<any>(null);
+  const [bookings, setBookings] = useState<OwnerBooking[]>([]);
+  const [reviewing, setReviewing] = useState<OwnerBooking | null>(null);
   const [legacyReviewIds, setLegacyReviewIds] = useState<string[]>([]);
   const [page, setPage] = useState(0);
   const [count, setCount] = useState(0);
@@ -25,6 +30,12 @@ function OwnerBookingsBody() {
   const [loadError, setLoadError] = useState(false);
   const [reload, setReload] = useState(0);
   const loadGeneration = useRef(0);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [notice, setNotice] = useState<{ text: string; error: boolean } | null>(null);
+  const lock = useRef(false);
+  const mounted = useRef(false);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+  const details = useBookingDetails(bookings.map(booking => booking.id), reload);
   const userId = user?.id;
   const instructors = useBookingInstructors(bookings.map(b => b.id), reload);
   const summaries = useBookingMessageSummaries(bookings.map((booking) => booking.id));
@@ -48,24 +59,26 @@ function OwnerBookingsBody() {
   useEffect(() => { void load(); return () => { loadGeneration.current += 1; }; }, [load, reload]);
 
   const cancel = async (id: string) => {
-    if (!confirm('Annullare questa richiesta di prenotazione?')) return;
-    const { error } = await supabase.rpc('change_booking_status', {
-      p_booking_id: id,
-      p_new_status: 'cancelled',
-    });
-
-    if (error) {
-      alert(error.message);
-      return;
+    if (lock.current || !confirm('Annullare questa richiesta di prenotazione?')) return;
+    lock.current = true; setBusyId(id); setNotice(null);
+    try {
+      const { error } = await supabase.rpc('change_booking_status', { p_booking_id: id, p_new_status: 'cancelled' });
+      if (error) throw error;
+      if (mounted.current) setNotice({ error: false, text: 'Richiesta annullata.' });
+    } catch {
+      if (mounted.current) setNotice({ error: true, text: 'Esito non confermato. Controlla lo stato aggiornato prima di riprovare: la richiesta potrebbe essere già annullata o accettata.' });
+    } finally {
+      lock.current = false;
+      if (mounted.current) { setBusyId(null); setReload(value => value + 1); }
     }
-
-    setReload((value) => value + 1);
   };
 
   return (
     <div className="bg-stone-50 min-h-[calc(100vh-4rem)]">
-      <div className="max-w-5xl mx-auto px-6 py-10">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3"><h1 className="text-3xl font-bold text-stone-900">Prenotazioni e messaggi</h1><button type="button" disabled={loading} onClick={() => void load()} className="text-sm font-semibold underline">Aggiorna</button></div>
+      <div className="max-w-5xl mx-auto px-6 pt-10 pb-28">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3"><h1 className="text-3xl font-bold text-stone-900">Prenotazioni e messaggi</h1><button type="button" disabled={loading || busyId !== null} onClick={() => setReload(value => value + 1)} className="text-sm font-semibold underline">Aggiorna</button></div>
+        <p className="mb-5 text-sm text-stone-600">Orari italiani, come nel calendario del professionista.</p>
+        {notice && <p role={notice.error ? 'alert' : 'status'} className="mb-4 rounded-xl border border-stone-200 bg-white p-4 text-sm">{notice.text}</p>}
         <ServiceReviewPanel refresh={reload} />
         {instructors.error && <InstructorLoadError retry={instructors.reload} />}
         {loading ? <p role="status">Caricamento prenotazioni…</p> : loadError ? <div role="alert" className="rounded-xl border border-rose-200 bg-white p-5">Prenotazioni non caricate. <button type="button" onClick={() => void load()} className="font-semibold underline">Riprova</button></div> : bookings.length === 0 ? (
@@ -73,22 +86,22 @@ function OwnerBookingsBody() {
         ) : (
           <div className="space-y-3">
             {bookings.map((b) => (
-              <div key={b.id} className="bg-white rounded-2xl p-5 border border-stone-200 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                <div className="flex-1">
+              <article key={b.id} className="bg-white rounded-2xl p-5 border border-stone-200 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                <div className="min-w-0 flex-1">
                   <div className="font-bold">{b.professional_name}</div>
-                  <div className="text-sm text-stone-700">{b.service_name}</div>
-                  <div className="text-sm text-stone-600">{new Date(b.start_at).toLocaleString('it-IT')}</div>
-                  <div className="text-xs text-stone-500 mt-1">{Number(b.price || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</div>
+                  <div className="text-sm text-stone-600">{bookingDateTime(b.start_at)}</div>
+                  <div className="text-xs text-stone-500 mt-1">{bookingPrice(b.price)}</div>
+                  <BookingDetails row={details.rows[b.id]} loading={details.loading} onRetry={details.retry} />
                   <p className="mt-2 whitespace-pre-wrap break-words text-sm text-stone-600">{b.notes || 'Nessuna nota alla richiesta.'}</p>
                   <BookingInstructor row={instructors.rows[b.id]} onSaved={instructors.reload} />
                 </div>
                 <StatusBadge status={b.status} />
                 <div className="flex flex-wrap gap-2">
                   <BookingConversation bookingId={b.id} summary={summaries[b.id]} requestNotes={b.notes} />
-                  {b.status === 'pending' && <button onClick={() => cancel(b.id)} className="text-xs text-rose-600 font-semibold">Annulla richiesta</button>}
+                  {b.status === 'pending' && <button type="button" disabled={busyId !== null} onClick={() => void cancel(b.id)} className="text-xs text-rose-600 font-semibold disabled:opacity-50">{busyId === b.id ? 'Annullamento…' : 'Annulla richiesta'}</button>}
                   {legacyReviewIds.includes(b.id) && <button onClick={() => setReviewing(b)} className="text-xs bg-emerald-600 text-white px-3 py-1.5 rounded-full font-semibold flex items-center gap-1"><Star className="w-3 h-3" /> Lascia una recensione</button>}
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         )}

@@ -1,12 +1,28 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **18 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`eb21b04` (Guida rapida inclusa).
+`f3e8aa2` (recupero dello stato account incluso).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Stato account — incremento locale corrente
+## Dettagli prenotazioni — incremento locale corrente
+
+[BOOKING_DETAILS_V1](BOOKING_DETAILS_V1.md): servizio, cane e fine prevista
+nelle richieste del professionista, nei riepiloghi della giornata e nell'elenco
+cliente. Nome del servizio registrato conservato; ripiego dichiarato sul catalogo
+quando manca. Orari italiani, zero euro distinto da prezzo mancante, recupero
+dell'annullamento incerto e rimozione delle note duplicate nella dashboard.
+
+72ª migration `20261018093000_private_booking_details.sql`: proiezione privata
+per i due partecipanti confermati, 100 ID per chiamata e protezione dei cani
+trasferiti. Nessuna modifica delle prenotazioni o estensione delle note private.
+PGlite su storia completa, Node, browser 1440/390 con API simulate, regressione
+prenotazione/messaggi, TypeScript, lint mirato e build/SEO. Test PostgreSQL nativo
+incluso come gate dell'installer, non eseguito qui. Nessun collaudo online implicito.
+Installer: `aggiorna_dettagli_prenotazioni.py`; rilascio ancora da eseguire.
+
+## Stato account — presente su GitHub
 
 [ACCOUNT_STATE_RECOVERY_V1](ACCOUNT_STATE_RECOVERY_V1.md): riprodotto su
 `eb21b04` il caso in cui la risposta del vecchio profilo A sostituisce il nome
@@ -18,7 +34,8 @@ ricreati quando cambia account; API e autorizzazioni database invariate.
 Test Node di concorrenza, browser desktop/mobile con SDK reale e API simulate,
 registrazione, recupero password, TypeScript, lint mirato e build/SEO.
 Installer: `aggiorna_stato_account.py`; nessun comando Supabase.
-Preparato localmente, rilascio di questo incremento ancora da eseguire.
+Il fetch del 18 ottobre osserva `f3e8aa2`: non ripetere questo installer.
+Presenza su GitHub e deployment Ready restano evidenze distinte.
 
 ## Guida rapida — presente su GitHub
 
@@ -210,7 +227,8 @@ forniti per il PC di Luigi, non eseguiti qui. Nessuna prova online implicita.
 Il fetch del 16 ottobre osserva `b08aabf` su GitHub. Non ripetere il pacchetto
 account. SQL online e Ready restano evidenze distinte. Le indisponibilità sono
 ora su GitHub, insieme alla delega di completamento; le assenze per alcune ore
-sono su GitHub. Messaggi nel pacchetto corrente; restano note, ruoli e turni ricorrenti.
+sono su GitHub. Anche messaggi, note, turni ricorrenti e coordinamento agenda
+sono presenti; restano eventuali ruoli amministrativi più ampi da delimitare.
 
 ## Email sospese
 
@@ -244,9 +262,9 @@ Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
 [export](DOG_HISTORY_EXPORT_V1.md), [valutazioni](SERVICE_REVIEWS_V1.md).
 I vecchi testi «preparato localmente, da pubblicare» per questi tre blocchi sono superati.
 
-La base GitHub contiene **64 migration**, fino a
-`20261014210000_centre_lesson_completion_permissions.sql`. Il pacchetto corrente
-aggiunge la 65ª. Un file nel repository non dimostra l’applicazione online.
+La base GitHub contiene **71 migration**, fino a
+`20261017220000_professional_client_workspace.sql`. Il pacchetto corrente
+aggiunge la 72ª. Un file nel repository non dimostra l’applicazione online.
 
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati
 sintetici. Auth/Storage e API browser sono simulati nelle prove descritte;
@@ -300,7 +318,7 @@ con Esposizioni presente. Il conteggio di 391 dell’8 ottobre è storico.
 | IMG-01 | Foto professionali/banner e foto cliente privata su GitHub (`e6e38c9`) | Confermare soltanto gli esiti non osservati: applicazione migration, Ready e prova Storage reale; non ripetere lo sviluppo |
 | MEDIA-01 | Allegati delle sessioni rinviati per decisione di Luigi | Prima matrice quote per abbonamento, utilità dei file, compressione, conservazione e costo totale; nessuna pipeline audio/video avviata |
 | REV-02 | Presente su GitHub (`3a6674b`): voto alla specifica prestazione | Esiti online distinti; non ripetere sviluppo o rilascio senza un difetto |
-| TEAM-01 | Elenco, calendario, account, assenze anche orarie e completamento su GitHub; messaggi nel pacchetto corrente | Rilascio messaggi delegati; poi note, ruoli e turni ricorrenti. Nessun voto alla persona |
+| TEAM-01 | Elenco, agenda, account, assenze, completamento, messaggi, note, turni e coordinamento su GitHub (`3b62ddd`) | Eventuali ruoli amministrativi più ampi richiedono un perimetro distinto; nessun voto alla persona |
 | SPORT-02 | Titolarità/versioni su GitHub (`8a482aa`); fonte live e ranking completo non attestati | Verifica identità/fonte, criteri per disciplina, invalidazione/revoca, integrazione e prova reale |
 | SEO-01 | Canonical ricevuta, redirect coerenti, richiesta inviata e sitemap riuscita; tre guide specifiche su GitHub | Osservare nuova scansione, canonical e pagine prioritarie. Non chiedere di nuovo i dati già ricevuti |
 | AFF-01 | Causa storica ignota; riprodotta separatamente una pagina bianca quando un modulo della UI fallisce | Recupero manuale su GitHub (`82caa1c`) e testato, vedere PAGE_RECOVERY_V1; non dedurre la causa del vecchio episodio, raccogliere dati se ricapita |

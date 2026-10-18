@@ -12,8 +12,9 @@ Anche [CENTRE_AGENDA_DELEGATION_V1](CENTRE_AGENDA_DELEGATION_V1.md) è su GitHub
 Anche [PROFESSIONAL_ANALYTICS_V1](PROFESSIONAL_ANALYTICS_V1.md) è su GitHub (`216c760`).
 Anche [PROFESSIONAL_CLIENTS_V2](PROFESSIONAL_CLIENTS_V2.md) è su GitHub (`f79320f`).
 Anche [SITE_HELP_V1](SITE_HELP_V1.md) è su GitHub (`eb21b04`).
-Incremento corrente: [ACCOUNT_STATE_RECOVERY_V1](ACCOUNT_STATE_RECOVERY_V1.md),
-risposte tardive al cambio account e recupero da profilo non caricato. Solo frontend.
+Anche [ACCOUNT_STATE_RECOVERY_V1](ACCOUNT_STATE_RECOVERY_V1.md) è su GitHub (`f3e8aa2`).
+Incremento corrente: [BOOKING_DETAILS_V1](BOOKING_DETAILS_V1.md), servizio/cane/fine
+nelle prenotazioni, orari italiani e recupero dell'annullamento incerto. Rilascio DB → frontend.
 La persona deve già essere collegata al centro; non si condividono credenziali.
 Segreteria generale e altre azioni amministrative non sono incluse.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);
@@ -95,6 +96,7 @@ per rifare una verifica email. Usare i documenti recapiti per il flusso effettiv
 | Foto dei profili | [PROFILE_IMAGES_V1](PROFILE_IMAGES_V1.md): pubblico professionale, privato cliente; [PHOTO_UPLOAD_OPTIMIZATION_V1](PHOTO_UPLOAD_OPTIMIZATION_V1.md): foto cani, anteprime, cache e rilascio |
 | Istruttori dei centri | [CENTRE_INSTRUCTORS_V1](CENTRE_INSTRUCTORS_V1.md), [CENTRE_CALENDAR_V1](CENTRE_CALENDAR_V1.md): nomi storici, filtri e conferme; [account/agenda](CENTRE_MEMBERSHIPS_V1.md), [assenze](INSTRUCTOR_TIME_OFF_V1.md), [fasce orarie](INSTRUCTOR_HOURLY_TIME_OFF_V1.md) e [delega di completamento](CENTRE_LESSON_PERMISSIONS_V1.md); [messaggi delegati](CENTRE_INSTRUCTOR_MESSAGES_V1.md) |
 | Calendario / messaggi | [PROFESSIONAL_CALENDAR_V1](PROFESSIONAL_CALENDAR_V1.md), [BOOKING_MESSAGES_V1](BOOKING_MESSAGES_V1.md) |
+| Richieste e dettagli prenotazioni | [BOOKING_DETAILS_V1](BOOKING_DETAILS_V1.md): servizio storico dove registrato, cane, orari italiani e annullamento recuperabile |
 | Pacchetti / abbonamenti | [PROFESSIONAL_PASSES_V1](PROFESSIONAL_PASSES_V1.md), [PROFESSIONAL_SUBSCRIPTIONS_V1](PROFESSIONAL_SUBSCRIPTIONS_V1.md) |
 | Archivio e media | [PROFESSIONAL_CONTINUITY_MEDIA](PROFESSIONAL_CONTINUITY_MEDIA.md), [CONTINUITY_SHARING_V1](CONTINUITY_SHARING_V1.md), [DOG_HISTORY_EXPORT_V1](DOG_HISTORY_EXPORT_V1.md) |
 | Valutazioni | [SERVICE_REVIEWS_V2](SERVICE_REVIEWS_V2.md): singola prestazione, non persona/struttura; V1 solo storico |
