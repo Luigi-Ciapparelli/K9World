@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 18 ottobre 2026, base `origin/main` osservata a `f3e8aa2`.
+Aggiornamento del 19 ottobre 2026, base `origin/main` osservata a `24aa9a4`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -74,9 +74,10 @@ Anche [Clienti e cani](docs/PROFESSIONAL_CLIENTS_V2.md) è su GitHub (`f79320f`)
 La [Guida rapida](docs/SITE_HELP_V1.md) è su GitHub (`eb21b04`).
 Anche lo [stato account](docs/ACCOUNT_STATE_RECOVERY_V1.md) è su GitHub (`f3e8aa2`):
 isolamento al cambio account e recupero dagli errori di lettura.
-Incremento corrente: [dettagli prenotazioni](docs/BOOKING_DETAILS_V1.md), servizio,
-cane e fine prevista nelle richieste; orari italiani e annullamento recuperabile.
-Nuova proiezione privata, senza apertura delle note o accessi estesi al team.
+Anche i [dettagli prenotazioni](docs/BOOKING_DETAILS_V1.md) sono su GitHub (`24aa9a4`).
+Incremento corrente: [registro lezioni](docs/LESSON_RECORDING_V1.md), recupero
+con gli stessi dati dopo una risposta persa, anche riaprendo il modulo, e orari italiani.
+Rilascio soltanto frontend; nessuna nuova migration.
 
 ## Primo controllo, senza modificare nulla
 

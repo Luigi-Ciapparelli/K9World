@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { lessonLocalTime } from './lessonTime';
 
 export interface PassTemplate {
   id: string; name: string; description: string | null; total_uses: number; price: number;
@@ -20,7 +21,7 @@ export const passLabels: Record<PassState, string> = {
   active: 'Attivo', expired: 'Scaduto', exhausted: 'Esaurito', cancelled: 'Annullato', legacy: 'Da verificare',
 };
 export const passDate = (value: string | null) => value
-  ? new Date(value).toLocaleString('it-IT', { dateStyle: 'short', timeStyle: 'short' }) : 'Non disponibile';
+  ? new Date(value).toLocaleString('it-IT', { timeZone: 'Europe/Rome', dateStyle: 'short', timeStyle: 'short' }) : 'Non disponibile';
 export const passMoney = (value: number | null) => value === null ? 'Da verificare'
   : new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(value);
 export function passError(error: unknown): string {
@@ -45,5 +46,5 @@ export async function passRpc<T>(name: string, args: Record<string, unknown> = {
   return data as T;
 }
 export function localPassTime(date = new Date()) {
-  return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+  return lessonLocalTime(date);
 }

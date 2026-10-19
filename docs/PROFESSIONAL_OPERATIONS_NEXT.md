@@ -1,6 +1,6 @@
 # Strumenti professionali — mappa e lavoro residuo
 
-Consolidato il 17 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
+Consolidato il 19 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
 [CURRENT_STATE](CURRENT_STATE.md); l'ordine è in
 [EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md).
 
@@ -15,8 +15,8 @@ Consolidato il 17 ottobre 2026. Lo stato di rilascio è mantenuto soltanto in
 | CRM autorizzato | `/pro/crm`; accesso ai clienti pertinenti |
 | Relazioni, sessioni, note e revisioni | `/pro/archive`; [continuità](CONTINUITY_UI_V1.md) |
 | Condivisione selettiva e archivio scaricabile | Relazione/storico ricevuto; [sharing](CONTINUITY_SHARING_V1.md), [export](DOG_HISTORY_EXPORT_V1.md) |
-| Pacchetti | `/pro/passes`; [specifica](PROFESSIONAL_PASSES_V1.md) |
-| Abbonamenti | `/pro/subscriptions`; [specifica](PROFESSIONAL_SUBSCRIPTIONS_V1.md) |
+| Pacchetti | `/pro/passes`; [specifica](PROFESSIONAL_PASSES_V1.md), [registro lezioni](LESSON_RECORDING_V1.md) |
+| Abbonamenti | `/pro/subscriptions`; [specifica](PROFESSIONAL_SUBSCRIPTIONS_V1.md), [registro lezioni](LESSON_RECORDING_V1.md) |
 | Valutazioni | Singola prestazione prenotata; [specifica](SERVICE_REVIEWS_V2.md) |
 | Istruttori del centro | `/pro/team`; elenco e assegnazioni, [specifica](CENTRE_INSTRUCTORS_V1.md); [calendario per istruttore](CENTRE_CALENDAR_V1.md), rilascio nel registro corrente |
 | Account istruttori | `/account/centres`; [consenso/agenda](CENTRE_MEMBERSHIPS_V1.md), [assenze](INSTRUCTOR_TIME_OFF_V1.md), [fasce orarie](INSTRUCTOR_HOURLY_TIME_OFF_V1.md), [permesso di completamento](CENTRE_LESSON_PERMISSIONS_V1.md), [messaggi delegati](CENTRE_INSTRUCTOR_MESSAGES_V1.md), [note attribuite](CENTRE_LESSON_NOTES_V1.md), [turni](INSTRUCTOR_WEEKLY_SHIFTS_V1.md), [coordinamento agenda](CENTRE_AGENDA_DELEGATION_V1.md); rilascio nel registro corrente |

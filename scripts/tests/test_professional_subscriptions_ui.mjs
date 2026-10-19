@@ -20,7 +20,7 @@ async function setup(role = 'professional', viewport = { width: 1440, height: 10
   const req = route.request(), url = new URL(req.url()), name = url.pathname.split('/').at(-1);
   assert.equal(url.hostname, 'pc-subscriptions-test.supabase.co');
   const b = req.method() === 'POST' ? req.postDataJSON() : {}; calls.push({ name, body: b, role }); let data = [];
-  if (name === 'profiles') data = [{ ...user, role, full_name: role === 'professional' ? 'Anna Educatrice' : 'Marco Proprietario', email_verified: true }];
+  if (name === 'profiles') data = { ...user, role, full_name: role === 'professional' ? 'Anna Educatrice' : 'Marco Proprietario', email_verified: true };
   else if (name === 'user') data = user;
   else if (name === 'services') data = [service];
   else if (name === 'get_professional_clients') data = [{ id: uid(11), full_name: 'Marco Proprietario' }];

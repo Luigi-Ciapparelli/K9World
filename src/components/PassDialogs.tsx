@@ -1,4 +1,6 @@
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { lessonTimeOptions, lessonTimeOptionLabel } from '../lib/lessonTime';
+import { useLessonRecording } from '../lib/useLessonRecording';
 import { supabase } from '../lib/supabase';
 import { passDate, passError, passMoney, passRpc, localPassTime, type ClientPass, type PassBooking, type PassEvent, type PassTemplate } from '../lib/professionalPasses';
 
@@ -90,24 +92,68 @@ export function IssuePassDialog({ models, onClose, onSaved }: { models: PassTemp
   </PassDialog>;
 }
 export function UsePassDialog({ pack, onClose, onSaved }: { pack: ClientPass; onClose: () => void; onSaved: () => void }) {
-  const [mode, setMode] = useState<'manual' | 'booking'>('manual'); const [bookings, setBookings] = useState<PassBooking[]>([]);
-  const [booking, setBooking] = useState(''); const [date, setDate] = useState(localPassTime()); const [description, setDescription] = useState('');
-  const [loading, setLoading] = useState(true); const [loadError, setLoadError] = useState('');
-  const { busy, error, run } = usePassMutation(onSaved);
-  useEffect(() => { let alive = true;
-    passRpc<PassBooking[]>('list_pass_eligible_bookings', { p_id: pack.id }).then(data => { if (alive) setBookings(data); })
-      .catch(() => { if (alive) setLoadError('Prenotazioni non disponibili. Chiudi e riapri per riprovare.'); })
-      .finally(() => { if (alive) setLoading(false); }); return () => { alive = false; };
-  }, [pack.id]);
+  const { busy, error, pending, submit } = useLessonRecording(pack.id, onSaved);
+  const [mode, setMode] = useState<'manual' | 'booking'>(pending?.input.p_booking_id ? 'booking' : 'manual');
+  const [bookings, setBookings] = useState<PassBooking[]>([]);
+  const [booking, setBooking] = useState(pending?.input.p_booking_id || '');
+  const [date, setDate] = useState(() => localPassTime(pending?.input.p_occurred_at ? new Date(pending.input.p_occurred_at) : new Date()));
+  const [description, setDescription] = useState(pending?.input.p_description || '');
+  const [chosenInstant, setChosenInstant] = useState(pending?.input.p_occurred_at || '');
+  const [loading, setLoading] = useState(false); const [loadError, setLoadError] = useState('');
+  const [retry, setRetry] = useState(0); const [validation, setValidation] = useState('');
+  const options = lessonTimeOptions(date);
+  useEffect(() => {
+    if (mode !== 'booking' || pending) return;
+    let current = true; setLoading(true); setLoadError(''); setBookings([]); setBooking('');
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 15000);
+    void (async () => {
+      try {
+        const { data, error: failure } = await supabase.rpc('list_pass_eligible_bookings', { p_id: pack.id }).abortSignal(controller.signal);
+        if (failure) throw failure;
+        if (!Array.isArray(data) || data.some(b => !b || typeof b.id !== 'string' || typeof b.service_name !== 'string' || typeof b.start_at !== 'string' || !Number.isFinite(Date.parse(b.start_at)))) throw new Error('Invalid booking list');
+        if (current) setBookings(data as PassBooking[]);
+      } catch { if (current) setLoadError('Impossibile caricare le prenotazioni completate.'); }
+      finally { window.clearTimeout(timer); if (current) setLoading(false); }
+    })();
+    return () => { current = false; window.clearTimeout(timer); controller.abort(); };
+  }, [pack.id, mode, retry, pending]);
+  function record(e: FormEvent) {
+    e.preventDefault(); setValidation('');
+    if (pending) { void submit(pending.input); return; }
+    const instant = options.length === 1 ? options[0] : options.includes(chosenInstant) ? chosenInstant : '';
+    if (mode === 'manual') {
+      if (!options.length) { setValidation('Data o ora non valida nel fuso italiano. Controlla anche il cambio dell’ora.'); return; }
+      if (!instant) { setValidation('Questo orario ricorre due volte: scegli la prima o la seconda occorrenza.'); return; }
+      if (Date.parse(instant) > Date.now()) { setValidation('Puoi registrare soltanto una lezione già svolta.'); return; }
+      if (description.trim().length < 3) { setValidation('Scrivi una breve descrizione della lezione.'); return; }
+    } else if (loading || loadError || !bookings.some(b => b.id === booking)) {
+      setValidation('Carica e scegli una prenotazione completata prima di continuare.'); return;
+    }
+    void submit({ p_client_pass_id: pack.id, p_booking_id: mode === 'booking' ? booking : null,
+      p_occurred_at: mode === 'manual' ? instant : null, p_description: mode === 'manual' ? description.trim() : null });
+  }
   return <PassDialog title="Registra lezione" busy={busy} onClose={onClose}>
     <p className="mb-4">{pack.client_name} · {pack.service_name} · <strong>{pack.remaining_uses} lezioni residue</strong></p>
-    <form onSubmit={e => { e.preventDefault(); void run('record_pass_use', { p_client_pass_id: pack.id, p_booking_id: mode === 'booking' ? booking : null, p_occurred_at: mode === 'manual' ? new Date(date).toISOString() : null, p_description: mode === 'manual' ? description.trim() : null }); }}><fieldset disabled={busy} className="space-y-4">
-      <label className="block">Come vuoi registrarla?<select aria-label="Come vuoi registrarla?" className={inputClass} value={mode} onChange={e => setMode(e.target.value as 'manual' | 'booking')}><option value="manual">Lezione svolta senza prenotazione sul portale</option><option value="booking">Collega una prenotazione completata</option></select></label>
-      {mode === 'booking' ? <><label className="block">Prenotazione<select aria-label="Prenotazione" className={inputClass} value={booking} onChange={e => setBooking(e.target.value)} required disabled={loading || !!loadError}><option value="">{loading ? 'Caricamento…' : 'Scegli una lezione'}</option>{bookings.map(b => <option value={b.id} key={b.id}>{passDate(b.start_at)} · {b.service_name}</option>)}</select></label>{loadError && <PassAlert>{loadError}</PassAlert>}{!loading && !loadError && !bookings.length && <p>Nessuna prenotazione completata compatibile da scalare.</p>}</>
-        : <><label className="block">Data e ora della lezione<input className={inputClass} type="datetime-local" step="1" value={date} onChange={e => setDate(e.target.value)} min={localPassTime(new Date(pack.purchased_at))} max={localPassTime()} required /></label><label className="block">Breve descrizione visibile al cliente<textarea className={inputClass} value={description} onChange={e => setDescription(e.target.value)} minLength={3} maxLength={300} required rows={2} /></label></>}
-      <p className="text-sm text-stone-600">Verrà scalata una lezione. Deve essere già svolta nel periodo di validità. Per gli appunti riservati usa l’archivio professionale.</p>
-      {error && <PassAlert>{error}</PassAlert>}<button className={passButton} disabled={mode === 'booking' && (!booking || loading || !!loadError)}>{busy ? 'Registrazione…' : 'Scala una lezione'}</button>
-    </fieldset></form>
+    <form onSubmit={record}><fieldset disabled={busy || !!pending} className="space-y-4">
+      <label className="block">Come vuoi registrarla?<select aria-label="Come vuoi registrarla?" className={inputClass} value={mode} onChange={e => { setMode(e.target.value as 'manual' | 'booking'); setValidation(''); }}><option value="manual">Lezione svolta senza prenotazione sul portale</option><option value="booking">Collega una prenotazione completata</option></select></label>
+      {mode === 'booking' ? <>
+        {pending ? <p className="rounded-xl bg-stone-50 p-3 text-sm">Prenotazione selezionata nel tentativo da confermare. Il collegamento resta invariato.</p>
+          : <label className="block">Prenotazione<select aria-label="Prenotazione" className={inputClass} value={booking} onChange={e => setBooking(e.target.value)} required disabled={loading || !!loadError}><option value="">{loading ? 'Caricamento…' : 'Scegli una lezione'}</option>{bookings.map(b => <option value={b.id} key={b.id}>{passDate(b.start_at)} · {b.service_name}</option>)}</select></label>}
+        {loadError && !pending && <PassAlert>{loadError} <button type="button" className="underline" onClick={() => setRetry(v => v + 1)}>Riprova prenotazioni</button></PassAlert>}
+        {!pending && !loading && !loadError && !bookings.length && <p>Nessuna prenotazione completata compatibile da scalare.</p>}
+      </> : <>
+        <label className="block">Data e ora della lezione<input className={inputClass} type="datetime-local" step="1" value={date} onChange={e => { setDate(e.target.value); setChosenInstant(''); }} required /></label>
+        <p className="text-sm text-stone-600">Ora italiana, come nel calendario. La lezione deve rientrare nel periodo di validità.</p>
+        {options.length > 1 && <label className="block">Quale orario del cambio ora?<select className={inputClass} value={chosenInstant} onChange={e => setChosenInstant(e.target.value)} required><option value="">Scegli l’orario</option>{options.map((instant, i) => <option key={instant} value={instant}>{i === 0 ? 'Prima' : 'Seconda'} occorrenza · {lessonTimeOptionLabel(instant)}</option>)}</select></label>}
+        <label className="block">Breve descrizione visibile al cliente<textarea className={inputClass} value={description} onChange={e => setDescription(e.target.value)} minLength={3} maxLength={300} required rows={2} /></label>
+      </>}
+      <p className="text-sm text-stone-600">{pending ? 'Stai verificando la registrazione della lezione già inviata.' : 'Verrà scalata una lezione. Per gli appunti riservati usa l’archivio professionale.'}</p>
+    </fieldset>
+    {validation && <PassAlert>{validation}</PassAlert>}{error && <PassAlert>{error}</PassAlert>}
+    {pending?.uncertain && <p className="my-3 text-sm text-stone-600">Riaprendo questa finestra ritrovi lo stesso tentativo. Prima di ricaricare il sito o uscire dall’account, controlla lo storico: una risposta persa non significa che la lezione non sia stata registrata.</p>}
+    <button className={`${passButton} mt-4`} disabled={busy || (!pending && mode === 'booking' && (!booking || loading || !!loadError))}>{busy ? 'Registrazione…' : pending ? 'Riprova lo stesso invio' : 'Scala una lezione'}</button>
+    </form>
   </PassDialog>;
 }
 export function PassReasonDialog({ pack, event, period = false, onClose, onSaved }: { pack: ClientPass; event?: PassEvent; period?: boolean; onClose: () => void; onSaved: () => void }) {
@@ -128,7 +174,7 @@ export function PassHistoryDialog({ pack, professional, onClose, onReverse }: { 
     return () => { alive = false; };
   }, [pack.id, retry]);
   return <PassDialog title={`Storico · ${pack.name}`} busy={false} onClose={onClose}>
-    <p className="mb-4 text-sm text-stone-600">Assegnato il {passDate(pack.purchased_at)}. Orari nel fuso del dispositivo.</p>
+    <p className="mb-4 text-sm text-stone-600">Assegnato il {passDate(pack.purchased_at)}. Orari italiani, come nel calendario.</p>
     {loading ? <p role="status">Caricamento storico…</p> : error ? <PassAlert>{error} <button className="underline" onClick={() => setRetry(v => v + 1)}>Riprova</button></PassAlert> : !events.length ? <p>Nessuna lezione registrata.</p> : <ol className="space-y-3">{events.map(e => <li key={e.id} className="rounded-xl border border-stone-200 p-4">
       <div className="flex justify-between gap-2"><strong>{e.kind === 'reversal' ? '+1 · Storno' : e.reversed_at ? 'Lezione stornata' : '−1 · Lezione'}</strong><span className="text-sm">{passDate(e.occurred_at)}</span></div>
       <p className="mt-2 whitespace-pre-wrap break-words">{e.description}</p>

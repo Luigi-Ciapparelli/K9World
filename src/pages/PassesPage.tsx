@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, Package, Plus, RefreshCw } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
+import { hasPendingLesson } from '../lib/useLessonRecording';
 import { supabase } from '../lib/supabase';
 import { passDate, passError, passLabels, passMoney, passRpc, type ClientPass, type PassEvent, type PassTemplate } from '../lib/professionalPasses';
 import { IssuePassDialog, PassAlert, PassHistoryDialog, PassReasonDialog, PassTemplateDialog, UsePassDialog, passButton, passSecondary } from '../components/PassDialogs';
@@ -76,7 +77,7 @@ function PassesContent({ professional, userId }: { professional: boolean; userId
           <p className="mt-3 text-sm">Scadenza: {passDate(p.expires_at)}</p><p className="mt-1 text-sm text-stone-600">Prezzo concordato: {passMoney(p.price)}</p>
           {p.state === 'legacy' && <p className="mt-3 text-sm text-amber-900">Registrazione della versione precedente: le condizioni originali richiedono una verifica. Non è possibile scalare lezioni.</p>}
           {p.cancellation_reason && <p className="mt-3 whitespace-pre-wrap break-words text-sm">Motivo annullamento: {p.cancellation_reason}</p>}
-          <div className="mt-5 flex flex-wrap gap-2">{professional && (p.state === 'active' || (p.state === 'expired' && p.remaining_uses > 0)) && <button className={passButton} onClick={() => setModal({ kind: 'use', pack: p })}>Registra lezione</button>}<button className={passSecondary} onClick={() => setModal({ kind: 'history', pack: p })}>Storico</button>{professional && p.state !== 'cancelled' && <button className="px-2 py-2 text-sm text-stone-600 underline" onClick={() => setModal({ kind: 'cancel', pack: p })}>Annulla pacchetto</button>}</div>
+          <div className="mt-5 flex flex-wrap gap-2">{professional && (hasPendingLesson(userId, p.id) || p.state === 'active' || (p.state === 'expired' && p.remaining_uses > 0)) && <button className={passButton} onClick={() => setModal({ kind: 'use', pack: p })}>{hasPendingLesson(userId, p.id) ? 'Verifica registrazione' : 'Registra lezione'}</button>}<button className={passSecondary} onClick={() => setModal({ kind: 'history', pack: p })}>Storico</button>{professional && p.state !== 'cancelled' && <button className="px-2 py-2 text-sm text-stone-600 underline" onClick={() => setModal({ kind: 'cancel', pack: p })}>Annulla pacchetto</button>}</div>
         </article>)}</div>}
         {(page > 0 || more) && <div className="mt-6 flex items-center justify-center gap-4"><button className={passSecondary} disabled={page === 0} onClick={() => setPage(v => v - 1)}>Precedente</button><span>Pagina {page + 1}</span><button className={passSecondary} disabled={!more} onClick={() => setPage(v => v + 1)}>Successiva</button></div>}
       </>}

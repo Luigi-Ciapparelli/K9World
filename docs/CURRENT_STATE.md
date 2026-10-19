@@ -1,12 +1,25 @@
 # PortaleCinofilo — stato corrente
 
-Aggiornato il **18 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`f3e8aa2` (recupero dello stato account incluso).
+Aggiornato il **19 ottobre 2026**. Base verificata con fetch di `origin/main`:
+`24aa9a4` (dettagli prenotazioni inclusi).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Dettagli prenotazioni — incremento locale corrente
+## Registro lezioni — incremento locale corrente
+
+[LESSON_RECORDING_V1](LESSON_RECORDING_V1.md): stessa operazione e dati invariati
+quando una risposta è incerta, recupero dopo riapertura/navigazione, anche per
+l'ultima lezione disponibile. Orari italiani e scelta esplicita al cambio ora;
+prenotazioni compatibili con retry, timeout e controllo della risposta.
+Il tentativo rimane nella memoria dell'app, non sopravvive a ricaricamenti completi.
+
+Prove Node sui fusi/date, browser 1440/390 con API simulate, regressioni pacchetti
+ed abbonamenti, TypeScript, lint mirato e build/SEO. Nessuna nuova migration;
+la storia rimane di 72 file. Nessun account o database online modificato.
+Installer `aggiorna_registro_lezioni.py`; pubblicazione ancora da eseguire.
+
+## Dettagli prenotazioni — presenti su GitHub
 
 [BOOKING_DETAILS_V1](BOOKING_DETAILS_V1.md): servizio, cane e fine prevista
 nelle richieste del professionista, nei riepiloghi della giornata e nell'elenco
@@ -20,7 +33,8 @@ trasferiti. Nessuna modifica delle prenotazioni o estensione delle note private.
 PGlite su storia completa, Node, browser 1440/390 con API simulate, regressione
 prenotazione/messaggi, TypeScript, lint mirato e build/SEO. Test PostgreSQL nativo
 incluso come gate dell'installer, non eseguito qui. Nessun collaudo online implicito.
-Installer: `aggiorna_dettagli_prenotazioni.py`; rilascio ancora da eseguire.
+Il fetch del 19 ottobre osserva `24aa9a4`: non ripetere l’installer precedente.
+Presenza su GitHub, applicazione SQL e Vercel Ready restano evidenze distinte.
 
 ## Stato account — presente su GitHub
 

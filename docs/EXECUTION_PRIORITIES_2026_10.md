@@ -1,6 +1,6 @@
 # PortaleCinofilo — ordine operativo
 
-18 ottobre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
+19 ottobre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
 Stato e prove in [CURRENT_STATE](CURRENT_STATE.md); decisioni in
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questa è la coda operativa unica,
 non un'autorizzazione generale a spendere, pubblicare o contattare terzi.
@@ -24,7 +24,8 @@ future per dimostrare quelle già utilizzabili.
 | ID | Priorità e ambito | Dipendenza / prossimo risultato concreto | Criterio di chiusura |
 | --- | --- | --- | --- |
 | TRAIN-01 | Presente su GitHub (`d21abc5`, `d2f5b2b`) | Ricerca quotidiana diretta, bestiame/caccia facoltativi e qualifiche ENCI distinte; TRAINER_SPECIALIZATIONS_V1 | Rilascio coordinato senza scelta obbligatoria per il proprietario; fonti e stati delle qualifiche verificabili |
-| BOOK-02 | Incremento corrente preparato localmente | BOOKING_DETAILS_V1: servizio, cane e fine prevista nelle prenotazioni; orari italiani e annullamento incerto | Proiezione privata, test SQL/browser e rilascio coordinato DB → frontend |
+| LESSON-01 | Incremento corrente preparato localmente | LESSON_RECORDING_V1: recupero della stessa registrazione, orari italiani, retry prenotazioni | Test browser desktop/mobile e regressioni; rilascio frontend, nessuna nuova migration |
+| BOOK-02 | Presente su GitHub (`24aa9a4`) | BOOKING_DETAILS_V1: servizio, cane e fine prevista nelle prenotazioni; orari italiani e annullamento incerto | Proiezione privata, test SQL/browser e rilascio coordinato DB → frontend |
 | AUTH-02 | Presente su GitHub (`f3e8aa2`) | ACCOUNT_STATE_RECOVERY_V1: isolamento richieste profilo, retry e timeout senza perdita sessione | Cambio account/uscita senza risposte residue; accesso, recupero e iscrizione preservati; rilascio frontend |
 | HELP-01 | Presente su GitHub (`eb21b04`) | SITE_HELP_V1: sostituire risposte inglesi e promesse inesatte con guida italiana per ruolo | Link effettivi, ricerca locale, tastiera e mobile verificati; rilascio frontend |
 | CRM-01 | Presente su GitHub (`f79320f`) | PROFESSIONAL_CLIENTS_V2: errori di salvataggio, retry, schede paginabili, dati dei cani trasferiti | Test locali mirati e rilascio coordinato DB/frontend; privacy delle note conservata |
