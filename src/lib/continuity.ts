@@ -15,8 +15,9 @@ export interface NoteRevision {
   occurred_at: string; activity: string; revision_number: number;
   body: string; change_reason: string | null; revision_created_at: string;
 }
-export async function continuityRpc<T>(name: string, args = {}): Promise<T> {
-  const { data, error } = await supabase.rpc(name, args);
+export async function continuityRpc<T>(name: string, args = {}, signal?: AbortSignal): Promise<T> {
+  const query = supabase.rpc(name, args);
+  const { data, error } = await (signal ? query.abortSignal(signal) : query);
   if (error) throw error;
   return data as T;
 }
@@ -34,5 +35,6 @@ export function localDateTime() {
   return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 }
 export function displayDate(value: string) {
-  return new Date(value).toLocaleString('it-IT', { dateStyle: 'medium', timeStyle: 'short' });
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? date.toLocaleString('it-IT', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Rome' }) : 'Data non disponibile';
 }

@@ -1,12 +1,24 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **19 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`24aa9a4` (dettagli prenotazioni inclusi).
+`3dae13b` (registro lezioni e direttiva futura MATCH-01 inclusi).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Registro lezioni — incremento locale corrente
+## Archivio privato — incremento locale corrente
+
+[CONTINUITY_RECORDING_RECOVERY_V1](CONTINUITY_RECORDING_RECOVERY_V1.md): recupero
+con lo stesso riferimento dopo risposta persa e riapertura, campi correggibili
+dopo rifiuto esplicito, conferma dalle revisioni autorizzate, timeout e orari italiani.
+Tentativi privati solo in memoria, cancellati all’uscita o cambio account.
+Il difetto del modulo bloccato è stato riprodotto sul commit `3dae13b`.
+
+Browser desktop/mobile con API sintetiche, regressione revisioni, TypeScript,
+test Node, lint mirato e build/SEO. Nessun SQL o account online modificato.
+Installer `aggiorna_archivio_sessioni.py`; pubblicazione ancora da eseguire.
+
+## Registro lezioni — presente su GitHub
 
 [LESSON_RECORDING_V1](LESSON_RECORDING_V1.md): stessa operazione e dati invariati
 quando una risposta è incerta, recupero dopo riapertura/navigazione, anche per
@@ -17,7 +29,8 @@ Il tentativo rimane nella memoria dell'app, non sopravvive a ricaricamenti compl
 Prove Node sui fusi/date, browser 1440/390 con API simulate, regressioni pacchetti
 ed abbonamenti, TypeScript, lint mirato e build/SEO. Nessuna nuova migration;
 la storia rimane di 72 file. Nessun account o database online modificato.
-Installer `aggiorna_registro_lezioni.py`; pubblicazione ancora da eseguire.
+Il fetch del 19 ottobre osserva `3ca2e4c`: non ripetere l’installer precedente.
+Anche MATCH-01 è registrata su GitHub (`3dae13b`), soltanto come direttiva futura.
 
 ## Dettagli prenotazioni — presenti su GitHub
 
@@ -276,9 +289,8 @@ Specifiche: [Esposizioni](EXHIBITIONS_RELEASE_V1.md),
 [export](DOG_HISTORY_EXPORT_V1.md), [valutazioni](SERVICE_REVIEWS_V1.md).
 I vecchi testi «preparato localmente, da pubblicare» per questi tre blocchi sono superati.
 
-La base GitHub contiene **71 migration**, fino a
-`20261017220000_professional_client_workspace.sql`. Il pacchetto corrente
-aggiunge la 72ª. Un file nel repository non dimostra l’applicazione online.
+La base GitHub contiene **72 migration**, fino a
+`20261018093000_private_booking_details.sql`. Il pacchetto corrente non ne aggiunge. Un file nel repository non dimostra l’applicazione online.
 
 Gli incrementi riportano test SQL, TypeScript, build/SEO e prove browser con dati
 sintetici. Auth/Storage e API browser sono simulati nelle prove descritte;

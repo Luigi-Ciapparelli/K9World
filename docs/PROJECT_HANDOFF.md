@@ -14,8 +14,9 @@ Anche [PROFESSIONAL_CLIENTS_V2](PROFESSIONAL_CLIENTS_V2.md) è su GitHub (`f7932
 Anche [SITE_HELP_V1](SITE_HELP_V1.md) è su GitHub (`eb21b04`).
 Anche [ACCOUNT_STATE_RECOVERY_V1](ACCOUNT_STATE_RECOVERY_V1.md) è su GitHub (`f3e8aa2`).
 Anche [BOOKING_DETAILS_V1](BOOKING_DETAILS_V1.md) è su GitHub (`24aa9a4`).
-Incremento corrente: [LESSON_RECORDING_V1](LESSON_RECORDING_V1.md), recupero
-della registrazione lezioni e orari italiani. Rilascio soltanto frontend.
+Anche [LESSON_RECORDING_V1](LESSON_RECORDING_V1.md) è su GitHub (`3ca2e4c`).
+Incremento corrente: [CONTINUITY_RECORDING_RECOVERY_V1](CONTINUITY_RECORDING_RECOVERY_V1.md),
+recupero della registrazione delle sessioni private. Rilascio soltanto frontend.
 La persona deve già essere collegata al centro; non si condividono credenziali.
 Segreteria generale e altre azioni amministrative non sono incluse.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);

@@ -8,6 +8,8 @@ import { ProfessionalContinuitySharing } from '../../components/ProfessionalCont
 import { OwnerContinuitySharing } from '../../components/OwnerContinuitySharing';
 import { notifySharingChanged } from '../../lib/continuitySharing';
 import { continuityEnabled, continuityError, continuityRpc, displayDate, relationshipLabels, type NoteRevision, type Relationship } from '../../lib/continuity';
+import { confirmRecordedSessions, getPendingSession, useContinuityRecording } from '../../lib/continuityRecording';
+import { lessonLocalTime, lessonTimeOptions, lessonTimeOptionLabel } from '../../lib/lessonTime';
 
 const button = 'rounded-xl bg-emerald-700 px-4 py-2 font-semibold text-white disabled:opacity-50';
 const secondary = 'rounded-xl border border-stone-300 px-4 py-2 font-semibold disabled:opacity-50';
@@ -35,6 +37,12 @@ function ContinuityWorkspace({ professional, userId, verified }: { professional:
   const generation = useRef(0);
   const [selected, setSelected] = useState<Relationship | null>(null);
   const [archiveKey, setArchiveKey] = useState(0);
+  const reconcileArchive = useCallback((rows: NoteRevision[]) => {
+    const confirmed = confirmRecordedSessions(userId, rows);
+    if (!confirmed.length) return;
+    setSelected(current => current && confirmed.includes(current.id) ? null : current);
+    setMessage('Registrazione confermata nell’archivio. La sessione e la nota sono già presenti.');
+  }, [userId]);
   const reload = useCallback(async () => {
     const current = ++generation.current;
     setLoading(true); setError('');
@@ -83,12 +91,12 @@ function ContinuityWorkspace({ professional, userId, verified }: { professional:
       <div className="flex flex-wrap gap-2">
         {professional && r.status === 'invited' && <><button className={button} disabled={busy || selected !== null} onClick={() => void act(r, true)}>Accetta invito</button><button className={secondary} disabled={busy || selected !== null} onClick={() => void act(r, false)}>Rifiuta invito</button></>}
         {professional && <DogHistoryExport scope="professional" subjectId={r.id} label="Scarica il tuo archivio" />}
-        {professional && r.status === 'active' && <button className={button} disabled={busy || selected !== null} onClick={() => setSelected(r)}>Registra sessione</button>}
+        {professional && (r.status === 'active' || getPendingSession(userId, r.id)) && <button className={button} disabled={busy || selected !== null} onClick={() => setSelected(r)}>{getPendingSession(userId, r.id) ? 'Verifica registrazione' : 'Registra sessione'}</button>}
         {(r.status === 'active' || (!professional && r.status === 'invited')) && <button className={secondary} disabled={busy || selected !== null} onClick={() => void act(r)}>{professional ? 'Concludi relazione' : r.status === 'invited' ? 'Ritira invito' : 'Revoca autorizzazione'}</button>}
       </div>
-      {selected?.id === r.id && <SessionForm relationship={selected} onClose={() => setSelected(null)} onSaved={() => { setSelected(null); setArchiveKey(k => k + 1); setMessage('Sessione e nota privata registrate.'); }} />}
+      {selected?.id === r.id && <SessionForm key={r.id} userId={userId} relationship={selected} onCheckArchive={() => setArchiveKey(k => k + 1)} onClose={() => setSelected(null)} onSaved={() => { setSelected(null); setArchiveKey(k => k + 1); setMessage('Sessione e nota privata registrate.'); }} />}
     </article>)}
-    {professional && <Archive refreshKey={archiveKey} />}
+    {professional && <Archive refreshKey={archiveKey} onLoaded={reconcileArchive} />}
   </div>;
   return professional ? <ProLayout active="archive">{content}</ProLayout> : <main className="bg-stone-50 min-h-screen">{content}</main>;
 }
@@ -133,57 +141,66 @@ function InviteForm({ professionalId, userId, verified, onSaved }: { professiona
   </form>;
 }
 
-type SessionRequest = { p_request_id: string; p_relationship_id: string; p_occurred_at: string; p_activity: string; p_body: string };
-function SessionForm({ relationship, onClose, onSaved }: { relationship: Relationship; onClose: () => void; onSaved: () => void }) {
-  // Seconds avoid truncating a newly accepted relationship to the preceding minute.
-  const [when, setWhen] = useState(() => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 19); });
-  const [activity, setActivity] = useState(''); const [body, setBody] = useState('');
-  const [attempt, setAttempt] = useState<SessionRequest | null>(null);
-  const [error, setError] = useState(''); const [busy, setBusy] = useState(false); const lock = useRef(false);
-  async function submit(e: FormEvent) {
-    e.preventDefault(); if (lock.current) return;
-    const occurred = new Date(when);
-    if (!attempt && (!Number.isFinite(occurred.getTime()) || occurred.getTime() > Date.now() || occurred.getTime() < new Date(relationship.accepted_at!).getTime() || !body.trim() || !activity.trim())) {
-      setError('Inserisci attività e nota, con una data successiva all’accettazione e non futura.'); return;
+function SessionForm({ userId, relationship, onClose, onSaved, onCheckArchive }: { userId: string; relationship: Relationship; onClose: () => void; onSaved: () => void; onCheckArchive: () => void }) {
+  const { pending, busy, error, submit } = useContinuityRecording(userId, relationship.id, onSaved);
+  const [when, setWhen] = useState(() => lessonLocalTime(pending ? new Date(pending.request.p_occurred_at) : new Date()));
+  const [chosenInstant, setChosenInstant] = useState(pending?.request.p_occurred_at || '');
+  const [activity, setActivity] = useState(pending?.request.p_activity || '');
+  const [body, setBody] = useState(pending?.request.p_body || '');
+  const [validation, setValidation] = useState('');
+  const options = lessonTimeOptions(when);
+  function record(e: FormEvent) {
+    e.preventDefault(); setValidation('');
+    if (pending) { void submit(pending.request); return; }
+    const instant = options.length === 1 ? options[0] : options.includes(chosenInstant) ? chosenInstant : '';
+    if (!options.length) { setValidation('Data o ora non valida nel fuso italiano. Controlla anche il cambio dell’ora.'); return; }
+    if (!instant) { setValidation('Questo orario ricorre due volte: scegli la prima o la seconda occorrenza.'); return; }
+    if (!relationship.accepted_at || Date.parse(instant) < Date.parse(relationship.accepted_at) || Date.parse(instant) > Date.now()) {
+      setValidation('La data deve essere successiva all’accettazione e non futura.'); return;
     }
-    lock.current = true; setBusy(true); setError('');
-    try {
-      const request = attempt || { p_request_id: crypto.randomUUID(), p_relationship_id: relationship.id, p_occurred_at: occurred.toISOString(), p_activity: activity.trim(), p_body: body.trim() };
-      setAttempt(request);
-      await continuityRpc('record_professional_session', request); onSaved();
-    } catch (err) { setError(continuityError(err)); }
-    finally { lock.current = false; setBusy(false); }
+    if (!activity.trim() || !body.trim()) { setValidation('Inserisci l’attività svolta e la nota privata.'); return; }
+    void submit({ p_relationship_id: relationship.id, p_occurred_at: instant, p_activity: activity.trim(), p_body: body.trim() });
   }
-  return <form className="space-y-3 border-t pt-4" onSubmit={submit}>
+  return <form className="space-y-3 border-t pt-4" onSubmit={record}>
     <h4 className="font-bold">Nuova sessione · {relationship.dog_name}</h4>
     <p className="text-sm text-stone-600">Registra un’attività già svolta durante la relazione. La nota è privata; successive correzioni manterranno la cronologia.</p>
-    <fieldset disabled={busy || attempt !== null} className="space-y-3">
-      <label className="block">Data e ora dell’attività (ora del dispositivo)<input className={input} type="datetime-local" step="1" required value={when} onChange={e => setWhen(e.target.value)} /></label>
+    <fieldset disabled={busy || !!pending} className="space-y-3">
+      <label className="block">Data e ora dell’attività (ora italiana)<input className={input} type="datetime-local" step="1" required value={when} onChange={e => { setWhen(e.target.value); setChosenInstant(''); setValidation(''); }} /></label>
+      {options.length === 2 && <label className="block">Quale orario del cambio ora?<select className={input} value={chosenInstant} onChange={e => setChosenInstant(e.target.value)} required><option value="">Scegli l’orario</option>{options.map((instant, i) => <option key={instant} value={instant}>{i === 0 ? 'Prima' : 'Seconda'} occorrenza · {lessonTimeOptionLabel(instant)}</option>)}</select></label>}
       <label className="block">Attività<input className={input} required maxLength={200} value={activity} onChange={e => setActivity(e.target.value)} /></label>
       <label className="block">Nota privata<textarea className={input} rows={7} required maxLength={20000} value={body} onChange={e => setBody(e.target.value)} placeholder="Osservazioni, obiettivi, attività svolte e risultati. Distingui i fatti dalle interpretazioni." /></label>
     </fieldset>
-    {error && <p role="alert" className="text-rose-700">{error}</p>}
-    {attempt && error && <p className="text-sm">Controlla l’archivio qui sotto. Se riprovi, verrà inviata la stessa richiesta per evitare duplicati. Conserva questo modulo aperto finché l’esito non è chiarito.</p>}
-    <div className="flex flex-wrap gap-2"><button className={button} disabled={busy}>{busy ? 'Registrazione…' : attempt ? 'Riprova la stessa richiesta' : 'Registra sessione e nota'}</button><button type="button" className={secondary} disabled={busy} onClick={() => { if ((!body && !attempt) || window.confirm(attempt ? 'Hai controllato l’archivio? L’invio potrebbe essere riuscito. Chiudendo perderai il riferimento per riprovare la stessa richiesta.' : 'Chiudere e scartare il testo non salvato?')) onClose(); }}>Chiudi modulo</button></div>
+    {(validation || error) && <p role="alert" className="text-rose-700">{validation || error}</p>}
+    {pending && <p role="status" className="text-sm">Questo invio è da confermare. Puoi chiudere e riaprire il modulo in questa scheda: ritroverai gli stessi dati. Ricaricare il sito o uscire dall’account interrompe questo recupero. Controlla l’archivio prima di creare una nuova sessione.</p>}
+    <div className="flex flex-wrap gap-2">
+      <button className={button} disabled={busy}>{busy ? 'Registrazione…' : pending ? 'Riprova lo stesso invio' : 'Registra sessione e nota'}</button>
+      {pending && <button type="button" className={secondary} disabled={busy} onClick={onCheckArchive}>Controlla registrazione nell’archivio</button>}
+      <button type="button" className={secondary} disabled={busy} onClick={() => { if (pending || (!body && !activity) || window.confirm('Chiudere e scartare il testo non salvato?')) onClose(); }}>Chiudi modulo</button>
+    </div>
   </form>;
 }
 
-function Archive({ refreshKey }: { refreshKey: number }) {
+function Archive({ refreshKey, onLoaded }: { refreshKey: number; onLoaded: (rows: NoteRevision[]) => void }) {
   const [rows, setRows] = useState<NoteRevision[]>([]); const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true); const [error, setError] = useState('');
   const [reload, setReload] = useState(0); const [editing, setEditing] = useState<NoteRevision | null>(null);
   useEffect(() => { setPage(0); }, [refreshKey]);
   useEffect(() => {
     let active = true; setLoading(true); setError(''); setRows([]);
-    void continuityRpc<NoteRevision[]>('list_professional_note_revisions_v2', { p_limit: 50, p_offset: page * 50 })
-      .then(data => { if (active) setRows(data); })
-      .catch(e => { if (active) setError(continuityError(e)); })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
-  }, [page, reload, refreshKey]);
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 15000);
+    void continuityRpc<NoteRevision[]>('list_professional_note_revisions_v2', { p_limit: 50, p_offset: page * 50 }, controller.signal)
+      .then(data => {
+        if (!Array.isArray(data) || data.some(r => !r || typeof r.note_id !== 'string' || typeof r.session_id !== 'string' || typeof r.body !== 'string' || typeof r.activity !== 'string' || !Number.isInteger(r.revision_number))) throw new Error('Invalid archive response');
+        if (active) { setRows(data); onLoaded(data); }
+      })
+      .catch(() => { if (active) setError('Impossibile caricare l’archivio. I testi aperti sono conservati: riprova il caricamento.'); })
+      .finally(() => { window.clearTimeout(timer); if (active) setLoading(false); });
+    return () => { active = false; window.clearTimeout(timer); controller.abort(); };
+  }, [page, reload, refreshKey, onLoaded]);
   return <section className="space-y-4">
     <div className="flex flex-wrap justify-between gap-3"><h2 className="text-2xl font-bold">Il tuo archivio privato</h2><button className={secondary} disabled={loading} onClick={() => { setPage(0); setReload(k => k + 1); }}>Aggiorna archivio</button></div>
-    <p className="text-sm text-stone-600">Sessioni e revisioni del tuo lavoro, anche dopo la fine della relazione. I nomi sono quelli conservati nello storico.</p>
+    <p className="text-sm text-stone-600">Sessioni e revisioni del tuo lavoro, anche dopo la fine della relazione. I nomi sono quelli conservati nello storico. Gli orari sono italiani.</p>
     {editing && <RevisionForm key={`${editing.note_id}:${editing.revision_number}`} revision={editing} onClose={() => setEditing(null)} onSaved={() => { setEditing(null); setPage(0); setReload(k => k + 1); notifySharingChanged(); }} />}
     {error && <p role="alert" className="text-rose-700">{error}</p>}
     {loading ? <p role="status">Caricamento archivio…</p> : !error && !rows.length ? <p>Nessuna revisione in questa pagina.</p> : null}
