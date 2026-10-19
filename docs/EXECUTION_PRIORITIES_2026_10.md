@@ -24,7 +24,7 @@ future per dimostrare quelle già utilizzabili.
 | ID | Priorità e ambito | Dipendenza / prossimo risultato concreto | Criterio di chiusura |
 | --- | --- | --- | --- |
 | TRAIN-01 | Presente su GitHub (`d21abc5`, `d2f5b2b`) | Ricerca quotidiana diretta, bestiame/caccia facoltativi e qualifiche ENCI distinte; TRAINER_SPECIALIZATIONS_V1 | Rilascio coordinato senza scelta obbligatoria per il proprietario; fonti e stati delle qualifiche verificabili |
-| ARCH-01 | Incremento corrente preparato localmente | CONTINUITY_RECORDING_RECOVERY_V1: recupero sessioni private, rifiuti espliciti, timeout e orari italiani | Test browser e privacy dei tentativi; rilascio frontend senza migration |
+| ARCH-01 | Registrazione su GitHub (`9ed53bc`); lettura condivisa preparata localmente | CONTINUITY_ACCESS_RECOVERY_V1: timeout, scadenza e rivalidazione del lettore, risposte controllate | Test browser desktop/mobile, regressione archivio; rilascio frontend senza migration |
 | LESSON-01 | Presente su GitHub (`3ca2e4c`) | LESSON_RECORDING_V1: recupero della stessa registrazione, orari italiani, retry prenotazioni | Test browser desktop/mobile e regressioni; rilascio frontend, nessuna nuova migration |
 | BOOK-02 | Presente su GitHub (`24aa9a4`) | BOOKING_DETAILS_V1: servizio, cane e fine prevista nelle prenotazioni; orari italiani e annullamento incerto | Proiezione privata, test SQL/browser e rilascio coordinato DB → frontend |
 | AUTH-02 | Presente su GitHub (`f3e8aa2`) | ACCOUNT_STATE_RECOVERY_V1: isolamento richieste profilo, retry e timeout senza perdita sessione | Cambio account/uscita senza risposte residue; accesso, recupero e iscrizione preservati; rilascio frontend |

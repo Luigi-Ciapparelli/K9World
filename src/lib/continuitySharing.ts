@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { continuityRpc } from './continuity';
+import { readSharingRows, sharingReadError } from './continuityRead';
 
 export const sharingChanged = 'pc-continuity-sharing-changed';
 export const sharingButton = 'rounded-xl bg-emerald-800 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50';
@@ -40,17 +40,18 @@ export function grantStatus(grant: ContinuityGrant) {
 // Every list is keyed by its arguments. A late response for another dog or page
 // cannot replace the current data; account changes remount the parent workspace.
 export function useSharingRows<T>(name: string, args: Record<string, unknown>, refreshKey = 0) {
-  const key = JSON.stringify(args);
+  const key = JSON.stringify([name, args]);
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState<{ key: string; rows: T[]; loading: boolean; error: string }>({ key: '', rows: [], loading: true, error: '' });
   const reload = useCallback(() => setRevision((value) => value + 1), []);
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     setState({ key, rows: [], loading: true, error: '' });
-    void continuityRpc<T[]>(name, JSON.parse(key))
-      .then((rows) => { if (active) setState({ key, rows: rows || [], loading: false, error: '' }); })
-      .catch((error) => { if (active) setState({ key, rows: [], loading: false, error: sharingError(error) }); });
-    return () => { active = false; };
+    void readSharingRows<T>(name, JSON.parse(key)[1], controller.signal)
+      .then((rows) => { if (active) setState({ key, rows, loading: false, error: '' }); })
+      .catch((error) => { if (active) setState({ key, rows: [], loading: false, error: sharingReadError(error) }); });
+    return () => { active = false; controller.abort(); };
   }, [name, key, revision, refreshKey]);
   useEffect(() => { window.addEventListener(sharingChanged, reload); return () => window.removeEventListener(sharingChanged, reload); }, [reload]);
   return { ...(state.key === key ? state : { rows: [] as T[], loading: true, error: '' }), reload };

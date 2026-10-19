@@ -1,12 +1,23 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **19 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`3dae13b` (registro lezioni e direttiva futura MATCH-01 inclusi).
+`9ed53bc` (recupero delle sessioni private incluso).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Archivio privato — incremento locale corrente
+## Lettura dello storico condiviso — incremento locale corrente
+
+[CONTINUITY_ACCESS_RECOVERY_V1](CONTINUITY_ACCESS_RECOVERY_V1.md): timeout,
+risposte validate, recupero della lettura e rimozione dei contributi durante
+la rivalidazione o alla scadenza della concessione. Riprodotto su `9ed53bc`
+il mantenimento del testo quando la verifica periodica resta senza risposta.
+
+Browser desktop/mobile con API simulate, regressione registrazione/rettifiche,
+TypeScript, lint mirato e build/SEO passati. Backend e permessi invariati.
+Installer `aggiorna_lettura_storico.py`; pubblicazione ancora da eseguire.
+
+## Archivio privato — presente su GitHub
 
 [CONTINUITY_RECORDING_RECOVERY_V1](CONTINUITY_RECORDING_RECOVERY_V1.md): recupero
 con lo stesso riferimento dopo risposta persa e riapertura, campi correggibili
@@ -16,7 +27,8 @@ Il difetto del modulo bloccato è stato riprodotto sul commit `3dae13b`.
 
 Browser desktop/mobile con API sintetiche, regressione revisioni, TypeScript,
 test Node, lint mirato e build/SEO. Nessun SQL o account online modificato.
-Installer `aggiorna_archivio_sessioni.py`; pubblicazione ancora da eseguire.
+Il fetch del 19 ottobre osserva `9ed53bc`: non ripetere l’installer precedente.
+Presenza su GitHub, Vercel Ready e prova online restano evidenze distinte.
 
 ## Registro lezioni — presente su GitHub
 
