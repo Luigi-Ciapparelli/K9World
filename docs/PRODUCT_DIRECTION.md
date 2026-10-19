@@ -78,6 +78,33 @@ di sola visibilità non modifica il merito della prova. Foto, follower, quantit�
 corsi e recensioni non certificano competenza. La formazione continua e le
 letture di approfondimento non diventano una classifica per quantità.
 
+## Abbinamento tra proprietario, cane e professionista — direttiva futura del 19 ottobre 2026
+
+PortaleCinofilo dovrà prevedere un sistema di suggerimento automatico che aiuti
+il proprietario a individuare i professionisti più vicini e più adatti alle
+esigenze del proprio binomio.
+
+L’abbinamento dovrà considerare le conoscenze e l’esperienza del proprietario,
+l’età e le esigenze del cane, gli obiettivi del percorso e le attività
+effettivamente offerte dal professionista. La notorietà o i risultati sportivi,
+da soli, non dovranno determinare il suggerimento: chi ha un cucciolo e cerca un
+primo orientamento dovrà essere indirizzato verso chi propone percorsi per
+cuccioli, mentre chi desidera prepararsi a una disciplina agonistica dovrà
+trovare professionisti specializzati in quell’attività.
+
+L’obiettivo è rendere la ricerca semplice, immediata e comprensibile anche a
+chi non possiede conoscenze cinofile, riducendo lo sforzo necessario per
+riconoscere il servizio adatto.
+
+La ricerca autonoma già disponibile rimane un riferimento da preservare.
+Resta da valutare se il suggerimento automatico debba essere integrato nel
+percorso esistente oppure proposto come possibilità facoltativa, evitando
+di rendere l’esperienza più macchinosa.
+
+**Direttiva da conservare per uno sviluppo futuro. In questa fase non vengono
+definiti il funzionamento dell’algoritmo, l’interfaccia o le modalità di
+implementazione.** Riferimento operativo: MATCH-01.
+
 ## Apprendimento e scelta del cane
 
 Impara resta un percorso con letture, attività e verifica significativa, non
