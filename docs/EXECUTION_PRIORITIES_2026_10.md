@@ -1,6 +1,6 @@
 # PortaleCinofilo — ordine operativo
 
-19 ottobre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
+20 ottobre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
 Stato e prove in [CURRENT_STATE](CURRENT_STATE.md); decisioni in
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questa è la coda operativa unica,
 non un'autorizzazione generale a spendere, pubblicare o contattare terzi.
@@ -23,8 +23,9 @@ future per dimostrare quelle già utilizzabili.
 
 | ID | Priorità e ambito | Dipendenza / prossimo risultato concreto | Criterio di chiusura |
 | --- | --- | --- | --- |
+| ADMIN-01 | Correzione locale di un difetto riprodotto | PROFESSIONAL_APPROVAL_V1: Annulla senza scrittura, note correnti, conferma esplicita e lettura dell’esito incerto | Test browser desktop/mobile e regressione Working-Dog; rilascio frontend senza migration |
 | TRAIN-01 | Presente su GitHub (`d21abc5`, `d2f5b2b`) | Ricerca quotidiana diretta, bestiame/caccia facoltativi e qualifiche ENCI distinte; TRAINER_SPECIALIZATIONS_V1 | Rilascio coordinato senza scelta obbligatoria per il proprietario; fonti e stati delle qualifiche verificabili |
-| ARCH-01 | Registrazione su GitHub (`9ed53bc`); lettura condivisa preparata localmente | CONTINUITY_ACCESS_RECOVERY_V1: timeout, scadenza e rivalidazione del lettore, risposte controllate | Test browser desktop/mobile, regressione archivio; rilascio frontend senza migration |
+| ARCH-01 | Registrazione e lettura condivisa su GitHub (`9ed53bc`, `7155fb9`) | CONTINUITY_ACCESS_RECOVERY_V1: timeout, scadenza e rivalidazione del lettore, risposte controllate | Test browser desktop/mobile, regressione archivio; rilascio frontend senza migration |
 | LESSON-01 | Presente su GitHub (`3ca2e4c`) | LESSON_RECORDING_V1: recupero della stessa registrazione, orari italiani, retry prenotazioni | Test browser desktop/mobile e regressioni; rilascio frontend, nessuna nuova migration |
 | BOOK-02 | Presente su GitHub (`24aa9a4`) | BOOKING_DETAILS_V1: servizio, cane e fine prevista nelle prenotazioni; orari italiani e annullamento incerto | Proiezione privata, test SQL/browser e rilascio coordinato DB → frontend |
 | AUTH-02 | Presente su GitHub (`f3e8aa2`) | ACCOUNT_STATE_RECOVERY_V1: isolamento richieste profilo, retry e timeout senza perdita sessione | Cambio account/uscita senza risposte residue; accesso, recupero e iscrizione preservati; rilascio frontend |

@@ -1,12 +1,23 @@
 # PortaleCinofilo — stato corrente
 
-Aggiornato il **19 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`9ed53bc` (recupero delle sessioni private incluso).
+Aggiornato il **20 ottobre 2026**. Base verificata con fetch di `origin/main`:
+`7155fb9` (lettura dello storico condiviso inclusa).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Lettura dello storico condiviso — incremento locale corrente
+## Approvazione professionisti — incremento locale corrente
+
+[PROFESSIONAL_APPROVAL_V1](PROFESSIONAL_APPROVAL_V1.md): il vecchio Annulla
+poteva inviare ugualmente un rifiuto. Ora modulo esplicito, motivo obbligatorio,
+note correnti conservate, blocco degli invii ripetuti e controllo dell'esito
+senza reinvio. Il ricontrollo prima della conferma non sostituisce un lock SQL.
+
+Verifiche browser desktop/mobile con API simulate e regressione Working-Dog;
+TypeScript, lint mirato e build/SEO. Nessun account o database online modificato.
+Installer `aggiorna_approvazioni_professionisti.py`; pubblicazione da eseguire.
+
+## Lettura dello storico condiviso — presente su GitHub
 
 [CONTINUITY_ACCESS_RECOVERY_V1](CONTINUITY_ACCESS_RECOVERY_V1.md): timeout,
 risposte validate, recupero della lettura e rimozione dei contributi durante
@@ -15,7 +26,8 @@ il mantenimento del testo quando la verifica periodica resta senza risposta.
 
 Browser desktop/mobile con API simulate, regressione registrazione/rettifiche,
 TypeScript, lint mirato e build/SEO passati. Backend e permessi invariati.
-Installer `aggiorna_lettura_storico.py`; pubblicazione ancora da eseguire.
+Il fetch del 20 ottobre osserva `7155fb9`: non ripetere l’installer precedente.
+GitHub, Vercel Ready e prova online restano evidenze distinte.
 
 ## Archivio privato — presente su GitHub
 

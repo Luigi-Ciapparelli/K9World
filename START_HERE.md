@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 19 ottobre 2026, base `origin/main` osservata a `9ed53bc`.
+Aggiornamento del 20 ottobre 2026, base `origin/main` osservata a `7155fb9`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -78,8 +78,9 @@ Anche i [dettagli prenotazioni](docs/BOOKING_DETAILS_V1.md) sono su GitHub (`24a
 Anche il [registro lezioni](docs/LESSON_RECORDING_V1.md) è su GitHub (`3ca2e4c`).
 MATCH-01 è registrata come direttiva futura (`3dae13b`), senza implementazione.
 Il [recupero delle sessioni private](docs/CONTINUITY_RECORDING_RECOVERY_V1.md)
-è su GitHub (`9ed53bc`). Incremento corrente:
-[lettura e scadenza dello storico condiviso](docs/CONTINUITY_ACCESS_RECOVERY_V1.md).
+è su GitHub (`9ed53bc`). Anche [lettura e scadenza dello storico condiviso](docs/CONTINUITY_ACCESS_RECOVERY_V1.md)
+sono su GitHub (`7155fb9`). Incremento corrente: [approvazione professionisti](docs/PROFESSIONAL_APPROVAL_V1.md),
+annullamento senza scritture e conferma esplicita con note correnti.
 Rilascio soltanto frontend; nessuna nuova migration.
 
 ## Primo controllo, senza modificare nulla
