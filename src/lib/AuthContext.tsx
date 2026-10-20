@@ -3,6 +3,7 @@ import { supabase } from './supabase';
 import type { Profile, Role, ProfessionalType } from './types';
 import { createAccountProfileState, emptyAccount } from './accountProfileState';
 import { setContinuityRecordingAccount } from './continuityRecording';
+import { setReviewAccount } from './reviewSubmission';
 
 interface AuthContextType {
   user: { id: string; email: string } | null;
@@ -50,9 +51,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // INITIAL_SESSION handles the initial state; a second getSession can race it.
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setContinuityRecordingAccount(session?.user?.id || null);
+      setReviewAccount(session?.user?.id || null);
       current.acceptUser(session?.user ? { id: session.user.id, email: session.user.email || '' } : null, event === 'USER_UPDATED');
     });
-    return () => { subscription.unsubscribe(); current.dispose(); setContinuityRecordingAccount(null); if (state.current === current) state.current = null; };
+    return () => { subscription.unsubscribe(); current.dispose(); setContinuityRecordingAccount(null); setReviewAccount(null); if (state.current === current) state.current = null; };
   }, []);
 
   const signIn = async (email: string, password: string) => {

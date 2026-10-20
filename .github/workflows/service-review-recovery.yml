@@ -1,0 +1,77 @@
+name: Service review recovery
+on:
+  pull_request:
+    paths:
+      - 'src/components/ServiceReviews.tsx'
+      - 'src/lib/serviceReviews.ts'
+      - 'src/lib/reviewSubmission.ts'
+      - 'src/lib/AuthContext.tsx'
+      - 'scripts/tests/test_service_review*.mjs'
+      - '.github/workflows/service-review-recovery.yml'
+permissions:
+  contents: read
+concurrency:
+  group: review-recovery-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      VITE_PROFESSIONAL_CONTINUITY: 'true'
+      VITE_SUPABASE_URL: 'https://pc-home-test.supabase.co'
+      VITE_SUPABASE_ANON_KEY: 'synthetic-test-public-key'
+      PC_TEST_BASE_URL: 'http://127.0.0.1:5219'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install test dependencies
+        run: npm install --no-save --package-lock=false playwright@1.56.1
+      - name: TypeScript and changed-file lint
+        run: |
+          npm run typecheck
+          npx --no-install eslint src/components/ServiceReviews.tsx src/lib/serviceReviews.ts src/lib/reviewSubmission.ts
+      - name: Build and public SEO checks
+        run: |
+          npm run build
+          node scripts/tests/test_seo_build.mjs
+      - name: Install Chromium
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Reproduce previous defect and verify recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          baseline="$RUNNER_TEMP/review-baseline"
+          git worktree add --detach "$baseline" ff529e9c28aa7846b190e4929fb86d9f789688d6
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$baseline/node_modules"
+          node node_modules/vite/bin/vite.js "$baseline" --host 127.0.0.1 --port 5220 --strictPort > "$RUNNER_TEMP/vite-baseline.log" 2>&1 &
+          baseline_pid=$!
+          trap 'kill "$baseline_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:5220/ > /dev/null; then break; fi
+            sleep 1
+          done
+          if PC_BASELINE=1 PC_TEST_BASE_URL=http://127.0.0.1:5220 node scripts/tests/test_service_review_recovery_ui.mjs > "$RUNNER_TEMP/review-baseline.log" 2>&1; then
+            cat "$RUNNER_TEMP/review-baseline.log"
+            exit 1
+          fi
+          cat "$RUNNER_TEMP/review-baseline.log"
+          grep -F 'DEFECT: closing the editor discarded the committed request reference' "$RUNNER_TEMP/review-baseline.log"
+          kill "$baseline_pid"
+          wait "$baseline_pid" || true
+          trap - EXIT
+          node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5219 --strictPort > "$RUNNER_TEMP/vite-review.log" 2>&1 &
+          review_pid=$!
+          trap 'kill "$review_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:5219/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/tests/test_service_review_recovery_ui.mjs
+          node scripts/tests/test_service_reviews_ui.mjs
+          node scripts/tests/test_public_service_reviews_ui.mjs

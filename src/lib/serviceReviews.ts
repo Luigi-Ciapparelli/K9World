@@ -8,11 +8,41 @@ export type ServiceReview = {
   version: number; own_rating: number | null; own_comment: string; pending: boolean; can_write: boolean;
 };
 export type ServiceReviews = { items: ServiceReview[]; count: number; pending_count: number };
-export async function loadServiceReviews(professional: boolean, page = 0, size = 5): Promise<ServiceReviews> {
-  const { data, error } = await supabase.rpc('get_my_service_reviews', { p_professional: professional, p_offset: page * size, p_limit: size });
-  if (error) throw error;
-  if (!data || !Array.isArray(data.items) || typeof data.count !== 'number') throw new Error('Invalid review response');
-  return data as ServiceReviews;
+// A timeout only ends the wait: it does not prove that a write was rolled back.
+export async function reviewRpc(name: string, args: Record<string, unknown>, parent?: AbortSignal) {
+  const controller = new AbortController();
+  let rejectAbort: (error: Error) => void = () => {};
+  const aborted = new Promise<never>((_, reject) => { rejectAbort = reject; });
+  const abort = () => { controller.abort(); rejectAbort(new DOMException('Aborted', 'AbortError')); };
+  if (parent?.aborted) throw new DOMException('Aborted', 'AbortError');
+  parent?.addEventListener('abort', abort, { once: true });
+  const timer = window.setTimeout(abort, 15000);
+  try {
+    const result = await Promise.race([supabase.rpc(name, args).abortSignal(controller.signal), aborted]);
+    if (result.error) throw result.error;
+    return result.data as unknown;
+  } finally { window.clearTimeout(timer); parent?.removeEventListener('abort', abort); }
+}
+const uuid = (value: unknown) => typeof value === 'string' && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(value);
+const text = (value: unknown) => typeof value === 'string';
+const date = (value: unknown) => text(value) && Number.isFinite(Date.parse(value as string));
+const nullableText = (value: unknown) => value === null || text(value);
+const nullableDate = (value: unknown) => value === null || date(value);
+const integer = (value: unknown) => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
+const rating = (value: unknown) => value === null || (integer(value) && Number(value) >= 1 && Number(value) <= 5);
+export async function loadServiceReviews(professional: boolean, page = 0, size = 5, signal?: AbortSignal): Promise<ServiceReviews> {
+  const data = await reviewRpc('get_my_service_reviews', { p_professional: professional, p_offset: page * size, p_limit: size }, signal) as ServiceReviews | null;
+  if (!data || !Array.isArray(data.items) || !integer(data.count) || !integer(data.pending_count)
+    || data.pending_count > data.count || data.items.length > size || data.count < data.items.length
+    || new Set(data.items.map(row => row?.id)).size !== data.items.length
+    || data.items.some(row => !row || !uuid(row.id) || !uuid(row.booking_id)
+      || !['trainer', 'boarding', 'other'].includes(row.kind) || !['booking_service', 'legacy_relationship'].includes(row.review_scope)
+      || !date(row.completed_at) || !nullableDate(row.end_at) || !text(row.service_name) || !text(row.counterpart_name)
+      || !rating(row.owner_rating) || !rating(row.professional_rating) || !rating(row.own_rating)
+      || !nullableText(row.owner_comment) || !text(row.own_comment) || !nullableDate(row.owner_updated_at)
+      || !nullableDate(row.professional_updated_at) || !integer(row.version)
+      || typeof row.pending !== 'boolean' || typeof row.can_write !== 'boolean')) throw new Error('Invalid review response');
+  return data;
 }
 export function reviewError(error: unknown) {
   switch ((error as { code?: string })?.code) {
