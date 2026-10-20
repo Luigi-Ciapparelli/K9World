@@ -23,19 +23,20 @@ jobs:
       VITE_SUPABASE_ANON_KEY: 'synthetic-test-public-key'
       PC_TEST_BASE_URL: 'http://127.0.0.1:5219'
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
+          package-manager-cache: false
       - name: Install test dependencies
         run: npm install --no-save --package-lock=false playwright@1.56.1
       - name: TypeScript and changed-file lint
         run: |
           npm run typecheck
-          npx --no-install eslint src/components/ServiceReviews.tsx src/lib/serviceReviews.ts src/lib/reviewSubmission.ts
+          npx --no-install eslint --max-warnings 0 src/components/ServiceReviews.tsx src/lib/serviceReviews.ts src/lib/reviewSubmission.ts
       - name: Build and public SEO checks
         run: |
           npm run build

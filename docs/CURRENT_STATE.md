@@ -1,12 +1,36 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **20 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`7155fb9` (lettura dello storico condiviso inclusa).
+`ff529e9` (correzione dell’approvazione professionisti inclusa).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Approvazione professionisti — incremento locale corrente
+## Recupero delle valutazioni — incremento tracciato su GitHub
+
+[SERVICE_REVIEW_RECOVERY_V1](SERVICE_REVIEW_RECOVERY_V1.md), [PR #1](https://github.com/Luigi-Ciapparelli/K9World/pull/1):
+ripresa dello stesso invio dopo risposta persa, chiusura e navigazione nell’app,
+limite di 15 secondi e controllo delle risposte. Voto/commento restano legati
+alla singola prestazione; tentativi solo nella memoria della scheda browser.
+Ricaricamento completo e uscita cancellano il tentativo locale, non i dati già salvati.
+
+Il difetto è stato riprodotto sulla base `ff529e9`. Prima verifica automatica
+[riuscita](https://github.com/Luigi-Ciapparelli/K9World/actions/runs/39460404902):
+TypeScript, build/SEO e tre suite browser con API sintetiche, desktop/mobile.
+Il seguito corregge l’unico warning del lint mirato e aggiunge il caso di due
+prestazioni distinte con doppio submit. L’esito dell’ultima revisione è nei
+controlli della PR; il primo run non certifica automaticamente le revisioni successive.
+Nessuna nuova migration, modifica dei permessi o prova con account online.
+
+### Dipendenze da analizzare — SEC-03
+
+L’installazione di progetto e strumenti di test nel primo run ha segnalato
+9 advisory npm (3 moderate e 6 high). Non è ancora distinta l’esposizione di
+produzione da quella degli strumenti di sviluppo. Analizzare versioni, percorsi
+e aggiornamenti compatibili; non usare `npm audit fix --force`.
+Questi avvisi non sono i controlli RLS del database né la prova di un incidente.
+
+## Approvazione professionisti — presente su GitHub
 
 [PROFESSIONAL_APPROVAL_V1](PROFESSIONAL_APPROVAL_V1.md): il vecchio Annulla
 poteva inviare ugualmente un rifiuto. Ora modulo esplicito, motivo obbligatorio,
@@ -15,7 +39,8 @@ senza reinvio. Il ricontrollo prima della conferma non sostituisce un lock SQL.
 
 Verifiche browser desktop/mobile con API simulate e regressione Working-Dog;
 TypeScript, lint mirato e build/SEO. Nessun account o database online modificato.
-Installer `aggiorna_approvazioni_professionisti.py`; pubblicazione da eseguire.
+Il fetch del 20 ottobre osserva `ff529e9`: non ripetere l’installer.
+Pubblicazione Git e collaudo con account online restano evidenze distinte.
 
 ## Lettura dello storico condiviso — presente su GitHub
 

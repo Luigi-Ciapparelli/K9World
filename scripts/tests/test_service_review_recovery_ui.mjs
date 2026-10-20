@@ -85,6 +85,41 @@ try{
   await context.close();
  }
  if(!process.env.PC_BASELINE){
+
+  {
+   const {context,page,state}=await setup(1440);
+   const secondId='e8200000-0000-0000-0000-000000000802';
+   state.items.push({...entry(),id:secondId,booking_id:'e8200000-0000-0000-0000-000000000403',service_name:'Seconda lezione'});
+   await page.getByRole('button',{name:'Aggiorna valutazioni'}).click();
+   await page.getByRole('heading',{name:'Seconda lezione',exact:true}).waitFor();
+   await openReview(page);state.mode='committed-loss';await send(page);
+   await page.getByRole('alert').filter({hasText:'Esito non confermato'}).waitFor();
+   await page.getByRole('button',{name:'Chiudi valutazione'}).click();
+   const secondCard=page.locator('article').filter({has:page.getByRole('heading',{name:'Seconda lezione',exact:true})});
+   await secondCard.getByRole('button',{name:'Scrivi la recensione',exact:true}).click();
+   assert.ok(await page.getByRole('radio',{name:'5 su 5',exact:true}).isEnabled());
+   await page.getByRole('radio',{name:'5 su 5',exact:true}).check();
+   await page.getByLabel('Un commento breve').fill('Commento per la seconda prestazione.');
+   await page.locator('dialog form').evaluate(form=>{
+    form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));
+    form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));
+   });
+   await page.getByRole('dialog').waitFor({state:'hidden'});
+   assert.equal(state.writes.length,2,'Double submission must produce one request');
+   assert.equal(state.writes[1].p_thread_id,secondId);
+   assert.equal(state.writes[1].p_rating,5);
+   assert.equal(state.writes[1].p_comment,'Commento per la seconda prestazione.');
+   assert.notEqual(state.writes[0].p_request_id,state.writes[1].p_request_id);
+   await page.getByRole('button',{name:'Riprendi verifica'}).click();
+   assert.ok(await page.getByRole('radio',{name:'4 su 5',exact:true}).isChecked());
+   assert.equal(await page.getByLabel('Un commento breve').inputValue(),'Il cane ha lavorato serenamente.');
+   await page.getByRole('button',{name:'Verifica invio'}).click();
+   await page.getByRole('dialog').waitFor({state:'hidden'});
+   assert.deepEqual(state.writes[0],state.writes[2]);
+   assert.equal(state.saved.size,2);
+   assert.equal(state.items[0].version,1);assert.equal(state.items[1].version,1);
+   await context.close();console.log('OK: distinct bookings keep separate votes, comments and request IDs; double submission blocked');
+  }
   {
    const {context,page,state}=await setup(390);
    await openReview(page);state.mode='hold';await send(page);await waitUntil(()=>!!state.held);

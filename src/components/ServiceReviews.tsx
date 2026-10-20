@@ -45,7 +45,7 @@ function ReviewPanelBody({ professional, refresh }: { professional: boolean; ref
   const activeRead = useRef<AbortController>();
   const dismissLock = useRef(false);
   const alive = useRef(true);
-  useEffect(() => { alive.current = true; return () => { alive.current = false; generation.current++; activeRead.current?.abort(); }; }, []);
+  useEffect(() => { alive.current = true; return () => { alive.current = false; activeRead.current?.abort(); }; }, []);
   const load = useCallback(async () => {
     const run = ++generation.current;
     activeRead.current?.abort();
