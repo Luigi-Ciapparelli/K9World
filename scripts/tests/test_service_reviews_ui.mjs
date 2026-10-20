@@ -32,7 +32,7 @@ async function setup(width,professional=false){
   await route.fulfill({status:200,json:data,headers:{'content-range':'*/0','access-control-expose-headers':'content-range'}});
  });
  const page=await context.newPage();page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(e.message));
- await page.goto(base+(professional?'/pro/bookings':'/owner/bookings'));
+ await page.goto(base+(professional?'/pro/bookings':'/owner/bookings'),{waitUntil:'domcontentloaded',timeout:30000});
  await page.getByRole('heading',{name:'Le vostre esperienze'}).waitFor();
  await page.getByText(professional?'Nessuna prenotazione corrisponde':'Non hai ancora prenotazioni.').waitFor();
  return {context,page,state};
@@ -53,7 +53,7 @@ try{
   await dialog.getByLabel('Un commento breve').fill('Esperienza chiara e utile. <img src=x onerror="window.injected=true">');
   if(process.env.PC_SCREENSHOTS){await fs.mkdir(process.env.PC_SCREENSHOTS,{recursive:true});await page.screenshot({path:process.env.PC_SCREENSHOTS+'/review-'+width+'.png'});}
   state.failNext=true;await dialog.getByRole('button',{name:'Pubblica recensione',exact:true}).click();await dialog.getByRole('alert').filter({hasText:'Esito non confermato'}).waitFor();
-  await dialog.getByRole('button',{name:'Pubblica recensione',exact:true}).click();await dialog.waitFor({state:'hidden'});
+  await dialog.getByRole('button',{name:'Verifica invio',exact:true}).click();await dialog.waitFor({state:'hidden'});
   assert.equal(state.writes.length,2);assert.equal(state.writes[0].p_request_id,state.writes[1].p_request_id,'Unchanged retry lost nonce');
   assert.equal(await page.evaluate(()=>window.injected),undefined);assert.equal(await page.getByRole('button',{name:'Non ora',exact:true}).count(),0);
   await page.getByRole('button',{name:'Aggiorna la tua valutazione',exact:true}).click();await page.getByRole('dialog').waitFor();state.conflict=true;

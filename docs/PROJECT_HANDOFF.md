@@ -17,8 +17,11 @@ Anche [BOOKING_DETAILS_V1](BOOKING_DETAILS_V1.md) è su GitHub (`24aa9a4`).
 Anche [LESSON_RECORDING_V1](LESSON_RECORDING_V1.md) è su GitHub (`3ca2e4c`).
 Anche [CONTINUITY_RECORDING_RECOVERY_V1](CONTINUITY_RECORDING_RECOVERY_V1.md)
 è su GitHub (`9ed53bc`). Anche [CONTINUITY_ACCESS_RECOVERY_V1](CONTINUITY_ACCESS_RECOVERY_V1.md)
-è su GitHub (`7155fb9`). Incremento corrente: [PROFESSIONAL_APPROVAL_V1](PROFESSIONAL_APPROVAL_V1.md),
-annullamento e conferma delle decisioni amministrative. Rilascio soltanto frontend.
+è su GitHub (`7155fb9`). Anche [PROFESSIONAL_APPROVAL_V1](PROFESSIONAL_APPROVAL_V1.md)
+è su GitHub (`ff529e9`). Incremento corrente: [SERVICE_REVIEW_RECOVERY_V1](SERVICE_REVIEW_RECOVERY_V1.md),
+recupero delle valutazioni con esito incerto, tracciato nella PR #1.
+Le prove sono eseguite da GitHub Actions; non serve un nuovo installer WSL.
+Rilascio soltanto frontend. Dipendenze da analizzare come prossimo blocco SEC-03.
 La persona deve già essere collegata al centro; non si condividono credenziali.
 Segreteria generale e altre azioni amministrative non sono incluse.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);
@@ -103,7 +106,7 @@ per rifare una verifica email. Usare i documenti recapiti per il flusso effettiv
 | Richieste e dettagli prenotazioni | [BOOKING_DETAILS_V1](BOOKING_DETAILS_V1.md): servizio storico dove registrato, cane, orari italiani e annullamento recuperabile |
 | Pacchetti / abbonamenti | [PROFESSIONAL_PASSES_V1](PROFESSIONAL_PASSES_V1.md), [PROFESSIONAL_SUBSCRIPTIONS_V1](PROFESSIONAL_SUBSCRIPTIONS_V1.md), [recupero registro lezioni](LESSON_RECORDING_V1.md) |
 | Archivio e media | [PROFESSIONAL_CONTINUITY_MEDIA](PROFESSIONAL_CONTINUITY_MEDIA.md), [CONTINUITY_SHARING_V1](CONTINUITY_SHARING_V1.md), [DOG_HISTORY_EXPORT_V1](DOG_HISTORY_EXPORT_V1.md) |
-| Valutazioni | [SERVICE_REVIEWS_V2](SERVICE_REVIEWS_V2.md): singola prestazione, non persona/struttura; V1 solo storico |
+| Valutazioni | [SERVICE_REVIEWS_V2](SERVICE_REVIEWS_V2.md): singola prestazione, non persona/struttura; [recupero invii](SERVICE_REVIEW_RECOVERY_V1.md); V1 solo storico |
 | Approvazione dei profili | [PROFESSIONAL_APPROVAL_V1](PROFESSIONAL_APPROVAL_V1.md): annullamento, note correnti e controllo esito; separato dalla verifica delle credenziali |
 | Integrità credenziali | [CREDENTIAL_VERIFICATION_INTEGRITY_V1](CREDENTIAL_VERIFICATION_INTEGRITY_V1.md); revisione, concorrenza, storico privato e rilascio coordinato |
 | Sport / Working-Dog | [SPORT_SEARCH_AND_WORKING_DOG_V1](SPORT_SEARCH_AND_WORKING_DOG_V1.md), [SPORT_MERIT_AND_VERIFICATION_V2](SPORT_MERIT_AND_VERIFICATION_V2.md) |

@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 20 ottobre 2026, base `origin/main` osservata a `7155fb9`.
+Aggiornamento del 20 ottobre 2026, base `origin/main` osservata a `ff529e9`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -79,9 +79,12 @@ Anche il [registro lezioni](docs/LESSON_RECORDING_V1.md) è su GitHub (`3ca2e4c`
 MATCH-01 è registrata come direttiva futura (`3dae13b`), senza implementazione.
 Il [recupero delle sessioni private](docs/CONTINUITY_RECORDING_RECOVERY_V1.md)
 è su GitHub (`9ed53bc`). Anche [lettura e scadenza dello storico condiviso](docs/CONTINUITY_ACCESS_RECOVERY_V1.md)
-sono su GitHub (`7155fb9`). Incremento corrente: [approvazione professionisti](docs/PROFESSIONAL_APPROVAL_V1.md),
-annullamento senza scritture e conferma esplicita con note correnti.
-Rilascio soltanto frontend; nessuna nuova migration.
+sono su GitHub (`7155fb9`). Anche l’[approvazione professionisti](docs/PROFESSIONAL_APPROVAL_V1.md)
+è su GitHub (`ff529e9`): non ripetere l’installer.
+Incremento corrente: [recupero delle valutazioni](docs/SERVICE_REVIEW_RECOVERY_V1.md),
+tracciato nella [PR #1](https://github.com/Luigi-Ciapparelli/K9World/pull/1).
+Prove automatiche su GitHub; nessuna nuova migration.
+Prossima verifica tecnica: avvisi delle dipendenze (SEC-03), distinguendo sviluppo e produzione.
 
 ## Primo controllo, senza modificare nulla
 
