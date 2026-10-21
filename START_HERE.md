@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 21 ottobre 2026, base `origin/main` osservata a `9523abd`.
+Aggiornamento del 21 ottobre 2026, base `origin/main` osservata a `7ac252e`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -86,7 +86,9 @@ sono su GitHub (`7155fb9`). Anche l’[approvazione professionisti](docs/PROFESS
 Incremento corrente: [recupero delle valutazioni](docs/SERVICE_REVIEW_RECOVERY_V1.md),
 tracciato nella [PR #1](https://github.com/Luigi-Ciapparelli/K9World/pull/1).
 Prove automatiche su GitHub; nessuna nuova migration.
-Prossima verifica tecnica: avvisi delle dipendenze (SEC-03), distinguendo sviluppo e produzione.
+Priorità autorizzata corrente: privacy e strumenti tecnici del browser,
+[BROWSER_PRIVACY_V1](docs/BROWSER_PRIVACY_V1.md). SEC-03 resta aperta;
+non confondere la verifica del codice con contratti, backup e conformità legale.
 
 ## Primo controllo, senza modificare nulla
 

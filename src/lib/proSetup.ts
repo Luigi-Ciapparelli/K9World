@@ -1,4 +1,5 @@
 import { isBookableService } from './serviceCategories';
+import { TOUR_PREFIX } from './browserData';
 export const setupSteps = [
   { id: 'identity', label: 'Presenta la tua attività', short: 'Identità', description: 'Il tuo nome e il tipo di lavoro che offri.', group: 'base' },
   { id: 'area', label: 'Indica dove lavori', short: 'Zona', description: 'La zona e la distanza entro cui puoi seguire i clienti.', group: 'base' },
@@ -64,7 +65,7 @@ export const toolTours = [
   ] },
 ] as const;
 export type ToolTour = typeof toolTours[number];
-const tourKey = (userId: string) => `pc-pro-explored-v1:${userId}`;
+const tourKey = (userId: string) => `${TOUR_PREFIX}${userId}`;
 export function readExploredTools(userId: string): string[] {
   try { const value: unknown = JSON.parse(localStorage.getItem(tourKey(userId)) || '[]'); return Array.isArray(value) ? value.filter((id): id is string => typeof id === 'string' && toolTours.some(t => t.id === id)) : []; } catch { return []; }
 }

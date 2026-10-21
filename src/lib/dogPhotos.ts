@@ -6,7 +6,7 @@ export const DOG_PHOTO_CHANGED = 'portalecinofilo-dog-photo-changed';
 const preparedPhotos = new WeakSet<File>();
 
 export const DOG_PHOTO_FALLBACK =
-  'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=400';
+  '/brand/portalecinofilo-mark.png';
 
 export function isExternalDogPhoto(value?: string | null) {
   return Boolean(value && /^https?:\/\//i.test(value));

@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { BROWSER_DATA_EVENT, THEME_KEY } from './browserData';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -8,6 +9,13 @@ type ThemeContextValue = {
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+function readTheme(): ThemeMode {
+  try {
+    const saved = window.localStorage.getItem(THEME_KEY);
+    return saved === 'light' || saved === 'dark' ? saved : 'system';
+  } catch { return 'system'; }
+}
 
 function applyTheme(theme: ThemeMode) {
   const root = document.documentElement;
@@ -22,20 +30,25 @@ function applyTheme(theme: ThemeMode) {
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeMode>(() => {
     if (typeof window === 'undefined') return 'system';
-    const saved = localStorage.getItem('pawconnect-theme');
-
-    if (saved === 'light' || saved === 'dark' || saved === 'system') {
-      return saved;
-    }
-
-    return 'system';
+    return readTheme();
   });
 
   const setTheme = (nextTheme: ThemeMode) => {
-    localStorage.setItem('pawconnect-theme', nextTheme);
+    try { window.localStorage.setItem(THEME_KEY, nextTheme); } catch { /* Apply for this visit even if storage is disabled. */ }
     setThemeState(nextTheme);
     applyTheme(nextTheme);
   };
+
+  useEffect(() => {
+    const sync = (event: Event) => {
+      if (event instanceof StorageEvent && event.key !== THEME_KEY && event.key !== null) return;
+      if (event instanceof CustomEvent && event.detail !== 'theme') return;
+      setThemeState(readTheme());
+    };
+    window.addEventListener('storage', sync);
+    window.addEventListener(BROWSER_DATA_EVENT, sync);
+    return () => { window.removeEventListener('storage', sync); window.removeEventListener(BROWSER_DATA_EVENT, sync); };
+  }, []);
 
   useEffect(() => {
     applyTheme(theme);
@@ -56,6 +69,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
+// This hook and its provider intentionally share the same context module.
+// eslint-disable-next-line react-refresh/only-export-components
 export function useTheme() {
   const ctx = useContext(ThemeContext);
 

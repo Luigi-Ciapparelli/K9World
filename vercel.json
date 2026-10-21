@@ -5,27 +5,32 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/services", "destination": "/search?type=trainer", "permanent": true },
-    { "source": "/become-a-pro", "destination": "/become-pro", "permanent": true }
+    {"source": "/services", "destination": "/search?type=trainer", "permanent": true},
+    {"source": "/become-a-pro", "destination": "/become-pro", "permanent": true}
   ],
   "rewrites": [
-    { "source": "/p/:id", "destination": "/profile-shell" },
-    { "source": "/pro/:path*", "destination": "/app-shell" },
-    { "source": "/owner/:path*", "destination": "/app-shell" },
-    { "source": "/admin/:path*", "destination": "/app-shell" },
-    { "source": "/signin", "destination": "/app-shell" },
-    { "source": "/signup", "destination": "/app-shell" },
-    { "source": "/forgot-password", "destination": "/app-shell" },
-    { "source": "/reset-password", "destination": "/app-shell" },
-    { "source": "/account/:path*", "destination": "/app-shell" }
+    {"source": "/p/:id", "destination": "/profile-shell"},
+    {"source": "/pro/:path*", "destination": "/app-shell"},
+    {"source": "/owner/:path*", "destination": "/app-shell"},
+    {"source": "/admin/:path*", "destination": "/app-shell"},
+    {"source": "/signin", "destination": "/app-shell"},
+    {"source": "/signup", "destination": "/app-shell"},
+    {"source": "/forgot-password", "destination": "/app-shell"},
+    {"source": "/reset-password", "destination": "/app-shell"},
+    {"source": "/account/:path*", "destination": "/app-shell"}
   ],
   "headers": [
-    { "source": "/account/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }, { "key": "Referrer-Policy", "value": "no-referrer" }] },
-    { "source": "/forgot-password", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }, { "key": "Referrer-Policy", "value": "no-referrer" }] },
-    { "source": "/reset-password", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }, { "key": "Referrer-Policy", "value": "no-referrer" }] },
-    { "source": "/pro/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
-    { "source": "/owner/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
-    { "source": "/admin/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
-    { "source": "/sw.js", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+    {"source": "/(.*)", "headers": [{"key": "Referrer-Policy", "value": "no-referrer"}, {"key": "X-Content-Type-Options", "value": "nosniff"}]},
+    {"source": "/account/:path*", "headers": [{"key": "X-Robots-Tag", "value": "noindex, nofollow"}, {"key": "Cache-Control", "value": "no-store"}, {"key": "Referrer-Policy", "value": "no-referrer"}]},
+    {"source": "/forgot-password", "headers": [{"key": "X-Robots-Tag", "value": "noindex, nofollow"}, {"key": "Cache-Control", "value": "no-store"}, {"key": "Referrer-Policy", "value": "no-referrer"}]},
+    {"source": "/reset-password", "headers": [{"key": "X-Robots-Tag", "value": "noindex, nofollow"}, {"key": "Cache-Control", "value": "no-store"}, {"key": "Referrer-Policy", "value": "no-referrer"}]},
+    {"source": "/pro/:path*", "headers": [{"key": "X-Robots-Tag", "value": "noindex, nofollow"}, {"key": "Cache-Control", "value": "no-store"}]},
+    {"source": "/owner/:path*", "headers": [{"key": "X-Robots-Tag", "value": "noindex, nofollow"}, {"key": "Cache-Control", "value": "no-store"}]},
+    {"source": "/admin/:path*", "headers": [{"key": "X-Robots-Tag", "value": "noindex, nofollow"}, {"key": "Cache-Control", "value": "no-store"}]},
+    {"source": "/sw.js", "headers": [{"key": "Cache-Control", "value": "no-cache"}]},
+    {"source": "/signin", "headers": [{"key": "Cache-Control", "value": "no-store"}]},
+    {"source": "/signup", "headers": [{"key": "Cache-Control", "value": "no-store"}]},
+    {"source": "/app-shell", "headers": [{"key": "Cache-Control", "value": "no-store"}]},
+    {"source": "/profile-shell", "headers": [{"key": "Cache-Control", "value": "no-store"}]}
   ]
 }

@@ -1,0 +1,60 @@
+name: Browser privacy
+on:
+  pull_request:
+    paths:
+      - 'src/lib/browserData.ts'
+      - 'src/lib/ThemeContext.tsx'
+      - 'src/lib/imparaProgress.ts'
+      - 'src/components/BrowserDataControls.tsx'
+      - 'src/pages/BeforeDogPage.tsx'
+      - 'src/pages/LegalPages.tsx'
+      - 'scripts/tests/test_browser_privacy_ui.mjs'
+      - '.github/workflows/browser-privacy.yml'
+      - 'vercel.json'
+      - 'index.html'
+      - 'public/sw.js'
+permissions:
+  contents: read
+concurrency:
+  group: browser-privacy-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      VITE_PROFESSIONAL_CONTINUITY: 'true'
+      VITE_SUPABASE_URL: 'https://pc-home-test.supabase.co'
+      VITE_SUPABASE_ANON_KEY: 'synthetic-test-public-key'
+      PC_TEST_BASE_URL: 'http://127.0.0.1:5240'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Install test dependencies
+        run: npm install --no-save --package-lock=false playwright@1.56.1
+      - name: TypeScript, targeted lint, build and SEO
+        run: |
+          npm run typecheck
+          npx --no-install eslint --max-warnings 0 src/components/BrowserDataControls.tsx src/lib/browserData.ts src/lib/ThemeContext.tsx src/lib/imparaProgress.ts src/pages/BeforeDogPage.tsx src/pages/LegalPages.tsx src/components/Footer.tsx src/lib/proSetup.ts
+          node scripts/tests/test_impara_progress.mjs
+          npm run build
+          node scripts/tests/test_seo_build.mjs
+      - name: Install Chromium
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Test browser storage on desktop and mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5240 --strictPort > "$RUNNER_TEMP/privacy-vite.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:5240/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/tests/test_browser_privacy_ui.mjs

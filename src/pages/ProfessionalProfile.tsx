@@ -184,7 +184,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
   const avatarUrl = pro.avatar_url || '';
   const coverUrl =
     pro.cover_photo_url ||
-    'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1800';
+    '/media/home/training-1280.webp';
   const servicePrices = services.map((service) => Number(service.price)).filter((price) => Number.isFinite(price) && price > 0);
   const listedPrice = Number(pro.starting_price);
   const startingPrice = Number.isFinite(listedPrice) && listedPrice > 0

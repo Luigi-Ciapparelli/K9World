@@ -242,7 +242,7 @@ export function OwnerDashboard() {
                   >
                     <DogPhoto
                       photoPath={dog.photo_url}
-                      fallbackUrl="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=200"
+                      fallbackUrl="/brand/portalecinofilo-mark.png"
                       alt={dog.name}
                       className="w-16 h-16 rounded-full object-cover shrink-0"
                     />

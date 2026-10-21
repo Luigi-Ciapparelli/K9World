@@ -55,21 +55,11 @@ export function Footer() {
           <div>
             <h3 className="text-white font-bold mb-3">Informazioni e regole</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-y-2 gap-x-4 text-sm">
-              <button type="button" onClick={() => navigate('/privacy')} className="text-left hover:text-white">
-                Privacy
-              </button>
-              <button type="button" onClick={() => navigate('/cookies')} className="text-left hover:text-white">
-                Cookie
-              </button>
-              <button type="button" onClick={() => navigate('/terms')} className="text-left hover:text-white">
-                Termini utenti
-              </button>
-              <button type="button" onClick={() => navigate('/professional-terms')} className="text-left hover:text-white">
-                Termini professionisti
-              </button>
-              <button type="button" onClick={() => navigate('/contact')} className="text-left hover:text-white">
-                Contatti
-              </button>
+              <RouteLink to="/privacy" className="text-left hover:text-white">Privacy</RouteLink>
+              <RouteLink to="/cookies" className="text-left hover:text-white">Cookie e dati locali</RouteLink>
+              <RouteLink to="/terms" className="text-left hover:text-white">Termini utenti</RouteLink>
+              <RouteLink to="/professional-terms" className="text-left hover:text-white">Termini professionisti</RouteLink>
+              <RouteLink to="/contact" className="text-left hover:text-white">Contatti</RouteLink>
               <a
                 href={`mailto:${CONTACT_EMAIL}?subject=Segnalazione%20PortaleCinofilo`}
                 className="hover:text-white"

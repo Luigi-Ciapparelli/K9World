@@ -63,7 +63,7 @@ export function DogDetailPage({ id }: { id: string }) {
           <div className="h-64 md:h-80 bg-stone-100">
             <DogPhoto
               photoPath={dog.photo_url}
-              fallbackUrl="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1000"
+              fallbackUrl="/brand/portalecinofilo-mark.png"
               className="w-full h-full object-cover"
               alt={dog.name}
             />
