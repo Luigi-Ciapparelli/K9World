@@ -39,8 +39,9 @@ TypeScript, lint mirato, build/prerender SEO e regressione Impara eseguiti local
 Suite browser nella CI `Browser privacy`: 1440/390 px, conferma/annullamento,
 protezione delle chiavi estranee/Auth, cache selettiva, tema/test con storage negato,
 input precedente corrotto e assenza di richieste a host aggiuntivi nelle pagine provate.
-Il browser locale non è stato scaricabile; non dichiarare il test browser passato
-prima dell'esito effettivo della CI. Prove con API sintetiche, nessun account reale.
+Il browser locale non era scaricabile. La [CI del codice a6b1fac](https://github.com/Luigi-Ciapparelli/K9World/actions/runs/39595123299)
+è poi terminata con successo, incluse entrambe le dimensioni del browser.
+Prove con API sintetiche, nessun account reale; preview Vercel riuscita.
 
 Il deploy Vercel e gli header reali vanno distinti dal merge. Nessuna cancellazione
 su account, Storage, database o contatti online. Nessuna certificazione di conformità.

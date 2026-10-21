@@ -13,8 +13,10 @@ cancellazione locale separati da account/archivi, tema e test resilienti allo
 storage negato, rimozione bozze inutilizzate e immagini esterne predefinite.
 Header di riservatezza e cache delle aree private; nessuna migration.
 TypeScript, lint mirato, build/SEO e regressione Impara passati localmente.
-La suite desktop/mobile viene eseguita nella CI `Browser privacy`; il download
-del browser locale è fallito. Merge, CI e deploy sono evidenze distinte.
+La suite desktop/mobile è passata nella [CI Browser privacy](https://github.com/Luigi-Ciapparelli/K9World/actions/runs/39595123299)
+sul codice `a6b1fac`: 1440/390 px, storage negato, cancellazione selettiva e chiave
+Auth preservata. Preview Vercel riuscita; il successivo merge e il deploy
+di produzione restano evidenze distinte. Il browser locale non era scaricabile.
 Restano da verificare contratti/regioni dei fornitori, conservazione online,
 backup/ripristino e gestione effettiva delle richieste privacy. Email sospese;
 PLUTO-01 e MATCH-01 restano soltanto direttive future.
