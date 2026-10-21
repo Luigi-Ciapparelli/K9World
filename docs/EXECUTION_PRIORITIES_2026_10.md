@@ -47,6 +47,7 @@ future per dimostrare quelle già utilizzabili.
 | ECO-01 | In parallelo all'utilizzo italiano | Conversazioni autorizzate e un problema professionale concreto; costi reali | Offerta B2B facoltativa e disponibilità a pagare documentate, senza attivare incassi automaticamente |
 | INT-01 | Dopo una prima prova utile italiana | Confronto di due mercati, lingua/assistenza/offerta e costo incrementale | Un mercato testato con decisione motivata; nessuna rete di siti acquistata in anticipo |
 | MATCH-01 | Direttiva futura registrata il 19 ottobre 2026; progettazione e implementazione non avviate | Abbinamento tra proprietario, cane e professionista in PRODUCT_DIRECTION: conoscenze del cliente, esigenze del cane, obiettivi, attività offerte e vicinanza | Conservare la ricerca autonoma e la semplicità; resta da decidere se integrare il suggerimento o offrirlo come opzione. Nessun algoritmo o flusso da definire ora |
+| PLUTO-01 | Direttiva futura del 21 ottobre 2026; attività sospesa | Assistente cinofilo educativo per adulti e bambini, conversazione limitata ai cani e tono giocoso; riferimento Clara Studio in PRODUCT_DIRECTION | Solo registrazione della direttiva. Nessuna ricerca, progettazione o implementazione prima del comando esplicito di Luigi; priorità correnti invariate |
 
 ## Input che mancano davvero a Luigi
 

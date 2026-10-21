@@ -156,6 +156,34 @@ Implementazione e denominazioni ufficiali: [TRAINER_SPECIALIZATIONS_V1](TRAINER_
 Un eventuale catalogo dei corsi ENCI deve usare riferimenti leciti/aggiornati,
 fonte, date e stato, senza simulare accreditamento o copiare materiale riservato.
 
+## Pluto — assistente cinofilo per adulti e bambini (direttiva futura del 21 ottobre 2026)
+
+Valutare in futuro la creazione di **Pluto**, l’assistente cinofilo di
+PortaleCinofilo: un personaggio amichevole che accompagni adulti e bambini
+nella conoscenza del cane, dei suoi bisogni e di una convivenza consapevole
+e sicura. Le spiegazioni dovranno essere comprensibili, affidabili e adatte
+all’età, coerenti con la missione educativa del portale.
+
+Pluto dovrà mantenere la conversazione nell’ambito cinofilo. Alle richieste
+estranee ai cani risponderà brevemente e con gentilezza, invitando a tornare
+al tema, senza trasformarsi in un assistente generalista. Alle domande
+esclusivamente su altri animali potrà usare una battuta riconoscibile,
+come **«Per me, i cani sono i migliori!»**, per poi ricondurre il dialogo
+alla cinofilia. La battuta esprime il carattere del personaggio, non un
+giudizio scientifico o un invito a mancare di rispetto agli altri animali.
+
+La sicurezza dei contenuti per i bambini, l’attendibilità delle risposte e
+la tutela dei dati dovranno essere requisiti del progetto futuro.
+
+Riferimento segnalato da Luigi, da valutare soltanto quando richiesto:
+[Clara Studio](https://github.com/miladicode823-coder/Clara-Studio).
+Il collegamento non costituisce una scelta tecnologica o un’approvazione
+del relativo codice; il progetto non è stato esaminato per questa direttiva.
+
+**PLUTO-01: registrare soltanto l’idea. Ricerca, progettazione, integrazione e
+sviluppo restano sospesi fino a un comando esplicito di Luigi. Le priorità
+operative correnti conservano la precedenza.**
+
 ## Immagini e contenimento dei costi — decisione del 9 ottobre
 
 Ora: foto/logo dell’addestratore, centro o altro professionista visibile in
