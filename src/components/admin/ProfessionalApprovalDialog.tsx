@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { approvalLabels, readProfessionalApproval, sameApproval, writeProfessionalApproval } from '../../lib/professionalApproval';
+import { approvalLabels, bounded, readProfessionalApproval, sameApproval, writeProfessionalApproval } from '../../lib/professionalApproval';
 import type { ApprovalStatus, ProfessionalApproval } from '../../lib/professionalApproval';
+import { admissionProofReady, approveTrainer, emptyAdmissionProof, readTrainerAdmission } from '../../lib/trainerAdmission';
+import type { TrainerAdmission } from '../../lib/trainerAdmission';
+import { TrainerAdmissionFields } from './TrainerAdmissionFields';
 
 const actions: Record<ApprovalStatus, { title: string; confirm: string; effect: string }> = {
   approved: { title: 'Approva il profilo', confirm: 'Conferma approvazione', effect: 'Il profilo potrà comparire nelle ricerche, secondo i servizi e la visibilità impostati.' },
@@ -26,6 +29,8 @@ export function ProfessionalApprovalDialog({ id, name, status, onClose, onObserv
   const [reason, setReason] = useState('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
+  const [admission, setAdmission] = useState<TrainerAdmission | null>(null);
+  const [proof, setProof] = useState(emptyAdmissionProof);
   const action = actions[status];
 
   const load = useCallback(async () => {
@@ -36,7 +41,10 @@ export function ProfessionalApprovalDialog({ id, name, status, onClose, onObserv
     setPhase(attempted.current ? 'checking' : 'loading'); setError('');
     try {
       const row = await readProfessionalApproval(id, request.signal);
+      const requirements = status === 'approved' && !attempted.current
+        ? await bounded(s => readTrainerAdmission(id, s), request.signal) : null;
       if (ticket !== generation.current) return;
+      setAdmission(requirements); setProof({ ...emptyAdmissionProof(), holderName: requirements?.identity.listing_type === 'individual' ? requirements.identity.name || '' : '' });
       const changed = snapshot.current !== null && !sameApproval(snapshot.current, row);
       if (!snapshot.current || changed || attempted.current) {
         setNotes(row.admin_notes || ''); setReason(row.rejection_reason || '');
@@ -53,10 +61,10 @@ export function ProfessionalApprovalDialog({ id, name, status, onClose, onObserv
       if (ticket !== generation.current) return;
       setError(attempted.current
         ? 'Esito non confermato. Non inviare di nuovo la decisione: verifica lo stato quando torna la connessione.'
-        : 'Non è stato possibile leggere lo stato attuale del profilo. Nessuna decisione inviata. Riprova il caricamento.');
+        : 'Non è stato possibile leggere lo stato e i requisiti attuali. Nessuna decisione inviata. Riprova il caricamento; se il controllo non è disponibile, completa il rilascio della verifica di ammissione.');
       setPhase(attempted.current ? 'uncertain' : 'loadError');
     } finally { if (ticket === generation.current) inFlight.current = false; }
-  }, [id, onObserved]);
+  }, [id, onObserved, status]);
 
   const cancelPending = useCallback(() => {
     ++generation.current; inFlight.current = false; controller.current?.abort();
@@ -70,6 +78,7 @@ export function ProfessionalApprovalDialog({ id, name, status, onClose, onObserv
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (inFlight.current || attempted.current || phase !== 'ready' || !current || (status === 'rejected' && !reason.trim())) return;
+    if (status === 'approved' && !admissionProofReady(admission, proof)) return;
     inFlight.current = true;
     const ticket = ++generation.current;
     const request = new AbortController(); controller.current = request;
@@ -90,7 +99,9 @@ export function ProfessionalApprovalDialog({ id, name, status, onClose, onObserv
         rejection_reason: status === 'rejected' ? reason.trim() : null,
       };
       attempted.current = true;
-      await writeProfessionalApproval(expected, request.signal);
+      if (status === 'approved' && admission?.required) {
+        await bounded(s => approveTrainer(id, admission, proof, expected.admin_notes, s), request.signal);
+      } else await writeProfessionalApproval(expected, request.signal);
       if (ticket !== generation.current) return;
       const observed = await readProfessionalApproval(id, request.signal);
       if (ticket !== generation.current) return;
@@ -122,6 +133,7 @@ export function ProfessionalApprovalDialog({ id, name, status, onClose, onObserv
       {notice && <p role="status" className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm">{notice}</p>}
       {(phase === 'loading' || phase === 'checking') && <p role="status" className="mt-4 text-sm">{phase === 'checking' ? 'Verifica dello stato…' : 'Caricamento dello stato attuale…'}</p>}
       {current && phase !== 'loading' && phase !== 'loadError' && <div className="mt-4 space-y-4">
+        {status === 'approved' && admission && <TrainerAdmissionFields context={admission} proof={proof} disabled={!editable} onChange={setProof} />}
         <label className="block text-sm font-semibold">Note di amministrazione
           <textarea rows={3} value={notes} disabled={!editable} onChange={event => setNotes(event.target.value)} className="mt-1 block w-full rounded-xl border border-stone-300 p-3 font-normal disabled:bg-stone-50" />
           <span className="mt-1 block text-xs font-normal text-stone-600">Le note esistenti sono conservate. Modificale solo se necessario.</span>
@@ -134,7 +146,7 @@ export function ProfessionalApprovalDialog({ id, name, status, onClose, onObserv
       <div className="mt-6 flex flex-wrap justify-end gap-3">
         <button type="button" disabled={busy} onClick={close} className="rounded-xl border border-stone-300 px-4 py-2.5 font-semibold disabled:opacity-50">{attempted.current ? 'Chiudi' : 'Annulla'}</button>
         {phase === 'loadError' && <button type="button" onClick={() => void load()} className="rounded-xl bg-emerald-700 px-4 py-2.5 font-semibold text-white">Riprova caricamento</button>}
-        {(editable || phase === 'saving') && <button type="submit" disabled={!editable || (status === 'rejected' && !reason.trim())} className="rounded-xl bg-emerald-700 px-4 py-2.5 font-semibold text-white disabled:opacity-50">{phase === 'saving' ? 'Registrazione in corso…' : action.confirm}</button>}
+        {(editable || phase === 'saving') && <button type="submit" disabled={!editable || (status === 'rejected' && !reason.trim()) || (status === 'approved' && !admissionProofReady(admission, proof))} className="rounded-xl bg-emerald-700 px-4 py-2.5 font-semibold text-white disabled:opacity-50">{phase === 'saving' ? 'Registrazione in corso…' : action.confirm}</button>}
         {phase === 'uncertain' && <button type="button" onClick={() => void load()} className="rounded-xl bg-emerald-700 px-4 py-2.5 font-semibold text-white">Verifica esito</button>}
       </div>
     </form>

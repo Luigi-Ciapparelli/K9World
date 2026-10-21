@@ -1,10 +1,30 @@
 # PortaleCinofilo — stato corrente
 
-Aggiornato il **20 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`ff529e9` (correzione dell’approvazione professionisti inclusa).
+Aggiornato il **21 ottobre 2026**. Base verificata con fetch di `origin/main`:
+`9523abd` (PR #1 sul recupero delle valutazioni integrata).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
+
+## Ammissione degli addestratori — incremento corrente
+
+[TRAINER_ADMISSION_V1](TRAINER_ADMISSION_V1.md): il problema di fiducia segnalato
+il 21 ottobre ha precedenza su SEC-03. Nuova barriera SQL e UI amministratore:
+qualifica professionale ENCI/CSEN/OPES/FISC verificata manualmente, identità,
+email confermata, titolare della qualifica e fonte registrati prima della
+pubblicazione. Copertura dei profili misti e invalidazione dopo modifiche/revoche.
+
+La migration `20261021100000_verified_trainer_admission.sql` rimette in attesa
+i profili già pubblicati che offrono addestramento: dovranno essere riesaminati.
+Account, prenotazioni, servizi e archivi sono conservati. Frontend dopo database.
+Stato remoto di questa migration non osservato: codice preparato non significa
+barriera già attiva sul sito. Dettagli e verifiche nella PR del blocco.
+
+UI desktop/mobile e regressione dialogo passate con API sintetiche, TypeScript,
+lint mirato e build/SEO passati. Verifica SQL e concorrenza nella CI dedicata.
+Restano aperti email temporanee, audit privacy operativo/fornitori, recupero
+backup, requisiti delle altre attività e verifica legale/fiscale. Non dichiarare
+protezione assoluta o conformità certificata.
 
 ## Recupero delle valutazioni — incremento tracciato su GitHub
 

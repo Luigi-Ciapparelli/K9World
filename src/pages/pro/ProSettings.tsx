@@ -1562,7 +1562,7 @@ function ApprovalBox({
       <div>
         <div className="font-bold text-amber-900">In attesa di approvazione</div>
         <p className="text-sm text-amber-800 mt-1">
-          Completa le informazioni essenziali. L’amministrazione deve approvare il profilo prima che sia disponibile nella ricerca.
+          Completa le informazioni essenziali. L’amministrazione deve approvare il profilo prima che sia disponibile nella ricerca. Se offri addestramento, conferma l’email e aggiungi in Attestati e risultati una qualifica ENCI, CSEN, OPES o FISC con la relativa fonte. Per un centro, indica la persona qualificata che vi opera.
         </p>
         {adminNotes && <p className="text-xs text-amber-700 mt-2">Nota amministrazione: {adminNotes}</p>}
       </div>

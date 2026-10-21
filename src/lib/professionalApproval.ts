@@ -14,7 +14,7 @@ export const approvalLabels: Record<ApprovalStatus, string> = {
 
 // Aborting a write does not prove a database rollback. Never retry a mutation
 // automatically: read its result instead. Nothing is stored in browser storage.
-async function bounded<T>(run: (signal: AbortSignal) => PromiseLike<T>, parent: AbortSignal): Promise<T> {
+export async function bounded<T>(run: (signal: AbortSignal) => PromiseLike<T>, parent: AbortSignal): Promise<T> {
   const controller = new AbortController();
   let rejectAbort: (reason: Error) => void = () => {};
   const aborted = new Promise<never>((_, reject) => { rejectAbort = reject; });

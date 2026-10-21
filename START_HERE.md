@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 20 ottobre 2026, base `origin/main` osservata a `ff529e9`.
+Aggiornamento del 21 ottobre 2026, base `origin/main` osservata a `9523abd`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -22,7 +22,9 @@ Calendario, messaggi, pacchetti, abbonamenti e archivio testuale esistono già.
 Il registro corrente specifica i limiti: presenza su GitHub, migration applicata,
 deployment Ready e prova con account reali sono evidenze distinte.
 
-Priorità approvata: foto dei profili, funzionamento, ottimizzazione e sicurezza.
+Priorità corrente: [ammissione degli addestratori](docs/TRAINER_ADMISSION_V1.md),
+poi controlli contro abusi e revisione privacy operativa. La richiesta del 21
+ottobre precede SEC-03; non riprendere marketing o raccolta email.
 Gli allegati delle sessioni attendono quote per piano e una politica di compressione;
 Impara ora segue l’ordine precedente 1, 3, 4, 5, 6, 7, 8, 2 (rinumerato 1–8).
 Il CSV SEO è stato analizzato: dettagli in [SEO_INDEXATION_2026_10_09](docs/SEO_INDEXATION_2026_10_09.md).

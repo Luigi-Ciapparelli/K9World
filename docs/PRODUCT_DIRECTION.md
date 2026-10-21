@@ -49,6 +49,18 @@ Evitare blocchi ripetitivi, slogan tecnici («Evidence layer»), menu duplicati 
 campi bianchi tutti nella stessa pagina. Desktop curato quanto mobile, CTA
 evidenti, focus/tastiera e movimento ridotto; effetti solo se aiutano l'uso.
 
+## Ammissione degli addestratori — decisione del 21 ottobre 2026
+
+Prima di pubblicare servizi di addestramento richiedere identità riscontrata,
+email confermata e qualifica nominativa ENCI, CSEN, OPES o FISC controllata
+presso la fonte. Per i centri identificare il referente e la persona qualificata
+che vi opera. Una tessera associativa o un risultato sportivo non bastano.
+Questa selezione del portale supera le precedenti indicazioni di ammissione
+basata soltanto su esperienza/dichiarazioni. Non è un elenco di abilitazioni
+obbligatorie per legge e non si applica automaticamente a pensioni/handler.
+Registrazione, pubblicazione e verifica restano azioni distinte. Conservare i
+dati dei profili in attesa. Dettagli in [TRAINER_ADMISSION_V1](TRAINER_ADMISSION_V1.md).
+
 ## Identità professionale, strutture e ricerca
 
 Visibilità quotidiana e sportiva sono selettori indipendenti: nessuna opzione

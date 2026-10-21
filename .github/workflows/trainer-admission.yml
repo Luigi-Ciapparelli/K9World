@@ -1,0 +1,58 @@
+name: Trainer admission
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/20261021100000_verified_trainer_admission.sql'
+      - 'src/lib/trainerAdmission.ts'
+      - 'src/lib/professionalApproval.ts'
+      - 'src/components/admin/ProfessionalApprovalDialog.tsx'
+      - 'src/components/admin/TrainerAdmissionFields.tsx'
+      - 'scripts/tests/*trainer_admission*'
+      - '.github/workflows/trainer-admission.yml'
+permissions:
+  contents: read
+concurrency:
+  group: trainer-admission-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      VITE_PROFESSIONAL_CONTINUITY: 'true'
+      VITE_SUPABASE_URL: 'https://pc-home-test.supabase.co'
+      VITE_SUPABASE_ANON_KEY: 'synthetic-test-public-key'
+      PC_TEST_BASE_URL: 'http://127.0.0.1:5240'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Reconstruct SQL and check concurrency
+        run: python3 scripts/tests/test_trainer_admission.py
+      - name: Install test dependencies
+        run: npm install --no-save --package-lock=false playwright@1.56.1
+      - name: TypeScript, targeted lint, build and SEO
+        run: |
+          npm run typecheck
+          npx --no-install eslint --max-warnings 0 src/components/admin/ProfessionalApprovalDialog.tsx src/components/admin/TrainerAdmissionFields.tsx src/lib/trainerAdmission.ts src/lib/professionalApproval.ts
+          npm run build
+          node scripts/tests/test_seo_build.mjs
+      - name: Install Chromium
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Test real admin interface with synthetic APIs
+        shell: bash
+        run: |
+          set -euo pipefail
+          node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5240 --strictPort > "$RUNNER_TEMP/admission-vite.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:5240/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/tests/test_trainer_admission_ui.mjs
+          node scripts/tests/test_professional_approval_ui.mjs

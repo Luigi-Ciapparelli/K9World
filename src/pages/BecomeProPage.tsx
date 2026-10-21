@@ -43,7 +43,7 @@ const steps = [
   },
   {
     title: 'Prepara le quattro basi',
-    text: 'Il profilo guidato ti accompagna: identità, zona, presentazione e primo servizio. Foto e competenze si possono aggiungere dopo.',
+    text: 'Il profilo guidato ti accompagna: identità, zona, presentazione e primo servizio. Puoi completarlo in più momenti. Per pubblicare servizi di addestramento servono identità riscontrata, email confermata e una qualifica ENCI, CSEN, OPES o FISC verificata.',
   },
   {
     title: 'Diventa trovabile',
@@ -59,7 +59,8 @@ const requirements = [
   'Identità e contatti professionali verificabili',
   'Descrizione chiara dei servizi realmente offerti',
   'Zona servita e prezzi indicativi',
-  'Esperienza, qualifiche o formazione dichiarate in modo trasparente',
+  'Per l’addestramento: qualifica ENCI, CSEN, OPES o FISC controllata presso la fonte',
+  'Per i centri che offrono addestramento: referente e persona qualificata identificabili',
   'Documentazione o fonti quando necessarie per una verifica',
   'Disponibilità a rispondere ai proprietari con serietà',
 ];

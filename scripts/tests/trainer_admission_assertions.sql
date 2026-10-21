@@ -1,0 +1,87 @@
+CREATE FUNCTION pg_temp.ok(v boolean,label text) RETURNS void LANGUAGE plpgsql AS $$
+BEGIN IF v IS DISTINCT FROM true THEN RAISE EXCEPTION 'FAILED: %',label; END IF; END $$;
+CREATE FUNCTION pg_temp.denied(q text,code text) RETURNS void LANGUAGE plpgsql AS $$
+BEGIN EXECUTE q; RAISE EXCEPTION 'Unexpected success: %',q;
+EXCEPTION WHEN OTHERS THEN IF SQLSTATE<>code THEN RAISE; END IF; END $$;
+GRANT EXECUTE ON FUNCTION pg_temp.ok(boolean,text),pg_temp.denied(text,text) TO authenticated,anon,service_role;
+CREATE FUNCTION pg_temp.admit(n integer,token text DEFAULT NULL,holder text DEFAULT NULL,authority text DEFAULT 'CSEN') RETURNS void LANGUAGE plpgsql AS $$
+DECLARE p uuid:=('ad210000-0000-0000-0000-'||lpad(n::text,12,'0'))::uuid;
+BEGIN
+ PERFORM public.admin_approve_trainer(p,coalesce(token,public.admin_get_trainer_admission(p)->>'token'),
+ ('ad210000-0000-0000-0002-'||lpad(n::text,12,'0'))::uuid,authority,coalesce(holder,'Persona '||n),
+ true,true,'Registro e identità verificati su fonti sintetiche','Note preservate dal revisore');
+END $$;
+GRANT EXECUTE ON FUNCTION pg_temp.admit(integer,text,text,text) TO authenticated,anon;
+SELECT pg_temp.ok((SELECT count(*)=3 FROM public.professionals WHERE id::text LIKE 'ad210000-%' AND NOT approved AND approval_status='pending'),'Legacy trainers require a real review');
+SELECT pg_temp.ok((SELECT approved FROM public.professionals WHERE id::text LIKE 'ad210000-%' AND professional_type='boarding'),'Boarding unchanged');
+SELECT pg_temp.ok((SELECT notes='Appuntamento da preservare' AND status='accepted' FROM public.bookings WHERE professional_id::text LIKE 'ad210000-%'),'Booking preserved');
+SELECT pg_temp.ok((SELECT admin_notes LIKE 'Nota precedente%' FROM public.professionals WHERE id='ad210000-0000-0000-0000-000000000001'),'Previous notes preserved');
+SET ROLE anon;
+SELECT pg_temp.denied($q$SELECT public.admin_get_trainer_admission('ad210000-0000-0000-0000-000000000001')$q$,'42501');
+SELECT pg_temp.denied($q$SELECT * FROM pc_private.trainer_admission_reviews$q$,'42501');
+RESET ROLE;
+SET ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','ad210000-0000-0000-0000-000000000001',false);
+SELECT pg_temp.denied($q$SELECT pg_temp.admit(1)$q$,'42501');
+SELECT pg_temp.denied($q$SELECT * FROM pc_private.trainer_admission_reviews$q$,'42501');
+SELECT set_config('request.jwt.claim.sub','ad210000-0000-0000-0000-000000000006',false);
+SELECT pg_temp.denied($q$SELECT public.admin_set_professional_approval('ad210000-0000-0000-0000-000000000001','approved')$q$,'23514');
+SELECT pg_temp.denied($q$SELECT pg_temp.admit(1,repeat('0',32))$q$,'40001');
+SELECT pg_temp.denied($q$SELECT pg_temp.admit(1,NULL,'Altra persona')$q$,'22023');
+SELECT pg_temp.denied($q$SELECT pg_temp.admit(1,NULL,NULL,'ALTRO')$q$,'22023');
+SELECT pg_temp.denied($q$SELECT pg_temp.admit(1,NULL,NULL,'ENCI')$q$,'22023');
+SELECT pg_temp.admit(1);
+SELECT pg_temp.admit(2,NULL,'Istruttore qualificato del centro');
+RESET ROLE;
+SELECT pg_temp.ok((SELECT count(*)=2 FROM public.professionals WHERE id::text LIKE 'ad210000-%' AND approved AND professional_type='trainer'),'Individual and centre approved');
+SELECT pg_temp.ok((SELECT holder_name='Istruttore qualificato del centro' FROM pc_private.trainer_admission_reviews WHERE professional_id='ad210000-0000-0000-0000-000000000002' AND invalidated_at IS NULL),'Centre qualification belongs to named person');
+SELECT pg_temp.ok((SELECT count(*)=2 FROM public.search_public_professionals(p_zone_text=>'AreaAmmissione')),'Only reviewed trainers searchable in default search');
+SELECT pg_temp.ok((SELECT NOT email_verified FROM public.profiles WHERE id='ad210000-0000-0000-0000-000000000003'),'Fixture without email confirmation');
+SET ROLE authenticated;
+SELECT pg_temp.denied($q$SELECT pg_temp.admit(3)$q$,'22023');
+SELECT set_config('request.jwt.claim.sub','ad210000-0000-0000-0000-000000000001',false);
+UPDATE public.professional_credentials SET title='Titolo cambiato' WHERE id='ad210000-0000-0000-0002-000000000001';
+RESET ROLE;
+SELECT pg_temp.ok((SELECT NOT approved AND approval_status='pending' FROM public.professionals WHERE id='ad210000-0000-0000-0000-000000000001'),'Credential edit removes publication');
+SELECT pg_temp.ok((SELECT invalidated_at IS NOT NULL FROM pc_private.trainer_admission_reviews WHERE professional_id='ad210000-0000-0000-0000-000000000001'),'Private review history retained');
+SET ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','ad210000-0000-0000-0000-000000000006',false);
+SELECT pg_temp.denied($q$SELECT pg_temp.admit(1)$q$,'22023');
+SELECT public.admin_review_credential_version(id,verification_version,'verified','Nuova verifica sintetica') FROM public.professional_credentials WHERE id='ad210000-0000-0000-0002-000000000001';
+SELECT pg_temp.admit(1);
+SELECT public.admin_review_credential_version(id,verification_version,'revoked','Revoca sintetica') FROM public.professional_credentials WHERE id='ad210000-0000-0000-0002-000000000001';
+RESET ROLE;
+SELECT pg_temp.ok((SELECT NOT approved FROM public.professionals WHERE id='ad210000-0000-0000-0000-000000000001'),'Credential revocation removes publication');
+UPDATE public.profiles SET full_name='Nuovo referente' WHERE id='ad210000-0000-0000-0000-000000000002';
+SELECT pg_temp.ok((SELECT NOT approved FROM public.professionals WHERE id='ad210000-0000-0000-0000-000000000002'),'Identity edit removes publication');
+INSERT INTO public.services(professional_id,name,service_type,price,active) VALUES('ad210000-0000-0000-0000-000000000004','Addestramento aggiunto','trainer',30,true);
+SELECT pg_temp.ok((SELECT NOT approved FROM public.professionals WHERE id='ad210000-0000-0000-0000-000000000004'),'Boarding cannot bypass by adding training');
+SET ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','ad210000-0000-0000-0000-000000000006',false);
+SELECT pg_temp.admit(4);
+RESET ROLE;
+DELETE FROM public.professional_credentials WHERE id='ad210000-0000-0000-0002-000000000004';
+SELECT pg_temp.ok((SELECT NOT approved FROM public.professionals WHERE id='ad210000-0000-0000-0000-000000000004'),'Deleting evidence removes publication');
+-- A missing/private foreign file cannot be used, and deleting/replacing evidence invalidates approval.
+UPDATE public.professional_credentials SET document_path='ad210000-0000-0000-0000-000000000001/proof.pdf',external_url=NULL WHERE id='ad210000-0000-0000-0002-000000000001';
+SET ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','ad210000-0000-0000-0000-000000000006',false);
+SELECT public.admin_review_credential_version(id,verification_version,'verified','Verifica sintetica documento') FROM public.professional_credentials WHERE id='ad210000-0000-0000-0002-000000000001';
+SELECT pg_temp.denied($q$SELECT pg_temp.admit(1)$q$,'22023');
+RESET ROLE;
+INSERT INTO storage.objects(bucket_id,name) VALUES('professional-credentials','ad210000-0000-0000-0000-000000000001/proof.pdf');
+SET ROLE authenticated;
+SELECT pg_temp.admit(1);
+RESET ROLE;
+DELETE FROM storage.objects WHERE name='ad210000-0000-0000-0000-000000000001/proof.pdf';
+SELECT pg_temp.ok((SELECT NOT approved FROM public.professionals WHERE id='ad210000-0000-0000-0000-000000000001'),'Deleting a file invalidates publication');
+INSERT INTO storage.objects(bucket_id,name) VALUES('professional-credentials','ad210000-0000-0000-0000-000000000001/proof.pdf');
+SET ROLE authenticated;
+SELECT pg_temp.denied($q$SELECT pg_temp.admit(1)$q$,'22023');
+RESET ROLE;
+SELECT pg_temp.ok((SELECT count(*)=1 FROM public.bookings WHERE professional_id::text LIKE 'ad210000-%'),'No booking deleted');
+SELECT pg_temp.ok((SELECT relrowsecurity FROM pg_class WHERE oid='pc_private.trainer_admission_reviews'::regclass),'RLS enabled');
+SELECT pg_temp.ok(NOT has_table_privilege('authenticated','pc_private.trainer_admission_reviews','SELECT') AND NOT has_table_privilege('service_role','pc_private.trainer_admission_reviews','SELECT'),'No direct table access');
+SELECT pg_temp.ok(NOT has_function_privilege('service_role','public.admin_approve_trainer(uuid,text,uuid,text,text,boolean,boolean,text,text)','EXECUTE'),'No service bypass');
+SELECT pg_temp.ok(NOT (SELECT prosecdef FROM pg_proc WHERE oid='public.admin_get_trainer_admission(uuid)'::regprocedure),'Public wrapper invoker');
+SELECT set_config('request.jwt.claim.sub','',false);

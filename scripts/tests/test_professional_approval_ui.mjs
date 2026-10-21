@@ -32,6 +32,7 @@ async function setup(width, role = 'admin') {
       if (mode === 'fail') return route.fulfill({ status: 403, json: { code: '42501', message: 'Synthetic failure' } });
       data = mode === 'missing' ? null : mode === 'malformed' ? { id: pro, approval_status: {} } : single ? state.row : [state.row];
     }
+    if (name === 'admin_get_trainer_admission') data = { required: false, token: 'a'.repeat(32), identity: { name: 'Anna Educatrice', email: 'educatrice@example.invalid', email_verified: true, listing_type: 'individual' }, credentials: [] };
     if (name === 'admin_set_professional_approval') {
       const input = req.postDataJSON(); state.writes.push(input);
       if (state.mode === 'denied') return route.fulfill({ status: 403, json: { code: '42501', message: 'Private database detail' } });

@@ -1,6 +1,6 @@
 # PortaleCinofilo — ordine operativo
 
-20 ottobre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
+21 ottobre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
 Stato e prove in [CURRENT_STATE](CURRENT_STATE.md); decisioni in
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questa è la coda operativa unica,
 non un'autorizzazione generale a spendere, pubblicare o contattare terzi.
@@ -23,7 +23,9 @@ future per dimostrare quelle già utilizzabili.
 
 | ID | Priorità e ambito | Dipendenza / prossimo risultato concreto | Criterio di chiusura |
 | --- | --- | --- | --- |
-| SEC-03 | Prossima verifica tecnica: dipendenze | Primo run CI del 20 ottobre: 9 advisory npm, da separare fra produzione e sviluppo; identificare versioni e percorsi prima degli aggiornamenti | Esposizione motivata, aggiornamenti compatibili verificati e rischio residuo esplicito; nessun audit fix forzato |
+| TRUST-01 | Priorità corrente autorizzata il 21 ottobre | TRAINER_ADMISSION_V1: qualifica ENCI/CSEN/OPES/FISC e identità prima della pubblicazione; migrazione e UI preparate | Test SQL/browser e rilascio coordinato; riesame dei profili esistenti senza cancellazioni |
+| TRUST-02 | Dopo il controllo di ammissione | Email temporanee/abusi e audit reale di trattamento dati, fornitori, backup e ripristino; supporto professionale per privacy e inquadramento | Riscontri documentati e gap chiusi; nessuna autocertificazione legale del codice |
+| SEC-03 | Verifica tecnica da riprendere: dipendenze | Primo run CI del 20 ottobre: 9 advisory npm, da separare fra produzione e sviluppo; identificare versioni e percorsi prima degli aggiornamenti | Esposizione motivata, aggiornamenti compatibili verificati e rischio residuo esplicito; nessun audit fix forzato |
 | ADMIN-01 | Presente su GitHub (`ff529e9`) | PROFESSIONAL_APPROVAL_V1: Annulla senza scrittura, note correnti, conferma esplicita e lettura dell’esito incerto | Test browser desktop/mobile e regressione Working-Dog; rilascio frontend senza migration |
 | TRAIN-01 | Presente su GitHub (`d21abc5`, `d2f5b2b`) | Ricerca quotidiana diretta, bestiame/caccia facoltativi e qualifiche ENCI distinte; TRAINER_SPECIALIZATIONS_V1 | Rilascio coordinato senza scelta obbligatoria per il proprietario; fonti e stati delle qualifiche verificabili |
 | ARCH-01 | Registrazione e lettura condivisa su GitHub (`9ed53bc`, `7155fb9`) | CONTINUITY_ACCESS_RECOVERY_V1: timeout, scadenza e rivalidazione del lettore, risposte controllate | Test browser desktop/mobile, regressione archivio; rilascio frontend senza migration |
