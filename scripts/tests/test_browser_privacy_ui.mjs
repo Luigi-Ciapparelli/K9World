@@ -22,6 +22,13 @@ async function setup(width, blocked = false) {
   page.on('pageerror', error => errors.push(error.message));
   return { page, context };
 }
+async function darkTheme(page) {
+  const toggle = page.getByRole('button', { name: 'Tema scuro', exact: true }).first();
+  const mobile = !await toggle.isVisible();
+  if (mobile) await page.getByRole('button', { name: 'Apri menu', exact: true }).click();
+  await toggle.click();
+  if (mobile) await page.getByRole('button', { name: 'Chiudi menu', exact: true }).click();
+}
 async function clear(page, action) {
   await page.getByRole('button', { name: action, exact: true }).click();
   await page.getByRole('button', { name: 'Conferma operazione', exact: true }).click();
@@ -37,7 +44,7 @@ try {
     await page.getByRole('link', { name: 'Gestisci i dati salvati su questo dispositivo', exact: true }).click();
     await page.getByRole('heading', { name: '4. Gestisci i dati locali', exact: true }).waitFor();
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'no viewport overflow');
-    const keys = ['portalecinofilo-impara-v3', 'pawconnect-impara-stage1-v2', 'pawconnect-before-dog-v1', 'portalecinofilo-before-dog-share-draft-v1', 'pc-pro-explored-v1:example', 'unrelated-key', 'sb-unrelated-auth-token'];
+    const keys = ['portalecinofilo-impara-v3', 'pawconnect-impara-stage1-v2', 'pawconnect-before-dog-v1', 'portalecinofilo-before-dog-share-draft-v1', 'pc-pro-explored-v1:example', 'unrelated-key', 'sb-pc-home-test-auth-token'];
     await page.evaluate(keys => { keys.forEach(key => localStorage.setItem(key, 'preserve-or-remove')); sessionStorage.setItem('pc-password-recovery-v1', 'preserve-recovery'); }, keys);
     await page.getByRole('button', { name: 'Cancella dati Impara', exact: true }).click();
     await page.getByRole('button', { name: 'Annulla', exact: true }).click();
@@ -45,13 +52,14 @@ try {
     await clear(page, 'Cancella dati Impara');
     await clear(page, 'Cancella risposte al test');
     await clear(page, 'Azzera guida agli strumenti');
-    await page.getByRole('button', { name: 'Tema scuro', exact: true }).first().click();
+    await darkTheme(page);
     assert.equal(await page.evaluate(() => localStorage.getItem('pawconnect-theme')), 'dark');
     await clear(page, 'Ripristina tema automatico');
     await page.waitForFunction(() => document.documentElement.dataset.theme === 'system');
     for (const key of keys.slice(0,5)) assert.equal(await page.evaluate(key => localStorage.getItem(key), key), null);
     for (const key of keys.slice(5)) assert.equal(await page.evaluate(key => localStorage.getItem(key), key), 'preserve-or-remove');
     assert.equal(await page.evaluate(() => sessionStorage.getItem('pc-password-recovery-v1')), 'preserve-recovery');
+    await page.evaluate(() => { localStorage.removeItem('sb-pc-home-test-auth-token'); sessionStorage.removeItem('pc-password-recovery-v1'); });
     await page.evaluate(async () => { await caches.open('portalecinofilo-test'); await caches.open('unrelated-cache'); });
     await clear(page, 'Svuota cache pubblica');
     assert.deepEqual(await page.evaluate(() => caches.keys()), ['unrelated-cache']);
@@ -71,7 +79,7 @@ try {
 
     const blocked = await setup(width, true);
     await blocked.page.goto(base + '/cookies');
-    await blocked.page.getByRole('button', { name: 'Tema scuro', exact: true }).first().click();
+    await darkTheme(blocked.page);
     assert.equal(await blocked.page.evaluate(() => document.documentElement.dataset.theme), 'dark');
     await blocked.page.getByRole('button', { name: 'Cancella dati Impara', exact: true }).click();
     await blocked.page.getByRole('button', { name: 'Conferma operazione', exact: true }).click();
