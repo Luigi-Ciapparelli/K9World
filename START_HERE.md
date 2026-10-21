@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 21 ottobre 2026, base `origin/main` osservata a `9523abd`.
+Aggiornamento del 21 ottobre 2026, base `origin/main` osservata a `7ac252e`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -83,10 +83,12 @@ Il [recupero delle sessioni private](docs/CONTINUITY_RECORDING_RECOVERY_V1.md)
 è su GitHub (`9ed53bc`). Anche [lettura e scadenza dello storico condiviso](docs/CONTINUITY_ACCESS_RECOVERY_V1.md)
 sono su GitHub (`7155fb9`). Anche l’[approvazione professionisti](docs/PROFESSIONAL_APPROVAL_V1.md)
 è su GitHub (`ff529e9`): non ripetere l’installer.
-Incremento corrente: [recupero delle valutazioni](docs/SERVICE_REVIEW_RECOVERY_V1.md),
-tracciato nella [PR #1](https://github.com/Luigi-Ciapparelli/K9World/pull/1).
-Prove automatiche su GitHub; nessuna nuova migration.
-Prossima verifica tecnica: avvisi delle dipendenze (SEC-03), distinguendo sviluppo e produzione.
+Il [recupero delle valutazioni](docs/SERVICE_REVIEW_RECOVERY_V1.md) è integrato
+su main (`9523abd`, [PR #1](https://github.com/Luigi-Ciapparelli/K9World/pull/1)).
+L’ammissione addestratori è su main (`a510771`); applicazione SQL remota da confermare.
+Priorità autorizzata corrente: privacy e strumenti tecnici del browser,
+[BROWSER_PRIVACY_V1](docs/BROWSER_PRIVACY_V1.md). SEC-03 resta aperta;
+non confondere la verifica del codice con contratti, backup e conformità legale.
 
 ## Primo controllo, senza modificare nulla
 

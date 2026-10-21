@@ -1,8 +1,9 @@
 import { STAGE_1_LESSONS, type ImparaLesson } from './imparaContent';
+import { BROWSER_DATA_EVENT, LOCAL_PROGRESS_KEY, LEGACY_PROGRESS_KEY } from './browserData';
 import { normalizeShapingResult, shapingPassed, SHAPING_STEPS, normalizeRexResult, rexPassed, REX_VERSION, type RexResult, type ShapingResult } from './shapingLab';
 
-export const PROGRESS_KEY = 'portalecinofilo-impara-v3';
-export const LEGACY_KEY = 'pawconnect-impara-stage1-v2';
+export const PROGRESS_KEY = LOCAL_PROGRESS_KEY;
+export const LEGACY_KEY = LEGACY_PROGRESS_KEY;
 export const PROGRESS_EVENT = 'portalecinofilo-impara-progress';
 export type TimingResult = { hits: number; extras: number; total: number; offsets: (number | null)[] };
 export type LabResult = TimingResult | ShapingResult | RexResult;
@@ -79,6 +80,15 @@ export function scoreMarkers(targets: number[], clicks: number[], toleranceMs: n
 }
 let memory: LearningProgress | undefined;
 let available = true;
+if (typeof window !== 'undefined') {
+  const cleared = (event: Event) => {
+    if ((event as CustomEvent).detail !== 'learning') return;
+    memory = emptyProgress(); available = true;
+    window.dispatchEvent(new Event(PROGRESS_EVENT));
+  };
+  window.addEventListener(BROWSER_DATA_EVENT, cleared);
+  if (import.meta.hot) import.meta.hot.dispose(() => window.removeEventListener(BROWSER_DATA_EVENT, cleared));
+}
 export const storageAvailable = () => available;
 export function readProgress(): LearningProgress {
   if (typeof window === 'undefined') return emptyProgress();
@@ -93,7 +103,7 @@ export function readProgress(): LearningProgress {
 }
 export function writeProgress(progress: LearningProgress) {
   memory = normalizeProgress(progress);
-  try { window.localStorage.setItem(PROGRESS_KEY, JSON.stringify(memory)); available = true; }
+  try { window.localStorage.setItem(PROGRESS_KEY, JSON.stringify(memory)); window.localStorage.removeItem(LEGACY_KEY); available = true; }
   catch { available = false; }
   window.dispatchEvent(new Event(PROGRESS_EVENT));
 }

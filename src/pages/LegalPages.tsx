@@ -8,6 +8,8 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 
+import { BrowserDataControls } from '../components/BrowserDataControls';
+
 const CONTACT_EMAIL = 'info@portalecinofilo.com';
 
 export function PrivacyPage() {
@@ -17,7 +19,7 @@ export function PrivacyPage() {
       subtitle="Come PortaleCinofilo tratta i dati personali."
       icon={<ShieldCheck className="w-7 h-7" />}
     >
-      <VersionStamp updated="13 ottobre 2026" />
+      <VersionStamp updated="21 ottobre 2026" />
 
       <p className="mb-8 text-[#3F4943]">
         Sei un professionista e vuoi sapere come gestiamo i tuoi recapiti?{' '}
@@ -54,6 +56,8 @@ export function PrivacyPage() {
           <li>recapiti professionali, provenienza, richieste e autorizzazioni agli inviti, come descritto nella sezione 9.</li>
         </ul>
       </Section>
+
+      <p className="mb-8">Appunti di Impara, risposte al test di scelta, preferenze e sessione di accesso possono essere conservati nel browser, con finalità diverse. Consulta l’<a className="font-semibold underline" href="/cookies">inventario dei dati locali e i comandi di cancellazione</a>. La cancellazione locale non elimina i dati conservati online.</p>
 
       <Section title="3. Finalità e basi giuridiche">
         <p>I dati vengono trattati, a seconda dei casi, per:</p>
@@ -263,43 +267,46 @@ export function PrivacyPage() {
 }
 
 export function CookiePage() {
+  const storageRows = [
+    ['Accesso all’account', 'Local storage · sb-<progetto>-auth-token e chiavi correlate del client Supabase', 'Sessione e rinnovo dell’accesso richiesto. Non è un cookie pubblicitario.', 'Fino all’uscita, alla rimozione di una sessione non più valida o alla cancellazione dal browser. La validità dell’accesso è controllata dal servizio di autenticazione.'],
+    ['Recupero password', 'Session storage · pc-password-recovery-v1', 'Riprende la schermata di recupero dopo un ricaricamento. Da solo non autorizza un cambio password.', 'Valido al massimo 30 minuti, o meno se scade prima la sessione; rimosso al termine del flusso. Il browser lo elimina alla chiusura della sessione della scheda.'],
+    ['Aspetto del sito', 'Local storage · pawconnect-theme', 'Ricorda la scelta Chiaro, Scuro o Auto quando la imposti.', 'Senza scadenza automatica, fino alla modifica o alla cancellazione.'],
+    ['Percorso Impara', 'Local storage · portalecinofilo-impara-v3; eventuale versione precedente pawconnect-impara-stage1-v2', 'Conserva nel browser appunti, letture, esercizi e quiz del percorso utilizzato. Non è sincronizzato con un account.', 'Senza scadenza automatica, fino all’azzeramento o alla cancellazione. Il comando qui sotto rimuove anche la versione precedente.'],
+    ['Scelta del cane', 'Local storage · pawconnect-before-dog-v1', 'Ricorda le risposte quando compili il test. Il risultato viene calcolato sul dispositivo; le risposte non sono inviate al professionista dalla ricerca.', 'Senza scadenza automatica, fino a Ricomincia o alla cancellazione. Il comando qui sotto rimuove anche le bozze delle versioni precedenti.'],
+    ['Guida professionista', 'Local storage · pc-pro-explored-v1:<account>', 'Ricorda gli strumenti che hai segnato come esplorati, distinti per account.', 'Senza scadenza automatica, fino alla cancellazione.'],
+    ['Navigazione e modalità offline', 'Cache Storage · portalecinofilo-*; eventuali cache precedenti k9world-*', 'Il service worker conserva file pubblici del sito e la pagina offline. Non salva risposte delle API, messaggi o documenti privati.', 'Fino all’aggiornamento della cache, alla sua rimozione da parte del browser o alla cancellazione manuale. Le risorse possono essere scaricate nuovamente durante l’uso.'],
+  ];
   return (
-    <LegalLayout
-      title="Cookie e tecnologie locali"
-      subtitle="Come vengono utilizzati cookie e tecnologie di memorizzazione."
-      icon={<Cookie className="w-7 h-7" />}
-    >
-      <VersionStamp />
-
-      <Section title="1. Strumenti necessari">
-        <p>
-          PortaleCinofilo può utilizzare cookie tecnici, session storage, local storage e tecnologie
-          equivalenti strettamente necessarie a login, sicurezza, navigazione, preferenze e salvataggio
-          di bozze o passaggi dell'esperienza utente.
-        </p>
+    <LegalLayout title="Cookie e dati locali" subtitle="Cosa viene salvato nel tuo browser e come gestirlo." icon={<Cookie className="w-7 h-7" />}>
+      <VersionStamp updated="21 ottobre 2026" />
+      <Section title="1. Funzioni del sito, senza tracciamento pubblicitario">
+        <p>La configurazione applicativa attuale non integra Google Analytics, Meta Pixel, TikTok Pixel, retargeting o profilazione pubblicitaria. Utilizza memoria locale per accesso, sicurezza e funzioni che scegli di usare, come il tema, il test di scelta e il percorso Impara. Il codice dell’applicazione non imposta cookie tramite JavaScript.</p>
+        <p className="mt-3">Local storage, session storage e cache non sono cookie, ma sono comunque tecnologie che conservano informazioni sul dispositivo. Qui trovi finalità e durata: chiamare uno strumento «tecnico» non autorizza a usarlo per pubblicità o finalità diverse.</p>
+        <p className="mt-3">Per gli strumenti strettamente necessari alle funzioni richieste è prevista un’informativa senza consenso preventivo. La navigazione non vale come consenso a tracciamenti futuri: prima di introdurli serviranno una valutazione e, quando richiesto, una scelta libera e revocabile che li blocchi fino all’accettazione.</p>
+        <p className="mt-3"><a className="font-semibold underline" href="#gestisci-dati-locali">Gestisci i dati salvati su questo dispositivo</a></p>
       </Section>
-
-      <Section title="2. Nessuna profilazione pubblicitaria">
-        <p>
-          Nella configurazione attuale PortaleCinofilo non integra strumenti di profilazione
-          pubblicitaria, retargeting o tracking cross-site come Meta Pixel, TikTok Pixel o analoghi.
-        </p>
+      <Section title="2. Inventario e durata">
+        <p>I nomi riportati servono a riconoscere le voci nelle impostazioni del browser. Le preferenze non sono condivise automaticamente fra dispositivi o browser.</p>
+        <div className="mt-4 overflow-x-auto" role="region" aria-label="Inventario dei dati locali" tabIndex={0}>
+          <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+            <caption className="sr-only">Funzione, tecnologia, finalità e durata della memoria del browser</caption>
+            <thead><tr>{['Funzione', 'Tecnologia e nome', 'Finalità', 'Durata'].map(label => <th key={label} scope="col" className="border-b border-stone-300 p-3 align-top">{label}</th>)}</tr></thead>
+            <tbody>{storageRows.map(([name, technology, purpose, duration]) => <tr key={name}><th scope="row" className="border-b border-stone-200 p-3 align-top">{name}</th>{[technology, purpose, duration].map(text => <td key={text} className="max-w-xs break-words border-b border-stone-200 p-3 align-top">{text}</td>)}</tr>)}</tbody>
+          </table>
+        </div>
       </Section>
-
-      <Section title="3. Analytics e marketing futuri">
-        <p>
-          Se in futuro verranno introdotti strumenti non strettamente necessari, la loro attivazione
-          verrà valutata preventivamente e, quando richiesto, subordinata al consenso dell'utente prima
-          del relativo utilizzo.
-        </p>
+      <Section title="3. Connessioni e servizi esterni">
+        <p>Il browser si collega a Vercel per ricevere il sito e a Supabase per le funzioni che richiedono dati o autenticazione. Queste richieste comportano dati tecnici come l’indirizzo IP; l’assenza di pixel pubblicitari non significa assenza di trattamenti di dati.</p>
+        <p className="mt-3">Le immagini predefinite sono distribuite dal portale. Le immagini caricate dagli utenti possono provenire dallo storage del servizio; eventuali foto precedentemente salvate come URL esterni contattano il relativo sito quando vengono visualizzate. I collegamenti a social e fonti aprono il sito esterno solo quando li selezioni: non sono feed social incorporati.</p>
+        <p className="mt-3">I fornitori possono gestire log e misure di sicurezza della propria infrastruttura. Per titolare, fornitori e diritti consulta l’<a className="font-semibold underline" href="/privacy">informativa privacy</a>. Puoi segnalare dubbi a <a className="font-semibold underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
       </Section>
-
-      <Section title="4. Gestione dal browser">
-        <p>
-          Puoi gestire o cancellare cookie e dati locali dalle impostazioni del browser. La rimozione
-          di dati tecnici necessari può richiedere un nuovo login o impedire il corretto funzionamento
-          di alcune funzioni.
-        </p>
+      <section id="gestisci-dati-locali" aria-labelledby="local-data-heading" className="mb-8 scroll-mt-24">
+        <h2 id="local-data-heading" className="mb-3 text-xl font-bold text-stone-900">4. Gestisci i dati locali</h2>
+        <BrowserDataControls />
+        <noscript><p>Per usare questi comandi attiva JavaScript, oppure cancella i dati del sito dalle impostazioni del browser.</p></noscript>
+      </section>
+      <Section title="5. Se il browser blocca il salvataggio">
+        <p>Puoi continuare a consultare i contenuti. Tema e test funzionano anche senza memoria persistente, ma le scelte potrebbero andare perse alla chiusura. L’accesso potrebbe richiedere un nuovo login; Impara permette di esportare un backup o scaricare il quaderno.</p>
       </Section>
     </LegalLayout>
   );

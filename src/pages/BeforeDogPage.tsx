@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from '../lib/RouterContext';
 import { FCI_GROUP_CONTENT, FCI_GROUP_NAMES } from '../lib/fciGroups';
+import { BEFORE_DOG_KEY, BEFORE_DOG_LEGACY_DRAFT_KEY } from '../lib/browserData';
 
 type Answers = {
   experience: string;
@@ -35,8 +36,7 @@ type StepOption = {
   detail: string;
 };
 
-const STORAGE_KEY = 'pawconnect-before-dog-v1';
-const PRE_DOG_SHARE_DRAFT_KEY = 'portalecinofilo-before-dog-share-draft-v1';
+const STORAGE_KEY = BEFORE_DOG_KEY;
 
 const initialAnswers: Answers = {
   experience: '',
@@ -330,7 +330,17 @@ function loadStoredAnswers(): Answers {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return initialAnswers;
-    return { ...initialAnswers, ...(JSON.parse(raw) as Partial<Answers>) };
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return initialAnswers;
+    const values = parsed as Record<string, unknown>;
+    const answers = { ...initialAnswers };
+    for (const step of steps) {
+      const valid = new Set(step.options.map(option => option.value));
+      const value = values[step.key];
+      if (step.key === 'household') answers.household = Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string' && valid.has(item)) : [];
+      else answers[step.key] = typeof value === 'string' && valid.has(value) ? value : '';
+    }
+    return answers;
   } catch {
     return initialAnswers;
   }
@@ -342,9 +352,15 @@ export function BeforeDogPage() {
   const [answers, setAnswers] = useState<Answers>(() => loadStoredAnswers());
   const [stepIndex, setStepIndex] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  const [storageError, setStorageError] = useState(false);
 
   useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+    // Do not create an empty record just by opening this page.
+    if (!Object.values(answers).some(value => Array.isArray(value) ? value.length : value)) return;
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+      setStorageError(false);
+    } catch { setStorageError(true); }
   }, [answers]);
 
   const step = steps[stepIndex];
@@ -547,25 +563,7 @@ export function BeforeDogPage() {
 
 
   const openPreDogProfessionalSearch = () => {
-    // Draft locale soltanto: non viene inviato automaticamente a nessuno.
-    // Il pass dati successivo introdurrà consenso esplicito + condivisione revocabile.
-    window.localStorage.setItem(
-      PRE_DOG_SHARE_DRAFT_KEY,
-      JSON.stringify({
-        version: 1,
-        source: 'before-dog',
-        answers,
-        result: {
-          level: decisionProfile.level,
-          title: decisionProfile.title,
-          summary: decisionProfile.summary,
-          nextStep: decisionProfile.nextStep,
-          explorationLenses,
-        },
-        savedAt: new Date().toISOString(),
-      })
-    );
-
+    // Search does not consume answers: do not duplicate them into an unused draft.
     const params = new URLSearchParams({
       source: 'before-dog',
       topic: 'scelta-responsabile',
@@ -579,7 +577,11 @@ export function BeforeDogPage() {
     setAnswers(initialAnswers);
     setStepIndex(0);
     setShowResult(false);
-    window.localStorage.removeItem(STORAGE_KEY);
+    try {
+      window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem(BEFORE_DOG_LEGACY_DRAFT_KEY);
+      setStorageError(false);
+    } catch { setStorageError(true); }
   };
 
   if (showResult) {
@@ -678,9 +680,7 @@ export function BeforeDogPage() {
                 </div>
 
                 <p className="text-xs text-stone-600 leading-5 mt-4">
-                  Le risposte e questo risultato vengono salvati solo come bozza sul tuo dispositivo.
-                  Non vengono condivisi automaticamente: la condivisione con il professionista
-                  richiederà un consenso esplicito.
+                  Le risposte restano in questo browser quando il salvataggio è disponibile; il risultato viene calcolato sul dispositivo. Non vengono inviate alla ricerca o al professionista.
                 </p>
               </div>
             </div>
@@ -942,6 +942,10 @@ export function BeforeDogPage() {
             <p className="text-stone-600 mt-4 leading-relaxed">
               Otto passaggi brevi. Nessun test magico e nessuna razza assegnata automaticamente.
             </p>
+
+            <p className="mt-4 text-sm text-stone-600">Le risposte vengono salvate in questo browser per riprendere il test. Chi usa lo stesso dispositivo può leggerle. <a href="/cookies#gestisci-dati-locali" className="underline">Gestisci i dati locali</a>.</p>
+            {storageError && <p role="status" className="mt-3 text-sm text-amber-900">Il browser non consente il salvataggio. Puoi continuare il test, ma le risposte potrebbero non restare dopo la chiusura o il ricaricamento.</p>}
+
 
             <div className="mt-7">
               <div className="flex justify-between text-xs font-semibold text-stone-500 mb-2">
