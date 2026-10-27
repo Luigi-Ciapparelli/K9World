@@ -1,3 +1,4 @@
+import { SignupPrivacyNotice, SignupTerms } from '../components/SignupLegalNotice';
 import { useEffect, useState } from 'react';
 import { PawPrint, Mail, Lock, User, Phone, Check } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
@@ -69,6 +70,7 @@ export function SignInPage() {
 
 export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
   const [step, setStep] = useState<1 | 2 | 3>(defaultRole ? 2 : 1);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [role, setRole] = useState<Role>(defaultRole || 'owner');
   const [professionalType, setProfessionalType] = useState<ProfessionalType | ''>('');
   const [fullName, setFullName] = useState('');
@@ -148,12 +150,18 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
       return;
     }
 
+    if (!termsAccepted) {
+      setError('Per creare l’account devi accettare i termini indicati.');
+      return;
+    }
+
     setLoading(true);
 
     try {
       const { error, needsEmailConfirmation } = await signUp({
         email: email.trim(),
         password,
+        termsAccepted,
         fullName: fullName.trim(),
         phone: phone.trim(),
         role,
@@ -192,8 +200,8 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
     return (
       <AuthFrame title="Entra in PortaleCinofilo" subtitle="Come vuoi usare la piattaforma?">
         <div className="space-y-3">
-          <RoleCard active={role === 'owner'} onClick={() => setRole('owner')} title="Sono proprietario di un cane" subtitle="Voglio trovare servizi affidabili per il mio cane" />
-          <RoleCard active={role === 'professional'} onClick={() => setRole('professional')} title="Sono un professionista" subtitle="Voglio offrire servizi e ricevere richieste" />
+          <RoleCard active={role === 'owner'} onClick={() => { setRole('owner'); setTermsAccepted(false); }} title="Sono proprietario di un cane" subtitle="Voglio trovare servizi affidabili per il mio cane" />
+          <RoleCard active={role === 'professional'} onClick={() => { setRole('professional'); setTermsAccepted(false); }} title="Sono un professionista" subtitle="Voglio offrire servizi e ricevere richieste" />
           <button onClick={() => setStep(2)} className="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition mt-4">
             Continua
           </button>
@@ -212,6 +220,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
         subtitle="Un ultimo passo per personalizzare PortaleCinofilo"
       >
         <form onSubmit={submit} className="space-y-4">
+          <SignupPrivacyNotice dog />
           <Field
             icon={<PawPrint className="w-4 h-4" />}
             placeholder="Nome del cane"
@@ -364,6 +373,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
             />
           </div>
 
+          <SignupTerms professional={false} checked={termsAccepted} onChange={setTermsAccepted} />
           {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}
 
           <div className="flex gap-3">
@@ -390,6 +400,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
   return (
     <AuthFrame title={role === 'professional' ? 'Inizia il tuo profilo professionale' : 'Crea il tuo account'} subtitle={role === 'professional' ? 'Per addestratori, pensioni, toelettatori e handler per esposizioni.' : 'Il primo passo per trovare aiuto per il tuo cane.'}>
       <form onSubmit={submit} className="space-y-4">
+        <SignupPrivacyNotice />
         {role === 'professional' && <div>
           <label htmlFor="signup-activity" className="block text-sm font-semibold text-stone-700 mb-2">Attività principale</label>
           <select id="signup-activity" value={professionalType} onChange={event => setProfessionalType(event.target.value as ProfessionalType | '')} required aria-describedby="signup-activity-help" className="w-full min-w-0 border border-stone-300 rounded-xl px-3 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
@@ -408,6 +419,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
         <div className="flex items-center gap-2 text-xs text-stone-600 bg-amber-50 p-3 rounded-lg border border-amber-100">
           <Check className="w-4 h-4 text-amber-600 shrink-0" /> Usa un’email che puoi consultare: servirà per confermare l’account.
         </div>
+        {role === 'professional' && <SignupTerms professional checked={termsAccepted} onChange={setTermsAccepted} />}
         {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}
         <div className="flex gap-3">
           <button type="button" onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl border border-stone-300 font-semibold">Indietro</button>

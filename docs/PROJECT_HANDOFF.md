@@ -1,6 +1,6 @@
 # PortaleCinofilo — passaggio di consegne
 
-20 ottobre 2026. Leggere prima [CURRENT_STATE](CURRENT_STATE.md) e
+21 ottobre 2026. Leggere prima [CURRENT_STATE](CURRENT_STATE.md) e
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questo documento spiega come lavorare;
 lo stato e l'ordine delle priorità non sono duplicati qui.
 
@@ -18,10 +18,10 @@ Anche [LESSON_RECORDING_V1](LESSON_RECORDING_V1.md) è su GitHub (`3ca2e4c`).
 Anche [CONTINUITY_RECORDING_RECOVERY_V1](CONTINUITY_RECORDING_RECOVERY_V1.md)
 è su GitHub (`9ed53bc`). Anche [CONTINUITY_ACCESS_RECOVERY_V1](CONTINUITY_ACCESS_RECOVERY_V1.md)
 è su GitHub (`7155fb9`). Anche [PROFESSIONAL_APPROVAL_V1](PROFESSIONAL_APPROVAL_V1.md)
-è su GitHub (`ff529e9`). Incremento corrente: [SERVICE_REVIEW_RECOVERY_V1](SERVICE_REVIEW_RECOVERY_V1.md),
-recupero delle valutazioni con esito incerto, tracciato nella PR #1.
+è su GitHub (`ff529e9`). [SERVICE_REVIEW_RECOVERY_V1](SERVICE_REVIEW_RECOVERY_V1.md)
+è integrato con PR #1. L'ordine corrente è nel registro, non nei vecchi checkpoint.
 Le prove sono eseguite da GitHub Actions; non serve un nuovo installer WSL.
-Rilascio soltanto frontend. Dipendenze da analizzare come prossimo blocco SEC-03.
+La priorità privacy del 21 ottobre precede l'analisi delle dipendenze SEC-03.
 La persona deve già essere collegata al centro; non si condividono credenziali.
 Segreteria generale e altre azioni amministrative non sono incluse.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);
@@ -115,6 +115,7 @@ per rifare una verifica email. Usare i documenti recapiti per il flusso effettiv
 | Clienti e cani | [PROFESSIONAL_CLIENTS_V2](PROFESSIONAL_CLIENTS_V2.md): note private affidabili, ricerca e schede |
 | Statistiche professionali | [PROFESSIONAL_ANALYTICS_V1](PROFESSIONAL_ANALYTICS_V1.md): aggregati privati, periodo italiano, clienti tornati e valore dei servizi |
 | API e sicurezza | [SUPABASE_PRIVATE_API_V2](SUPABASE_PRIVATE_API_V2.md), [SUPABASE_AUDIT_FIXES_V1](SUPABASE_AUDIT_FIXES_V1.md) |
+| Privacy e diritti | [BROWSER_PRIVACY_V1](BROWSER_PRIVACY_V1.md), [PRIVACY_OPERATIONS_V1](PRIVACY_OPERATIONS_V1.md): registrazione, testi versionati, richieste e controlli operativi ancora da completare |
 | Recupero errori frontend | [PAGE_RECOVERY_V1](PAGE_RECOVERY_V1.md): pagine mancanti/in errore, offline, bozze, prove e limiti |
 | SEO / disponibilità / mercati | [SEO_INDEXATION_2026_10_09](SEO_INDEXATION_2026_10_09.md), [BREED_GUIDES_V1](BREED_GUIDES_V1.md), [SEO_VISIBILITY_V1](SEO_VISIBILITY_V1.md), [INTERNATIONAL_SEO_AND_HOSTING_V1](INTERNATIONAL_SEO_AND_HOSTING_V1.md) |
 | Lancio / social / ricavi | [LAUNCH_READINESS_V1](LAUNCH_READINESS_V1.md), [FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10](FUTURE_PRODUCT_AND_SOCIAL_DIRECTION_2026_10.md), [BUSINESS_ROADMAP_V1](BUSINESS_ROADMAP_V1.md), [FUNDING_SCREENING_2026_10](FUNDING_SCREENING_2026_10.md) |

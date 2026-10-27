@@ -4,6 +4,19 @@ import { RouteLink } from './RouteLink';
 
 const CONTACT_EMAIL = 'info@portalecinofilo.com';
 
+export function AccountLegalLinks() {
+  return (
+    <footer aria-label="Informazioni legali dell’area personale" className="border-t border-stone-200 bg-stone-50 px-4 py-5 text-sm text-stone-700">
+      <div className="mx-auto flex max-w-7xl flex-wrap justify-center gap-x-5 gap-y-3">
+        <a href="/privacy#richieste-privacy" className="underline underline-offset-4">Privacy e diritti sui dati</a>
+        <RouteLink to="/cookies" className="underline underline-offset-4">Cookie e dati locali</RouteLink>
+        <RouteLink to="/terms" className="underline underline-offset-4">Termini utenti</RouteLink>
+        <RouteLink to="/professional-terms" className="underline underline-offset-4">Termini professionisti</RouteLink>
+      </div>
+    </footer>
+  );
+}
+
 export function Footer() {
   const { navigate } = useRouter();
 

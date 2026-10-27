@@ -1,6 +1,6 @@
 # PortaleCinofilo — comincia qui
 
-Aggiornamento del 21 ottobre 2026, base `origin/main` osservata a `7ac252e`.
+Aggiornamento del 21 ottobre 2026, base `origin/main` osservata a `41273c1`.
 Questa pagina è un ingresso breve, non un registro a cui anteporre ogni rilascio.
 
 ## Ordine di lettura per un nuovo account o collaboratore
@@ -22,8 +22,9 @@ Calendario, messaggi, pacchetti, abbonamenti e archivio testuale esistono già.
 Il registro corrente specifica i limiti: presenza su GitHub, migration applicata,
 deployment Ready e prova con account reali sono evidenze distinte.
 
-Priorità corrente: [ammissione degli addestratori](docs/TRAINER_ADMISSION_V1.md),
-poi controlli contro abusi e revisione privacy operativa. La richiesta del 21
+Priorità corrente: [privacy operativa e registrazione](docs/PRIVACY_OPERATIONS_V1.md),
+con conferma remota dell'[ammissione degli addestratori](docs/TRAINER_ADMISSION_V1.md).
+La richiesta del 21
 ottobre precede SEC-03; non riprendere marketing o raccolta email.
 Gli allegati delle sessioni attendono quote per piano e una politica di compressione;
 Impara ora segue l’ordine precedente 1, 3, 4, 5, 6, 7, 8, 2 (rinumerato 1–8).
@@ -86,8 +87,9 @@ sono su GitHub (`7155fb9`). Anche l’[approvazione professionisti](docs/PROFESS
 Il [recupero delle valutazioni](docs/SERVICE_REVIEW_RECOVERY_V1.md) è integrato
 su main (`9523abd`, [PR #1](https://github.com/Luigi-Ciapparelli/K9World/pull/1)).
 L’ammissione addestratori è su main (`a510771`); applicazione SQL remota da confermare.
-Priorità autorizzata corrente: privacy e strumenti tecnici del browser,
-[BROWSER_PRIVACY_V1](docs/BROWSER_PRIVACY_V1.md). SEC-03 resta aperta;
+Il blocco [BROWSER_PRIVACY_V1](docs/BROWSER_PRIVACY_V1.md) è su main (`41273c1`)
+e le pagine pubbliche aggiornate sono state osservate in produzione.
+Segue [PRIVACY_OPERATIONS_V1](docs/PRIVACY_OPERATIONS_V1.md). SEC-03 resta aperta;
 non confondere la verifica del codice con contratti, backup e conformità legale.
 
 ## Primo controllo, senza modificare nulla
