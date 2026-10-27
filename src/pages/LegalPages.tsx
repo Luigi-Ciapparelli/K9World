@@ -1,5 +1,4 @@
 import {
-  AlertTriangle,
   Cookie,
   FileText,
   ListOrdered,
@@ -9,8 +8,10 @@ import {
 } from 'lucide-react';
 
 import { BrowserDataControls } from '../components/BrowserDataControls';
+import { PrivacyRequestGuide } from '../components/PrivacyRequestGuide';
+import { LEGAL_NOTICE_DATE, LEGAL_NOTICE_VERSION, PRIVACY_CONTACT } from '../lib/legalNotices';
 
-const CONTACT_EMAIL = 'info@portalecinofilo.com';
+const CONTACT_EMAIL = PRIVACY_CONTACT;
 
 export function PrivacyPage() {
   return (
@@ -19,7 +20,7 @@ export function PrivacyPage() {
       subtitle="Come PortaleCinofilo tratta i dati personali."
       icon={<ShieldCheck className="w-7 h-7" />}
     >
-      <VersionStamp updated="21 ottobre 2026" />
+      <VersionStamp updated={LEGAL_NOTICE_DATE} version={LEGAL_NOTICE_VERSION} />
 
       <p className="mb-8 text-[#3F4943]">
         Sei un professionista e vuoi sapere come gestiamo i tuoi recapiti?{' '}
@@ -54,6 +55,7 @@ export function PrivacyPage() {
           <li>foto, note e altri contenuti caricati volontariamente;</li>
           <li>dati tecnici, log e informazioni necessarie a sicurezza e funzionamento.</li>
           <li>recapiti professionali, provenienza, richieste e autorizzazioni agli inviti, come descritto nella sezione 9.</li>
+          <li>la dichiarazione di accettazione dei termini trasmessa alla registrazione e le versioni dei testi mostrate; non è un consenso a comunicazioni promozionali.</li>
         </ul>
       </Section>
 
@@ -142,6 +144,22 @@ export function PrivacyPage() {
           dei diritti e obblighi di legge. Quando i dati non sono più necessari vengono cancellati
           o anonimizzati secondo le procedure applicabili.
         </p>
+        <p className="mt-3">
+          In particolare, la chiusura di una relazione con il cane non elimina automaticamente
+          le sessioni, le note e le revisioni già presenti nell’archivio del professionista.
+          Anche la cancellazione dell’account può lasciare riferimenti storici e contenuti
+          nell’archivio. Questo non attribuisce un diritto a conservarli senza limiti:
+          necessità, base giuridica, durata e diritti delle persone devono essere valutati
+          anche per queste copie. Puoi chiedere una verifica e la cancellazione dei dati
+          nei casi previsti dalla normativa attraverso il percorso qui sotto.
+        </p>
+        <p className="mt-3">
+          Per valutare la conservazione distinguiamo i dati necessari a un servizio ancora
+          in corso, quelli richiesti da obblighi di legge e quelli indispensabili a una
+          contestazione concreta. Una generica utilità futura non giustifica di per sé
+          la conservazione. La rimozione dalla pagina pubblica o lo scollegamento del nome
+          dall’account non equivalgono automaticamente alla cancellazione o all’anonimizzazione.
+        </p>
       </Section>
 
       <Section title="7. Diritti">
@@ -158,6 +176,8 @@ export function PrivacyPage() {
           . Resta inoltre possibile proporre reclamo al Garante per la protezione dei dati personali.
         </p>
       </Section>
+
+      <PrivacyRequestGuide />
 
       <Section title="8. Ranking e decisioni automatizzate">
         <p>
@@ -319,7 +339,7 @@ export function TermsPage() {
       subtitle="Regole essenziali per proprietari e visitatori di PortaleCinofilo."
       icon={<FileText className="w-7 h-7" />}
     >
-      <VersionStamp />
+      <VersionStamp updated={LEGAL_NOTICE_DATE} version={LEGAL_NOTICE_VERSION} />
 
       <Section title="1. Natura del servizio">
         <p>
@@ -336,6 +356,8 @@ export function TermsPage() {
 
       <Section title="2. Account e informazioni fornite">
         <p>
+          La registrazione richiede l’accettazione di questi termini; l’informativa privacy descrive
+          separatamente il trattamento dei dati. L’accettazione non autorizza invii promozionali.
           L'utente deve fornire informazioni accurate e mantenere sicure le proprie credenziali.
           Le informazioni relative al cane, incluse esigenze, comportamento e condizioni rilevanti
           per il servizio richiesto, devono essere comunicate in modo veritiero e responsabile.
@@ -424,7 +446,7 @@ export function ProfessionalTermsPage() {
       subtitle="Trasparenza su pubblicazione, verifiche, ranking e rapporto con PortaleCinofilo."
       icon={<Scale className="w-7 h-7" />}
     >
-      <VersionStamp />
+      <VersionStamp updated={LEGAL_NOTICE_DATE} version={LEGAL_NOTICE_VERSION} />
 
       <Section title="1. Candidatura e pubblicazione">
         <p>
@@ -478,7 +500,11 @@ export function ProfessionalTermsPage() {
           Il professionista può utilizzare i dati resi disponibili tramite PortaleCinofilo soltanto
           per gestire la richiesta o relazione autorizzata e nel rispetto della normativa applicabile.
           Non acquisisce diritti generali sul database, sui dati di altri utenti o su informazioni
-          non necessarie alla relazione.
+          non necessarie alla relazione. La conservazione di un archivio non attribuisce un diritto
+          illimitato sui dati personali: il professionista deve valutare necessità e durata,
+          rispettare i diritti delle persone e collaborare alla gestione delle richieste che
+          riguardano i dati trattati attraverso il portale. La fine di una relazione impedisce
+          i nuovi accessi non autorizzati, ma non cancella automaticamente i contributi già archiviati.
         </p>
       </Section>
 
@@ -654,15 +680,16 @@ function LegalLayout({
   );
 }
 
-function VersionStamp({ updated = '30 settembre 2026' }: { updated?: string }) {
+function VersionStamp({ updated = '30 settembre 2026', version }: { updated?: string; version?: string }) {
   return (
-    <div className="mb-8 rounded-2xl border border-[#D5A33A]/30 bg-[#D5A33A]/10 p-4 flex gap-3 text-[#58451A]">
-      <AlertTriangle className="w-5 h-5 mt-0.5 shrink-0" />
+    <div className="mb-8 rounded-2xl border border-stone-200 bg-stone-50 p-4 flex gap-3 text-stone-700">
+      <FileText className="w-5 h-5 mt-0.5 shrink-0" />
       <div>
         <div className="font-bold">Informazioni sul servizio</div>
         <p className="text-sm mt-1">
-          Ultimo aggiornamento: {updated}. I testi saranno sottoposti a revisione professionale
-          prima della monetizzazione o del lancio commerciale su larga scala.
+          Ultimo aggiornamento: {updated}.{version ? ` Versione ${version}.` : ''}{' '}
+          Per informazioni o per esercitare i tuoi diritti scrivi a{' '}
+          <a href={`mailto:${CONTACT_EMAIL}`} className="break-all font-semibold underline">{CONTACT_EMAIL}</a>.
         </p>
       </div>
     </div>

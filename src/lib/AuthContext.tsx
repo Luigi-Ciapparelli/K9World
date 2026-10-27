@@ -1,3 +1,4 @@
+import { signupLegalDeclaration } from './legalNotices';
 import { createContext, useContext, useEffect, useRef, useState, ReactNode } from 'react';
 import { supabase } from './supabase';
 import type { Profile, Role, ProfessionalType } from './types';
@@ -17,6 +18,7 @@ interface AuthContextType {
 }
 
 interface SignUpArgs {
+  termsAccepted: boolean;
   email: string;
   password: string;
   fullName: string;
@@ -85,6 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signUp = async ({
+    termsAccepted,
     email,
     password,
     fullName,
@@ -101,6 +104,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     dogReactive,
     dogNotes,
   }: SignUpArgs) => {
+    if (role !== 'owner' && role !== 'professional') return { error: 'Scegli un tipo di account valido.' };
+    if (termsAccepted !== true) return { error: 'Per creare l’account devi accettare i termini indicati.' };
     if (role === 'professional' && (!professionalType || !['trainer', 'groomer', 'boarding', 'handler'].includes(professionalType))) {
       return { error: 'Scegli la tua attività principale.' };
     }
@@ -111,6 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         emailRedirectTo: window.location.origin + '/account/contacts',
         data: {
           pawconnect_onboarding_version: '1',
+          legal_declaration: signupLegalDeclaration(role),
           full_name: fullName,
           phone,
           role,

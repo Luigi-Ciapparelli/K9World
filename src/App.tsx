@@ -4,7 +4,7 @@ import { RouterProvider, useRouter } from './lib/RouterContext';
 import { Navbar } from './components/Navbar';
 import { AccountProfileRecovery } from './components/AccountProfileRecovery';
 import { Chatbot } from './components/Chatbot';
-import { Footer } from './components/Footer';
+import { AccountLegalLinks, Footer } from './components/Footer';
 import { continuityEnabled } from './lib/continuity';
 import { ThemeProvider } from './lib/ThemeContext';
 import { PageMetadata } from './components/PageMetadata';
@@ -259,10 +259,7 @@ function AppShell() {
   else if (basePath === '/pro/settings') content = <ProSettings />;
   else content = <NotFoundPage />;
 
-  const showFooter =
-    !basePath.startsWith('/owner') &&
-    !basePath.startsWith('/pro') &&
-    basePath !== '/admin';
+  const showFooter = !/^\/(owner|pro|admin)(\/|$)/.test(basePath);
 
   return (
     <>
@@ -273,7 +270,7 @@ function AppShell() {
         {content}
       </Suspense>
       </PageErrorBoundary>
-      {showFooter && <Footer />}
+      {showFooter ? <Footer /> : <AccountLegalLinks />}
       <Chatbot key={user?.id || 'visitor'} />
     </>
   );

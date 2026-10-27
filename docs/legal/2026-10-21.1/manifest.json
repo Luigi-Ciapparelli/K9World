@@ -1,0 +1,19 @@
+{
+  "version": "2026-10-21.1",
+  "date": "2026-10-21",
+  "scope": "Static text and markup of legal page main elements; interactive controls require the website. This archive is not a user acceptance receipt.",
+  "pages": {
+    "privacy": {
+      "source": "https://www.portalecinofilo.com/privacy",
+      "sha256": "255973cbeb9bb3a16f45ba41397bce1ca46f2ac0df9a5b549a91f668536dcc13"
+    },
+    "terms": {
+      "source": "https://www.portalecinofilo.com/terms",
+      "sha256": "96d78b94b54def38a083768c1e86f0376dacfd2d9ab8ee0d96819e23eca08b29"
+    },
+    "professional-terms": {
+      "source": "https://www.portalecinofilo.com/professional-terms",
+      "sha256": "9c11496628372bbfc2bd8ab58ea6ab9b7759370e6c04b4259cad8e6c952354f3"
+    }
+  }
+}

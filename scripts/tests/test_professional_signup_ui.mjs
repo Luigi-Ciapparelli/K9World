@@ -56,10 +56,21 @@ try {
     assert.equal(t.writes.length, 0, 'No silent walker signup');
     assert.ok(await select.evaluate(element => element.validity.valueMissing));
     await select.selectOption(activity);
+    const terms = t.page.getByRole('checkbox', { name: 'Accetto i Termini di utilizzo e i Termini per i professionisti.', exact: true });
+    assert.equal(await terms.isChecked(), false, 'No preselected acceptance');
+    await t.page.getByRole('button', { name: 'Crea account', exact: true }).click();
+    assert.equal(t.writes.length, 0, 'Terms must be accepted before signup');
+    assert.ok(await terms.evaluate(element => element.validity.valueMissing));
+    const privacy = t.page.getByRole('link', { name: 'Leggi l’informativa privacy (nuova scheda)', exact: true });
+    assert.equal(await privacy.getAttribute('href'), '/privacy');
+    assert.equal(await privacy.getAttribute('target'), '_blank');
+    assert.equal(await t.page.getByRole('link', { name: 'Termini per i professionisti (nuova scheda)', exact: true }).getAttribute('href'), '/professional-terms');
+    await terms.check();
     t.fail();
     await t.page.getByRole('button', { name: 'Crea account', exact: true }).click();
     await t.page.getByRole('alert').filter({ hasText: 'Errore di prova' }).waitFor();
     assert.equal(await select.inputValue(), activity, 'Retry must retain the chosen activity');
+    assert.equal(await terms.isChecked(), true, 'Failed signup preserves acceptance and form data');
     assert.ok(await t.page.getByRole('button', { name: 'Crea account', exact: true }).isEnabled());
     assert.ok(await t.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Signup overflow');
     if (process.env.PC_SCREENSHOTS) {
@@ -74,6 +85,10 @@ try {
       assert.equal(request.data.professional_type, activity);
       assert.equal(request.data.full_name, 'Referente di prova');
       assert.equal(request.data.dog_name, '');
+      assert.deepEqual(request.data.legal_declaration, {
+        terms_version: '2026-10-21.1', professional_terms_version: '2026-10-21.1',
+        privacy_notice_version: '2026-10-21.1', terms_accepted: true, source: 'website-signup',
+      });
     }
     await t.context.close();
   }
@@ -82,6 +97,7 @@ try {
   await t.page.getByRole('button', { name: /Sono un professionista/ }).click();
   await t.page.getByRole('button', { name: 'Continua', exact: true }).click();
   assert.equal(await t.page.getByLabel('Attività principale', { exact: true }).inputValue(), '');
+  await t.page.getByRole('checkbox').check();
   await t.page.getByRole('button', { name: 'Indietro', exact: true }).click();
   await t.page.getByRole('button', { name: /Sono proprietario di un cane/ }).click();
   await t.page.getByRole('button', { name: 'Continua', exact: true }).click();
@@ -90,7 +106,22 @@ try {
   await t.page.getByRole('button', { name: 'Continua: il tuo cane', exact: true }).click();
   await t.page.getByRole('heading', { name: 'Presentaci il tuo cane' }).waitFor();
   assert.equal(t.writes.length, 0, 'Owner must complete dog onboarding before account creation');
+  assert.equal(await t.page.getByRole('link', { name: 'Termini per i professionisti (nuova scheda)', exact: true }).count(), 0);
+  const ownerTerms = t.page.getByRole('checkbox', { name: 'Accetto i Termini di utilizzo.', exact: true });
+  assert.equal(await ownerTerms.isChecked(), false, 'Changing role resets acceptance');
+  await t.page.getByPlaceholder('Nome del cane', { exact: true }).fill('Cane di prova');
+  await t.page.getByPlaceholder('Razza, es. Rottweiler').fill('Meticcio');
+  await t.page.getByRole('button', { name: /Meticcio \/ altra razza/ }).click();
+  await t.page.getByRole('button', { name: 'Crea account', exact: true }).click();
+  assert.equal(t.writes.length, 0, 'Owner acceptance is required too');
+  await ownerTerms.check();
+  await t.page.getByRole('button', { name: 'Crea account', exact: true }).click();
+  await t.page.getByRole('heading', { name: 'Bentornato' }).waitFor();
+  assert.equal(t.writes.length, 1);
+  assert.equal(t.writes[0].data.role, 'owner');
+  assert.equal(t.writes[0].data.legal_declaration.professional_terms_version, null);
+  assert.equal(t.writes[0].data.legal_declaration.terms_accepted, true);
   await t.context.close();
   assert.deepEqual(errors, []);
-  console.log('OK: invito diretto, attività obbligatoria, trainer/pensione/toelettatura/handler nel payload Auth, retry senza perdita dati, conferma email e percorso proprietario preservato. Auth simulata, nessun account reale creato.');
+  console.log('OK: registrazione proprietario e quattro attività, termini non preselezionati, informativa accessibile, versioni inviate, cambio ruolo e retry. Auth simulata; la dichiarazione non è una ricevuta server immutabile.');
 } finally { await browser.close(); }

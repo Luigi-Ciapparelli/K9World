@@ -8,7 +8,16 @@ on:
       - 'src/components/BrowserDataControls.tsx'
       - 'src/pages/BeforeDogPage.tsx'
       - 'src/pages/LegalPages.tsx'
+      - 'src/App.tsx'
+      - 'src/components/Footer.tsx'
+      - 'src/components/PrivacyRequestGuide.tsx'
+      - 'src/components/SignupLegalNotice.tsx'
+      - 'src/lib/legalNotices.ts'
+      - 'src/lib/AuthContext.tsx'
+      - 'src/pages/AuthPages.tsx'
       - 'scripts/tests/test_browser_privacy_ui.mjs'
+      - 'scripts/tests/test_privacy_requests_ui.mjs'
+      - 'scripts/tests/test_professional_signup_ui.mjs'
       - '.github/workflows/browser-privacy.yml'
       - 'vercel.json'
       - 'index.html'
@@ -41,6 +50,7 @@ jobs:
         run: |
           npm run typecheck
           npx --no-install eslint --max-warnings 0 src/components/BrowserDataControls.tsx src/lib/browserData.ts src/lib/ThemeContext.tsx src/lib/imparaProgress.ts src/pages/BeforeDogPage.tsx src/pages/LegalPages.tsx src/components/Footer.tsx src/lib/proSetup.ts
+          npx --no-install eslint --max-warnings 0 src/components/PrivacyRequestGuide.tsx src/components/SignupLegalNotice.tsx src/lib/legalNotices.ts src/pages/AuthPages.tsx
           node scripts/tests/test_impara_progress.mjs
           npm run build
           node scripts/tests/test_seo_build.mjs
@@ -58,3 +68,5 @@ jobs:
             sleep 1
           done
           node scripts/tests/test_browser_privacy_ui.mjs
+          node scripts/tests/test_professional_signup_ui.mjs
+          node scripts/tests/test_privacy_requests_ui.mjs

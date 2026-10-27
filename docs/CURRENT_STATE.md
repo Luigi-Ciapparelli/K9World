@@ -1,12 +1,28 @@
 # PortaleCinofilo — stato corrente
 
 Aggiornato il **21 ottobre 2026**. Base verificata con fetch di `origin/main`:
-`7ac252e` (ammissione addestratori e direttiva futura Pluto su main).
+`41273c1` (privacy browser su main, oltre ad ammissione e direttiva futura Pluto).
 Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
-## Privacy browser — incremento corrente
+## Registrazione e richieste privacy — incremento corrente
+
+[PRIVACY_OPERATIONS_V1](PRIVACY_OPERATIONS_V1.md): informativa prima dei campi,
+accettazione distinta dei termini per ruolo, testi versione `2026-10-21.1`,
+modelli per esercitare i diritti e link legali nelle aree personali. Procedura
+operativa e matrice dei controlli ancora aperti. Nessuna nuova migration.
+La dichiarazione Auth è modificabile dall'utente: non è una ricevuta server
+immutabile né una barriera contro chiamate dirette all'API.
+
+TypeScript, lint mirato, build con configurazione sintetica e SEO passati.
+Browser desktop/mobile e deploy sono tracciati nella PR di questo incremento;
+non confonderli con prove di cancellazione, contratti o backup online.
+Da completare: domicilio pubblico del gestore, DPA/regioni degli account reali,
+retention, gestione effettiva dei diritti, ruoli dei professionisti e revisione
+legale/fiscale. Non rinviare la verifica legale alla monetizzazione.
+
+## Privacy browser — su main `41273c1`
 
 [BROWSER_PRIVACY_V1](BROWSER_PRIVACY_V1.md): informativa specifica, comandi di
 cancellazione locale separati da account/archivi, tema e test resilienti allo
@@ -15,8 +31,9 @@ Header di riservatezza e cache delle aree private; nessuna migration.
 TypeScript, lint mirato, build/SEO e regressione Impara passati localmente.
 La suite desktop/mobile è passata nella [CI Browser privacy](https://github.com/Luigi-Ciapparelli/K9World/actions/runs/39595123299)
 sul codice `a6b1fac`: 1440/390 px, storage negato, cancellazione selettiva e chiave
-Auth preservata. Preview Vercel riuscita; il successivo merge e il deploy
-di produzione restano evidenze distinte. Il browser locale non era scaricabile.
+Auth preservata. PR #3 integrata in `41273c1`; produzione osservata con pagine
+`/cookies` e `/privacy` aggiornate e header no-referrer/nosniff, `/account` no-store.
+Il browser locale non era scaricabile; le prove interattive sono state eseguite in CI.
 Restano da verificare contratti/regioni dei fornitori, conservazione online,
 backup/ripristino e gestione effettiva delle richieste privacy. Email sospese;
 PLUTO-01 e MATCH-01 restano soltanto direttive future.
