@@ -47,6 +47,17 @@ Non presentare questi esempi a finanziatori come trazione già acquisita. Il por
 
 Le soglie sono criteri proposti per scegliere il lavoro successivo, non requisiti di legge né promesse di risultato.
 
+### Priorità operativa del 27 ottobre: validare il primo uso
+
+Questa precisazione organizza la preparazione della prova; non dichiara acquisiti clienti, appuntamenti o ricavi e non autorizza spese o comunicazioni esterne.
+
+1. Completare TRUST-01/02 per il primo uso: confermare la barriera di ammissione professionale nell'ambiente reale e la gestione dei dati trattati. Verificare soltanto le parti del percorso iscrizione → profilo approvato → richiesta → risposta/appuntamento per cui manca evidenza online; riutilizzare i test già passati.
+2. Preparare una dimostrazione breve, centrata su profilo, richieste e appuntamenti. Primo obiettivo proposto: tre dimostrazioni concordate; poi fino a cinque professionisti esterni verificati e disponibili e tre richieste reali gestite. Non promettere clienti ai professionisti.
+3. Misurare ingresso completato, risposta e ritorno all'uso, separando i dati dimostrativi. Scegliere il successivo intervento sulla base di un ostacolo osservato o un bisogno ripetuto, prima di aggiungere grandi funzioni o acquistare traffico.
+4. Valutare una sola offerta facoltativa quando emerge un'utilità ripetibile. Restano applicabili la verifica dell'inquadramento descritta nella sezione 6 e la decisione distinta su prezzi e incassi.
+
+Le finestre sotto partono dall'avvio effettivo della prova, non dalla data del documento. La mancanza di una struttura organizzativa dedicata non sospende preparazione e correzioni tecniche; gli adempimenti richiesti si valutano sull'attività concreta. L'assistente prepara materiali, verifiche e analisi; il fondatore decide coinvolgimento di terzi e impegni economici. Email e raccolta contatti restano sospese. Nessuna nuova spesa pubblicitaria o abbonamento è autorizzato da questo piano.
+
 | Finestra | Lavoro prioritario | Evidenza da raccogliere | Decisione alla fine |
 | --- | --- | --- | --- |
 | Giorni 1–7 | Completare la presenza social con contenuti già curati; invitare personalmente i primi professionisti disponibili; chiarire accesso ai fondi | 3 dimostrazioni concordate, problemi di ingresso annotati, requisiti di finanziamento chiariti | Risolvere gli ostacoli che impediscono di utilizzare il sito |
