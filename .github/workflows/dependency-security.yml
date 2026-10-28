@@ -1,0 +1,58 @@
+name: Dependency security
+on:
+  pull_request:
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.ts'
+      - 'scripts/tests/test_dev_server_boundary.mjs'
+      - 'scripts/tests/test_pilot_booking_flow_ui.mjs'
+      - '.github/workflows/dependency-security.yml'
+permissions:
+  contents: read
+concurrency:
+  group: dependency-security-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      VITE_PROFESSIONAL_CONTINUITY: 'true'
+      VITE_SUPABASE_URL: 'https://pc-home-test.supabase.co'
+      VITE_SUPABASE_ANON_KEY: 'synthetic-test-public-key'
+      PC_TEST_BASE_URL: 'http://127.0.0.1:5241'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Install the locked dependency tree
+        run: npm ci
+      - name: Audit and development server regression
+        run: |
+          npm audit --audit-level=low
+          node scripts/tests/test_dev_server_boundary.mjs
+      - name: TypeScript, production build and SEO
+        run: |
+          npm run typecheck
+          npm run build
+          node scripts/tests/test_seo_build.mjs
+      - name: Install Chromium
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Built search, booking and messages across both roles
+        shell: bash
+        run: |
+          set -euo pipefail
+          node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 5241 --strictPort > "$RUNNER_TEMP/dependency-vite.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:5241/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/tests/test_pilot_booking_flow_ui.mjs
+          node scripts/tests/test_trainer_specializations_ui.mjs
