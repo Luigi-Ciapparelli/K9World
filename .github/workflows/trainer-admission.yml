@@ -2,6 +2,9 @@ name: Trainer admission
 on:
   pull_request:
     paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.ts'
       - 'supabase/migrations/20261021100000_verified_trainer_admission.sql'
       - 'src/lib/trainerAdmission.ts'
       - 'src/lib/professionalApproval.ts'
@@ -34,7 +37,7 @@ jobs:
       - name: Reconstruct SQL and check concurrency
         run: python3 scripts/tests/test_trainer_admission.py
       - name: Install test dependencies
-        run: npm install --no-save --package-lock=false playwright@1.56.1
+        run: npm ci
       - name: TypeScript, targeted lint, build and SEO
         run: |
           npm run typecheck
