@@ -32,6 +32,8 @@ controlla RLS, dati Supabase, contratti o conformità legale.
   e si attivano anche per modifiche a manifest, lockfile o configurazione Vite.
 - Nuova CI `Dependency security`: audit, regressione del server di sviluppo,
   TypeScript, build/SEO, ricerca e percorso prenotazione/messaggi sul compilato.
+  La fixture di prenotazione accetta esplicitamente i termini già introdotti
+  nel sito, controllando che la casella parta vuota e la dichiarazione sia inviata.
   Nessun `npm audit fix --force` e nessun aggiornamento generale a Vite 8.
 
 Per installare il progetto usare `npm ci`, che richiede coerenza fra manifest
