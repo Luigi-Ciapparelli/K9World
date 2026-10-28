@@ -1,0 +1,27 @@
+name: Signup legal receipts
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'src/lib/legalNotices.ts'
+      - 'src/lib/AuthContext.tsx'
+      - 'docs/legal/**'
+      - 'scripts/tests/*signup_legal_receipts*'
+      - 'scripts/tests/*trainer_admission*'
+      - 'scripts/audit/real_use_privacy_status.sql'
+      - '.github/workflows/signup-legal-receipts.yml'
+permissions:
+  contents: read
+concurrency:
+  group: signup-legal-receipts-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Full SQL history, immutable initial receipts and admission regression
+        run: python3 scripts/tests/test_signup_legal_receipts.py
