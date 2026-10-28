@@ -25,7 +25,8 @@ def constant(path, name):
 
 def fixture(repo):
     tests = repo / 'scripts/tests'
-    migrations = sorted((repo / 'supabase/migrations').glob('*.sql'))
+    # This suite intentionally reconstructs history through its target migration.
+    migrations = sorted(p for p in (repo / 'supabase/migrations').glob('*.sql') if p.name <= MIGRATION)
     if migrations[-1].name != MIGRATION:
         raise RuntimeError('Storia migration cambiata: rivedere il test.')
     bootstrap = constant(tests / 'test_continuity_migration.py', 'BOOTSTRAP')
@@ -126,6 +127,10 @@ def main():
         args.export_fixture.write_text(json.dumps(data))
         print('Fixture sintetica esportata:', args.export_fixture)
         return
+    run_suite(data)
+
+
+def run_suite(data):
     if os.geteuid() == 0:
         raise SystemExit('Esegui come Luigi, senza sudo.')
     candidates = list(Path('/usr/lib/postgresql').glob('*/bin/initdb'))
