@@ -106,7 +106,10 @@ casuale, diversa dalla password, cifra la copia: salvarla nel gestore password.
 La frase passa a GnuPG tramite un descrittore anonimo, non un argomento o file.
 Python non garantisce l'azzeramento fisico delle stringhe dalla memoria.
 
-Lo script verifica TLS e nome del server con le CA di sistema, imposta le
+Lo script verifica TLS e nome del server usando la CA pubblica ufficiale Supabase,
+inclusa in `scripts/certificates/supabase-prod-ca-2021.crt`. Ne controlla
+l'impronta SHA-256 del certificato DER prima di richiedere le password; usa una
+copia temporanea privata, senza modificare le CA di sistema. Imposta le
 connessioni in sola lettura e non indebolisce TLS in caso di errore. Esegue
 un dump nativo completo, senza escludere automaticamente tabelle per aggirare
 errori, e un export dei ruoli senza password. Se Vault contiene segreti si ferma:
@@ -134,9 +137,31 @@ la destinazione senza modificare l'originale o sopprimere errori indiscriminatam
 Il manifest mantiene `restore_status=not_tested` e `storage_status=not_backed_up`.
 Le immagini Storage, le configurazioni e una copia indipendente restano aperte.
 
+Il 29 ottobre la prima esecuzione di Luigi si è fermata nel controllo preliminare
+con errore classificato `CERTIFICATO_TLS`: nessun export completato. La versione
+iniziale usava solo le CA di Ubuntu. La correzione segue la
+[guida ufficiale psql](https://supabase.com/docs/guides/database/psql), che richiede
+la CA Supabase anche per il session pooler. L'errore di categoria non prova da
+solo quale messaggio TLS specifico sia stato restituito dal client.
+
+Origine del certificato pubblico: [download Supabase](https://supabase-downloads.s3-ap-southeast-1.amazonaws.com/prod/ssl/prod-ca-2021.crt),
+URL verificato nella [configurazione ufficiale Studio](https://github.com/supabase/supabase/blob/bd62dec2e20aa165e37a1592dbda655835bf2683/apps/studio/hooks/custom-content/custom-content.json).
+Impronta DER SHA-256: `807025ad50d4ed219d2c9c7d299c004f824eb00cf7f65afef607d07b72e6cafa`.
+È un certificato pubblico, senza chiave privata; la sua inclusione nel repository
+non include credenziali. Un cambio di CA richiede verifica della fonte e
+aggiornamento esplicito dell'impronta, non accettazione automatica dal server.
+`verify-full` continua a controllare catena, validità temporale e hostname.
+
+`test_backup_tls.py` verifica offline CA, file mancante/alterato/non valido e
+classificazione degli errori senza stampa del log. Gli errori successivi mostrano
+un codice distinto per CA, hostname, password, rete, opzioni e permessi della
+query; non attribuire automaticamente qualsiasi errore alla password.
+La prova di connessione ed esportazione nel WSL resta da ripetere: il successo
+dei test offline non la sostituisce. Nessun riavvio o cambio di SSL enforcement.
+
 Il controllo online preparatorio ha letto solo metadati: nessuna tabella non
 leggibile dal ruolo `postgres`, Vault vuoto, versione 17.6. L'esportazione reale
-non è stata ancora eseguita dall'assistente; attende il comando locale di Luigi.
+non è stata completata; attende la nuova esecuzione locale di Luigi.
 I test della pipeline usano dati sintetici e coprono anche password errata,
 ciphertext alterato e produttore fallito; la prova di ripristino ricostruisce
 le 75 migration e passa il dump attraverso cifratura e decifratura.

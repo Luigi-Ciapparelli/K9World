@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import ssl
 import subprocess
 import sys
 import tempfile
@@ -16,6 +17,10 @@ from datetime import datetime, timezone
 PROJECT = 'tyuptbiqqhkhfsikdaeq'
 PG_BIN = Path('/usr/lib/postgresql/17/bin')
 LIMIT = 240
+# Public trust anchor linked by the official Supabase Studio SSL configuration.
+# Source: https://supabase-downloads.s3-ap-southeast-1.amazonaws.com/prod/ssl/prod-ca-2021.crt
+SUPABASE_CA = Path(__file__).resolve().parent / 'certificates' / 'supabase-prod-ca-2021.crt'
+SUPABASE_CA_SHA256 = '807025ad50d4ed219d2c9c7d299c004f824eb00cf7f65afef607d07b72e6cafa'
 
 
 class BackupError(Exception):
@@ -23,7 +28,54 @@ class BackupError(Exception):
 
 
 def clean_env():
-    return {k: v for k, v in os.environ.items() if not k.startswith('PG')}
+    env = {k: v for k, v in os.environ.items() if not k.startswith('PG')}
+    env['LC_ALL'] = 'C'  # Stable error categories; never print the original log.
+    return env
+
+
+def verified_ca_bytes(path=SUPABASE_CA):
+    """Accept only the reviewed public Supabase CA, never a server-supplied CA."""
+    try:
+        with path.open('rb') as source:
+            raw = source.read(16385)
+    except OSError:
+        raise BackupError('SUPABASE_CA_FILE_MISSING_OR_UNREADABLE') from None
+    if len(raw) > 16384 or not re.fullmatch(
+            rb'\s*-----BEGIN CERTIFICATE-----\s+[A-Za-z0-9+/=\s]+-----END CERTIFICATE-----\s*', raw):
+        raise BackupError('SUPABASE_CA_INVALID')
+    try:
+        der = ssl.PEM_cert_to_DER_cert(raw.decode('ascii').strip())
+    except (ValueError, UnicodeError):
+        raise BackupError('SUPABASE_CA_INVALID') from None
+    if hashlib.sha256(der).hexdigest() != SUPABASE_CA_SHA256:
+        raise BackupError('SUPABASE_CA_FINGERPRINT_MISMATCH')
+    return raw
+
+
+def connection_error_code(raw):
+    """Return a fixed label only, even if stderr contains credentials or SQL."""
+    text = raw.decode('utf-8', errors='replace').lower()
+    categories = (
+        ('DATABASE_TLS_HOSTNAME_MISMATCH', ('does not match host name', 'hostname mismatch')),
+        ('DATABASE_TLS_CA_VERIFICATION_FAILED', ('certificate verify failed', 'self-signed certificate',
+                                                'unable to get local issuer', 'root certificate file')),
+        ('DATABASE_TLS_CLIENT_CERTIFICATE_ERROR', ('client certificate', 'private key file')),
+        ('DATABASE_TLS_NOT_SUPPORTED', ('does not support ssl',)),
+        ('DATABASE_TLS_ERROR', ('ssl error', 'certificate')),
+        ('DATABASE_STARTUP_OPTIONS_REJECTED', ('unsupported startup parameter',
+                                             'unrecognized configuration parameter', 'invalid value for parameter')),
+        ('DATABASE_AUTH_RATE_LIMITED', ('circuit breaker', 'too many authentication')),
+        ('DATABASE_PASSWORD_REJECTED', ('password authentication failed', 'wrong password',
+                                       'no password supplied', 'sasl authentication failed')),
+        ('DATABASE_POOLER_TENANT_NOT_FOUND', ('tenant or user not found',)),
+        ('DATABASE_DNS_FAILED', ('could not translate host', 'name resolution')),
+        ('DATABASE_NETWORK_OR_TIMEOUT', ('timeout', 'timed out', 'connection refused', 'network is unreachable')),
+        ('DATABASE_CONNECTION_LIMIT', ('too many connections', 'max client connections')),
+        ('DATABASE_PREFLIGHT_PERMISSION_DENIED', ('permission denied', 'must be owner')),
+        ('DATABASE_PREFLIGHT_OBJECT_MISSING', ('does not exist',)),
+    )
+    return next((code for code, patterns in categories if any(p in text for p in patterns)),
+                'DATABASE_CONNECTION_FAILED_UNCLASSIFIED')
 
 
 def stop(process):
@@ -143,10 +195,9 @@ def main():
     for tool in ('gpg', 'gpgconf'):
         if not shutil.which(tool):
             raise BackupError('GNUPG_REQUIRED')
-    ca = Path('/etc/ssl/certs/ca-certificates.crt')
-    if not ca.is_file():
-        raise BackupError('SYSTEM_CA_CERTIFICATES_REQUIRED')
+    ca_bytes = verified_ca_bytes()
     print('Backup database PortaleCinofilo. Solo lettura; nessun restore o acquisto.', flush=True)
+    print('Certificato CA ufficiale Supabase controllato; verifica TLS completa attiva.')
     print('Supabase > Connect > Session pooler: copia soltanto il campo Host.')
     host = checked_host(input('Host: '))
     password = getpass.getpass('Password database Supabase (nascosta): ')
@@ -171,6 +222,11 @@ def main():
     print('Directory privata:', output, flush=True)
     try:
         with tempfile.TemporaryDirectory(prefix='pc-db-auth-') as credentials, crypto_home() as home:
+            # Snapshot the validated public CA in the same private directory.
+            # No global trust-store modification and no check/use race on the repo file.
+            ca = Path(credentials) / 'supabase-root.crt'
+            ca.write_bytes(ca_bytes)
+            ca.chmod(0o600)
             passfile = Path(credentials) / 'pgpass'
             username = 'postgres.' + PROJECT
             passfile.write_text(':'.join(map(pgpass_field, [host, '5432', 'postgres', username, password])) + '\n')
@@ -188,7 +244,8 @@ def main():
                                         'ON_ERROR_STOP=1', '-c', sql], env=env,
                                        stdout=subprocess.PIPE, stderr=errors, timeout=30)
             if check.returncode:
-                raise BackupError('DATABASE_CONNECTION_FAILED_CHECK_HOST_PASSWORD_AND_TLS')
+                with (logs / 'connection.log').open('rb') as errors:
+                    raise BackupError(connection_error_code(errors.read(16384)))
             metadata = json.loads(check.stdout)
             if metadata['version_num'] // 10000 != 17 or metadata['database'] != 'postgres':
                 raise BackupError('UNEXPECTED_DATABASE_VERSION')
