@@ -7,6 +7,7 @@ on:
       - 'src/lib/AuthContext.tsx'
       - 'docs/legal/**'
       - 'scripts/tests/*signup_legal_receipts*'
+      - 'scripts/tests/dog_photo_limits_assertions.sql'
       - 'scripts/tests/*trainer_admission*'
       - 'scripts/audit/real_use_privacy_status.sql'
       - '.github/workflows/signup-legal-receipts.yml'

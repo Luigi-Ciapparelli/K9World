@@ -35,6 +35,10 @@ WITH tables AS (
  SELECT 'ricevuta_cancellata_con_account',EXISTS(
   SELECT 1 FROM pg_constraint WHERE conrelid=to_regclass('pc_private.signup_legal_receipts')
   AND confrelid=to_regclass('auth.users') AND contype='f' AND confdeltype='c')
+ UNION ALL
+ SELECT 'foto_cani_limiti_server',EXISTS(
+  SELECT 1 FROM storage.buckets WHERE id='dog-photos' AND NOT public
+  AND file_size_limit=163840 AND allowed_mime_types=ARRAY['image/webp']::text[])
 )
 SELECT controllo,CASE WHEN ok THEN 'OK' ELSE 'DA_COMPLETARE' END AS esito FROM checks ORDER BY controllo;
 

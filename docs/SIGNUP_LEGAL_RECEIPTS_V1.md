@@ -1,8 +1,9 @@
 # Ricevute iniziali dei termini — 28 ottobre 2026
 
-Incremento di TRUST-02 sulla base `5c0849d`. Applicazione al database remoto
-non osservata: il codice su GitHub e un deploy Vercel non applicano una migration.
-Il risultato dei test e l'eventuale rilascio sono riportati nella PR del blocco.
+Incremento di TRUST-02, rilasciato su `main` con `1eec921` (PR #8).
+Migration applicata al database reale il 28 ottobre; trigger e cronologia
+riconfermati il 29 ottobre. Prove e limiti in
+[PRODUCTION_PRIVACY_VERIFICATION_2026_10_29](PRODUCTION_PRIVACY_VERIFICATION_2026_10_29.md).
 
 ## Risultato concreto
 
@@ -60,7 +61,7 @@ gli effetti. Il testo già pubblicato non cambia in questo incremento.
 ## Verifiche e rilascio
 
 `python3 scripts/tests/test_signup_legal_receipts.py` ricostruisce tutte le
-74 migration in PostgreSQL privato. Verifica ruoli, input contraffatti, rollback,
+75 migration in PostgreSQL privato, incluso il successivo limite foto cane. Verifica ruoli, input contraffatti, rollback,
 onboarding del cane da un ruolo Auth senza privilegi sul registro, isolamento,
 cancellazione, regressioni di ammissione e concorrenza approvazione/revoca.
 Auth e Storage sono dipendenze SQL simulate: il test non prova i servizi online.
