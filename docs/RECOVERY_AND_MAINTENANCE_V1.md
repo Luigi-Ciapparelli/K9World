@@ -14,8 +14,11 @@ applicative in `public`/`pc_private`. Non sono stati letti contenuti delle perso
 Il [fornitore](https://supabase.com/docs/guides/platform/backups) raccomanda sul
 piano gratuito esportazioni esterne regolari. Non dichiarare disponibili o
 collaudati i backup giornalieri dei piani Pro/Team sulla base del solo piano Free.
-Gli strumenti collegati non espongono l'elenco dei backup né un export completo:
-la loro effettiva disponibilità va controllata nel pannello dell'account.
+Il 29 ottobre Luigi ha controllato il pannello e riportato il messaggio:
+«Free Plan does not include project backups». Non ci sono quindi backup del
+progetto disponibili tramite quella funzione del piano attuale. Non chiedere
+di ripetere il controllo o di accedere nuovamente al browser dell'assistente.
+Gli strumenti collegati non espongono un export completo del progetto.
 
 Il dump PostgreSQL contiene i metadati Storage, **non i file delle foto e dei
 documenti**. GitHub conserva il codice, non i dati del servizio. Una prova con
@@ -42,6 +45,43 @@ La versione PostgreSQL e la durata sono stampate nel risultato. Questo non è un
 test di upgrade tra versioni, un test SMTP, un ripristino Storage o una misura
 del tempo necessario al progetto reale. Nessuna copia o credenziale reale viene
 caricata nei job CI. Non usare la fixture Auth al posto del servizio Supabase.
+
+Prova eseguita nella PR #10, integrata su `main` in `98ed236`: GitHub Actions
+[40824382308](https://github.com/Luigi-Ciapparelli/K9World/actions/runs/40824382308)
+superata con PostgreSQL 18.6 in 8,2 secondi. Il progetto online usa 17.6: non è
+una prova fra versioni né una verifica della copia reale.
+
+## Percorso a costo contenuto sul piano gratuito
+
+La priorità è predisporre un'esportazione protetta sul computer del gestore,
+senza attivare Pro, PITR o un altro progetto a pagamento. Un backup manuale
+richiede esecuzione regolare e controllo dell'esito; non offre la copertura
+automatica di un servizio gestito. L'automazione va aggiunta dopo la prima
+copia completa e la prova di ripristino, con segnalazione degli errori e
+verifica che il computer rimanga disponibile agli orari previsti.
+
+Primo passo nel terminale WSL già usato per il progetto:
+
+```bash
+cd ~/K9World && git pull --ff-only && python3 scripts/diagnose_backup_environment.py
+```
+
+Il controllo rileva gli strumenti installati e le versioni dei client locali,
+con un timeout per comando. Non apre file di account, password o chiavi e non
+mostra variabili ambiente; non contatta Supabase, non installa software e non crea un backup.
+La presenza del comando Docker non prova che il suo motore sia avviato.
+L'output serve a scegliere fra CLI con Docker e client PostgreSQL compatibile
+senza far installare strumenti alla cieca. Il PostgreSQL 16 installato in
+passato nel WSL non basta per esportare il server 17.6; controllare prima se
+nel frattempo è presente una versione successiva.
+
+Dopo questo controllo occorrono connessione dal pannello **Connect**, credenziale
+inserita localmente senza incollarla in chat e destinazione privata della copia.
+Conservare anche una copia cifrata indipendente dal computer; scegliere fra le
+risorse già disponibili prima di acquistare spazio. Le immagini e i documenti
+Storage richiedono una copia distinta dal dump. Non chiamare completo il backup
+finché il perimetro sotto non è stato verificato. Nessuna esportazione di record
+personali nel log della chat o negli artifact pubblici di GitHub Actions.
 
 ## Procedura per la prima copia reale
 
