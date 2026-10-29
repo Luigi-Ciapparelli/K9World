@@ -10,8 +10,11 @@ import shutil
 import subprocess
 import tempfile
 import time
+import sys
 
 from test_signup_legal_receipts import fixture
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from backup_database_encrypted import crypto_home, encrypt_command, start_gpg, verify_encrypted
 
 
 def sql_identifier(value):
@@ -110,7 +113,20 @@ def main():
         dump = root / 'database.dump'
         roles = source.run('pg_dumpall', ['-h', source.socket, '-p', '55446', '-U', source.role,
                                          '--roles-only', '--no-role-passwords'])
-        source.run('pg_dump', ['--format=custom', '--file', dump, *source.connect()])
+        # Exercise the same encrypted export pipeline used by the operator.
+        # Plaintext is restored only here, for this synthetic isolated fixture.
+        with crypto_home() as crypto:
+            encrypted = root / 'database.dump.gpg'
+            phrase = 'Synthetic restore test only 2026'
+            encrypt_command([str(binaries / 'pg_dump'), '--format=custom', *source.connect()],
+                            env, crypto, phrase, encrypted, root)
+            verify_encrypted(encrypted, crypto, phrase, root,
+                             [str(binaries / 'pg_restore'), '--exit-on-error', '--file=/dev/null'])
+            with dump.open('xb') as decoded, (root / 'decrypt.log').open('wb') as errors:
+                process = start_gpg(crypto, phrase, ['--decrypt', str(encrypted)],
+                                    subprocess.DEVNULL, decoded, errors)
+                if process.wait(timeout=60):
+                    raise RuntimeError('Synthetic archive decryption failed')
         dump_hash = hashlib.sha256(dump.read_bytes()).hexdigest()
         source.stop()  # Prove recovery without the source database being available.
         target.start()
@@ -125,7 +141,7 @@ def main():
             raise RuntimeError('Schema/owners/grants/functions/RLS differ after restore')
         if data_fingerprint(target, 'pc_recovery') != expected_rows:
             raise RuntimeError('Rows or sequence state differ after restore')
-        print(f'OK: {len(data["migrations"])+1} migration; schema, proprietari, ACL, RLS, righe e sequenze ripristinati.', flush=True)
+        print(f'OK: {len(data["migrations"])+1} migration; archivio cifrato/decifrato; schema, proprietari, ACL, RLS, righe e sequenze ripristinati.', flush=True)
         target.sql("""BEGIN;
 SET LOCAL ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','ad210000-0000-0000-0000-000000000001',true);

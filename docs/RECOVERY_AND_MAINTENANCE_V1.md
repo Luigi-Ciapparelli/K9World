@@ -75,6 +75,10 @@ senza far installare strumenti alla cieca. Il PostgreSQL 16 installato in
 passato nel WSL non basta per esportare il server 17.6; controllare prima se
 nel frattempo è presente una versione successiva.
 
+Riscontro acquisito il 29 ottobre: Luigi ha installato il client **17.11** nel
+WSL (`/usr/lib/postgresql/17/bin`); GnuPG 2.4.4 è presente, Docker assente.
+Non richiedere nuovamente quel controllo. Il server online rimane 17.6.
+
 Dopo questo controllo occorrono connessione dal pannello **Connect**, credenziale
 inserita localmente senza incollarla in chat e destinazione privata della copia.
 Conservare anche una copia cifrata indipendente dal computer; scegliere fra le
@@ -82,6 +86,60 @@ risorse già disponibili prima di acquistare spazio. Le immagini e i documenti
 Storage richiedono una copia distinta dal dump. Non chiamare completo il backup
 finché il perimetro sotto non è stato verificato. Nessuna esportazione di record
 personali nel log della chat o negli artifact pubblici di GitHub Actions.
+
+### Prima esportazione cifrata del database
+
+È disponibile `scripts/backup_database_encrypted.py`, da eseguire nel WSL senza
+sudo. Non accetta password, URL o destinazioni come argomenti. Usa il client 17
+installato e GnuPG, senza Docker. Dal pannello **Connect > Session pooler**
+copiate soltanto **Host** quando lo script lo chiede; porta 5432, database e
+utente sono fissati al progetto. Non usare il transaction pooler su 6543.
+
+```bash
+cd ~/K9World && git pull --ff-only && python3 scripts/backup_database_encrypted.py
+```
+
+La password del database viene richiesta senza eco, conservata per il tempo
+necessario in un file temporaneo privato `0600`, poi rimossa. Non appare nella
+cronologia, nei comandi o nelle variabili ambiente. Una seconda frase lunga e
+casuale, diversa dalla password, cifra la copia: salvarla nel gestore password.
+La frase passa a GnuPG tramite un descrittore anonimo, non un argomento o file.
+Python non garantisce l'azzeramento fisico delle stringhe dalla memoria.
+
+Lo script verifica TLS e nome del server con le CA di sistema, imposta le
+connessioni in sola lettura e non indebolisce TLS in caso di errore. Esegue
+un dump nativo completo, senza escludere automaticamente tabelle per aggirare
+errori, e un export dei ruoli senza password. Se Vault contiene segreti si ferma:
+la relativa chiave di recupero richiede prima una procedura distinta.
+
+Il dump compresso fluisce direttamente nella cifratura AES-256. Non viene scritto
+un dump in chiaro. I file sono conservati in una directory privata sotto
+`~/PortaleCinofilo-backups/`, fuori dal repository. Entrambi gli exit code della
+pipeline sono controllati: un export fallito seguito da cifratura riuscita non
+produce un esito positivo. I processi hanno timeout e vengono fermati in caso di
+interruzione. L'agente GnuPG temporaneo viene chiuso senza toccare il portachiavi
+abituale. Eventuali log diagnostici restano privati nella directory della copia.
+
+La verifica decifra integralmente i file; per il dump, `pg_restore` legge e
+genera SQL verso `/dev/null`, senza connettersi a un database. La riga
+`OK_DATABASE_EXPORT_VERIFIED` e il manifest con hash SHA-256 compaiono soltanto
+se tutti i passaggi riescono. Un errore lascia `INCOMPLETE.txt` e non certifica
+la directory. Condividere in chat solo lo stato finale, mai archivi o log.
+
+**Limite operativo:** è un export nativo del database, non un restore Supabase
+già collaudato. Include oggetti e ruoli gestiti che non vanno importati alla cieca
+in un progetto Supabase nuovo. La documentazione del fornitore distingue questi
+oggetti dai dump filtrati della CLI: la prova reale di ripristino dovrà adattare
+la destinazione senza modificare l'originale o sopprimere errori indiscriminatamente.
+Il manifest mantiene `restore_status=not_tested` e `storage_status=not_backed_up`.
+Le immagini Storage, le configurazioni e una copia indipendente restano aperte.
+
+Il controllo online preparatorio ha letto solo metadati: nessuna tabella non
+leggibile dal ruolo `postgres`, Vault vuoto, versione 17.6. L'esportazione reale
+non è stata ancora eseguita dall'assistente; attende il comando locale di Luigi.
+I test della pipeline usano dati sintetici e coprono anche password errata,
+ciphertext alterato e produttore fallito; la prova di ripristino ricostruisce
+le 75 migration e passa il dump attraverso cifratura e decifratura.
 
 ## Procedura per la prima copia reale
 
