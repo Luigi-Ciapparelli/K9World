@@ -5,6 +5,8 @@ on:
       - 'supabase/migrations/**'
       - 'scripts/tests/test_recovery_drill.py'
       - 'scripts/backup_database_encrypted.py'
+      - 'scripts/certificates/**'
+      - 'scripts/tests/test_backup_tls.py'
       - 'scripts/tests/test_encrypted_backup.py'
       - 'scripts/tests/recovery_seed.sql'
       - 'scripts/tests/test_signup_legal_receipts.py'
@@ -23,6 +25,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+      - name: Database CA and private connection errors
+        run: python3 scripts/tests/test_backup_tls.py
       - name: Encryption and failure handling with synthetic data
         run: python3 scripts/tests/test_encrypted_backup.py
       - name: Backup and restore synthetic database in separate private clusters
