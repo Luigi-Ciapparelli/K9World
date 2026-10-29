@@ -5,6 +5,8 @@ on:
       - 'supabase/migrations/**'
       - 'scripts/tests/test_recovery_drill.py'
       - 'scripts/backup_database_encrypted.py'
+      - 'scripts/backup_storage_encrypted.py'
+      - 'scripts/tests/test_storage_backup.py'
       - 'scripts/certificates/**'
       - 'scripts/tests/test_backup_tls.py'
       - 'scripts/tests/test_encrypted_backup.py'
@@ -29,5 +31,7 @@ jobs:
         run: python3 scripts/tests/test_backup_tls.py
       - name: Encryption and failure handling with synthetic data
         run: python3 scripts/tests/test_encrypted_backup.py
+      - name: Storage export pagination, privacy and native encryption
+        run: python3 scripts/tests/test_storage_backup.py
       - name: Backup and restore synthetic database in separate private clusters
         run: python3 scripts/tests/test_recovery_drill.py
