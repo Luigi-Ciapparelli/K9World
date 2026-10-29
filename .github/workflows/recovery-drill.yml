@@ -1,0 +1,25 @@
+name: Isolated database recovery
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'scripts/tests/test_recovery_drill.py'
+      - 'scripts/tests/recovery_seed.sql'
+      - 'scripts/tests/test_signup_legal_receipts.py'
+      - 'scripts/tests/test_trainer_admission.py'
+      - '.github/workflows/recovery-drill.yml'
+permissions:
+  contents: read
+concurrency:
+  group: recovery-drill-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Backup and restore synthetic database in separate private clusters
+        run: python3 scripts/tests/test_recovery_drill.py
