@@ -25,3 +25,14 @@ dist-ssr
 # Environment variables
 .env.*
 !.env.example
+
+# Recovery archives and local connection credentials must never be published.
+/backups/
+/private-backups/
+*.dump
+*.backup
+*.sql.gz
+*.dump.age
+*.backup.age
+.pgpass
+pg_service.conf
