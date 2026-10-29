@@ -4,6 +4,14 @@ Base `ace4afa`, 75 migration. Incremento di SEC-04/TRUST-02. Esiti della prova
 isolata e dello stato del pannello vanno registrati nella PR di questo blocco.
 Non sostituisce un backup reale del progetto o il controllo dei contratti.
 
+**Riscontro del 29 ottobre:** dopo la correzione TLS su `main` `9111ee4`, Luigi
+ha eseguito lo script nel proprio WSL e comunicato `OK_DATABASE_EXPORT_VERIFIED`.
+È confermata la creazione di database e ruoli cifrati, la decifratura integrale
+e la lettura dell'archivio. Il risultato è comunicato dall'operatore: i file
+reali rimangono sul suo computer e non sono stati letti dall'assistente.
+Restano da confermare seconda copia indipendente, file Storage e restore reale
+isolato. Non chiedere di ripetere l'export riuscito per aggiornare il registro.
+
 ## Stato rilevato sul progetto
 
 Il progetto collegato al repository è attivo, nella regione `eu-central-1`,
@@ -156,17 +164,44 @@ aggiornamento esplicito dell'impronta, non accettazione automatica dal server.
 classificazione degli errori senza stampa del log. Gli errori successivi mostrano
 un codice distinto per CA, hostname, password, rete, opzioni e permessi della
 query; non attribuire automaticamente qualsiasi errore alla password.
-La prova di connessione ed esportazione nel WSL resta da ripetere: il successo
-dei test offline non la sostituisce. Nessun riavvio o cambio di SSL enforcement.
+La successiva prova nel WSL è riuscita secondo il risultato comunicato da Luigi;
+è distinta dai test offline. Nessun riavvio o cambio di SSL enforcement eseguito.
 
 Il controllo online preparatorio ha letto solo metadati: nessuna tabella non
 leggibile dal ruolo `postgres`, Vault vuoto, versione 17.6. L'esportazione reale
-non è stata completata; attende la nuova esecuzione locale di Luigi.
+è stata completata dall'operatore con esito `OK_DATABASE_EXPORT_VERIFIED`.
 I test della pipeline usano dati sintetici e coprono anche password errata,
 ciphertext alterato e produttore fallito; la prova di ripristino ricostruisce
 le 75 migration e passa il dump attraverso cifratura e decifratura.
 
 ## Procedura per la prima copia reale
+
+Il primo export database è riuscito. La prossima azione dell'operatore è salvare
+la frase nel gestore password e copiare `database.dump.gpg`, `roles.sql.gpg` e
+`manifest.json` dalla directory riuscita su una destinazione indipendente già
+disponibile: supporto esterno o spazio cloud privato del progetto. Copiare,
+non spostare; non includere password, frase di cifratura o log privati. Una
+seconda cartella sullo stesso PC non offre indipendenza dal guasto del PC.
+Non è stata scelta o verificata una destinazione né eseguito un trasferimento.
+Prima di considerare verificata la seconda copia confrontare gli hash SHA-256
+dei due file cifrati con quelli del manifest. Non eliminare l'originale.
+
+Inventario tecnico in sola lettura del 29 ottobre, successivo al riscontro:
+4 bucket, 1 oggetto Storage, 90.679 byte secondo i metadati, nessuna dimensione
+mancante. Nessun contenuto, percorso o proprietario è stato letto. Questo
+inventario non è il download dell'oggetto e può cambiare dopo il controllo.
+La dimensione ridotta permette di completare la prima copia dei file senza
+scegliere ora un nuovo piano di archiviazione.
+
+Per preparare il restore reale risultano installate sul server 17.6:
+`plpgsql` 1.0, `pg_stat_statements` 1.11, `pgcrypto` 1.3,
+`uuid-ossp` 1.1 e `supabase_vault` 0.3.1. Il client 17.11 presente nel WSL
+non prova la disponibilità di un server 17 e di queste estensioni. Preparare
+prima un ambiente locale compatibile e isolato, senza porte pubbliche e senza
+credenziali online; poi provare la copia reale mantenendo i log privati.
+Non sostituire Vault con una fixture, omettere errori o ripristinare nel progetto
+online per ottenere un esito positivo. La procedura non è ancora collaudata
+con questo dump: non usare il test sintetico come attestazione di ripristino.
 
 Prima della manutenzione, completare in uno spazio privato questo perimetro:
 
