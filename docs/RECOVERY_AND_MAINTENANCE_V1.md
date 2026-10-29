@@ -174,6 +174,74 @@ I test della pipeline usano dati sintetici e coprono anche password errata,
 ciphertext alterato e produttore fallito; la prova di ripristino ricostruisce
 le 75 migration e passa il dump attraverso cifratura e decifratura.
 
+### Esportazione cifrata dei file Storage
+
+È disponibile `scripts/backup_storage_encrypted.py`: copia i byte degli oggetti,
+compresi i bucket privati, in una directory separata dal backup database già
+riuscito. Non installa dipendenze, non richiede Docker, non crea un progetto
+Supabase e non abilita piani a pagamento. Il download usa traffico del progetto;
+i limiti locali sotto evitano un'esportazione illimitata.
+
+```bash
+cd ~/K9World && git pull --ff-only && python3 scripts/backup_storage_encrypted.py
+```
+
+Nel pannello del progetto, **Settings > API Keys**, utilizzare una **Secret key**
+(`sb_secret_...`), preferibilmente dedicata ai backup. Se disponibile è accettata
+anche la chiave legacy `service_role` di questo progetto. Non usare la chiave
+publishable/anon: non permette una copia completa dei file privati. La chiave
+va inserita esclusivamente nella richiesta nascosta dello script, mai in chat,
+GitHub, argomenti, file di configurazione o variabili ambiente. Rimane in memoria
+durante l'esecuzione. Questa chiave ha privilegi elevati: lo script limita le
+proprie richieste alla lettura, ma non trasforma la chiave in una credenziale
+con soli permessi di lettura. Le chiavi esistenti usate dal sito non vanno revocate
+per provare il backup. Conservare la frase di cifratura nel gestore password;
+si può usare quella già scelta per il backup database, diversa dalla chiave API.
+
+Il client usa HTTPS con verifica della CA e del nome host del progetto fissato
+nel codice. Non segue redirect né proxy ereditati dall'ambiente. Esegue soltanto
+GET dei bucket, POST di lettura dell'elenco oggetti e GET dei file originali,
+senza trasformazioni delle immagini, upload, cancellazioni o URL pubblici nuovi.
+Elenca cartelle e pagine, controlla dimensioni ed ETag quando presente, e rilegge
+l'inventario a fine download. Se rileva cambiamenti o risposte incomplete si
+ferma, senza dichiarare riuscita la copia. Il doppio inventario osserva la
+stabilità dei metadati: non offre uno snapshot atomico né la simultaneità con
+l'export PostgreSQL precedente. Eseguire quando non ci sono modifiche ai file.
+
+Ogni file è scaricato in memoria, cifrato con GnuPG AES-256, decifrato nuovamente
+e confrontato per lunghezza e SHA-256. Nessun file originale viene scritto
+in chiaro dallo script. Nomi e percorsi originali, metadati dei bucket e mappa
+dei file sono dentro `inventory.json.gpg`; i nomi locali sono numerici. La copia
+riuscita comprende **tutti** i file `.gpg` e `manifest.json` della directory
+`~/PortaleCinofilo-backups/storage-.../`. Il manifest esterno contiene conteggi,
+dimensioni e hash dei file cifrati, senza nomi di persone o percorsi originali.
+Permessi directory `0700`, file `0600`; nessuna credenziale o log remoto salvato.
+Come per l'altro script, Python non garantisce l'azzeramento fisico della memoria.
+
+Limiti di questa prima procedura: 16 MiB per oggetto, 100 MiB totali, 1.000 file,
+meno di 100 bucket standard, 1.000 cartelle e profondità massima 32. La rete ha
+timeout per richiesta e un budget complessivo di 10 minuti. I limiti non causano
+esclusioni silenziose: in caso di superamento la copia non viene certificata.
+Bucket Analytics/Vector richiedono una procedura distinta. Niente tentativi
+automatici dopo errori di accesso o rate limit.
+
+La riga di successo è `OK_STORAGE_EXPORT_VERIFIED`. Condividerla senza allegare
+file o chiavi. `INCOMPLETE.txt` senza manifest indica un tentativo non completato.
+Lo script non carica né ripristina file online. Il manifest mantiene
+`restore_status=not_tested`: il ripristino isolato e la copia indipendente
+restano da eseguire. La copia Storage reale non è ancora confermata dall'operatore.
+
+`scripts/tests/test_storage_backup.py` usa esclusivamente risposte API e file
+sintetici: paginazione, cartelle, permessi, limiti, cambi durante il download,
+redirect, errori senza segreti, cifratura e verifica dei byte. La modalità
+`--offline` esclude tre prove GnuPG e non va presentata come test completo;
+GitHub Actions esegue anche quelle tre prove. Non equivale a una prova del
+download dei file reali dal servizio Supabase.
+
+Riferimenti: [chiavi API Supabase](https://supabase.com/docs/guides/getting-started/api-keys),
+[download oggetti](https://supabase.com/docs/guides/storage/management/download-objects),
+[client ufficiale Storage](https://github.com/supabase/storage-js/blob/main/src/packages/StorageFileApi.ts).
+
 ## Procedura per la prima copia reale
 
 Il primo export database è riuscito. La prossima azione dell'operatore è salvare
