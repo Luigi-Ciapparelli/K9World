@@ -112,7 +112,10 @@ def windows_report(destination):
     except (ValueError, UnicodeError):
         raise CopyError('WINDOWS_CHECK_FAILED') from None
     if result.returncode or not isinstance(parsed, dict) or parsed.get('error'):
-        raise CopyError('CHECK_USB_CONNECTED_AND_DATABASE_STORAGE_FOLDERS')
+        stage = parsed.get('stage', 'UNKNOWN') if isinstance(parsed, dict) else 'UNKNOWN'
+        category = parsed.get('category', 'UNKNOWN') if isinstance(parsed, dict) else 'UNKNOWN'
+        suffix = ('_' + stage + '_' + category) if re.fullmatch('[A-Z_]+', str(stage)) and re.fullmatch('[A-Za-z]+', str(category)) else ''
+        raise CopyError('CHECK_USB_CONNECTED_AND_DATABASE_STORAGE_FOLDERS' + suffix)
     return parsed
 
 
