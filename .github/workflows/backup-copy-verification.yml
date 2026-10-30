@@ -1,0 +1,23 @@
+name: Encrypted backup copy verification
+on:
+  pull_request:
+    paths:
+      - 'scripts/verify_backup_copy.py'
+      - 'scripts/verify_backup_copy_windows.ps1'
+      - 'scripts/tests/test_backup_copy.py'
+      - '.github/workflows/backup-copy-verification.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Check synthetic copies and reject corruption
+        run: python scripts/tests/test_backup_copy.py
