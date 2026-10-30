@@ -17,8 +17,12 @@ non li ha ricevuti o ispezionati. Database e Storage sono due esportazioni
 separate, non uno snapshot simultaneo.
 Il 30 ottobre Luigi comunica inoltre di aver copiato i due gruppi sulla USB F:,
 dopo una prima copia del solo database sul disco D: del desktop. La copia su
-USB è un riscontro dell'operatore; il confronto degli hash resta da eseguire.
-Restano verifica della seconda copia e restore reale isolato.
+USB è un riscontro dell'operatore. Dopo il verificatore su `main` `ce65e9b`,
+Luigi comunica `OK_BACKUP_COPY_HASHES_VERIFIED`: manifest, dimensioni e hash
+dei file Database e Storage della USB corrispondono agli originali sul PC.
+È acquisito l'esito della seconda copia; l'assistente non ha letto i backup
+reali e non ha osservato l'espulsione fisica della USB.
+Restano restore reale isolato, configurazioni dei servizi e periodicità delle copie.
 Non chiedere di ripetere gli export riusciti per aggiornare il registro.
 
 ## Stato rilevato sul progetto
@@ -154,7 +158,8 @@ la destinazione senza modificare l'originale o sopprimere errori indiscriminatam
 Il manifest mantiene `restore_status=not_tested` e `storage_status=not_backed_up`.
 Questi stati descrivono il perimetro di quel dump, senza includere una successiva
 copia Storage separata. Non riscrivere il manifest storico per segnare verifiche
-esterne. Restano da completare configurazioni, copia indipendente e restore.
+esterne. La copia indipendente è stata verificata successivamente; restano
+configurazioni, periodicità e restore.
 
 Il 29 ottobre la prima esecuzione di Luigi si è fermata nel controllo preliminare
 con errore classificato `CERTIFICATO_TLS`: nessun export completato. La versione
@@ -239,8 +244,8 @@ automatici dopo errori di accesso o rate limit.
 La riga di successo è `OK_STORAGE_EXPORT_VERIFIED`. Condividerla senza allegare
 file o chiavi. `INCOMPLETE.txt` senza manifest indica un tentativo non completato.
 Lo script non carica né ripristina file online. Il manifest mantiene
-`restore_status=not_tested`: il ripristino isolato e la copia indipendente
-restano da eseguire. Il 30 ottobre l'operatore ha confermato la copia Storage
+`restore_status=not_tested`: il ripristino isolato resta da eseguire. La copia
+indipendente sulla USB è stata verificata successivamente. Il 30 ottobre l'operatore ha confermato la copia Storage
 reale: `OK_STORAGE_EXPORT_VERIFIED`, 1 oggetto, 90.679 byte.
 
 `scripts/tests/test_storage_backup.py` usa esclusivamente risposte API e file
@@ -257,24 +262,24 @@ Riferimenti: [chiavi API Supabase](https://supabase.com/docs/guides/getting-star
 [download oggetti](https://supabase.com/docs/guides/storage/management/download-objects),
 [client ufficiale Storage](https://github.com/supabase/storage-js/blob/main/src/packages/StorageFileApi.ts).
 
-## Procedura per la prima copia reale
+## Conservazione delle copie riuscite
 
-Gli export database e Storage sono riusciti secondo i riscontri dell'operatore.
-La prossima azione è conservare la frase nel gestore password e copiare entrambi
-i gruppi di file su una destinazione indipendente già disponibile: supporto
-esterno o spazio cloud privato del progetto. Per il database copiare
-`database.dump.gpg`, `roles.sql.gpg` e `manifest.json`; per Storage copiare tutti
-i file `.gpg` e il relativo `manifest.json` dalla directory riuscita. Tenere i
+Gli export database e Storage e la seconda copia sono riusciti secondo i
+riscontri dell'operatore. Conservare la frase nel gestore password, separata
+dai backup. Il gruppo Database comprende `database.dump.gpg`, `roles.sql.gpg`
+e `manifest.json`; il gruppo Storage comprende tutti i file `.gpg` e il relativo
+`manifest.json` della directory riuscita. Mantenere i
 due gruppi in cartelle separate: i manifest hanno lo stesso nome e non devono
 sovrascriversi. Copiare, non spostare; non includere password, frase di cifratura
-o log privati. Una
-seconda cartella sullo stesso PC non offre indipendenza dal guasto del PC.
+o log privati. Una seconda cartella sullo stesso PC non offre indipendenza dal guasto del PC.
 Luigi ha scelto la USB F: e comunicato di aver completato la copia, con cartelle
 `PortaleCinofilo-backup/Database` e `PortaleCinofilo-backup/Storage` separate.
 Il trasferimento è riferito dall'operatore, non osservato dall'assistente;
 la sola presenza sul disco D: del desktop non documentava una copia separata dal PC.
-Prima di considerare verificata la seconda copia confrontare dimensioni e hash
-SHA-256 di ogni file cifrato con il proprio manifest, sia database sia Storage.
+Il confronto di dimensioni e hash SHA-256 di ogni file cifrato, insieme ai
+manifest dei due gruppi, è riuscito secondo `OK_BACKUP_COPY_HASHES_VERIFIED`
+comunicato da Luigi il 30 ottobre. Non chiedere di ripetere una copia o il
+controllo senza una modifica dei file o un motivo concreto.
 La copia in una cartella cloud locale richiede anche la conferma della
 sincronizzazione remota. Nessun caricamento cloud è stato eseguito o autorizzato
 per queste copie. Non eliminare gli originali.
@@ -317,7 +322,11 @@ separata dal computer; frase di cifratura nel gestore password.
 mancanti, manifest incompatibili, originali incompleti e tentativi di usare
 percorsi esterni. Il workflow `backup-copy-verification.yml` esegue il controllo
 su Linux e Windows, includendo il collegamento a PowerShell e percorsi con
-spazi, accenti, parentesi e apostrofi. L'esito sulla USB reale resta da ricevere.
+spazi, accenti, parentesi e apostrofi. Il
+[run 41072402411](https://github.com/Luigi-Ciapparelli/K9World/actions/runs/41072402411)
+ha superato le prove Linux e Windows prima dell'integrazione `ce65e9b`.
+Il successivo esito sulla USB reale è stato comunicato da Luigi:
+`OK_BACKUP_COPY_HASHES_VERIFIED`. È un riscontro distinto dai test sintetici.
 
 Inventario tecnico in sola lettura del 29 ottobre, successivo al riscontro:
 4 bucket, 1 oggetto Storage, 90.679 byte secondo i metadati, nessuna dimensione
@@ -335,6 +344,31 @@ credenziali online; poi provare la copia reale mantenendo i log privati.
 Non sostituire Vault con una fixture, omettere errori o ripristinare nel progetto
 online per ottenere un esito positivo. La procedura non è ancora collaudata
 con questo dump: non usare il test sintetico come attestazione di ripristino.
+
+Prossimo controllo locale mirato, senza riaprire il database online né ripetere
+la verifica del client 17.11 già acquisita:
+
+```bash
+cd ~/K9World && git pull --ff-only && python3 scripts/diagnose_backup_environment.py --restore
+```
+
+La modalità `--restore` controlla `postgres`, `initdb` e `pg_ctl` sotto il
+percorso Debian/Ubuntu del server 17 e la presenza dei file `.control` delle
+cinque estensioni osservate nel database. Riporta spazio libero e memoria
+disponibile per dimensionare la prova. Non avvia cluster, non contatta database,
+non installa pacchetti e non legge dump, password, chiavi o configurazioni account.
+Un file `.control` presente non prova che la libreria sia caricabile o compatibile;
+le dipendenze effettive e il restore restano una verifica successiva.
+L'output dal WSL di Luigi non è ancora stato ricevuto: non assumere installato
+il server 17 solo perché è disponibile `pg_dump` 17.11.
+
+La [guida del fornitore al restore da Platform](https://supabase.com/docs/guides/self-hosting/restore-from-platform)
+distingue il dump nativo completo da quello filtrato dalla CLI. Questa copia
+nativa non va importata alla cieca sopra gli schemi gestiti di un nuovo progetto;
+per la prova isolata occorre una destinazione compatibile e un piano esplicito
+per ruoli ed estensioni. Nessuna esclusione automatica di dati o falsa attestazione
+di successo a fronte di errori ignorati. Non è stato predisposto un comando di
+restore dei dati reali prima di avere questo controllo dell'ambiente.
 
 Prima della manutenzione, completare in uno spazio privato questo perimetro:
 
