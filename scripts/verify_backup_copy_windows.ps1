@@ -25,7 +25,16 @@ try {
             $pcSize = $pcFile.Length
             $pcModified = $pcFile.LastWriteTimeUtc
             $pcStage = 'FILE_HASH'
-            $pcHash = (Get-FileHash -LiteralPath $pcFile.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+            # .NET is present in Windows PowerShell; no Get-FileHash module dependency.
+            $pcStream = $null
+            $pcHasher = [Security.Cryptography.SHA256]::Create()
+            try {
+                $pcStream = [IO.File]::Open($pcFile.FullName, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::Read)
+                $pcHash = [BitConverter]::ToString($pcHasher.ComputeHash($pcStream)).Replace('-', '').ToLowerInvariant()
+            } finally {
+                if ($null -ne $pcStream) { $pcStream.Dispose() }
+                $pcHasher.Dispose()
+            }
             $pcAfter = Get-Item -LiteralPath $pcFile.FullName
             $pcStage = 'FILE_STABILITY'
             if ($pcAfter.Length -ne $pcSize -or $pcAfter.LastWriteTimeUtc -ne $pcModified) { throw 'File changed' }
