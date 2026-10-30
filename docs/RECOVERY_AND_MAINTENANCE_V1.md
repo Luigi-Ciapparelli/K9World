@@ -15,7 +15,10 @@ dall'operatore anche la copia cifrata dei file Storage, con verifica della
 decifratura e dei byte scaricati. I file reali rimangono sul suo PC; l'assistente
 non li ha ricevuti o ispezionati. Database e Storage sono due esportazioni
 separate, non uno snapshot simultaneo.
-Restano da confermare seconda copia indipendente e restore reale isolato.
+Il 30 ottobre Luigi comunica inoltre di aver copiato i due gruppi sulla USB F:,
+dopo una prima copia del solo database sul disco D: del desktop. La copia su
+USB è un riscontro dell'operatore; il confronto degli hash resta da eseguire.
+Restano verifica della seconda copia e restore reale isolato.
 Non chiedere di ripetere gli export riusciti per aggiornare il registro.
 
 ## Stato rilevato sul progetto
@@ -266,12 +269,55 @@ due gruppi in cartelle separate: i manifest hanno lo stesso nome e non devono
 sovrascriversi. Copiare, non spostare; non includere password, frase di cifratura
 o log privati. Una
 seconda cartella sullo stesso PC non offre indipendenza dal guasto del PC.
-Non è stata scelta o verificata una destinazione né eseguito un trasferimento.
+Luigi ha scelto la USB F: e comunicato di aver completato la copia, con cartelle
+`PortaleCinofilo-backup/Database` e `PortaleCinofilo-backup/Storage` separate.
+Il trasferimento è riferito dall'operatore, non osservato dall'assistente;
+la sola presenza sul disco D: del desktop non documentava una copia separata dal PC.
 Prima di considerare verificata la seconda copia confrontare dimensioni e hash
 SHA-256 di ogni file cifrato con il proprio manifest, sia database sia Storage.
 La copia in una cartella cloud locale richiede anche la conferma della
-sincronizzazione remota. Nessuna destinazione è stata scelta o autorizzata per
-un caricamento da parte dell'assistente. Non eliminare gli originali.
+sincronizzazione remota. Nessun caricamento cloud è stato eseguito o autorizzato
+per queste copie. Non eliminare gli originali.
+
+### Verifica della copia sulla USB scelta
+
+`scripts/verify_backup_copy.py` confronta entrambi i gruppi sulla USB con i
+rispettivi originali in `~/PortaleCinofilo-backups`. Non richiede password, non
+decifra, non modifica file, non effettua restore e non contatta Supabase.
+
+```bash
+cd ~/K9World && git pull --ff-only && python3 scripts/verify_backup_copy.py
+```
+
+La destinazione predefinita è `F:\PortaleCinofilo-backup`. Dal WSL lo script
+invoca Windows PowerShell in modo non interattivo per leggere il disco F:
+direttamente, senza dover montare la USB nel filesystem Linux. Il percorso passa
+come dato codificato, mai come testo eseguibile. Non modifica l'execution policy.
+Sono letti soltanto manifest e file cifrati dei due gruppi; gli errori non
+stampano contenuti o percorsi privati. Una destinazione diversa si indica con
+`--destination`; lo script supporta anche una cartella locale.
+
+Il manifest copiato deve coincidere byte per byte con un manifest di export
+riuscito sul PC. Il controllo confronta lunghezza e SHA-256 di ciascun file
+sulla destinazione e sull'originale; rileva anche una corruzione di uguale
+dimensione. Verifica progetto, stato dell'export, insieme previsto dei file e
+inventario Storage cifrato; rifiuta copie incomplete, file mancanti o manifest
+incompatibili. Non sceglie arbitrariamente il backup più recente: cerca quello
+esattamente corrispondente al manifest copiato. Non legge il contenuto decifrato
+dell'inventario o dei file e non controlla il disco D:.
+
+Solo dopo tutti i confronti stampa `OK_BACKUP_COPY_HASHES_VERIFIED`. Questo
+attesta l'integrità osservata della copia rispetto agli originali, non la
+provenienza crittografica del manifest, l'indipendenza fisica del supporto o un
+ripristino già riuscito. L'uso della USB F: è la scelta riferita da Luigi.
+Dopo un esito positivo espellere la USB in sicurezza da Windows e conservarla
+separata dal computer; frase di cifratura nel gestore password.
+
+`scripts/tests/test_backup_copy.py` usa solo file sintetici. Copre file corrotti,
+mancanti, manifest incompatibili, originali incompleti e tentativi di usare
+percorsi esterni. Il workflow `backup-copy-verification.yml` esegue il controllo
+su Linux e Windows, includendo il collegamento a PowerShell e percorsi con
+spazi, accenti, parentesi e apostrofi. L'esito sulla USB reale resta da ricevere.
 
 Inventario tecnico in sola lettura del 29 ottobre, successivo al riscontro:
 4 bucket, 1 oggetto Storage, 90.679 byte secondo i metadati, nessuna dimensione
