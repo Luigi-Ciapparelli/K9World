@@ -1,4 +1,4 @@
-# Ripristino e manutenzione — 29 ottobre 2026
+# Ripristino e manutenzione — aggiornamento 30 ottobre 2026
 
 Base `ace4afa`, 75 migration. Incremento di SEC-04/TRUST-02. Esiti della prova
 isolata e dello stato del pannello vanno registrati nella PR di questo blocco.
@@ -9,8 +9,14 @@ ha eseguito lo script nel proprio WSL e comunicato `OK_DATABASE_EXPORT_VERIFIED`
 È confermata la creazione di database e ruoli cifrati, la decifratura integrale
 e la lettura dell'archivio. Il risultato è comunicato dall'operatore: i file
 reali rimangono sul suo computer e non sono stati letti dall'assistente.
-Restano da confermare seconda copia indipendente, file Storage e restore reale
-isolato. Non chiedere di ripetere l'export riuscito per aggiornare il registro.
+**Riscontro del 30 ottobre:** dopo lo script integrato su `main` `a1ce61c`, Luigi
+comunica `OK_STORAGE_EXPORT_VERIFIED`, 1 oggetto e 90.679 byte. È confermata
+dall'operatore anche la copia cifrata dei file Storage, con verifica della
+decifratura e dei byte scaricati. I file reali rimangono sul suo PC; l'assistente
+non li ha ricevuti o ispezionati. Database e Storage sono due esportazioni
+separate, non uno snapshot simultaneo.
+Restano da confermare seconda copia indipendente e restore reale isolato.
+Non chiedere di ripetere gli export riusciti per aggiornare il registro.
 
 ## Stato rilevato sul progetto
 
@@ -143,7 +149,9 @@ in un progetto Supabase nuovo. La documentazione del fornitore distingue questi
 oggetti dai dump filtrati della CLI: la prova reale di ripristino dovrà adattare
 la destinazione senza modificare l'originale o sopprimere errori indiscriminatamente.
 Il manifest mantiene `restore_status=not_tested` e `storage_status=not_backed_up`.
-Le immagini Storage, le configurazioni e una copia indipendente restano aperte.
+Questi stati descrivono il perimetro di quel dump, senza includere una successiva
+copia Storage separata. Non riscrivere il manifest storico per segnare verifiche
+esterne. Restano da completare configurazioni, copia indipendente e restore.
 
 Il 29 ottobre la prima esecuzione di Luigi si è fermata nel controllo preliminare
 con errore classificato `CERTIFICATO_TLS`: nessun export completato. La versione
@@ -229,14 +237,18 @@ La riga di successo è `OK_STORAGE_EXPORT_VERIFIED`. Condividerla senza allegare
 file o chiavi. `INCOMPLETE.txt` senza manifest indica un tentativo non completato.
 Lo script non carica né ripristina file online. Il manifest mantiene
 `restore_status=not_tested`: il ripristino isolato e la copia indipendente
-restano da eseguire. La copia Storage reale non è ancora confermata dall'operatore.
+restano da eseguire. Il 30 ottobre l'operatore ha confermato la copia Storage
+reale: `OK_STORAGE_EXPORT_VERIFIED`, 1 oggetto, 90.679 byte.
 
 `scripts/tests/test_storage_backup.py` usa esclusivamente risposte API e file
 sintetici: paginazione, cartelle, permessi, limiti, cambi durante il download,
 redirect, errori senza segreti, cifratura e verifica dei byte. La modalità
 `--offline` esclude tre prove GnuPG e non va presentata come test completo;
 GitHub Actions esegue anche quelle tre prove. Non equivale a una prova del
-download dei file reali dal servizio Supabase.
+download dei file reali dal servizio Supabase. Le 17 prove complete sono passate
+nel [run GitHub Actions 40957197550](https://github.com/Luigi-Ciapparelli/K9World/actions/runs/40957197550),
+prima dell'integrazione della PR #13. Il riscontro dell'operatore sopra è una
+successiva evidenza distinta relativa alla copia reale.
 
 Riferimenti: [chiavi API Supabase](https://supabase.com/docs/guides/getting-started/api-keys),
 [download oggetti](https://supabase.com/docs/guides/storage/management/download-objects),
@@ -244,22 +256,29 @@ Riferimenti: [chiavi API Supabase](https://supabase.com/docs/guides/getting-star
 
 ## Procedura per la prima copia reale
 
-Il primo export database è riuscito. La prossima azione dell'operatore è salvare
-la frase nel gestore password e copiare `database.dump.gpg`, `roles.sql.gpg` e
-`manifest.json` dalla directory riuscita su una destinazione indipendente già
-disponibile: supporto esterno o spazio cloud privato del progetto. Copiare,
-non spostare; non includere password, frase di cifratura o log privati. Una
+Gli export database e Storage sono riusciti secondo i riscontri dell'operatore.
+La prossima azione è conservare la frase nel gestore password e copiare entrambi
+i gruppi di file su una destinazione indipendente già disponibile: supporto
+esterno o spazio cloud privato del progetto. Per il database copiare
+`database.dump.gpg`, `roles.sql.gpg` e `manifest.json`; per Storage copiare tutti
+i file `.gpg` e il relativo `manifest.json` dalla directory riuscita. Tenere i
+due gruppi in cartelle separate: i manifest hanno lo stesso nome e non devono
+sovrascriversi. Copiare, non spostare; non includere password, frase di cifratura
+o log privati. Una
 seconda cartella sullo stesso PC non offre indipendenza dal guasto del PC.
 Non è stata scelta o verificata una destinazione né eseguito un trasferimento.
-Prima di considerare verificata la seconda copia confrontare gli hash SHA-256
-dei due file cifrati con quelli del manifest. Non eliminare l'originale.
+Prima di considerare verificata la seconda copia confrontare dimensioni e hash
+SHA-256 di ogni file cifrato con il proprio manifest, sia database sia Storage.
+La copia in una cartella cloud locale richiede anche la conferma della
+sincronizzazione remota. Nessuna destinazione è stata scelta o autorizzata per
+un caricamento da parte dell'assistente. Non eliminare gli originali.
 
 Inventario tecnico in sola lettura del 29 ottobre, successivo al riscontro:
 4 bucket, 1 oggetto Storage, 90.679 byte secondo i metadati, nessuna dimensione
 mancante. Nessun contenuto, percorso o proprietario è stato letto. Questo
-inventario non è il download dell'oggetto e può cambiare dopo il controllo.
-La dimensione ridotta permette di completare la prima copia dei file senza
-scegliere ora un nuovo piano di archiviazione.
+inventario non era il download dell'oggetto e può cambiare dopo il controllo.
+Il successivo export riuscito comunicato il 30 ottobre trova ancora 1 oggetto,
+90.679 byte; è un riscontro separato. Nessun nuovo piano di archiviazione attivato.
 
 Per preparare il restore reale risultano installate sul server 17.6:
 `plpgsql` 1.0, `pg_stat_statements` 1.11, `pgcrypto` 1.3,
