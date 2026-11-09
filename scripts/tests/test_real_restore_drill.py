@@ -34,13 +34,14 @@ class Storage:
         return b'\xff\x00\x01'
 
 
-def source(root, live, *, owner_failure=False):
+def source(root, live, *, owner_failure=False, managed='none'):
     roles, archive = b'\nCREATE ROLE supabase_admin;\nALTER ROLE supabase_admin WITH SUPERUSER LOGIN;\n', b'fake archive'
     if live:
         p = subprocess.run(['/usr/bin/docker','--host',dr.SOCKET,'run','--rm','-i','--pull=never','--network','none',
                             '--read-only','--no-healthcheck','--cap-drop','ALL','--security-opt','no-new-privileges',
                             '--user','postgres','--tmpfs','/tmp:rw,nosuid,nodev,noexec,mode=1777,size=384m',
                             '--env','PC_SYNTHETIC_OWNER_FAILURE='+str(int(owner_failure)),
+                            '--env','PC_SYNTHETIC_MANAGED_EVENTS='+managed,
                             '--entrypoint','/bin/sh',dr.IMAGE,'-seu'],
                            input=Path(__file__).with_name('real_restore_fixture.sh').read_bytes(),
                            stdout=subprocess.PIPE,timeout=120,check=True)
@@ -140,10 +141,19 @@ class Diagnostic(unittest.TestCase):
 
 @unittest.skipUnless('--container' in sys.argv,'requires the pinned local image')
 class Container(unittest.TestCase):
+    def test_archived_membership_cannot_be_manufactured(self):
+        with tempfile.TemporaryDirectory() as tmp, dr.memory_file() as stream:
+            root=Path(tmp)
+            db,st=source(root,True,managed='no_membership')
+            conf=root/'docker'; conf.mkdir(mode=0o700)
+            dr.pack(stream,db,st,DB_PHRASE,STORE_PHRASE)
+            with self.assertRaisesRegex(dr.DrillError,'^PROVA_EVENT_MEMBERSHIP_ERROR$'):
+                dr.isolated(dr.engine(conf,False),stream)
+
     def test_denied_import_reports_only_sqlstate_and_fixed_labels(self):
         with tempfile.TemporaryDirectory() as tmp, dr.memory_file() as stream:
             root=Path(tmp)
-            db,st=source(root,True,owner_failure=True)
+            db,st=source(root,True,owner_failure=True,managed='yes')
             conf=root/'docker'; conf.mkdir(mode=0o700)
             dr.pack(stream,db,st,DB_PHRASE,STORE_PHRASE)
             with self.assertRaisesRegex(dr.DrillError,
@@ -153,7 +163,7 @@ class Container(unittest.TestCase):
     def test_restore_real_format_and_reject_snapshot_skew(self):
         with tempfile.TemporaryDirectory() as tmp, dr.memory_file() as stream:
             root=Path(tmp)
-            db, st=source(root,True)
+            db, st=source(root,True,managed='yes')
             conf=root/'docker'; conf.mkdir(mode=0o700)
             cmd=dr.engine(conf,False)
             dr.pack(stream,db,st,DB_PHRASE,STORE_PHRASE)

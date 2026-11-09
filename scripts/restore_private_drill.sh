@@ -37,14 +37,18 @@ finish() {
 }
 trap finish EXIT
 tar -xf -
-pg_restore --list db.dump > toc
+pg_restore --list --verbose --create db.dump > toc
 grep -Eq '^;[[:space:]]*dbname: postgres$' toc
+event_plan
 stage=START
 initdb -D "$PGDATA" -U "$PGUSER" --auth-local=trust --auth-host=reject --no-locale --encoding=UTF8
 cat >> "$PGDATA/postgresql.conf" <<'CONF'
 log_line_prefix = 'PCDR|%a|%e| '
 log_error_verbosity = terse
 log_min_error_statement = panic
+# Policy shipped in the pinned Supabase image. The native bootstrap does not
+# preload supautils. Only the owner replay connection requests the library.
+include = '/etc/postgresql-custom/supautils.conf'
 CONF
 pg_ctl -D "$PGDATA" -l /tmp/dr-pg.log -t 45 -w -o "-k $PGHOST -p $PGPORT -c listen_addresses='' -c wal_level=logical -c shared_preload_libraries=pg_stat_statements" start
 test "$(psql -XAtw -v ON_ERROR_STOP=1 -c "SELECT current_setting('data_directory')='/tmp/dr-pg' AND current_setting('listen_addresses')='' AND inet_server_addr() IS NULL AND current_user='supabase_admin' AND current_setting('server_version_num')::int / 10000=17")" = t
@@ -53,8 +57,11 @@ psql -Xqw -v ON_ERROR_STOP=1 --single-transaction -f roles.apply
 stage=DATABASE
 # --clean --create acts ONLY on the disposable postgres database in this private cluster.
 # It restores database-level ownership, configuration and ACLs with the archive.
-PGAPPNAME=pc_dr_import pg_restore -w --verbose --clean --if-exists --create --exit-on-error -d template1 db.dump >/tmp/dr-import.log 2>&1
+event_import >/tmp/dr-import.log 2>&1
 export PGDATABASE=postgres
+unset PGAPPNAME
+stage=EVENT_COMPARE
+event_verify
 stage=ROLE_COMPARE
 canonical_roles() {
     sed -E '/^($|--|\\(un)?restrict )/d' | LC_ALL=C sort | sha256sum

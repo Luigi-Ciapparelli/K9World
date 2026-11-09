@@ -5,6 +5,13 @@ export LC_ALL=C PGDATA=/tmp/fixture-pg PGPORT=55446 PGUSER=supabase_admin PGDATA
 export PGHOST=/tmp/fixture-sock
 mkdir -m 700 "$PGHOST" /tmp/out
 initdb -D "$PGDATA" -U "$PGUSER" --auth-local=trust --auth-host=reject --no-locale --encoding=UTF8 >&2
+echo "include = '/etc/postgresql-custom/supautils.conf'" >> "$PGDATA/postgresql.conf"
+if [ "${PC_SYNTHETIC_MANAGED_EVENTS:-none}" != none ]; then
+    # The provider preloads the library in server config, never via a GUC
+    # supplied by the unprivileged login. Keep the bootstrap control native.
+    echo "session_preload_libraries = 'supautils'" >> "$PGDATA/postgresql.conf"
+    export PGOPTIONS='-c session_preload_libraries='
+fi
 pg_ctl -D "$PGDATA" -l /tmp/fixture.log -w -o "-k $PGHOST -p $PGPORT -c listen_addresses='' -c shared_preload_libraries=pg_stat_statements" start >&2
 psql -Xqw -v ON_ERROR_STOP=1 >&2 <<'SQL'
 CREATE ROLE postgres LOGIN;
@@ -42,6 +49,42 @@ INSERT INTO storage.buckets VALUES ('private-photo',false),('empty-public',true)
 INSERT INTO storage.objects VALUES ('00000000-0000-4000-a000-000000000001','private-photo',
  'gruppo/spazio e città.webp','{"size":3,"eTag":"synthetic-tag"}','2026-10-29T10:12:30.123456Z');
 SQL
+if [ "${PC_SYNTHETIC_MANAGED_EVENTS:-none}" != none ]; then
+    psql -Xqw -v ON_ERROR_STOP=1 >&2 <<'SQL'
+CREATE ROLE supabase_privileged_role;
+GRANT supabase_privileged_role TO postgres;
+CREATE FUNCTION public.pc_event_handler() RETURNS event_trigger LANGUAGE plpgsql
+AS $$ BEGIN RETURN; END $$;
+ALTER FUNCTION public.pc_event_handler() OWNER TO postgres;
+
+-- The old restore operation fails even for the native bootstrap superuser.
+BEGIN;
+CREATE EVENT TRIGGER pc_native_control ON ddl_command_end EXECUTE FUNCTION public.pc_event_handler();
+DO $$ BEGIN
+  IF (SELECT rolsuper FROM pg_roles WHERE rolname='postgres') THEN RAISE EXCEPTION 'invalid fixture'; END IF;
+  BEGIN
+    ALTER EVENT TRIGGER pc_native_control OWNER TO postgres;
+    RAISE EXCEPTION 'native assignment unexpectedly succeeded';
+  EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+END $$;
+ROLLBACK;
+SQL
+    # Create the actual fixtures as the original non-superuser using the shipped policy.
+    PGUSER=postgres PGOPTIONS='' psql -Xqw -v ON_ERROR_STOP=1 >&2 <<'SQL'
+DO $$ BEGIN
+  IF current_user<>'postgres' OR current_setting('is_superuser')<>'off' THEN RAISE EXCEPTION 'wrong event creator'; END IF;
+END $$;
+CREATE EVENT TRIGGER "fixture ""disabled"" event" ON ddl_command_end
+WHEN TAG IN ('CREATE TABLE','COMMENT') EXECUTE FUNCTION public.pc_event_handler();
+ALTER EVENT TRIGGER "fixture ""disabled"" event" DISABLE;
+COMMENT ON EVENT TRIGGER "fixture ""disabled"" event" IS E'Private test comment.\n-- Dumped by pg_dump version sample';
+CREATE EVENT TRIGGER pc_fixture_replica ON sql_drop EXECUTE FUNCTION public.pc_event_handler();
+ALTER EVENT TRIGGER pc_fixture_replica ENABLE REPLICA;
+SQL
+    if [ "$PC_SYNTHETIC_MANAGED_EVENTS" = no_membership ]; then
+        psql -Xqw -v ON_ERROR_STOP=1 -c 'REVOKE supabase_privileged_role FROM postgres' >&2
+    fi
+fi
 if [ "${PC_SYNTHETIC_OWNER_FAILURE:-0}" = 1 ]; then
     # A valid source can have a demoted event-trigger owner. PG17 rejects
     # assigning ownership to that non-superuser during replay (42501).
