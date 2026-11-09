@@ -6,6 +6,12 @@ export PGHOST=/tmp/fixture-sock
 mkdir -m 700 "$PGHOST" /tmp/out
 initdb -D "$PGDATA" -U "$PGUSER" --auth-local=trust --auth-host=reject --no-locale --encoding=UTF8 >&2
 echo "include = '/etc/postgresql-custom/supautils.conf'" >> "$PGDATA/postgresql.conf"
+if [ "${PC_SYNTHETIC_MANAGED_EVENTS:-none}" != none ]; then
+    # The provider preloads the library in server config, never via a GUC
+    # supplied by the unprivileged login. Keep the bootstrap control native.
+    echo "session_preload_libraries = 'supautils'" >> "$PGDATA/postgresql.conf"
+    export PGOPTIONS='-c session_preload_libraries='
+fi
 pg_ctl -D "$PGDATA" -l /tmp/fixture.log -w -o "-k $PGHOST -p $PGPORT -c listen_addresses='' -c shared_preload_libraries=pg_stat_statements" start >&2
 psql -Xqw -v ON_ERROR_STOP=1 >&2 <<'SQL'
 CREATE ROLE postgres LOGIN;
@@ -64,7 +70,10 @@ END $$;
 ROLLBACK;
 SQL
     # Create the actual fixtures as the original non-superuser using the shipped policy.
-    PGUSER=postgres PGOPTIONS='-c session_preload_libraries=supautils' psql -Xqw -v ON_ERROR_STOP=1 >&2 <<'SQL'
+    PGUSER=postgres PGOPTIONS='' psql -Xqw -v ON_ERROR_STOP=1 >&2 <<'SQL'
+DO $$ BEGIN
+  IF current_user<>'postgres' OR current_setting('is_superuser')<>'off' THEN RAISE EXCEPTION 'wrong event creator'; END IF;
+END $$;
 CREATE EVENT TRIGGER "fixture ""disabled"" event" ON ddl_command_end
 WHEN TAG IN ('CREATE TABLE','COMMENT') EXECUTE FUNCTION public.pc_event_handler();
 ALTER EVENT TRIGGER "fixture ""disabled"" event" DISABLE;
