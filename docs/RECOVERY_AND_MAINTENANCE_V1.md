@@ -29,7 +29,11 @@ Luigi ha poi eseguito il comando di `4b56efe` sulle copie reali: raggiunta la fa
 di importazione dopo la decifratura di **entrambi** gli export, esito
 `RIPRISTINO_NON_COMPLETATO: PROVA_DATABASE_PRIVILEGE`. Nessun ripristino
 riuscito è attestato. Quel classificatore cercava parole in tutto il log e non
-identificava l'istruzione o lo stato SQL. La causa precisa non è stata osservata.
+identificava l'istruzione o lo stato SQL. Dopo `8b329eb` Luigi ha ottenuto
+`PROVA_DATABASE_PG42501_TOC4334_EVENT_TRIGGER_OWNER_OTHER_POSTGRES_EVENT_OWNER`.
+PostgreSQL ha rifiutato il trasferimento di proprietà di un event trigger al
+ruolo `postgres`. Il numero 4334 appartiene soltanto a quell'archivio. Non è
+un problema di cifratura. L'esito del nuovo tentativo sui dati reali resta aperto.
 Restano il ripristino completo, la configurazione dei servizi e la periodicità.
 Non chiedere di ripetere gli export riusciti per aggiornare il registro.
 
@@ -427,7 +431,7 @@ per la prova isolata occorre una destinazione compatibile e un piano esplicito
 per ruoli ed estensioni. Nessuna esclusione automatica di dati o falsa attestazione
 di successo a fronte di errori ignorati. Il comando di preparazione non importa backup reali.
 
-### Prova delle copie cifrate già esportate (primo tentativo interrotto)
+### Prova delle copie cifrate già esportate (ripristino completo da confermare)
 
 Nel terminale WSL, senza USB e senza sudo davanti a Python:
 
@@ -459,6 +463,21 @@ e fissi: nessun host, credenziale o destinazione passati dall'operatore.
   la sostituzione del database iniziale riguarda solo il contenitore appena
   creato; mantiene ACL, owner e impostazioni del database. Nessun salto di
   oggetti, disabilitazione di RLS o ignoranza di errori per ottenere un OK.
+- Se il TOC contiene definizioni di event trigger di `postgres` non superutente,
+  il laboratorio usa la policy originale della [stessa immagine Supabase](https://github.com/supabase/postgres/blob/17.6.1.113/ansible/files/postgresql_config/supautils.conf.j2).
+  Verifica che il ruolo abbia già ereditato `supabase_privileged_role` dalla copia.
+  Con la libreria [supautils 3.2.2](https://github.com/supabase/supautils/tree/v3.2.2)
+  caricata nella connessione dedicata, **solo queste definizioni** vengono create
+  come il proprietario archiviato con `--use-set-session-authorization`. Non viene
+  usato il numero 4334 come filtro, non si dà SUPERUSER o un nuovo grant, né si
+  scrivono i cataloghi a mano. Ogni voce del TOC è assegnata una sola volta;
+  commenti e altri oggetti rimangono nel loro ordine di ripristino di PostgreSQL 17.
+  Nelle sessioni di rigioco gestito non si eseguono callback degli eventi durante
+  il DDL di importazione; i flag dei singoli trigger sono ripristinati e verificati.
+  L'assenza della membership archiviata o un proprietario incompatibile bloccano
+  la prova. Un nuovo dump dello schema verifica nome, evento, filtri, funzione,
+  modalità attiva/disattiva/replica, proprietà e commento di **tutti** gli event
+  trigger esposti dall'archivio. I dettagli e le impronte restano nel contenitore.
 - Riconfronto dell'export dei ruoli senza password, di intestazioni e righe COPY
   (ordine indipendente, duplicati mantenuti), e dei valori delle sequenze contro
   il dump originale. Tipi di record non riconosciuti nel confronto, per esempio
@@ -484,7 +503,7 @@ e fissi: nessun host, credenziale o destinazione passati dall'operatore.
   I log grezzi sono eliminati con il contenitore. La prova rimane rigorosa al
   primo errore e non cambia ruoli o permessi per aggirarlo. Un caso sintetico
   con proprietario di evento non superuser verifica la diagnosi `42501`;
-  non identifica la causa della copia dell’operatore. Conservare entrambe le copie
+  il secondo riscontro di Luigi identifica nella sua copia il ruolo previsto (`postgres`). Conservare entrambe le copie
   originali. Non condividere dump, immagini, password, frasi o log privati.
 
 Limiti per questa prima prova: 128 MiB di archivio PostgreSQL decrittato (formato

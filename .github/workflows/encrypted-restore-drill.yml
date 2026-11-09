@@ -4,6 +4,7 @@ on:
     paths:
       - 'scripts/restore_encrypted_backups.py'
       - 'scripts/restore_private_drill.sh'
+      - 'scripts/restore_event_entries.sh'
       - 'scripts/restore_database_error.awk'
       - 'scripts/tests/real_restore_fixture.sh'
       - 'scripts/tests/test_real_restore_drill.py'

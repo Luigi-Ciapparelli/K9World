@@ -224,7 +224,7 @@ def database_failure_code(fields):
 def isolated(cmd, tar_stream):
     token = uuid.uuid4().hex
     marker = TAG + '=' + token
-    script = (HERE / 'restore_private_drill.sh').read_text()
+    script = (HERE / 'restore_event_entries.sh').read_text() + '\n' + (HERE / 'restore_private_drill.sh').read_text()
     args = ['run','--rm','-i','--pull=never','--name','pc-private-drill-'+token,'--label',marker,
             '--network','none','--log-driver','none','--read-only','--no-healthcheck',
             '--cap-drop','ALL','--security-opt','no-new-privileges','--user','postgres',
@@ -238,7 +238,7 @@ def isolated(cmd, tar_stream):
         result = r.stdout.strip()
         if r.returncode or result != b'DR_OK':
             # Never forward Docker/Postgres output, SQL, paths or values.
-            stages = {b'INPUT', b'START', b'ROLES', b'DATABASE', b'ROLE_COMPARE', b'DATA_COMPARE',
+            stages = {b'INPUT', b'START', b'ROLES', b'DATABASE', b'EVENT_MEMBERSHIP', b'EVENT_PROFILE', b'EVENT_COMPARE', b'ROLE_COMPARE', b'DATA_COMPARE',
                       b'PRIVACY', b'STORAGE_FILES', b'STORAGE_CATALOG', b'STOP'}
             kinds = {b'ERROR', b'MISSING', b'PRIVILEGE', b'COLLATION', b'CONFIG', b'EXISTS', b'SPACE', b'FORMAT'}
             bits = result.split(b':')
