@@ -42,6 +42,19 @@ INSERT INTO storage.buckets VALUES ('private-photo',false),('empty-public',true)
 INSERT INTO storage.objects VALUES ('00000000-0000-4000-a000-000000000001','private-photo',
  'gruppo/spazio e città.webp','{"size":3,"eTag":"synthetic-tag"}','2026-10-29T10:12:30.123456Z');
 SQL
+if [ "${PC_SYNTHETIC_OWNER_FAILURE:-0}" = 1 ]; then
+    # A valid source can have a demoted event-trigger owner. PG17 rejects
+    # assigning ownership to that non-superuser during replay (42501).
+    psql -Xqw -v ON_ERROR_STOP=1 >&2 <<'SQL'
+CREATE ROLE private_test_owner SUPERUSER;
+CREATE FUNCTION pc_private.synthetic_event() RETURNS event_trigger LANGUAGE plpgsql
+AS $$ BEGIN RETURN; END $$;
+CREATE EVENT TRIGGER "not-for-diagnostic@example.invalid" ON ddl_command_end
+WHEN TAG IN ('COMMENT') EXECUTE FUNCTION pc_private.synthetic_event();
+ALTER EVENT TRIGGER "not-for-diagnostic@example.invalid" OWNER TO private_test_owner;
+ALTER ROLE private_test_owner NOSUPERUSER;
+SQL
+fi
 pg_dumpall -w --roles-only --no-role-passwords > /tmp/out/roles
 pg_dump -w --format=custom --file=/tmp/out/db
 pg_ctl -D "$PGDATA" -m fast -w stop >&2

@@ -34,12 +34,13 @@ class Storage:
         return b'\xff\x00\x01'
 
 
-def source(root, live):
+def source(root, live, *, owner_failure=False):
     roles, archive = b'\nCREATE ROLE supabase_admin;\nALTER ROLE supabase_admin WITH SUPERUSER LOGIN;\n', b'fake archive'
     if live:
         p = subprocess.run(['/usr/bin/docker','--host',dr.SOCKET,'run','--rm','-i','--pull=never','--network','none',
                             '--read-only','--no-healthcheck','--cap-drop','ALL','--security-opt','no-new-privileges',
                             '--user','postgres','--tmpfs','/tmp:rw,nosuid,nodev,noexec,mode=1777,size=384m',
+                            '--env','PC_SYNTHETIC_OWNER_FAILURE='+str(int(owner_failure)),
                             '--entrypoint','/bin/sh',dr.IMAGE,'-seu'],
                            input=Path(__file__).with_name('real_restore_fixture.sh').read_bytes(),
                            stdout=subprocess.PIPE,timeout=120,check=True)
@@ -81,11 +82,31 @@ class Inputs(unittest.TestCase):
             dr.pack(stream,(folder,manifest,changed),self.st,DB_PHRASE,STORE_PHRASE)
 
     def test_two_passphrases_and_safe_extraction(self):
+        asked = []
+        def ask():
+            asked.append(True)
+            return STORE_PHRASE
         with dr.memory_file() as stream:
-            self.assertEqual(dr.pack(stream,self.db,self.st,DB_PHRASE,STORE_PHRASE),(1,3))
+            self.assertEqual(dr.pack(stream,self.db,self.st,DB_PHRASE,ask_storage=ask),(1,3))
+            self.assertEqual(asked,[True])
             with tarfile.open(fileobj=stream) as tar:
                 self.assertEqual(tar.extractfile('objects/private-photo/'+RECORD['path']).read(),b'\xff\x00\x01')
                 self.assertNotIn(b'CREATE ROLE supabase_admin;',tar.extractfile('roles.apply').read())
+
+    def test_shared_phrase_needs_only_database_prompt(self):
+        with tempfile.TemporaryDirectory() as tmp, dr.crypto_home() as home, dr.memory_file() as stream:
+            root=Path(tmp); d=root/('storage-'+STAMP+'-synthetic'); d.mkdir(mode=0o700)
+            export_storage(Storage(),d,home,DB_PHRASE)
+            self.assertEqual(dr.pack(stream,self.db,dr.select_set(root,'Storage'),DB_PHRASE,
+                                     ask_storage=lambda: self.fail('unnecessary prompt')),(1,3))
+
+    def test_corrupt_inventory_does_not_ask_for_another_phrase(self):
+        folder, manifest, files = self.st
+        changed = dict(files)
+        changed['inventory.json.gpg']={**files['inventory.json.gpg'],'sha256':'0'*64}
+        with dr.memory_file() as stream, self.assertRaisesRegex(dr.DrillError,'^HASH_CIFRATO_DIVERSO_STORAGE$'):
+            dr.pack(stream,self.db,(folder,manifest,changed),DB_PHRASE,
+                    ask_storage=lambda: self.fail('hash failure is not a phrase failure'))
 
     def test_path_traversal_is_not_packed(self):
         with tempfile.TemporaryDirectory() as tmp,dr.crypto_home() as home,dr.memory_file() as stream:
@@ -95,8 +116,40 @@ class Inputs(unittest.TestCase):
                 dr.add_storage(tar,dr.select_set(root,'Storage'),home,STORE_PHRASE)
 
 
+class Diagnostic(unittest.TestCase):
+    def test_only_first_import_error_drives_code_not_sql_text(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d=Path(tmp)
+            (d/'server').write_text('PCDR|another|42501| ERROR:  permission denied for schema vault\n'
+                'PCDR|pc_dr_import|42501| WARNING:  permission denied\n'
+                'PCDR|pc_dr_import|42704| ERROR:  role "sensitive@example.invalid" does not exist\n'
+                'PCDR|pc_dr_import|42501| ERROR:  permission denied for schema auth\n')
+            (d/'client').write_text('pg_restore: from TOC entry 302; 0 0 ACL confidential name\n'
+                'pg_restore: error: could not execute query: ERROR:  role missing\n'
+                'Command was: GRANT USAGE ON SCHEMA private_example TO some_name;\n'
+                "SELECT 'permission denied';\n")
+            (d/'toc').write_text('302; 0 0 ACL storage TABLE confidential private_owner\n')
+            out=subprocess.check_output(['awk','-f',dr.HERE/'restore_database_error.awk',
+                                         d/'server',d/'client',d/'toc']).strip()
+            self.assertEqual(dr.database_failure_code(out.split(b':')),
+                             'PROVA_DATABASE_PG42704_TOC302_ACL_GRANT_STORAGE_OTHER_MISSING')
+            for bad in (out.replace(b'302',b'0001'),out.replace(b'OTHER',b'SECRET'),
+                        out.replace(b'42704',b'EMAIL'),out+b':extra'):
+                self.assertIsNone(dr.database_failure_code(bad.split(b':')))
+
+
 @unittest.skipUnless('--container' in sys.argv,'requires the pinned local image')
 class Container(unittest.TestCase):
+    def test_denied_import_reports_only_sqlstate_and_fixed_labels(self):
+        with tempfile.TemporaryDirectory() as tmp, dr.memory_file() as stream:
+            root=Path(tmp)
+            db,st=source(root,True,owner_failure=True)
+            conf=root/'docker'; conf.mkdir(mode=0o700)
+            dr.pack(stream,db,st,DB_PHRASE,STORE_PHRASE)
+            with self.assertRaisesRegex(dr.DrillError,
+                  '^PROVA_DATABASE_PG42501_TOC[1-9][0-9]{0,7}_EVENT_TRIGGER_OWNER_OTHER_OTHER_EVENT_OWNER$'):
+                dr.isolated(dr.engine(conf,False),stream)
+
     def test_restore_real_format_and_reject_snapshot_skew(self):
         with tempfile.TemporaryDirectory() as tmp, dr.memory_file() as stream:
             root=Path(tmp)

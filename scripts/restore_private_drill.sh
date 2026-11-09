@@ -10,10 +10,18 @@ cd /tmp/dr-work
 exec 3>&1
 exec >/tmp/dr-log 2>&1
 stage=INPUT
+db_error_parser=$1
 finish() {
     rc=$?
     trap - EXIT
     if [ "$rc" != 0 ]; then
+        if [ "$stage" = DATABASE ]; then
+            # The primary SQLSTATE comes from the private server log, never from
+            # words in dumped SQL. If no error is attributable, say UNKNOWN.
+            awk "$db_error_parser" /tmp/dr-pg.log /tmp/dr-import.log toc >&3 ||
+                printf 'DR_FAIL:DATABASE:ERROR\n' >&3
+            exit "$rc"
+        fi
         kind=ERROR
         if grep -Eqi 'no space left|out of memory' /tmp/dr-log; then kind=SPACE
         elif grep -Eqi 'collation|locale.*(invalid|not found|not supported)' /tmp/dr-log; then kind=COLLATION
@@ -33,6 +41,11 @@ pg_restore --list db.dump > toc
 grep -Eq '^;[[:space:]]*dbname: postgres$' toc
 stage=START
 initdb -D "$PGDATA" -U "$PGUSER" --auth-local=trust --auth-host=reject --no-locale --encoding=UTF8
+cat >> "$PGDATA/postgresql.conf" <<'CONF'
+log_line_prefix = 'PCDR|%a|%e| '
+log_error_verbosity = terse
+log_min_error_statement = panic
+CONF
 pg_ctl -D "$PGDATA" -l /tmp/dr-pg.log -t 45 -w -o "-k $PGHOST -p $PGPORT -c listen_addresses='' -c wal_level=logical -c shared_preload_libraries=pg_stat_statements" start
 test "$(psql -XAtw -v ON_ERROR_STOP=1 -c "SELECT current_setting('data_directory')='/tmp/dr-pg' AND current_setting('listen_addresses')='' AND inet_server_addr() IS NULL AND current_user='supabase_admin' AND current_setting('server_version_num')::int / 10000=17")" = t
 stage=ROLES
@@ -40,7 +53,7 @@ psql -Xqw -v ON_ERROR_STOP=1 --single-transaction -f roles.apply
 stage=DATABASE
 # --clean --create acts ONLY on the disposable postgres database in this private cluster.
 # It restores database-level ownership, configuration and ACLs with the archive.
-pg_restore -w --clean --if-exists --create --exit-on-error -d template1 db.dump
+PGAPPNAME=pc_dr_import pg_restore -w --verbose --clean --if-exists --create --exit-on-error -d template1 db.dump >/tmp/dr-import.log 2>&1
 export PGDATABASE=postgres
 stage=ROLE_COMPARE
 canonical_roles() {
