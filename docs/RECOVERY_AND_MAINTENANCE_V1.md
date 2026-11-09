@@ -1,4 +1,4 @@
-# Ripristino e manutenzione — aggiornamento 30 ottobre 2026
+# Ripristino e manutenzione — aggiornamento 9 novembre 2026
 
 Base `ace4afa`, 75 migration. Incremento di SEC-04/TRUST-02. Esiti della prova
 isolata e dello stato del pannello vanno registrati nella PR di questo blocco.
@@ -22,7 +22,10 @@ Luigi comunica `OK_BACKUP_COPY_HASHES_VERIFIED`: manifest, dimensioni e hash
 dei file Database e Storage della USB corrispondono agli originali sul PC.
 È acquisito l'esito della seconda copia; l'assistente non ha letto i backup
 reali e non ha osservato l'espulsione fisica della USB.
-Restano restore reale isolato, configurazioni dei servizi e periodicità delle copie.
+Il 9 novembre Luigi ha comunicato `OK_AMBIENTE_RIPRISTINO_PG17_VAULT` dopo
+`2e211d3`: conferma sul proprio WSL del ripristino sintetico con cinque estensioni.
+È distinto dal [test CI del laboratorio](https://github.com/Luigi-Ciapparelli/K9World/actions/runs/42582849160).
+Restano il riscontro sulle copie reali, la configurazione dei servizi e la periodicità.
 Non chiedere di ripetere gli export riusciti per aggiornare il registro.
 
 ## Stato rilevato sul progetto
@@ -402,10 +405,9 @@ ripristina in un secondo database vuoto. Arresta la procedura al primo errore.
 Verifica la riga, le cinque versioni osservate in produzione e funzioni delle
 estensioni, inclusa la generazione di un nonce da Vault. Non prova la decifratura
 di segreti di produzione. `OK_AMBIENTE_RIPRISTINO_PG17_VAULT` conferma solo
-questo test sull'ambiente dove viene eseguito. Il riscontro dal WSL è ancora da
-ricevere. GitHub Actions usa esattamente la modalità `--check` con dati sintetici.
+questo test sull'ambiente dove viene eseguito. Il riscontro dal WSL è arrivato il 9 novembre: prova sintetica superata. GitHub Actions usa esattamente la modalità `--check` con dati sintetici.
 
-La successiva prova delle copie reali resta sul PC dell'operatore, con originali
+La prova delle copie reali descritta qui sotto resta sul PC dell'operatore, con originali
 in sola lettura, controllo esplicito dei ruoli e confronto dei dati recuperati.
 Nessun file effettivo è richiesto in chat. I file Storage e la configurazione
 dei servizi vanno verificati separatamente. Riferimenti:
@@ -419,6 +421,60 @@ nativa non va importata alla cieca sopra gli schemi gestiti di un nuovo progetto
 per la prova isolata occorre una destinazione compatibile e un piano esplicito
 per ruoli ed estensioni. Nessuna esclusione automatica di dati o falsa attestazione
 di successo a fronte di errori ignorati. Il comando di preparazione non importa backup reali.
+
+### Prova delle copie cifrate già esportate (esito reale ancora da ricevere)
+
+Nel terminale WSL, senza USB e senza sudo davanti a Python:
+
+```bash
+cd ~/K9World && git switch main && git pull --ff-only && python3 scripts/restore_encrypted_backups.py
+```
+
+Lo script cerca i due gruppi completi nella cartella originale privata
+`~/PortaleCinofilo-backups`; con più esportazioni dello stesso tipo chiede quale
+usare. Occorrono le frasi di cifratura locali, non la password database né una
+chiave Supabase. Per Storage si può premere Invio se la frase è la stessa.
+Il motore e l'immagine devono essere quelli già preparati. Non vengono
+installati programmi né scaricate immagini. I riferimenti Docker sono locali
+e fissi: nessun host, credenziale o destinazione passati dall'operatore.
+
+- Prima dell'importazione: controlli di progetto, stato, nomi, dimensioni,
+  SHA-256 dei cifrati, esito completo di GnuPG e limiti di lettura. I plaintext
+  passano in memoria; nessun dump in chiaro nelle cartelle dell'utente.
+- Istanza effimera sulla stessa immagine fissata: rete esterna assente, nessuna
+  porta o cartella dell'host montata; volume di lavoro temporaneo in memoria,
+  log Docker disattivati. PostgreSQL riceve solo su un socket Unix. In un
+  cluster inizializzato come `supabase_admin` il solo CREATE di quel ruolo già
+  esistente è riconosciuto esplicitamente; ALTER, grant e loro autori restano.
+- Ripristino nativo con `pg_restore --create --clean --if-exists --exit-on-error`:
+  la sostituzione del database iniziale riguarda solo il contenitore appena
+  creato; mantiene ACL, owner e impostazioni del database. Nessun salto di
+  oggetti, disabilitazione di RLS o ignoranza di errori per ottenere un OK.
+- Riconfronto dell'export dei ruoli senza password, di intestazioni e righe COPY
+  (ordine indipendente, duplicati mantenuti), e dei valori delle sequenze contro
+  il dump originale. Tipi di record non riconosciuti nel confronto, per esempio
+  large object nativi, bloccano il risultato. Si controllano le versioni delle
+  estensioni, le tabelle centrali e i limiti d'accesso di anon/authenticated a
+  note e ricevute private. È una verifica dell'archivio, non di dati online successivi.
+- File Storage ricostruiti in una radice temporanea secondo bucket e percorso;
+  hash dei file estratti confrontati con l'inventario cifrato. Si confrontano
+  bucket e loro visibilità, insieme completo degli oggetti e ID, dimensioni,
+  data di modifica al millisecondo ed ETag quando disponibile, con il catalogo
+  del database ripristinato. Due snapshot separati possono legittimamente
+  divergere: `PROVA_STORAGE_CATALOG_ERROR` richiede indagine, non unione
+  automatica o perdita di file.
+- Il comando elimina solo il contenitore contrassegnato per questa esecuzione
+  e controlla che non ne resti uno. Sul successo stampa
+  `OK_RIPRISTINO_LOCALE_DATABASE_E_FILE`; sul fallimento comunica un codice
+  senza SQL, nomi, percorsi privati o dati. Conservare entrambe le copie
+  originali. Non condividere dump, immagini, password, frasi o log privati.
+
+Limiti per questa prima prova: 128 MiB di archivio PostgreSQL decrittato (formato
+custom già compresso), 4 MiB ruoli, 16 MiB per file e 100 MiB Storage, Vault
+privo di segreti, nessun test HTTP dei servizi. Un OK non ripristina il sito
+online e non certifica login, SMTP, chiavi, oggetti serviti via API o procedure
+di cancellazione e conservazione. Il test CI usa solo copie sintetiche, con due
+frasi diverse; il risultato WSL sulle copie reali deve provenire dall'operatore.
 
 Prima della manutenzione, completare in uno spazio privato questo perimetro:
 

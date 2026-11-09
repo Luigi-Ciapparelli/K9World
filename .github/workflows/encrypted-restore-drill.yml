@@ -1,0 +1,26 @@
+name: Encrypted offline restore drill
+on:
+  pull_request:
+    paths:
+      - 'scripts/restore_encrypted_backups.py'
+      - 'scripts/restore_private_drill.sh'
+      - 'scripts/tests/real_restore_fixture.sh'
+      - 'scripts/tests/test_real_restore_drill.py'
+      - 'scripts/backup_database_encrypted.py'
+      - 'scripts/backup_storage_encrypted.py'
+      - 'scripts/verify_backup_copy.py'
+      - '.github/workflows/encrypted-restore-drill.yml'
+permissions:
+  contents: read
+jobs:
+  synthetic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Fetch the same fixed local lab image
+        run: docker pull docker.io/supabase/postgres@sha256:4c39816ce8d9303a3aba1161c842929c73a40c7109a9ef1b644582478e31832e
+      - name: Restore a synthetic encrypted backup and reject incompatible copies
+        run: python3 scripts/tests/test_real_restore_drill.py --container
