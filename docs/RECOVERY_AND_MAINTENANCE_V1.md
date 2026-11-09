@@ -25,7 +25,12 @@ reali e non ha osservato l'espulsione fisica della USB.
 Il 9 novembre Luigi ha comunicato `OK_AMBIENTE_RIPRISTINO_PG17_VAULT` dopo
 `2e211d3`: conferma sul proprio WSL del ripristino sintetico con cinque estensioni.
 È distinto dal [test CI del laboratorio](https://github.com/Luigi-Ciapparelli/K9World/actions/runs/42582849160).
-Restano il riscontro sulle copie reali, la configurazione dei servizi e la periodicità.
+Luigi ha poi eseguito il comando di `4b56efe` sulle copie reali: raggiunta la fase
+di importazione dopo la decifratura di **entrambi** gli export, esito
+`RIPRISTINO_NON_COMPLETATO: PROVA_DATABASE_PRIVILEGE`. Nessun ripristino
+riuscito è attestato. Quel classificatore cercava parole in tutto il log e non
+identificava l'istruzione o lo stato SQL. La causa precisa non è stata osservata.
+Restano il ripristino completo, la configurazione dei servizi e la periodicità.
 Non chiedere di ripetere gli export riusciti per aggiornare il registro.
 
 ## Stato rilevato sul progetto
@@ -422,7 +427,7 @@ per la prova isolata occorre una destinazione compatibile e un piano esplicito
 per ruoli ed estensioni. Nessuna esclusione automatica di dati o falsa attestazione
 di successo a fronte di errori ignorati. Il comando di preparazione non importa backup reali.
 
-### Prova delle copie cifrate già esportate (esito reale ancora da ricevere)
+### Prova delle copie cifrate già esportate (primo tentativo interrotto)
 
 Nel terminale WSL, senza USB e senza sudo davanti a Python:
 
@@ -432,8 +437,12 @@ cd ~/K9World && git switch main && git pull --ff-only && python3 scripts/restore
 
 Lo script cerca i due gruppi completi nella cartella originale privata
 `~/PortaleCinofilo-backups`; con più esportazioni dello stesso tipo chiede quale
-usare. Occorrono le frasi di cifratura locali, non la password database né una
-chiave Supabase. Per Storage si può premere Invio se la frase è la stessa.
+usare. Inserire, senza mostrarla, la frase salvata al momento dell’export
+database. Il comando prova la stessa frase sull’inventario cifrato Storage.
+Chiede la frase scelta per Storage solo se GnuPG non apre l'inventario; non
+ripropone la domanda per un hash errato. Non servono password Supabase o chiavi
+API. Nel vecchio comando, premere Invio al secondo prompt riutilizzava la frase
+del database: se si è arrivati alla fase Docker, le frasi erano corrette.
 Il motore e l'immagine devono essere quelli già preparati. Non vengono
 installati programmi né scaricate immagini. I riferimenti Docker sono locali
 e fissi: nessun host, credenziale o destinazione passati dall'operatore.
@@ -466,7 +475,16 @@ e fissi: nessun host, credenziale o destinazione passati dall'operatore.
 - Il comando elimina solo il contenitore contrassegnato per questa esecuzione
   e controlla che non ne resti uno. Sul successo stampa
   `OK_RIPRISTINO_LOCALE_DATABASE_E_FILE`; sul fallimento comunica un codice
-  senza SQL, nomi, percorsi privati o dati. Conservare entrambe le copie
+  senza SQL, nomi privati, percorsi o dati. Dal primo riscontro fallito, gli
+  errori di importazione hanno un codice `PROVA_DATABASE_PG…_TOC…`: primo
+  SQLSTATE primario della sessione di importazione, numero progressivo della
+  voce nell'archivio (non un identificativo cliente), tipo, operazione, schema
+  e ruolo proprietario della voce se noti, motivo. Campi non riconosciuti
+  diventano OTHER/UNKNOWN; il processo sul PC accetta solo valori prestabiliti.
+  I log grezzi sono eliminati con il contenitore. La prova rimane rigorosa al
+  primo errore e non cambia ruoli o permessi per aggirarlo. Un caso sintetico
+  con proprietario di evento non superuser verifica la diagnosi `42501`;
+  non identifica la causa della copia dell’operatore. Conservare entrambe le copie
   originali. Non condividere dump, immagini, password, frasi o log privati.
 
 Limiti per questa prima prova: 128 MiB di archivio PostgreSQL decrittato (formato

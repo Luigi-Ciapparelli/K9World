@@ -113,10 +113,11 @@ def tar_member(tar, name, data):
     tar.addfile(item, io.BytesIO(data))
 
 
-def add_storage(tar, storage, home, phrase):
+def add_storage(tar, storage, home, phrase, inventory_bytes=None):
     _, manifest, _ = storage
     require(manifest.get('format') == 1, 'FORMATO_STORAGE')
-    idx = json.loads(decrypt(storage, 'inventory.json.gpg', INDEX_LIMIT, home, phrase, 'STORAGE'))
+    idx = json.loads(inventory_bytes if inventory_bytes is not None else
+                     decrypt(storage, 'inventory.json.gpg', INDEX_LIMIT, home, phrase, 'STORAGE'))
     require(idx.get('format') == 1 and idx.get('project') == PROJECT and idx.get('started_at') == manifest['started_at'],
             'INVENTARIO_STORAGE_NON_CORRISPONDE')
     buckets, objects = idx['buckets'], idx['objects']
@@ -158,7 +159,7 @@ def add_storage(tar, storage, home, phrase):
     return len(objects), total
 
 
-def pack(tar_stream, database, storage, db_phrase, st_phrase):
+def pack(tar_stream, database, storage, db_phrase, st_phrase=None, *, ask_storage=None):
     require(database[1].get('client_major') == 17 and str(database[1].get('server_version','')).startswith('17.'),
             'VERSIONE_DATABASE_DIVERSA')
     with crypto_home() as home, tarfile.open(fileobj=tar_stream, mode='w') as tar:
@@ -171,7 +172,17 @@ def pack(tar_stream, database, storage, db_phrase, st_phrase):
         tar_member(tar, 'roles.original', roles)
         tar_member(tar, 'roles.apply', roles.replace(pair, b'\nALTER ROLE supabase_admin WITH ', 1))
         tar_member(tar, 'db.dump', decrypt(database, 'database.dump.gpg', DB_LIMIT, home, db_phrase, 'DATABASE'))
-        counts = add_storage(tar, storage, home, st_phrase)
+        inventory = None
+        if st_phrase is None:
+            st_phrase = db_phrase
+            try:
+                inventory = decrypt(storage, 'inventory.json.gpg', INDEX_LIMIT, home, st_phrase, 'STORAGE')
+            except DrillError as e:
+                if str(e) != 'DECIFRATURA_FALLITA_STORAGE' or ask_storage is None:
+                    raise
+                st_phrase = ask_storage()
+                require(bool(st_phrase), 'FRASE_STORAGE_NON_INSERITA')
+        counts = add_storage(tar, storage, home, st_phrase, inventory)
     tar_stream.seek(0)
     return counts
 
@@ -191,6 +202,25 @@ def engine(config, interactive):
     raise DrillError('MOTORE_DOCKER_LOCALE_NON_DISPONIBILE')
 
 
+def database_failure_code(fields):
+    # The container processes SQL from a backup. Treat even its diagnostic channel
+    # as untrusted. Never expose raw messages, SQLSTATEs chosen by callers, or names.
+    if len(fields) != 8 or fields[0] != b'DR_DB':
+        return None
+    _, state, entry, kind, op, scope, owner, reason = fields
+    allowed = (
+        (state, b'UNKNOWN 42501 28000 28P01 42P01 42703 42704 42710 42883 42P07 42P16 42601 3F000 3D000 0A000 22023 23502 23503 23505 23514 25001 25006 2BP01 53100 53200 55000 55006 58P01 P0001 XX000'),
+        (kind, b'OTHER EVENT_TRIGGER DEFAULT_ACL DATABASE_PROPERTIES TABLE_DATA FK_CONSTRAINT ROW_SECURITY SEQUENCE_SET MATERIALIZED_VIEW FOREIGN_TABLE SECURITY_LABEL ACL SCHEMA DATABASE FUNCTION PROCEDURE EXTENSION TABLE INDEX SEQUENCE TYPE POLICY CONSTRAINT PUBLICATION SUBSCRIPTION TRIGGER COMMENT VIEW CAST DOMAIN AGGREGATE FOREIGN BLOB'),
+        (op, b'OTHER OWNER SESSION_AUTH CREATE ALTER DROP GRANT REVOKE COMMENT COPY SET SELECT REINDEX SECURITY'),
+        (scope, b'OTHER PUBLIC AUTH STORAGE REALTIME VAULT EXTENSIONS PC_PRIVATE PG_CATALOG SUPABASE_MIGRATIONS SUPABASE_FUNCTIONS'),
+        (owner, b'OTHER POSTGRES SUPABASE_ADMIN SUPABASE_AUTH_ADMIN SUPABASE_STORAGE_ADMIN SUPABASE_REALTIME_ADMIN AUTHENTICATOR SERVICE_ROLE PG_DATABASE_OWNER'),
+        (reason, b'OTHER EVENT_OWNER PUBLICATION_OWNER SCHEMA_ACCESS PARAMETER_ACCESS ROLE_MEMBERSHIP OWNER_REQUIRED SUPERUSER_REQUIRED ACCESS_DENIED MISSING LOCALE'),
+    )
+    if not re.fullmatch(b'(?:0|[1-9][0-9]{0,7})', entry) or any(v not in choices.split() for v,choices in allowed):
+        return None
+    return b'_'.join([b'PROVA_DATABASE_PG'+state,b'TOC'+entry,kind,op,scope,owner,reason]).decode('ascii')
+
+
 def isolated(cmd, tar_stream):
     token = uuid.uuid4().hex
     marker = TAG + '=' + token
@@ -200,7 +230,8 @@ def isolated(cmd, tar_stream):
             '--cap-drop','ALL','--security-opt','no-new-privileges','--user','postgres',
             '--memory','1536m','--memory-swap','1536m','--pids-limit','96','--ulimit','core=0',
             '--shm-size','96m','--tmpfs','/tmp:rw,nosuid,nodev,noexec,mode=1777,size=1024m',
-            '--entrypoint','/bin/busybox',IMAGE,'timeout','320','/bin/sh','-ceu',script]
+            '--entrypoint','/bin/busybox',IMAGE,'timeout','320','/bin/sh','-ceu',script,'pc-drill',
+            (HERE / 'restore_database_error.awk').read_text()]
     try:
         r = subprocess.run(cmd + args, env=ENV, stdin=tar_stream, stdout=subprocess.PIPE,
                            stderr=subprocess.DEVNULL, timeout=360)
@@ -211,6 +242,9 @@ def isolated(cmd, tar_stream):
                       b'PRIVACY', b'STORAGE_FILES', b'STORAGE_CATALOG', b'STOP'}
             kinds = {b'ERROR', b'MISSING', b'PRIVILEGE', b'COLLATION', b'CONFIG', b'EXISTS', b'SPACE', b'FORMAT'}
             bits = result.split(b':')
+            db_code = database_failure_code(bits)
+            if db_code:
+                raise DrillError(db_code)
             if len(bits) == 3 and bits[0] == b'DR_FAIL' and bits[1] in stages and bits[2] in kinds:
                 raise DrillError('PROVA_' + bits[1].decode() + '_' + bits[2].decode())
             raise DrillError('PROCESSO_DOCKER_NON_COMPLETATO')
@@ -238,11 +272,13 @@ def main():
     db, st = select_set(root,'Database'), select_set(root,'Storage')
     with tempfile.TemporaryDirectory(prefix='pc-dr-client-') as conf, memory_file() as bundle:
         cmd = engine(conf, True)
-        dp = getpass.getpass('Frase di cifratura della copia DATABASE: ')
-        sp = getpass.getpass('Frase della copia STORAGE (Invio se è la stessa): ') or dp
+        dp = getpass.getpass('Frase salvata quando hai cifrato la copia DATABASE (non la password Supabase): ')
+        def ask_storage():
+            print('La frase del database non ha aperto l’inventario Storage. Usa la frase scelta per la copia dei file.')
+            return getpass.getpass('Frase di cifratura della copia STORAGE: ')
         print('Controllo integrità e decifro in memoria…', flush=True)
-        n, size = pack(bundle, db, st, dp, sp)
-        print('Ripristino ruoli, database e file nel contenitore isolato…', flush=True)
+        n, size = pack(bundle, db, st, dp, ask_storage=ask_storage)
+        print('Database e Storage decifrati. Ripristino ruoli, database e file nel contenitore isolato…', flush=True)
         isolated(cmd, bundle)
     print('OK_RIPRISTINO_LOCALE_DATABASE_E_FILE')
     print(f'File Storage ricostruiti e confrontati: {n}; byte: {size}. Contenitore eliminato.')
