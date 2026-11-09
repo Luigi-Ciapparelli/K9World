@@ -345,7 +345,7 @@ Non sostituire Vault con una fixture, omettere errori o ripristinare nel progett
 online per ottenere un esito positivo. La procedura non è ancora collaudata
 con questo dump: non usare il test sintetico come attestazione di ripristino.
 
-Prossimo controllo locale mirato, senza riaprire il database online né ripetere
+Controllo locale già eseguito il 30 ottobre, senza riaprire il database online né ripetere
 la verifica del client 17.11 già acquisita:
 
 ```bash
@@ -359,16 +359,66 @@ disponibile per dimensionare la prova. Non avvia cluster, non contatta database,
 non installa pacchetti e non legge dump, password, chiavi o configurazioni account.
 Un file `.control` presente non prova che la libreria sia caricabile o compatibile;
 le dipendenze effettive e il restore restano una verifica successiva.
-L'output dal WSL di Luigi non è ancora stato ricevuto: non assumere installato
-il server 17 solo perché è disponibile `pg_dump` 17.11.
+Il 30 ottobre Luigi ha eseguito questa modalità dopo `3efbfd8`: server 17
+(`postgres`, `initdb`, `pg_ctl`) e tutti e cinque i file `.control` non sono
+disponibili nei percorsi controllati. Spazio libero 951,9 GiB e memoria
+disponibile al momento 7,2 GiB. Il client 17.11 resta installato; non ripetere
+questo controllo nativo. Non è ancora stato avviato alcun ripristino reale.
+
+### Ambiente locale scelto per la prova
+
+Preparare Docker Engine nel WSL Ubuntu 24.04, usando il pacchetto `docker.io`
+distribuito da Ubuntu. Non richiede un account Docker, un piano Desktop o un
+nuovo progetto Supabase. Il contenitore servirà soltanto alla prova locale:
+il sito e il database online restano dove sono. Questa scelta evita di dover
+compilare e installare a mano Vault nell'Ubuntu dell'operatore.
+
+Dal terminale Ubuntu WSL, con il proprio utente:
+
+```bash
+cd ~/K9World && git switch main && git pull --ff-only && bash scripts/prepare_restore_lab.sh --prepare-wsl
+```
+
+Se il motore funziona, viene riutilizzato sul socket Unix locale. Se manca,
+lo script verifica Ubuntu 24.04 WSL 2 e systemd prima di installare il pacchetto
+Ubuntu con APT (nessuna rimozione di pacchetti per risolvere conflitti) e di
+avviare il servizio. Non aggiunge l'utente al gruppo Docker. La password
+eventualmente chiesta da sudo è quella locale Ubuntu. In assenza di systemd la
+preparazione si ferma; non sovrascrive la configurazione WSL e non disinstalla
+altri programmi. In modalità `--check` usa solo un motore già accessibile,
+senza sudo, installazioni o avvii del servizio.
+
+Il primo download usa il digest del tag Supabase 17.6.1.113 (indice verificato
+il 9 novembre 2026 su [Docker Hub](https://hub.docker.com/v2/repositories/supabase/postgres/tags/17.6.1.113)):
+`sha256:4c39816ce8d9303a3aba1161c842929c73a40c7109a9ef1b644582478e31832e`.
+Il download richiede rete; il contenitore che segue è senza rete esterna, porte
+pubblicate, mount delle cartelle dell'operatore o credenziali di produzione.
+Esclude l'entrypoint di inizializzazione dello stack: PostgreSQL parte da un
+cluster vuoto, come utente postgres, su socket Unix privato; i dati di prova
+sono temporanei. Il filesystem dell'immagine è di sola lettura.
+
+La prova crea le estensioni e una riga inventata, esporta il database e lo
+ripristina in un secondo database vuoto. Arresta la procedura al primo errore.
+Verifica la riga, le cinque versioni osservate in produzione e funzioni delle
+estensioni, inclusa la generazione di un nonce da Vault. Non prova la decifratura
+di segreti di produzione. `OK_AMBIENTE_RIPRISTINO_PG17_VAULT` conferma solo
+questo test sull'ambiente dove viene eseguito. Il riscontro dal WSL è ancora da
+ricevere. GitHub Actions usa esattamente la modalità `--check` con dati sintetici.
+
+La successiva prova delle copie reali resta sul PC dell'operatore, con originali
+in sola lettura, controllo esplicito dei ruoli e confronto dei dati recuperati.
+Nessun file effettivo è richiesto in chat. I file Storage e la configurazione
+dei servizi vanno verificati separatamente. Riferimenti:
+[pacchetto Ubuntu](https://packages.ubuntu.com/noble/docker.io),
+[isolamento della rete Docker](https://docs.docker.com/engine/network/drivers/none/),
+[immagine PostgreSQL 17 di Supabase](https://github.com/supabase/postgres/blob/17.6.1.113/Dockerfile-17).
 
 La [guida del fornitore al restore da Platform](https://supabase.com/docs/guides/self-hosting/restore-from-platform)
 distingue il dump nativo completo da quello filtrato dalla CLI. Questa copia
 nativa non va importata alla cieca sopra gli schemi gestiti di un nuovo progetto;
 per la prova isolata occorre una destinazione compatibile e un piano esplicito
 per ruoli ed estensioni. Nessuna esclusione automatica di dati o falsa attestazione
-di successo a fronte di errori ignorati. Non è stato predisposto un comando di
-restore dei dati reali prima di avere questo controllo dell'ambiente.
+di successo a fronte di errori ignorati. Il comando di preparazione non importa backup reali.
 
 Prima della manutenzione, completare in uno spazio privato questo perimetro:
 

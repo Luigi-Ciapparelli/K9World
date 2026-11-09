@@ -1,0 +1,19 @@
+name: Isolated restore environment
+on:
+  pull_request:
+    paths:
+      - 'scripts/prepare_restore_lab.sh'
+      - 'scripts/tests/restore_lab_probe.sh'
+      - '.github/workflows/restore-lab.yml'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Restore a synthetic record using the pinned Supabase image
+        run: bash scripts/prepare_restore_lab.sh --check
