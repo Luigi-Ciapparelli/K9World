@@ -1,8 +1,23 @@
-# Ripristino e manutenzione — aggiornamento 9 novembre 2026
+# Ripristino e manutenzione — aggiornamento 10 novembre 2026
 
-Base `ace4afa`, 75 migration. Incremento di SEC-04/TRUST-02. Esiti della prova
-isolata e dello stato del pannello vanno registrati nella PR di questo blocco.
-Non sostituisce un backup reale del progetto o il controllo dei contratti.
+**Esito del 10 novembre 2026 — ripristino locale riuscito.** Dopo `cde492a`,
+Luigi ha eseguito il comando nel proprio WSL sulle copie cifrate reali e ha
+comunicato `OK_RIPRISTINO_LOCALE_DATABASE_E_FILE`. Il database è stato
+ripristinato; l'unico oggetto Storage dell'inventario (90.679 byte) è stato
+ricostruito e confrontato. Il contenitore temporaneo è stato eliminato.
+Il riscontro viene dall'operatore; l'assistente non ha ricevuto archivi o log.
+La prova riguarda gli export del 29 ottobre (database) e del 30 ottobre
+(Storage), non uno snapshot al 10 novembre. La copia separata su USB era già
+stata verificata tramite hash. Non occorre ripetere questa prova sulle stesse copie.
+
+Non sono stati avviati Auth, SMTP, Edge Functions o il servizio Storage HTTP:
+l'esito non attesta un ripristino del sito online, l'invio email o il download
+autenticato. Per la prossima prova funzionale vedere il
+[registro di verifica del primo uso](PRODUCTION_PRIVACY_VERIFICATION_2026_10_29.md#prossime-evidenze-necessarie-per-luso-reale).
+
+## Cronologia degli export e delle prove
+
+Base iniziale `ace4afa`, 75 migration. Incremento di SEC-04/TRUST-02.
 
 **Riscontro del 29 ottobre:** dopo la correzione TLS su `main` `9111ee4`, Luigi
 ha eseguito lo script nel proprio WSL e comunicato `OK_DATABASE_EXPORT_VERIFIED`.
@@ -27,15 +42,15 @@ Il 9 novembre Luigi ha comunicato `OK_AMBIENTE_RIPRISTINO_PG17_VAULT` dopo
 È distinto dal [test CI del laboratorio](https://github.com/Luigi-Ciapparelli/K9World/actions/runs/42582849160).
 Luigi ha poi eseguito il comando di `4b56efe` sulle copie reali: raggiunta la fase
 di importazione dopo la decifratura di **entrambi** gli export, esito
-`RIPRISTINO_NON_COMPLETATO: PROVA_DATABASE_PRIVILEGE`. Nessun ripristino
-riuscito è attestato. Quel classificatore cercava parole in tutto il log e non
+`RIPRISTINO_NON_COMPLETATO: PROVA_DATABASE_PRIVILEGE`. Quel tentativo
+si è interrotto. Il classificatore cercava parole in tutto il log e non
 identificava l'istruzione o lo stato SQL. Dopo `8b329eb` Luigi ha ottenuto
 `PROVA_DATABASE_PG42501_TOC4334_EVENT_TRIGGER_OWNER_OTHER_POSTGRES_EVENT_OWNER`.
 PostgreSQL ha rifiutato il trasferimento di proprietà di un event trigger al
 ruolo `postgres`. Il numero 4334 appartiene soltanto a quell'archivio. Non è
-un problema di cifratura. L'esito del nuovo tentativo sui dati reali resta aperto.
-Restano il ripristino completo, la configurazione dei servizi e la periodicità.
-Non chiedere di ripetere gli export riusciti per aggiornare il registro.
+un problema di cifratura. La correzione di [PR #18](https://github.com/Luigi-Ciapparelli/K9World/pull/18)
+è stata verificata prima con dati sintetici e poi con le copie dell'operatore:
+il risultato del 10 novembre sopra sostituisce i due tentativi interrotti.
 
 ## Stato rilevato sul progetto
 
@@ -93,7 +108,7 @@ automatica di un servizio gestito. L'automazione va aggiunta dopo la prima
 copia completa e la prova di ripristino, con segnalazione degli errori e
 verifica che il computer rimanga disponibile agli orari previsti.
 
-Primo passo nel terminale WSL già usato per il progetto:
+Controllo iniziale, già eseguito per questo WSL; riferimento per preparare un altro ambiente:
 
 ```bash
 cd ~/K9World && git pull --ff-only && python3 scripts/diagnose_backup_environment.py
@@ -162,16 +177,14 @@ genera SQL verso `/dev/null`, senza connettersi a un database. La riga
 se tutti i passaggi riescono. Un errore lascia `INCOMPLETE.txt` e non certifica
 la directory. Condividere in chat solo lo stato finale, mai archivi o log.
 
-**Limite operativo:** è un export nativo del database, non un restore Supabase
-già collaudato. Include oggetti e ruoli gestiti che non vanno importati alla cieca
-in un progetto Supabase nuovo. La documentazione del fornitore distingue questi
-oggetti dai dump filtrati della CLI: la prova reale di ripristino dovrà adattare
-la destinazione senza modificare l'originale o sopprimere errori indiscriminatamente.
+**Limite operativo:** il dump nativo contiene oggetti e ruoli gestiti. La prova
+riuscita usa la destinazione isolata documentata sotto: non dimostra che lo
+stesso dump possa essere importato direttamente in un progetto Supabase nuovo.
 Il manifest mantiene `restore_status=not_tested` e `storage_status=not_backed_up`.
 Questi stati descrivono il perimetro di quel dump, senza includere una successiva
 copia Storage separata. Non riscrivere il manifest storico per segnare verifiche
-esterne. La copia indipendente è stata verificata successivamente; restano
-configurazioni, periodicità e restore.
+esterne. Il confronto della USB (30 ottobre) e il ripristino isolato (10 novembre)
+sono esiti successivi, registrati qui separatamente dal manifest originale.
 
 Il 29 ottobre la prima esecuzione di Luigi si è fermata nel controllo preliminare
 con errore classificato `CERTIFICATO_TLS`: nessun export completato. La versione
@@ -256,9 +269,10 @@ automatici dopo errori di accesso o rate limit.
 La riga di successo è `OK_STORAGE_EXPORT_VERIFIED`. Condividerla senza allegare
 file o chiavi. `INCOMPLETE.txt` senza manifest indica un tentativo non completato.
 Lo script non carica né ripristina file online. Il manifest mantiene
-`restore_status=not_tested`: il ripristino isolato resta da eseguire. La copia
-indipendente sulla USB è stata verificata successivamente. Il 30 ottobre l'operatore ha confermato la copia Storage
-reale: `OK_STORAGE_EXPORT_VERIFIED`, 1 oggetto, 90.679 byte.
+`restore_status=not_tested` come stato al momento dell'export. Il 30 ottobre
+l'operatore ha confermato `OK_STORAGE_EXPORT_VERIFIED` e la verifica della copia
+USB; il 10 novembre lo stesso inventario (1 oggetto, 90.679 byte) è stato
+ricostruito e confrontato nel laboratorio.
 
 `scripts/tests/test_storage_backup.py` usa esclusivamente risposte API e file
 sintetici: paginazione, cartelle, permessi, limiti, cambi durante il download,
@@ -354,8 +368,8 @@ non prova la disponibilità di un server 17 e di queste estensioni. Preparare
 prima un ambiente locale compatibile e isolato, senza porte pubbliche e senza
 credenziali online; poi provare la copia reale mantenendo i log privati.
 Non sostituire Vault con una fixture, omettere errori o ripristinare nel progetto
-online per ottenere un esito positivo. La procedura non è ancora collaudata
-con questo dump: non usare il test sintetico come attestazione di ripristino.
+online per ottenere un esito positivo. Il collaudo sul dump reale del 10
+novembre è distinto sia dal test sintetico sia dal recupero dei servizi.
 
 Controllo locale già eseguito il 30 ottobre, senza riaprire il database online né ripetere
 la verifica del client 17.11 già acquisita:
@@ -370,12 +384,12 @@ cinque estensioni osservate nel database. Riporta spazio libero e memoria
 disponibile per dimensionare la prova. Non avvia cluster, non contatta database,
 non installa pacchetti e non legge dump, password, chiavi o configurazioni account.
 Un file `.control` presente non prova che la libreria sia caricabile o compatibile;
-le dipendenze effettive e il restore restano una verifica successiva.
+le dipendenze effettive sono state provate in seguito nel contenitore.
 Il 30 ottobre Luigi ha eseguito questa modalità dopo `3efbfd8`: server 17
 (`postgres`, `initdb`, `pg_ctl`) e tutti e cinque i file `.control` non sono
 disponibili nei percorsi controllati. Spazio libero 951,9 GiB e memoria
 disponibile al momento 7,2 GiB. Il client 17.11 resta installato; non ripetere
-questo controllo nativo. Non è ancora stato avviato alcun ripristino reale.
+questo controllo nativo: a quella data il ripristino reale non era ancora stato avviato.
 
 ### Ambiente locale scelto per la prova
 
@@ -431,7 +445,7 @@ per la prova isolata occorre una destinazione compatibile e un piano esplicito
 per ruoli ed estensioni. Nessuna esclusione automatica di dati o falsa attestazione
 di successo a fronte di errori ignorati. Il comando di preparazione non importa backup reali.
 
-### Prova delle copie cifrate già esportate (ripristino completo da confermare)
+### Procedura di ripristino locale (collaudata sulle copie reali il 10 novembre)
 
 Nel terminale WSL, senza USB e senza sudo davanti a Python:
 
@@ -511,7 +525,7 @@ custom già compresso), 4 MiB ruoli, 16 MiB per file e 100 MiB Storage, Vault
 privo di segreti, nessun test HTTP dei servizi. Un OK non ripristina il sito
 online e non certifica login, SMTP, chiavi, oggetti serviti via API o procedure
 di cancellazione e conservazione. Il test CI usa solo copie sintetiche, con due
-frasi diverse; il risultato WSL sulle copie reali deve provenire dall'operatore.
+frasi diverse; l'esito WSL reale è stato comunicato separatamente dall'operatore il 10 novembre.
 
 Prima della manutenzione, completare in uno spazio privato questo perimetro:
 
@@ -556,7 +570,7 @@ Questi controlli coprono i casi segnalati nel
 Non provano che tutti gli aggiornamenti siano compatibili. Prima di eseguire:
 
 1. Verificare nel pannello versione proposta, prerequisiti e tempo stimato.
-2. Completare copia reale e ripristino isolato, inclusi file/configurazioni.
+2. Il recupero del database e dei file esportati in ottobre è provato. Prima di una futura manutenzione servono una copia aggiornata e la disponibilità verificata delle configurazioni dei servizi.
 3. Concordare una finestra breve: l'upgrade rende temporaneamente indisponibile
    il progetto. Non mettere in pausa il sito per forzare un aggiornamento.
 4. Seguire l'upgrade gestito; non eliminare automaticamente estensioni, slot o
@@ -570,8 +584,12 @@ Fonti: [upgrade Supabase](https://supabase.com/docs/guides/platform/upgrading),
 
 ## Confini ancora aperti
 
-Finché non esiste una copia reale protetta e ripristinata con successo, SEC-04
-resta aperto. La prova sintetica è una verifica tecnica aggiuntiva, non una
-spunta sostitutiva. Fornitori/DPA, conservazione, richieste e informazioni del
-gestore rimangono nelle evidenze operative di TRUST-02. Non introdurre tracking
-o un banner generico per compensare questi adempimenti.
+Per SEC-04 è chiusa la prova di recupero **database e byte Storage di queste
+copie**. Rimangono aperti la frequenza e la durata di conservazione delle copie,
+chi controlla i mancati backup, la ricostruzione delle configurazioni dei servizi
+e la gestione di eventuali revoche/cancellazioni intervenute dopo l'export.
+Prima di qualsiasi riapertura si devono verificare accessi ed eventuali revoche;
+il successo in un contenitore senza rete non dimostra il recupero di Auth,
+SMTP, Edge o Storage HTTP. Non è stato autorizzato un upgrade, un riavvio o un
+ripristino in produzione. Fornitori, accessi e gestione effettiva dei diritti
+restano evidenze distinte di TRUST-02.

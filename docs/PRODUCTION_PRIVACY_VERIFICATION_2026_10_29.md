@@ -84,12 +84,29 @@ per la sola impostazione del limite Storage.
 1. Una prova concordata del percorso web completo con recapito controllato:
    registrazione, email, accesso e revisione del primo addestratore. Le prove
    SQL annullate non sostituiscono la consegna email o una verifica documentale.
-2. Backup ed esportazioni realmente disponibili sul piano usato e ripristino
-   isolato; includere gli oggetti Storage, non soltanto le righe del database.
+2. **Aggiornamento 10 novembre 2026:** il recupero locale del database e dei
+   file è confermato da Luigi: 1 oggetto Storage, 90.679 byte, contenitore
+   eliminato. Vedi [riscontro e limiti](RECOVERY_AND_MAINTENANCE_V1.md).
+   Auth, SMTP, Edge e Storage HTTP non sono stati avviati nel ripristino.
 3. Evidenze riservate di fornitori/DPA, amministratori/MFA, ruoli e basi,
    conservazione, gestione delle richieste e informazioni obbligatorie del
    gestore, secondo `PRIVACY_OPERATIONS_V1.md`. Non pubblicare questi documenti
    o dati personali nel repository e non attribuire consensi retroattivi.
+
+Il 10 novembre un GET HTTPS anonimo su `/become-pro`, `/signup?role=professional`
+e `/privacy` ha restituito HTML con stato 200 su www.portalecinofilo.com.
+Questa verifica della disponibilità delle pagine non ha inviato moduli o email
+e non prova il funzionamento della registrazione.
+
+**Prossimo passo prima degli inviti:** usare una casella di prova controllata
+dal gestore e partire da [Per i professionisti](https://www.portalecinofilo.com/become-pro)
+→ **Crea il tuo profilo**. Verificare che la conferma ricevuta consenta
+l'accesso all'area professionale, ma non renda l'addestratore ricercabile
+prima della revisione di identità e qualifica. Verificare la candidatura dal
+lato amministratore; non approvare un profilo fittizio. Registrare solo
+passato/bloccato e il passaggio interessato, mai email, link di conferma,
+documenti o codici. È una verifica del percorso attuale, distinta dalla
+ricostruzione dei servizi a partire dal backup.
 
 Cookie e local storage tecnici mantengono inventario e comandi già implementati.
 Nessun pixel, tracciamento pubblicitario o banner generico viene aggiunto da
