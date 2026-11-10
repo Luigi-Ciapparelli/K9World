@@ -9,6 +9,7 @@ import { continuityEnabled } from './lib/continuity';
 import { ThemeProvider } from './lib/ThemeContext';
 import { PageMetadata } from './components/PageMetadata';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { confirmationPage } from './lib/signupConfirmation';
 import { usePasswordRecovery } from './lib/passwordRecovery';
 import { ConnectionNotice, PageErrorBoundary, PageLoading } from './components/PageRecovery';
 
@@ -16,6 +17,7 @@ const CentreAgendaPage = lazy(() => import('./pages/CentreAgendaPage').then(m =>
 const CentreCollaborationsPage = lazy(() => import('./pages/CentreCollaborationsPage').then(module => ({default:module.CentreCollaborationsPage})));
 const AccountContactsPage = lazy(() => import('./pages/AccountContactsPage').then(module => ({ default: module.AccountContactsPage })));
 
+const ConfirmEmailPage = lazy(() => import('./pages/ConfirmEmailPage').then(module => ({ default: module.ConfirmEmailPage })));
 const ForgotPasswordPage = lazy(() => import('./pages/PasswordRecoveryPages').then(module => ({ default: module.ForgotPasswordPage })));
 const ResetPasswordPage = lazy(() => import('./pages/PasswordRecoveryPages').then(module => ({ default: module.ResetPasswordPage })));
 
@@ -137,6 +139,11 @@ const ContactPage = lazy(() =>
   import('./pages/LegalPages').then((module) => ({ default: module.ContactPage }))
 );
 const ContinuityPage = lazy(() => import('./pages/continuity/ContinuityPage').then(module => ({ default: module.ContinuityPage })));
+function SignInRedirect({ contacts }: { contacts: boolean }) {
+  const { navigate } = useRouter();
+  useEffect(() => { navigate('/signin', contacts ? { fromContacts: '1' } : {}); }, [contacts, navigate]);
+  return null;
+}
 function AppShell() {
   const { path, navigate } = useRouter();
   const { user, profile, loading } = useAuth();
@@ -173,15 +180,16 @@ function AppShell() {
     </Suspense></PageErrorBoundary>;
   }
 
+  if (basePath === confirmationPage) {
+    return <PageErrorBoundary key={basePath}><Suspense fallback={<PageLoading />}><ConfirmEmailPage /></Suspense></PageErrorBoundary>;
+  }
+
   if (loading) {
     return <PageLoading />;
   }
 
   if (isProtectedRoute) {
-    if (!user) {
-      navigate('/signin');
-      return null;
-    }
+    if (!user) return <SignInRedirect contacts={basePath === '/account/contacts'} />;
 
     if (!profile) return <AccountProfileRecovery key={user.id} />;
 

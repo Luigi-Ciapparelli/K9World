@@ -1,3 +1,4 @@
+import { signupEmailRedirect } from './signupConfirmation';
 import { signupLegalDeclaration } from './legalNotices';
 import { createContext, useContext, useEffect, useRef, useState, ReactNode } from 'react';
 import { supabase } from './supabase';
@@ -66,7 +67,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (error) {
-      return { error: error.message, role: null };
+      return { error: error.code === 'email_not_confirmed' || /^email not confirmed$/i.test(error.message)
+        ? 'Il tuo indirizzo email non è ancora confermato. Premi «Reinvia email di conferma» e apri solo il messaggio più recente.'
+        : error.message, role: null };
     }
 
     if (!data.user) {
@@ -113,7 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email,
       password,
       options: {
-        emailRedirectTo: window.location.origin + '/account/contacts',
+        emailRedirectTo: signupEmailRedirect(),
         data: {
           pawconnect_onboarding_version: '1',
           legal_declaration: signupLegalDeclaration(role),

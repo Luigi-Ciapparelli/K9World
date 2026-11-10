@@ -18,6 +18,12 @@ on:
       - 'src/lib/legalNotices.ts'
       - 'src/lib/AuthContext.tsx'
       - 'src/pages/AuthPages.tsx'
+      - 'src/pages/ConfirmEmailPage.tsx'
+      - 'src/lib/signupConfirmation.ts'
+      - 'src/lib/supabase.ts'
+      - 'src/lib/routeUrls.ts'
+      - 'src/components/SignupConfirmationResend.tsx'
+      - 'scripts/tests/test_signup_confirmation_ui.mjs'
       - 'scripts/tests/test_browser_privacy_ui.mjs'
       - 'scripts/tests/test_privacy_requests_ui.mjs'
       - 'scripts/tests/test_professional_signup_ui.mjs'
@@ -72,4 +78,6 @@ jobs:
           done
           node scripts/tests/test_browser_privacy_ui.mjs
           node scripts/tests/test_professional_signup_ui.mjs
+          node scripts/tests/test_signup_confirmation_ui.mjs
+          node scripts/tests/test_password_recovery_ui.mjs
           node scripts/tests/test_privacy_requests_ui.mjs

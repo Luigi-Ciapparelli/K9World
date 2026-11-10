@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from './supabase';
+import { confirmationPage } from './signupConfirmation';
 
 type RecoveryState =
   | { status: 'idle' | 'checking' }
@@ -31,6 +32,8 @@ function readMarker(): RecoveryMarker | null {
   } catch { return null; }
 }
 let saved = browser ? readMarker() : null;
+// An explicit signup confirmation is a different flow, even in a tab used for an older reset.
+if (saved && browser && !callback && window.location.pathname === confirmationPage) forgetMarker();
 let state: RecoveryState = browser && (callback || saved) ? { status: 'checking' } : idle;
 let acceptingCallback = Boolean(callback && !hasError);
 let timer: ReturnType<typeof setTimeout> | undefined;

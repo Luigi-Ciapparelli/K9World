@@ -164,3 +164,35 @@ Riferimenti ufficiali consultati:
 - https://supabase.com/docs/reference/javascript/auth-updateuser
 - https://supabase.com/docs/reference/javascript/auth-admin-updateuserbyid
 - https://supabase.com/docs/reference/javascript/auth-resend
+
+### Conferma della registrazione: clic, reinvio e codice
+
+Iscrizione e reinvio mantengono il redirect già previsto per `/account/contacts`.
+Il sito riconosce la risposta Auth prima di proteggere la pagina dei recapiti.
+Il risultato appare su `/account/confirm-email`, anche quando il provider
+ritorna alla home con un esito di iscrizione. Un indirizzo aperto senza prova
+o una sessione precedente non attestano la conferma. Nessuna modifica ai
+permessi, alle prove dei recapiti o all’ammissione dei professionisti.
+
+Configurazione del progetto ospitato: in **Authentication → Email Templates →
+Confirm signup**, il pulsante deve usare **ConfirmationURL**. Un semplice
+link al login, alla SiteURL o alla RedirectTo non verifica nulla. Per offrire
+anche il codice facoltativo, il modello può contenere:
+
+```html
+<p>Hai richiesto un account PortaleCinofilo?</p>
+<p><a href="{{ .ConfirmationURL }}">Conferma la mia email</a></p>
+<p>In alternativa, su PortaleCinofilo scegli Accedi → Ho un codice nell’email
+e inserisci questo codice: <strong>{{ .Token }}</strong>.</p>
+<p>Se non hai richiesto l’account, ignora il messaggio.</p>
+```
+
+Il template ospitato è separato dal deploy del sito. Il codice funziona solo
+se presente nell’email ed è alternativo al link della stessa richiesta.
+Il reinvio usa Auth signup; non crea un secondo account. I test browser
+automatizzati usano solo risposte Auth sintetiche. Per il collaudo reale,
+usare la stessa casella controllata, una sola richiesta, poi verificare
+l’accesso; non riportare token, codici o indirizzi nel registro di prova.
+
+Documentazione: [modelli email](https://supabase.com/docs/guides/auth/auth-email-templates),
+[verifica OTP](https://supabase.com/docs/reference/javascript/auth-verifyotp).
