@@ -18,7 +18,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    # Playwright 1.56 supports this runner; ubuntu-latest can upgrade before the browser does.
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     env:
       VITE_PROFESSIONAL_CONTINUITY: 'true'

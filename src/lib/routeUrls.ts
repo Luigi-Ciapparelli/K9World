@@ -18,7 +18,7 @@ export function routeHref(path: string) {
   const safe = normalizeRoute(path);
   if (!safe.startsWith('/') || safe.startsWith('//')) return '/';
   // Keep the fragment available for the Supabase email callback.
-  if (/^\/(?:forgot-password|reset-password|account\/contacts)$/.test(safe.split('?')[0])) return safe;
+  if (/^\/(?:forgot-password|reset-password|account\/(?:contacts|confirm-email))$/.test(safe.split('?')[0])) return safe;
   return privateRoute(safe) ? `/#${safe}` : safe;
 }
 export function readBrowserRoute() {

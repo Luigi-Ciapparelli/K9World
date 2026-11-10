@@ -6,17 +6,16 @@ import { useRouter } from '../lib/RouterContext';
 import type { ProfessionalType, Role } from '../lib/types';
 import { loadFciBreeds, normalizeBreedSearch, type FciBreed } from '../lib/fciBreeds';
 import { bookingAuthPath, bookingDestination } from '../lib/bookingEntry';
-import { supabase } from '../lib/supabase';
+import { SignupConfirmationResend } from '../components/SignupConfirmationResend';
+import { confirmationPage } from '../lib/signupConfirmation';
 
 export function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [confirmationInfo, setConfirmationInfo] = useState('');
-  const [resending, setResending] = useState(false);
   const { signIn } = useAuth();
-  const { navigate, path } = useRouter();
+  const { navigate, path, params } = useRouter();
   const destination = bookingDestination(path);
 
   const submit = async (e: React.FormEvent) => {
@@ -39,6 +38,7 @@ export function SignInPage() {
 
   return (
     <AuthFrame title="Bentornato" subtitle={destination ? 'Accedi per continuare la richiesta al professionista scelto.' : 'Accedi al tuo account PortaleCinofilo'}>
+      {params.fromContacts && <p role="status" className="mb-4 rounded-xl bg-amber-50 p-3 text-sm text-stone-800">Per vedere i tuoi recapiti devi accedere. Se sei arrivato qui dall’email, il link non ha restituito un esito di conferma. Apri l’ultima email oppure richiedine una nuova qui sotto.</p>}
       <form onSubmit={submit} className="space-y-4">
         <Field icon={<Mail className="w-4 h-4" />} type="email" placeholder="Email" value={email} onChange={setEmail} autoComplete="username" required />
         <Field icon={<Lock className="w-4 h-4" />} type="password" placeholder="Password" value={password} onChange={setPassword} autoComplete="current-password" required />
@@ -51,17 +51,9 @@ export function SignInPage() {
           Non hai un account? <button type="button" onClick={() => navigate(bookingAuthPath('signup', destination))} className="text-emerald-700 font-semibold">Registrati</button>
         </p>
         <div className="border-t border-stone-200 pt-4 text-sm text-stone-600">
-          <p>Non hai ricevuto la conferma? Inserisci la tua email nel campo sopra.</p>
-          <button type="button" disabled={resending || !email.trim()} className="mt-2 font-semibold text-emerald-700 underline disabled:opacity-50" onClick={async () => {
-            if (resending) return;
-            setResending(true); setConfirmationInfo('');
-            try {
-              const result = await supabase.auth.resend({ type:'signup', email:email.trim(), options:{emailRedirectTo:window.location.origin+'/account/contacts'} });
-              setConfirmationInfo(result.error ? 'Invio non riuscito. Attendi un minuto e riprova; se persiste, contatta info@portalecinofilo.com.' : 'Se l’indirizzo è in attesa di conferma, riceverai una nuova email. Controlla anche lo spam.');
-            } catch { setConfirmationInfo('Invio non confermato. Controlla la connessione e riprova.'); }
-            finally { setResending(false); }
-          }}>{resending ? 'Invio in corso…' : 'Reinvia email di conferma'}</button>
-          {confirmationInfo && <p role="status" className="mt-2">{confirmationInfo}</p>}
+          <p>Se devi ancora confermare l’indirizzo, inserisci la tua email nel campo sopra. Non serve registrarti di nuovo.</p>
+          <SignupConfirmationResend email={email} />
+          <button type="button" className="mt-3 text-sm font-semibold text-emerald-700 underline" onClick={() => navigate(confirmationPage, { email: email.trim(), mode: 'code' })}>Ho un codice nell’email</button>
         </div>
       </form>
     </AuthFrame>

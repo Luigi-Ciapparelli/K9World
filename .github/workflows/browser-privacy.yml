@@ -18,6 +18,14 @@ on:
       - 'src/lib/legalNotices.ts'
       - 'src/lib/AuthContext.tsx'
       - 'src/pages/AuthPages.tsx'
+      - 'src/pages/ConfirmEmailPage.tsx'
+      - 'src/lib/signupConfirmation.ts'
+      - 'src/lib/supabase.ts'
+      - 'src/lib/routeUrls.ts'
+      - 'src/components/SignupConfirmationResend.tsx'
+      - 'scripts/tests/test_signup_confirmation_ui.mjs'
+      - 'scripts/tests/test_password_recovery_ui.mjs'
+      - 'src/lib/passwordRecovery.ts'
       - 'scripts/tests/test_browser_privacy_ui.mjs'
       - 'scripts/tests/test_privacy_requests_ui.mjs'
       - 'scripts/tests/test_professional_signup_ui.mjs'
@@ -32,7 +40,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    # Playwright 1.56 supports this runner; ubuntu-latest can upgrade before the browser does.
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     env:
       VITE_PROFESSIONAL_CONTINUITY: 'true'
@@ -72,4 +81,6 @@ jobs:
           done
           node scripts/tests/test_browser_privacy_ui.mjs
           node scripts/tests/test_professional_signup_ui.mjs
+          node scripts/tests/test_signup_confirmation_ui.mjs
+          node scripts/tests/test_password_recovery_ui.mjs
           node scripts/tests/test_privacy_requests_ui.mjs

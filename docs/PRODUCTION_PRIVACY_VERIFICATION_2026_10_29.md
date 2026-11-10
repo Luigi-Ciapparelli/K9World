@@ -113,3 +113,10 @@ Nessun pixel, tracciamento pubblicitario o banner generico viene aggiunto da
 questo incremento. Le direttive future PLUTO-01, MATCH-01 e MEDIA-01 restano ferme.
 
 Riferimento Storage: [restrizioni dei bucket](https://supabase.com/docs/guides/storage/buckets/creating-buckets).
+
+10 novembre — La prova con la casella del gestore si è fermata dopo il clic
+nell’email: il login indicava indirizzo non confermato. Corretto il ritorno
+all’app perché mostri l’esito del link e consenta il reinvio. Il test locale
+del browser non attesta la consegna, il contenuto del template ospitato o il
+successo della conferma per l’account reale. Il punto da riprendere è il
+primo accesso con l’ultima email, prima della verifica della candidatura.
