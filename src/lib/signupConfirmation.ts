@@ -39,6 +39,15 @@ export function captureSignupReturn(): Incoming {
   return { state: code === 'otp_expired' ? 'expired' : 'invalid' };
 }
 
+// The SDK passes its parsed snapshot to this hook before consuming the grant.
+// Remove the original credential-bearing history entry before the SDK changes the hash.
+export function detectSignupGrant(url: URL, params: Record<string, string>) {
+  if (url.pathname === confirmationPage && params.access_token && ['signup', 'email'].includes(params.type)) {
+    window.history.replaceState(window.history.state, '', confirmationPage);
+  }
+  return Boolean(params.access_token || params.error || params.error_code || params.error_description);
+}
+
 export async function resolveSignupReturn(auth: SupabaseClient['auth'], incoming: Incoming): Promise<ConfirmationResult> {
   if (incoming.state !== 'grant') return incoming;
   try {
@@ -56,7 +65,7 @@ export async function resolveSignupReturn(auth: SupabaseClient['auth'], incoming
   } catch {
     return { state: 'unavailable' };
   } finally {
-    if (window.location.pathname === confirmationPage && window.location.hash && !window.location.hash.startsWith('#/')) {
+    if (window.location.pathname === confirmationPage && !window.location.hash.startsWith('#/') && window.location.href !== window.location.origin + confirmationPage) {
       window.history.replaceState(window.history.state, '', confirmationPage);
     }
   }

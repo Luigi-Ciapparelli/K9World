@@ -48,12 +48,18 @@ try {
     ['/account/contacts#' + grant, { confirmed:false }, 'Link non valido'],
     [pagePath, { stored:true }, 'Conferma la tua email'],
   ]) {
-    const t = await setup(options); await t.page.goto(base + path);
+    const t = await setup(options);
+    if (heading === 'Email confermata') await t.page.goto(base + '/signin');
+    await t.page.goto(base + path);
     await t.page.getByRole('heading', { name: heading, exact: true }).waitFor();
     assert.equal(t.page.url(), base + pagePath);
     assert.equal(await t.page.getByText('PrivateProviderDetail').count(), 0);
     assert.deepEqual(t.writes, [], 'Reading a callback must not resend, approve or write to profiles');
-    if (heading === 'Email confermata') await t.page.getByRole('button',{name:'Continua nel tuo account'}).waitFor();
+    if (heading === 'Email confermata') {
+      await t.page.getByRole('button',{name:'Continua nel tuo account'}).waitFor();
+      await t.page.goBack();
+      assert.doesNotMatch(t.page.url(), /access_token|refresh_token|synthetic-access/);
+    }
     await t.close();
   }
   const normal = await setup(); await normal.page.goto(base + '/account/contacts');
