@@ -11,7 +11,7 @@ const storageKey = 'sb-pc-home-test-auth-token';
 const markerKey = 'pc-password-recovery-v1';
 const errors = [];
 function session(id = uid) {
-  return { access_token: 'synthetic-recovery-' + id, refresh_token: 'synthetic-refresh-' + id, expires_in: 3600, expires_at: Math.floor(Date.now() / 1000) + 3600, token_type: 'bearer', user: { id, email: id === uid ? 'pilot@example.invalid' : 'other@example.invalid', role: 'authenticated', aud: 'authenticated', app_metadata: { provider: 'email', providers: ['email'] }, user_metadata: {} } };
+  return { access_token: 'synthetic-recovery-' + id, refresh_token: 'synthetic-refresh-' + id, expires_in: 3600, expires_at: Math.floor(Date.now() / 1000) + 3600, token_type: 'bearer', user: { id, email_confirmed_at: '2026-01-01T12:00:00Z', email: id === uid ? 'pilot@example.invalid' : 'other@example.invalid', role: 'authenticated', aud: 'authenticated', app_metadata: { provider: 'email', providers: ['email'] }, user_metadata: {} } };
 }
 const authError = (route, status, code) => route.fulfill({ status, headers: { 'x-supabase-api-version': '2024-01-01' }, json: { code, error_code: code, msg: 'Synthetic Auth error' } });
 function callback(path = '/reset-password', type = 'recovery') {
@@ -162,9 +162,10 @@ try {
 
   const confirmation = await setup();
   await confirmation.page.goto(callback('/', 'signup'));
-  await confirmation.page.getByRole('heading', { level: 1 }).waitFor();
+  await confirmation.page.getByRole('heading', { name: 'Email confermata', exact: true }).waitFor();
   assert.equal(await form(confirmation.page).count(), 0, 'Signup confirmation is not password recovery');
-  assert.equal(new URL(confirmation.page.url()).pathname, '/');
+  assert.equal(confirmation.page.url(), base + '/account/confirm-email');
+  assert.equal(confirmation.writes.length, 0, 'A signup callback must not change a password');
   await confirmation.context.close();
   assert.deepEqual(errors, []);
   console.log('OK: richiesta email, risposta generica, rate limit, callback Supabase, ricarica, validazione password, errore e retry, disconnessione e nuovo accesso; link scaduti, sessioni diverse, callback rifiutati e conferma signup isolati. API simulate; nessuna email reale inviata.');

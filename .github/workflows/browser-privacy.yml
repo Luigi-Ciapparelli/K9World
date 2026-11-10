@@ -24,6 +24,8 @@ on:
       - 'src/lib/routeUrls.ts'
       - 'src/components/SignupConfirmationResend.tsx'
       - 'scripts/tests/test_signup_confirmation_ui.mjs'
+      - 'scripts/tests/test_password_recovery_ui.mjs'
+      - 'src/lib/passwordRecovery.ts'
       - 'scripts/tests/test_browser_privacy_ui.mjs'
       - 'scripts/tests/test_privacy_requests_ui.mjs'
       - 'scripts/tests/test_professional_signup_ui.mjs'
