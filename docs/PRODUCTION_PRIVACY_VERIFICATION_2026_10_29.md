@@ -98,15 +98,14 @@ e `/privacy` ha restituito HTML con stato 200 su www.portalecinofilo.com.
 Questa verifica della disponibilità delle pagine non ha inviato moduli o email
 e non prova il funzionamento della registrazione.
 
-**Prossimo passo prima degli inviti:** usare una casella di prova controllata
-dal gestore e partire da [Per i professionisti](https://www.portalecinofilo.com/become-pro)
-→ **Crea il tuo profilo**. Verificare che la conferma ricevuta consenta
-l'accesso all'area professionale, ma non renda l'addestratore ricercabile
-prima della revisione di identità e qualifica. Verificare la candidatura dal
-lato amministratore; non approvare un profilo fittizio. Registrare solo
-passato/bloccato e il passaggio interessato, mai email, link di conferma,
-documenti o codici. È una verifica del percorso attuale, distinta dalla
-ricostruzione dei servizi a partire dal backup.
+**Prossimo passo prima degli inviti, aggiornato l’11 novembre:** usare lo
+stesso account di prova già registrato e confermato, senza crearne un altro.
+In una finestra privata aprire Accedi e provare email e password: la sessione
+creata dal link non basta a collaudare questo accesso. Verificare l’ingresso
+nell’area professionale e la candidatura dal lato amministratore, senza
+approvare un profilo fittizio. Registrare solo passato/bloccato e il passaggio
+interessato, mai email, link di conferma, documenti o codici. È una verifica
+del percorso attuale, distinta dalla ricostruzione dei servizi dal backup.
 
 Cookie e local storage tecnici mantengono inventario e comandi già implementati.
 Nessun pixel, tracciamento pubblicitario o banner generico viene aggiunto da
@@ -118,5 +117,20 @@ Riferimento Storage: [restrizioni dei bucket](https://supabase.com/docs/guides/s
 nell’email: il login indicava indirizzo non confermato. Corretto il ritorno
 all’app perché mostri l’esito del link e consenta il reinvio. Il test locale
 del browser non attesta la consegna, il contenuto del template ospitato o il
-successo della conferma per l’account reale. Il punto da riprendere è il
-primo accesso con l’ultima email, prima della verifica della candidatura.
+successo della conferma per l’account reale. Correzione integrata in main
+con `c66073c` (PR #19), test browser e deployment Vercel completati; pagina
+di conferma osservata sul dominio pubblico.
+
+11 novembre — Luigi riferisce **email confermata**. Un controllo SQL remoto
+in sola lettura, con soli conteggi aggregati, conferma che l’unico account
+professionale creato dal 10 novembre ha email confermata in Auth e flag
+email verificata nel profilo. La candidatura resta `pending`, con
+`approved=false`; il profilo è assente dalla proiezione pubblica.
+Nessun account o permesso è stato modificato per questo controllo.
+
+Questo chiude la prova della conferma email e del mantenimento dello stato
+di candidatura. Resta da registrare l’esito dell’accesso con password
+dell’account già creato e della lettura della candidatura nel pannello admin.
+Non approvare automaticamente il profilo, non reinviare conferme già
+concluse e non interpretare il risultato come verifica completa dei servizi
+o attestazione generale di conformità.
