@@ -1,0 +1,50 @@
+name: Professional agenda
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/professional-agenda.yml'
+      - 'src/pages/pro/**'
+      - 'src/components/ManualAppointmentDialog.tsx'
+      - 'src/lib/manualAppointments.ts'
+      - 'src/professional-workspace.css'
+      - 'supabase/migrations/*_professional_manual_appointments.sql'
+      - 'scripts/tests/*manual_appointments*'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      VITE_PROFESSIONAL_CONTINUITY: 'true'
+      VITE_SUPABASE_URL: 'https://pc-home-test.supabase.co'
+      VITE_SUPABASE_ANON_KEY: 'synthetic-test-public-key'
+      PC_TEST_BASE_URL: 'http://127.0.0.1:5240'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: npm ci
+      - run: npm run typecheck && npm run build
+      - run: npx --no-install playwright install --with-deps chromium
+      - name: Full height rail, mobile menu and manual appointment lifecycle
+        run: |
+          set -euo pipefail
+          node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5240 --strictPort > "$RUNNER_TEMP/studio-vite.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail "$PC_TEST_BASE_URL" >/dev/null; then break; fi
+            sleep 1
+          done
+          PC_SCREENSHOTS="$RUNNER_TEMP/studio-screens" node scripts/tests/test_manual_appointments_ui.mjs
+      - name: Synthetic desktop and mobile previews
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: studio-professionista
+          path: ${{ runner.temp }}/studio-screens
+          retention-days: 7

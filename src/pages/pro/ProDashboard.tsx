@@ -5,9 +5,10 @@ import { ClientPortrait, useClientPortraits } from '../../components/ClientPortr
 import { ServiceReviewNotice } from '../../components/ServiceReviews';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import { ArrowRight, Bell, Calendar, Check, Settings, Users, X } from 'lucide-react';
+import { ArrowRight, Bell, Calendar, CalendarPlus, Check, Settings, Users, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { acceptanceError } from '../../lib/professionalCalendar';
+import { useManualAppointments } from '../../lib/manualAppointments';
+import { addDays, calendarTime, dayLabel, romeDay, acceptanceError } from '../../lib/professionalCalendar';
 import { BookingConversation } from '../../components/BookingConversation';
 import { BookingMessageInbox } from '../../components/BookingMessageInbox';
 import { useAuth } from '../../lib/AuthContext';
@@ -34,6 +35,8 @@ export function ProDashboard() {
   const [nextError, setNextError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [reloadKey, setReloadKey] = useState(0);
+  const todayKey = romeDay();
+  const manual = useManualAppointments(profile?.role === 'professional' ? userId : undefined,todayKey,addDays(todayKey,1),reloadKey);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [notice, setNotice] = useState<{ error: boolean; text: string } | null>(null);
   const details = useBookingDetails([...pending.rows, ...today.rows, ...(next ? [next] : [])].map(booking => booking.id), reloadKey);
@@ -130,19 +133,15 @@ export function ProDashboard() {
 
   return (
     <ProLayout active="dashboard">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-10 text-[var(--pc-ink-950)]">
-        <header className="mb-7">
-          <p className="pc-kicker">La tua attività</p>
-          <h1 className="pc-display text-4xl md:text-5xl font-semibold mt-2">{firstName ? `Ciao, ${firstName}.` : 'La tua area professionale'}</h1>
-          <p className="text-[var(--pc-muted-600)] text-lg mt-3">Gestisci le richieste e organizza il lavoro con clienti e cani.</p>
-        </header>
-        <button className="pg-dashboard-entry" onClick={() => navigate('/pro/settings')}><span><strong>Il tuo profilo, un passo alla volta.</strong><small>Completa le basi e scopri gli strumenti con una guida.</small></span><span>Apri il percorso <ArrowRight size={18} /></span></button>
-
+      <div className="pg-desk max-w-7xl mx-auto px-4 sm:px-6 py-6 text-[var(--pc-ink-950)]">
+        <header className="pg-daybreak"><div><p className="pg-day-stamp"><Calendar size={15} /> {dayLabel(todayKey,true)}</p>
+          <h1>{firstName ? `Ciao, ${firstName}.` : 'La tua giornata'}</h1><p>Gli appuntamenti di oggi e le richieste da gestire.</p></div>
+          <div className="pg-day-actions"><button className="pg-agenda-cta" onClick={()=>navigate('/pro/calendar?new=1')}><CalendarPlus size={19} /> Nuovo appuntamento</button>
+          <button className="pg-day-link" onClick={()=>navigate('/pro/calendar')}>Apri calendario</button></div></header>
         {notice && <p role={notice.error ? 'alert' : 'status'} className="pc-card p-4 mb-5 text-sm">{notice.text}</p>}
-        <BookingMessageInbox professional />
-        <ServiceReviewNotice professional />
 
-        <div className="grid xl:grid-cols-2 gap-6">
+
+        <div className="pg-desk-panels">
           <section className="pc-card p-5 md:p-6" aria-labelledby="pro-requests-title" aria-busy={loading}>
             <p className="pc-kicker">Da gestire</p>
             <h2 id="pro-requests-title" className="pc-display text-2xl font-semibold mt-1">Richieste in attesa{!loading && !pending.error ? ` · ${pending.count}` : ''}</h2>
@@ -168,22 +167,29 @@ export function ProDashboard() {
 
           <section className="pc-card p-5 md:p-6" aria-labelledby="pro-today-title" aria-busy={loading}>
             <p className="pc-kicker">Agenda di oggi</p>
-            <h2 id="pro-today-title" className="pc-display text-2xl font-semibold mt-1">Appuntamenti accettati{!loading && !today.error ? ` · ${today.count}` : ''}</h2>
-            <p className="mt-2 text-sm text-[var(--pc-muted-600)]">Orari italiani, come nel calendario. Appuntamenti con inizio oggi.</p>
+            <h2 id="pro-today-title" className="pc-display text-2xl font-semibold mt-1">I tuoi appuntamenti</h2>
+            <p className="mt-2 text-sm text-[var(--pc-muted-600)]">Prenotazioni confermate e appuntamenti segnati da te, in ora italiana.</p>
             <div className="mt-5">
-              {loading ? <Loading /> : today.error ? <LoadError onRetry={retry} /> : today.rows.length === 0 ? <p className="text-sm text-[var(--pc-muted-600)]">Nessun appuntamento accettato con inizio oggi.</p> : (
-                <div className="divide-y divide-[var(--pc-line)]">{today.rows.map((booking) => <div key={booking.id} className="py-4 first:pt-0"><BookingSummary booking={booking} portrait={portraits[booking.id]} details={details.rows[booking.id]} loading={details.loading} onRetry={details.retry} /></div>)}</div>
-              )}
+              {loading && <Loading />}{today.error && <LoadError onRetry={retry} />}
+              {manual.loading && <p role="status" className="text-sm">Caricamento agenda privata…</p>}
+              {manual.error && <p className="pg-agenda-warning" role="alert">Appuntamenti manuali non caricati. <button onClick={retry}>Riprova</button></p>}
+              {!loading && !manual.loading && !today.error && !manual.error && !today.count && !manual.rows.length && <p className="text-sm text-[var(--pc-muted-600)]">Nessun appuntamento in agenda per oggi.</p>}
+              {[...today.rows.map(b=>({kind:'online' as const, b, start:b.start_at})),...manual.rows.map(a=>({kind:'manual' as const,a,start:a.start_at}))]
+                .sort((a,b)=>Date.parse(a.start)-Date.parse(b.start)).slice(0,5).map(item=>item.kind==='online'
+                  ? <div key={'online-'+item.b.id} className="py-4"><BookingSummary booking={item.b} portrait={portraits[item.b.id]} details={details.rows[item.b.id]} loading={details.loading} onRetry={details.retry} /></div>
+                  : <div className="pg-desk-manual" key={'manual-'+item.a.id}><time>{romeDay(item.start)<todayKey?'In corso':calendarTime(item.start)}</time><span><strong>{item.a.service_name}{item.a.dog_label ? ' · '+item.a.dog_label : ''}</strong><small>Segnato in agenda{item.a.instructor_name ? ' · '+item.a.instructor_name : ''}</small></span></div>)}
+              {!loading && !manual.loading && !today.error && !manual.error && today.count+manual.rows.length>5 && <p className="mt-3 text-sm">Altri {today.count+manual.rows.length-5} impegni in calendario.</p>}
             </div>
-            {!loading && !today.error && today.count > today.rows.length && <p className="mt-4 text-sm text-[var(--pc-muted-600)]">Mostrati {today.rows.length} appuntamenti su {today.count}.</p>}
-            <SectionLink onClick={() => navigate('/pro/bookings')}>Apri prenotazioni</SectionLink>
+            <SectionLink onClick={() => navigate('/pro/calendar')}>Apri l’agenda di oggi</SectionLink>
           </section>
         </div>
+        <BookingMessageInbox professional />
+        <ServiceReviewNotice professional />
 
         <section className="pc-card p-5 md:p-6 mt-6" aria-labelledby="pro-next-title" aria-busy={loading}>
           <p className="pc-kicker">In programma</p>
-          <h2 id="pro-next-title" className="pc-display text-2xl font-semibold mt-1">Prossimo impegno</h2>
-          <div className="mt-4">{loading ? <Loading /> : nextError ? <LoadError onRetry={retry} /> : next ? <BookingSummary booking={next} portrait={portraits[next.id]} details={details.rows[next.id]} loading={details.loading} onRetry={details.retry} /> : <p className="text-sm text-[var(--pc-muted-600)]">Non ci sono appuntamenti accettati con inizio futuro.</p>}</div>
+          <h2 id="pro-next-title" className="pc-display text-2xl font-semibold mt-1">Prossima prenotazione online</h2>
+          <div className="mt-4">{loading ? <Loading /> : nextError ? <LoadError onRetry={retry} /> : next ? <BookingSummary booking={next} portrait={portraits[next.id]} details={details.rows[next.id]} loading={details.loading} onRetry={details.retry} /> : <p className="text-sm text-[var(--pc-muted-600)]">Nessuna prenotazione online accettata con inizio futuro.</p>}</div>
           <SectionLink onClick={() => navigate('/pro/bookings')}>Consulta prenotazioni</SectionLink>
         </section>
         <section aria-label="Strumenti professionali" className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-7">

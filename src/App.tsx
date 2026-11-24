@@ -267,11 +267,13 @@ function AppShell() {
   else if (basePath === '/pro/settings') content = <ProSettings />;
   else content = <NotFoundPage />;
 
-  const showFooter = !/^\/(owner|pro|admin)(\/|$)/.test(basePath);
+  const inStudio = (isProRoute && ['professional', 'admin'].includes(profile?.role || '')) ||
+    (profile?.role === 'professional' && ['/account/centres', '/account/centre-agenda'].includes(basePath));
+  const showFooter = !inStudio && !/^\/(owner|pro|admin)(\/|$)/.test(basePath);
 
   return (
     <>
-      <Navbar />
+      {!inStudio && <Navbar />}
       <ConnectionNotice />
       <PageErrorBoundary key={`${user?.id || 'visitor'}:${basePath}`}>
       <Suspense fallback={<PageLoading />}>

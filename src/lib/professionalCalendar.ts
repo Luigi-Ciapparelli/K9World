@@ -34,7 +34,7 @@ export function monthDays(month: string) {
   const offset = (new Date(`${first}T12:00:00Z`).getUTCDay() + 6) % 7;
   return Array.from({ length: 42 }, (_, i) => addDays(first, i - offset));
 }
-export function bookingOnDay(booking: CalendarBooking, day: string) {
+export function bookingOnDay(booking: Pick<CalendarBooking, 'start_at' | 'end_at'>, day: string) {
   const start = new Date(booking.start_at).getTime();
   const end = Math.max(start, new Date(booking.end_at).getTime() - 1);
   return romeDay(new Date(start)) <= day && romeDay(new Date(end)) >= day;
@@ -65,6 +65,7 @@ export function bookingAvailabilityError(error: unknown): string | null {
   return null;
 }
 export function acceptanceError(error: unknown) {
+  if ((error as { code?: string } | null)?.code === 'PCJ01') return 'Orario già occupato da un appuntamento manuale. Verifica la tua agenda prima di accettare.';
   if ((error as { code?: string } | null)?.code === 'PCR01') return 'Puoi confermare un servizio svolto solo dopo il suo orario di fine.';
   return (error as { code?: string } | null)?.code === 'PCA02'
     ? 'Richiesta ancora in attesa: il periodo è segnato come indisponibile. Gestisci l’indisponibilità nel Calendario prima di accettare.'

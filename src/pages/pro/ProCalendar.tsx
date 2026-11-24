@@ -1,10 +1,12 @@
 import {shiftsForDay,type InstructorShifts} from '../../lib/instructorShifts';
 import {absenceTimeLabel,type InstructorAbsence} from '../../lib/instructorTimeOff';
+import { ManualAppointmentDialog } from '../../components/ManualAppointmentDialog';
+import { useManualAppointments, type ManualAppointment } from '../../lib/manualAppointments';
 import { BookingInstructor, InstructorLoadError } from '../../components/BookingInstructor';
 import { useBookingInstructors, type CentreTeam } from '../../lib/centreTeam';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { ClientPortrait, useClientPortraits } from '../../components/ClientPortrait';
-import { CalendarDays, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
+import { CalendarDays, CalendarPlus, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
 import { supabase } from '../../lib/supabase';
@@ -22,14 +24,21 @@ const input = 'mt-1 block w-full rounded-xl border border-stone-300 bg-white px-
 
 export function ProCalendar() {
   const { user, profile } = useAuth();
-  return <ProLayout active="calendar">{user && profile?.role === 'professional'
+  const {path}=useRouter();
+  const creating = new URLSearchParams(path.split('?')[1]).get('new') === '1';
+  return <ProLayout active={creating ? 'new-appointment' : 'calendar'}>{user && profile?.role === 'professional'
     ? <CalendarContent key={user.id} />
     : <p className="p-6">Accedi con il tuo account professionista per consultare il calendario.</p>}
   </ProLayout>;
 }
 
 function CalendarContent() {
-  const { navigate } = useRouter();
+  const { path, navigate } = useRouter();
+  const { user } = useAuth();
+  const creating = new URLSearchParams(path.split('?')[1]).get('new') === '1';
+  const [editing, setEditing] = useState<ManualAppointment | undefined>();
+  const openNew = () => { setEditing(undefined); navigate('/pro/calendar?new=1'); };
+  const closeDialog = () => { setEditing(undefined); if (creating) navigate('/pro/calendar'); };
   const today = romeDay();
   const [month, setMonth] = useState(today.slice(0, 7));
   const [selected, setSelected] = useState(today);
@@ -61,6 +70,7 @@ function CalendarContent() {
   const days = useMemo(() => monthDays(month), [month]);
   const from = days[0];
   const to = addDays(days[41], 1);
+  const manual = useManualAppointments(user?.id, from, to, reload);
   const refresh = () => setReload((n) => n + 1);
   const instructors = useBookingInstructors(bookings.map(b => b.id), reload);
 
@@ -146,10 +156,15 @@ function CalendarContent() {
     && instructorFilterReady && (instructor === 'all' || (instructor === 'unassigned'
       ? instructors.rows[booking.id]?.can_assign && !instructors.rows[booking.id]?.instructor_id
       : instructors.rows[booking.id]?.instructor_id === instructor)));
+  const visibleManual = manual.rows.filter(a => (service === 'all' || a.service_id === service)
+    && (instructor === 'all' || (instructor === 'unassigned' ? !a.instructor_id : a.instructor_id === instructor)));
+  const selectedManual = visibleManual.filter(a => bookingOnDay(a, selected));
+  const monthEvents = [...visible.map(b => ({ ...b, label: [b.client_name,b.service_name,instructors.rows[b.id]?.instructor_name].filter(Boolean).join(' · '), key: 'web-'+b.id })),
+    ...visibleManual.map(a => ({ ...a, label: [a.dog_label,a.service_name,a.instructor_name].filter(Boolean).join(' · '), key:'manual-'+a.id }))].sort((a,b)=>Date.parse(a.start_at)-Date.parse(b.start_at));
   const selectedBookings = visible.filter((booking) => bookingOnDay(booking, selected));
   const portraits = useClientPortraits([], selectedBookings.map(booking => booking.id), reload);
   const selectedPeriods = schedule?.periods.filter((period) => period.start_date <= selected && period.end_date >= selected) || [];
-  const legend = Array.from(new Map(bookings.map((booking) => [booking.service_id || 'deleted', booking])).entries());
+  const legend = Array.from(new Map([...bookings, ...manual.rows].map((booking) => [booking.service_id || 'deleted', booking])).entries());
 
   const perform = async (work: () => Promise<string>) => {
     if (lock.current || loading || !schedule) return;
@@ -220,20 +235,19 @@ function CalendarContent() {
     setMonth(next); setSelected(`${next}-01`); setService('all');
   };
 
-  return <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 text-stone-900 sm:px-6">
+  return <div className="pg-agenda-page mx-auto max-w-7xl space-y-5 px-4 py-6 text-stone-900 sm:px-6">
+    {(creating || editing) && <ManualAppointmentDialog key={editing?.id || 'new'} initial={editing} initialDay={selected} team={team} teamError={teamError} onClose={closeDialog}
+      onSaved={(date, removed) => { closeDialog(); setSelected(date); setMonth(date.slice(0,7)); setService('all'); setInstructor('all'); setNotice({error:false,text:removed?'Appuntamento rimosso.':'Appuntamento salvato in agenda.'}); refresh(); }} />}
     <header className="flex flex-wrap items-start justify-between gap-4">
       <div><p className="pc-kicker">La tua attività</p><h1 className="mt-2 text-3xl font-semibold">Calendario e disponibilità</h1>
         <p className="mt-2 text-sm text-stone-600">Impegni per servizio, richieste e periodi di assenza. Date e orari seguono l’ora italiana.</p></div>
-      <div className="flex flex-wrap gap-2"><button type="button" disabled={busy || loading} onClick={refresh} className={button}><RefreshCw className="mr-2 inline h-4 w-4" />Aggiorna</button>
+      <div className="flex flex-wrap gap-2"><button type="button" className="pg-agenda-cta" onClick={openNew}><CalendarPlus size={19} /> Nuovo appuntamento</button><button type="button" disabled={busy || loading} onClick={refresh} className={button}><RefreshCw className="mr-2 inline h-4 w-4" />Aggiorna</button>
         <button type="button" onClick={() => navigate('/pro/settings')} className={button}>Servizi e colori</button></div>
     </header>
     {notice && <p role={notice.error ? 'alert' : 'status'} className={`rounded-2xl border p-4 text-sm ${notice.error ? 'border-amber-300 bg-amber-50 text-amber-950' : 'border-emerald-200 bg-emerald-50 text-emerald-950'}`}>{notice.text}</p>}
     {loadError && <div role="alert" className="rounded-2xl border border-rose-200 bg-white p-5"><p>Calendario non caricato. Riprova tra poco.</p><button type="button" onClick={refresh} className={`${button} mt-3`}>Riprova</button></div>}
-    <section aria-label="Ricezione delle richieste" className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-stone-200 bg-white p-5">
-      <div><h2 className="font-bold">{loading ? 'Caricamento disponibilità…' : schedule ? schedule.paused ? 'Nuove richieste sospese' : 'Ricezione richieste attiva' : 'Disponibilità non caricata'}</h2>
-        <p className="mt-1 max-w-2xl text-sm text-stone-600">La sospensione dura fino alla riattivazione. Per un’assenza con termine automatico, aggiungi un periodo di indisponibilità. Gli appuntamenti accettati restano confermati.</p></div>
-      <button type="button" disabled={busy || loading || !schedule} onClick={togglePause} className={primary}>{schedule?.paused ? 'Riattiva nuove richieste' : 'Sospendi nuove richieste'}</button>
-    </section>
+    {manual.error && <p role="alert" className="pg-agenda-warning">Appuntamenti manuali non caricati. Verifica prima di considerare libero un orario. <button onClick={refresh}>Riprova agenda privata</button></p>}
+    {manual.loading && <p role="status" className="text-sm">Caricamento appuntamenti manuali…</p>}
     <section aria-label="Calendario mensile" className="overflow-hidden rounded-2xl border border-stone-200 bg-white">
       <div className="flex flex-wrap items-center justify-between gap-3 p-4">
         <h2 className="text-xl font-bold capitalize">{new Intl.DateTimeFormat('it-IT', { timeZone: 'UTC', month: 'long', year: 'numeric' }).format(new Date(`${month}-01T12:00:00Z`))}</h2>
@@ -258,10 +272,10 @@ function CalendarContent() {
       {teamError && <p role="alert" className="px-4 pb-3 text-sm">Elenco istruttori non caricato: sono mostrati tutti gli impegni. <button className="underline" onClick={refresh}>Riprova</button></p>}
       {instructors.error && <div className="px-4"><InstructorLoadError retry={instructors.reload} />{instructor !== 'all' && <button className="mb-3 underline text-sm" onClick={() => setInstructor('all')}>Mostra tutti gli impegni</button>}</div>}
       <div className="flex flex-wrap gap-x-4 gap-y-2 px-4 pb-4 text-xs">{legend.map(([id, booking]) => <span key={id} className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full border border-stone-300" aria-hidden="true" style={{ backgroundColor: serviceColor(booking.calendar_color) }} />{booking.service_name}</span>)}</div>
-      {loading || !instructorFilterReady ? <p role="status" className="p-6 text-stone-600">{instructors.error ? 'Ripristina il caricamento degli istruttori o mostra tutti gli impegni.' : 'Caricamento impegni…'}</p> : !loadError && <>
+      {(loading || !instructorFilterReady) && !visibleManual.length ? <p role="status" className="p-6 text-stone-600">{instructors.error ? 'Ripristina il caricamento degli istruttori o mostra tutti gli impegni.' : 'Caricamento impegni…'}</p> : <>
         <div className="grid grid-cols-7 border-t border-stone-200 bg-stone-50 text-center text-xs font-bold">{['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'].map((day) => <div key={day} className="py-2">{day}</div>)}</div>
         <div className="grid grid-cols-7">{days.map((day) => {
-          const events = visible.filter((booking) => bookingOnDay(booking, day));
+          const events = monthEvents.filter((booking) => bookingOnDay(booking, day));
           const dayAbsences = absences.filter(p=>p.start_date<=day&&p.end_date>=day);
           const instructorAbsent = dayAbsences.some(p=>!p.start_time);
           const instructorPartial = !instructorAbsent && dayAbsences.length>0;
@@ -275,8 +289,8 @@ function CalendarContent() {
               {weekly?.enabled&&!shiftsForDay(weekly.slots,day).length&&<span className="block break-words rounded bg-stone-100 px-1 text-[10px] text-stone-700">Fuori turno</span>}
               {instructorAbsent && <span className="block break-words rounded bg-amber-100 px-1 text-[10px] text-amber-950">Istruttore assente</span>}
               {instructorPartial && <span className="block break-words rounded bg-amber-100 px-1 text-[10px] text-amber-950">Orari bloccati</span>}
-              {events.slice(0, 3).map((booking) => <span key={booking.id} className="mt-1 block truncate border-l-4 pl-1 text-[10px] text-stone-800 sm:text-xs" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
-                {romeDay(booking.start_at) === day ? calendarTime(booking.start_at) : '↳'} <span className="hidden sm:inline">{booking.client_name} · {booking.service_name}{instructors.rows[booking.id]?.instructor_name ? ` · ${instructors.rows[booking.id].instructor_name}` : ''}</span><span className="sm:hidden">{booking.service_name}</span>
+              {events.slice(0, 3).map((booking) => <span key={booking.key} className="mt-1 block truncate border-l-4 pl-1 text-[10px] text-stone-800 sm:text-xs" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
+                {romeDay(booking.start_at) === day ? calendarTime(booking.start_at) : '↳'} <span className="hidden sm:inline">{booking.label}</span><span className="sm:hidden">{booking.service_name}</span>
               </span>)}
               {events.length > 3 && <span className="mt-1 block text-xs font-semibold text-stone-700">+{events.length - 3}</span>}
             </div>
@@ -284,21 +298,30 @@ function CalendarContent() {
         })}</div>
       </>}
     </section>
-    {!loading && !loadError && instructorFilterReady && <section aria-label="Impegni del giorno" className="space-y-3">
-      <h2 className="text-xl font-bold capitalize">{dayLabel(selected, true)}</h2>
+    <section aria-label="Impegni del giorno" className="space-y-3">
+      <div className="pg-agenda-day"><h2 className="text-xl font-bold capitalize">{dayLabel(selected, true)}</h2><button type="button" className="pg-agenda-secondary" onClick={openNew}><CalendarPlus size={17} /> Aggiungi in questo giorno</button></div>
       {weekly&&<div className="rounded-xl bg-stone-50 p-3 text-sm"><p className="font-semibold">Turni dell’istruttore · ora italiana</p><p className="mt-1">{weekly.enabled?(shiftsForDay(weekly.slots,selected).map(s=>`${s.start}–${s.end}`).join(' · ')||'Fuori turno per questo giorno'):'Nessun limite settimanale attivo'}</p><p className="mt-2">Le assenze restano valide. Le lezioni già fissate sono conservate.</p></div>}
       {absences.filter(p=>p.start_date<=selected&&p.end_date>=selected).length>0&&<div className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950"><p className="font-semibold">Indisponibilità dell’istruttore selezionato</p><ul className="mt-2 space-y-1">{absences.filter(p=>p.start_date<=selected&&p.end_date>=selected).map((p,index)=><li key={index}>{absenceTimeLabel(p)}</li>)}</ul><p className="mt-2">Le lezioni già fissate restano confermate. Le schede segnalano quelle che si sovrappongono.</p></div>}
       {selectedPeriods.length > 0 && <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950">Giorno segnato come indisponibile. Gli impegni già accettati restano confermati.</p>}
-      {!selectedBookings.length && <p className="rounded-xl border border-stone-200 bg-white p-5 text-sm text-stone-600">Nessun impegno per questo giorno e questi filtri.</p>}
-      {selectedBookings.map((booking) => <article key={booking.id} className="rounded-2xl border border-stone-200 border-l-4 bg-white p-5" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
+      {!loading && !loadError && instructorFilterReady && !manual.error && !manual.loading && !selectedManual.length && !selectedBookings.length && <p className="rounded-xl border border-stone-200 bg-white p-5 text-sm text-stone-600">Nessun impegno per questo giorno e questi filtri.</p>}
+      {[...selectedBookings.map(booking=>({kind:'online' as const, booking, start:booking.start_at})), ...selectedManual.map(appointment=>({kind:'manual' as const, appointment, start:appointment.start_at}))].sort((a,b)=>Date.parse(a.start)-Date.parse(b.start)).map(entry => {
+        if (entry.kind==='manual') { const a=entry.appointment; return <article key={'manual-'+a.id} className="pg-manual-card" style={{borderLeftColor:serviceColor(a.calendar_color)}}>
+          <div><small>Segnato in agenda</small><h3>{a.service_name}{a.dog_label ? ' · '+a.dog_label : ''}</h3><p>{calendarDateTime(a.start_at)} – {calendarDateTime(a.end_at)}{a.instructor_name ? ' · '+a.instructor_name : ''}</p></div>
+          <button type="button" className="pg-agenda-secondary" onClick={()=>setEditing(a)}>Modifica</button></article>; }
+        const booking=entry.booking; return <article key={booking.id} className="rounded-2xl border border-stone-200 border-l-4 bg-white p-5" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
         <div className="flex flex-wrap items-start justify-between gap-3"><div><h3 className="font-bold flex items-center gap-3"><ClientPortrait src={portraits[booking.id]} name={booking.client_name} />{booking.client_name}</h3><p className="mt-1 text-sm">{booking.service_name}</p></div><StatusBadge status={booking.status} /></div>
         <p className="mt-3 text-sm text-stone-600">{calendarDateTime(booking.start_at)} – {calendarDateTime(booking.end_at)} · {Number(booking.price || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
         <div className="mt-3 rounded-xl bg-stone-50 p-3"><p className="text-xs font-bold text-stone-600">Note del cliente</p><p className="mt-1 whitespace-pre-wrap break-words text-sm">{booking.notes?.trim() || 'Nessuna nota inserita.'}</p></div>
         <BookingInstructor row={instructors.rows[booking.id]} professional onSaved={instructors.reload} />
         <div className="mt-4 flex flex-wrap gap-2"><BookingConversation bookingId={booking.id} professional requestNotes={booking.notes} />{booking.status === 'pending' && <><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'accepted')} className={primary}>Accetta</button><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'declined')} className={button}>Rifiuta</button></>}
           {booking.status === 'accepted' && <button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'completed')} className={primary}>Segna completata</button>}</div>
-      </article>)}
-    </section>}
+      </article>; })}
+    </section>
+    <section aria-label="Ricezione delle richieste" className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-stone-200 bg-white p-5">
+      <div><h2 className="font-bold">{loading ? 'Caricamento disponibilità…' : schedule ? schedule.paused ? 'Nuove richieste sospese' : 'Ricezione richieste attiva' : 'Disponibilità non caricata'}</h2>
+        <p className="mt-1 max-w-2xl text-sm text-stone-600">La sospensione dura fino alla riattivazione. Per un’assenza con termine automatico, aggiungi un periodo di indisponibilità. Gli appuntamenti accettati restano confermati.</p></div>
+      <button type="button" disabled={busy || loading || !schedule} onClick={togglePause} className={primary}>{schedule?.paused ? 'Riattiva nuove richieste' : 'Sospendi nuove richieste'}</button>
+    </section>
     <section className="rounded-2xl border border-stone-200 bg-white p-5">
       <h2 className="text-xl font-bold"><CalendarDays className="mr-2 inline h-5 w-5" />Periodi di indisponibilità</h2>
       <p className="mt-2 text-sm text-stone-600">Entrambe le date sono comprese. Il blocco termina a mezzanotte dopo l’ultimo giorno, secondo l’ora italiana. Eventuali appuntamenti già accettati restano confermati e vengono segnalati dopo il salvataggio.</p>
