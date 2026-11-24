@@ -70,7 +70,7 @@ function CalendarContent() {
     void (async () => {
       try {
         const {data, error} = await supabase.rpc('get_my_centre_team');
-        if (error || !data) throw error || new Error('Missing roster');
+        if (error || typeof data?.enabled !== 'boolean' || !Array.isArray(data?.members)) throw error || new Error('Incomplete roster');
         if (active) {
           const current = data as CentreTeam;
           setTeam(current);
@@ -118,7 +118,9 @@ function CalendarContent() {
     void (async () => {
       try {
         const scheduleResult = await supabase.rpc('get_my_schedule', { p_from: from, p_to: to });
-        if (scheduleResult.error || !scheduleResult.data) throw scheduleResult.error || new Error('Missing schedule');
+        if (scheduleResult.error || typeof scheduleResult.data?.paused !== 'boolean' || !Array.isArray(scheduleResult.data?.periods)) {
+          throw scheduleResult.error || new Error('Incomplete schedule');
+        }
         const rows: CalendarBooking[] = [];
         for (let offset = 0; ; offset += 200) {
           if (!active) return;

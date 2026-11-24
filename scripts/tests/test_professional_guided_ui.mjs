@@ -8,15 +8,15 @@ assert.ok(['127.0.0.1', 'localhost'].includes(new URL(base).hostname), 'Use a lo
 const OUT=process.env.PC_SCREENSHOTS;
 if (OUT) await fs.mkdir(OUT, {recursive:true});
 const uid='d0000000-0000-0000-0000-000000000001';const errors=[];
-async function setup(width=1440, theme='light', approval='approved') {
+async function setup(width=1440, theme='light', approval='approved', listing='individual') {
  const context=await browser.newContext({viewport:{width,height:1000},serviceWorkers:'block'});
  await context.addInitScript(({uid,theme})=>{
   localStorage.setItem('pawconnect-theme',theme);
   localStorage.setItem('sb-pc-home-test-auth-token',JSON.stringify({access_token:'synthetic-token',refresh_token:'synthetic-refresh',expires_at:Math.floor(Date.now()/1000)+3600,token_type:'bearer',user:{id:uid,email:'test@example.invalid',aud:'authenticated',role:'authenticated'}}));
  },{uid,theme});
- const writes=[];let fail=false;let failLoad=false;
+ const writes=[];let fail=false;let failLoad=false;let brokenSchedule=false;
  let profile={id:uid,full_name:'Elena Rossi',role:'professional',email:'test@example.invalid',email_verified:true,phone_verified:false,avatar_url:''};
- let pro={id:uid,professional_type:'trainer',listing_type:'individual',bio:'',zone_text:'Rimini',latitude:44.0678,longitude:12.5695,coverage_radius_km:20,starting_price:25,approved:approval==='approved',approval_status:approval,team_size:1};
+ let pro={id:uid,professional_type:'trainer',listing_type:listing,bio:'',zone_text:'Rimini',latitude:44.0678,longitude:12.5695,coverage_radius_km:20,starting_price:25,approved:approval==='approved',approval_status:approval,team_size:1};
  let rules={min_lead_hours:4,cancellation_hours:24,min_duration_minutes:30,max_duration_minutes:480,buffer_minutes:15};
  let services=[];let credentials=[];
  await context.route('**/*.supabase.co/**',async route=>{
@@ -26,6 +26,9 @@ async function setup(width=1440, theme='light', approval='approved') {
   if(name==='user') data={id:uid,email:'test@example.invalid',role:'authenticated'};
   if(name==='profiles') data=profile;
   if(name==='professionals') { if(failLoad && method==='GET') return route.fulfill({status:500,json:{message:'Injected load failure'}}); data=pro; }
+  if(name==='get_my_schedule') data=brokenSchedule ? {} : {paused:false,periods:[]};
+  if(name==='get_my_centre_team') data={enabled:listing==='center',members:[]};
+  if(name==='get_my_centre_lessons') data={items:[],truncated:false};
   if(name==='services') data=services;
   if(name==='booking_rules') data=rules;
   if(name==='professional_credentials') data=credentials;
@@ -46,9 +49,57 @@ async function setup(width=1440, theme='light', approval='approved') {
   await route.fulfill({status:200,json:data,headers});
  });
  const page=await context.newPage();page.setDefaultTimeout(12000);page.on('pageerror',e=>errors.push(e.message));
- return {page,context,writes,fail:()=>fail=true,failLoad:()=>failLoad=true};
+ return {page,context,writes,breakSchedule:value=>{brokenSchedule=value;},fail:()=>fail=true,failLoad:()=>failLoad=true};
 }
 try {
+ // Verify the real route menu for an individual and a centre, without connecting to production.
+ for (const [width, listing] of [[1440,'individual'], [390,'center']]) {
+  const {page,context,breakSchedule}=await setup(width,'light','approved',listing);
+  if(width===1440) breakSchedule(true);
+  await page.goto(base+'#/pro/settings');
+  const nav=page.getByRole('navigation',{name:'Navigazione professionista',includeHidden:true});
+  const menu=page.getByRole('button',{name:'Apri menu professionista'});
+  if (width===390) {
+    assert.ok(!await nav.isVisible());
+    await menu.click();
+    await nav.getByRole('link',{name:'Istruttori del centro'}).waitFor();
+    await page.keyboard.press('Escape');
+    assert.ok(!await nav.isVisible());
+    assert.ok(await menu.evaluate(el=>el===document.activeElement));
+    await menu.click();
+  } else {
+    await nav.getByRole('link',{name:'Profilo guidato'}).waitFor();
+    assert.equal(await nav.getByRole('link',{name:'Istruttori del centro'}).count(),0);
+  }
+  const current=nav.getByRole('link',{name:'Profilo guidato'});
+  assert.equal(await current.getAttribute('aria-current'),'page');
+  const item=nav.getByRole('link',{name:'Calendario',exact:true}), label=item.locator('.pg-rail-label');
+  assert.equal(await item.getAttribute('href'),'/#/pro/calendar');
+  const bounds=await item.boundingBox();assert.ok(bounds.width>=44 && bounds.height>=44);
+  if (width===1440) {
+    assert.equal(await label.isVisible(),false);
+    await item.hover();assert.ok(await label.isVisible());
+    await page.keyboard.press('Escape');assert.equal(await label.isVisible(),false);
+    await page.mouse.move(600,120);await current.focus();await page.keyboard.press('Shift+Tab');
+    await item.focus();assert.ok(await label.isVisible());
+  } else assert.ok(await label.isVisible());
+  await item.click();await page.waitForURL(/#\/pro\/calendar$/);
+  if(width===1440) {
+    const retry=page.getByRole('alert').filter({hasText:'Calendario non caricato'}).getByRole('button',{name:'Riprova',exact:true});
+    await retry.waitFor();breakSchedule(false);await retry.click();
+  }
+  await page.getByRole('heading',{name:'Ricezione richieste attiva'}).waitFor();
+  if(width===390) await menu.click();
+  await page.locator('.pg-rail-link[aria-current=page]').filter({hasText:'Calendario'}).waitFor();
+  await nav.getByRole('link',{name:'Le mie collaborazioni'}).click();
+  await page.waitForURL(/#\/account\/centres$/);
+  if(width===390) await menu.click();
+  assert.equal(await nav.getByRole('link',{name:'Le mie collaborazioni'}).getAttribute('aria-current'),'page');
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await context.close();
+ }
+ if(process.argv.includes('--navigation')) { assert.deepEqual(errors,[]); console.log('OK: icone, nomi accessibili, tastiera, mobile, navigazione e visibilità centro.'); }
+ else {
  const t=await setup();const {page,context,writes}=t;
  await page.goto(base+'#/pro/settings');await page.getByRole('heading',{name:'Un passo alla volta. Il tuo lavoro prende forma.'}).waitFor();
  assert.equal(await page.locator('progress').getAttribute('value'),'2');
@@ -77,7 +128,7 @@ try {
  await page.getByRole('button',{name:'Il tuo percorso',exact:true}).click();assert.equal(await page.locator('progress').getAttribute('value'),'4');
  await page.reload();await page.locator('progress').waitFor();assert.equal(await page.locator('progress').getAttribute('value'),'4');
  await page.getByRole('button',{name:/Racconta come lavori/}).click();await page.locator('main textarea').fill('Bozza non salvata');
- page.once('dialog',dialog=>dialog.dismiss());await page.getByRole('navigation',{name:'Navigazione professionista'}).getByRole('button',{name:'Calendario',exact:true}).click();
+ page.once('dialog',dialog=>dialog.dismiss());await page.getByRole('navigation',{name:'Navigazione professionista'}).getByRole('link',{name:'Calendario',exact:true}).click();
  assert.match(page.url(),/step=story/);assert.equal(await page.locator('main textarea').inputValue(),'Bozza non salvata');
  // Native hash links must respect the same unsaved draft guard.
  await Promise.all([page.waitForEvent('dialog').then(dialog=>dialog.dismiss()), page.evaluate(()=>{location.hash='/pro/calendar';})]);
@@ -120,4 +171,5 @@ try {
  const unavailable=await setup();unavailable.failLoad();await unavailable.page.goto(base+'#/pro/settings');await unavailable.page.getByRole('alert').waitFor();assert.equal(await unavailable.page.locator('progress').count(),0);await unavailable.context.close();
  assert.deepEqual(errors,[]);
  console.log('OK: dati persistiti e progressi reali, salvataggio per sezione, errori e retry, servizio in tre passi senza duplicati, protezione bozze, guide senza scritture, attestati, responsive e stato di errore. API simulate; nessun dato online modificato.');
+ }
 } finally { await browser.close(); }

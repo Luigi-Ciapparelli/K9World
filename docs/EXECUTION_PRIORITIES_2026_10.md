@@ -1,9 +1,11 @@
 # PortaleCinofilo — ordine operativo
 
-Ultimo riscontro registrato: 10 novembre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
+Ultimo riscontro registrato: 24 novembre 2026. Email sospese su richiesta di Luigi; proseguire il lavoro tecnico.
 Stato e prove in [CURRENT_STATE](CURRENT_STATE.md); decisioni in
 [PRODUCT_DIRECTION](PRODUCT_DIRECTION.md). Questa è la coda operativa unica,
 non un'autorizzazione generale a spendere, pubblicare o contattare terzi.
+
+Gestione professionale: [navigazione, prova di 90 giorni e listino proposto](PRO_WORKSPACE_PLANS_V1.md). La proposta distingue professionisti singoli e centri; non avvia pagamenti né scadenze sugli account. Il 24 novembre il progetto Supabase è stato riattivato e Auth è tornato raggiungibile.
 
 ## Chiusi sul repository, non da reimplementare
 

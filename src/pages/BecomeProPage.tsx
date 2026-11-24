@@ -8,7 +8,6 @@ import {
   Medal,
   MessageCircle,
   ShieldCheck,
-  Sparkles,
   Users,
 } from 'lucide-react';
 import { useRouter } from '../lib/RouterContext';
@@ -67,8 +66,8 @@ const requirements = [
 
 const faqs = [
   {
-    q: 'Quanto costa iscriversi?',
-    a: 'L’iscrizione e gli strumenti attualmente disponibili sono gratuiti. Non chiediamo una carta di pagamento. Eventuali servizi a pagamento futuri avranno condizioni da accettare separatamente: nessun passaggio automatico a un piano a pagamento.',
+    q: 'Mi verrà addebitato qualcosa se mi iscrivo oggi?',
+    a: 'No. Oggi non chiediamo una carta e non vendiamo abbonamenti al gestionale. Se hai già un account, non parte alcuna scadenza con la pubblicazione del listino. Potrai decidere separatamente se aderire alla nuova formula.',
   },
   {
     q: 'Pagando posso comparire più in alto?',
@@ -114,7 +113,7 @@ export function BecomeProPage() {
             <p className="text-lg md:text-xl text-[#536058] mt-6 max-w-2xl leading-relaxed">
               Per addestratori, centri cinofili e strutture: un profilo pubblico,
               richieste con informazioni sul cane, messaggi e calendario.
-              Crea gratuitamente il tuo profilo e gestisci il lavoro in un unico posto.
+              Qui trovi gli strumenti per il tuo lavoro e il listino previsto per il lancio.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mt-8">
@@ -128,10 +127,10 @@ export function BecomeProPage() {
               </button>
 
               <a
-                href="mailto:info@portalecinofilo.com?subject=Il%20mio%20profilo%20su%20PortaleCinofilo"
+                href="#listino"
                 className="inline-flex items-center justify-center rounded-full border border-[#AEB8B0] bg-[#FFFEFA] px-6 py-3.5 font-semibold text-[#18211C] hover:border-[#163D2A] transition"
               >
-                Scrivici per iniziare
+                Vedi prova e prezzi
               </a>
             </div>
 
@@ -291,28 +290,29 @@ export function BecomeProPage() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-[#C8D7CC] bg-[#E4EEE7] p-6 md:p-8">
-            <div className="flex items-center gap-3">
-              <Sparkles className="w-6 h-6 text-[#163D2A]" />
-              <h2 className="text-2xl font-bold">Inizia senza costi di iscrizione</h2>
-            </div>
-
-            <p className="text-[#425047] mt-5 text-lg leading-relaxed">
-              Stiamo costruendo la rete dei primi professionisti, a partire dalla Romagna.
-              Puoi presentare la tua attività e usare gli strumenti disponibili gratuitamente.
-              L’iscrizione non garantisce un numero di richieste: ti aiutiamo a preparare un profilo
-              chiaro e a gestire i contatti che ricevi.
+          <section id="listino" aria-labelledby="listino-title" tabIndex={-1} className="scroll-mt-28 rounded-3xl border border-[#C8D7CC] bg-[#E4EEE7] p-6 md:p-8">
+            <p className="text-sm font-semibold text-[#31553F]">Listino di lancio proposto</p>
+            <h2 id="listino-title" className="mt-2 text-3xl font-bold tracking-tight text-[#163D2A]">90 giorni per provarlo sul campo</h2>
+            <p className="mt-3 leading-relaxed text-[#37493C]">
+              Nella formula prevista la prova inizia quando attivi il gestionale dopo l’approvazione.
+              Puoi seguire un cane dal primo incontro alle lezioni successive, senza carta e senza rinnovo automatico.
             </p>
-
-            <div className="mt-6 rounded-2xl bg-[#FFFEFA] border border-[#C8D7CC] p-5">
-              <div className="font-semibold">Il futuro modello Pro</div>
-              <p className="text-sm text-[#5D6961] mt-2">
-                Eventuali strumenti a pagamento saranno una scelta esplicita, con prezzi e condizioni
-                comunicati prima dell’adesione. Non daranno posizioni migliori nella ricerca.
-                La formazione di base per i proprietari resterà gratuita.
-              </p>
-            </div>
-          </div>
+            <dl className="mt-5 divide-y divide-[#CDD8CD] rounded-2xl bg-[#FFFEFA] px-4 text-[#183A29]">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 py-4">
+                <dt><strong>Professionista</strong><span className="block text-sm">Per chi lavora da solo</span></dt>
+                <dd className="text-lg font-bold">15 € <span className="text-sm font-normal">/ mese</span></dd>
+              </div>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 py-4">
+                <dt><strong>Centro</strong><span className="block text-sm">Fino a 3 operatori, referente incluso</span></dt>
+                <dd className="text-lg font-bold">35 € <span className="text-sm font-normal">/ mese</span></dd>
+              </div>
+            </dl>
+            <p className="mt-4 text-sm leading-relaxed text-[#37493C]">
+              Oggi il gestionale è gratuito. I piani indicati non sono in vendita e non è partito alcun periodo di prova.
+              Al lancio, al termine dei 90 giorni continuerà a pagamento solo chi lo sceglie.
+              Impara e la ricerca per i proprietari restano gratuiti.
+            </p>
+          </section>
         </div>
       </section>
 

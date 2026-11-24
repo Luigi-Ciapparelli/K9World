@@ -18,6 +18,13 @@ on:
       - 'src/lib/legalNotices.ts'
       - 'src/lib/AuthContext.tsx'
       - 'src/pages/AuthPages.tsx'
+      - 'src/pages/BecomeProPage.tsx'
+      - 'src/pages/pro/ProLayout.tsx'
+      - 'src/pages/pro/ProCalendar.tsx'
+      - 'src/professional-workspace.css'
+      - 'src/pages/CentreCollaborationsPage.tsx'
+      - 'src/pages/CentreAgendaPage.tsx'
+      - 'scripts/tests/test_professional_guided_ui.mjs'
       - 'src/pages/ConfirmEmailPage.tsx'
       - 'src/lib/signupConfirmation.ts'
       - 'src/lib/supabase.ts'
@@ -80,6 +87,7 @@ jobs:
             sleep 1
           done
           node scripts/tests/test_browser_privacy_ui.mjs
+          node scripts/tests/test_professional_guided_ui.mjs --navigation
           node scripts/tests/test_professional_signup_ui.mjs
           node scripts/tests/test_signup_confirmation_ui.mjs
           node scripts/tests/test_password_recovery_ui.mjs
