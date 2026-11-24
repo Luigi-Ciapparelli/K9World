@@ -53,7 +53,7 @@ function ProviderControl({provider}:{provider:Provider}){
   async function copy(){try{await navigator.clipboard.writeText(secret);if(live.current)setNotice('Link copiato. Incollalo soltanto nella tua app calendario.');}
     catch{if(live.current){setDisplay(true);setNotice('Seleziona il link qui sotto e copialo.');}}}
   return <div className="space-y-3 text-sm">
-    <p>Il provider scelto riceverà orari e tipo di impegno, senza nomi, recapiti, cani o note. Chi possiede il link può leggerli. I tuoi eventi personali non vengono letti. Puoi interrompere il collegamento qui.</p>
+    <p>Il provider scelto riceverà orari e tipo di impegno, senza nomi, recapiti, cani o note. Chi possiede il link può leggerli. I tuoi eventi personali non vengono letti. Puoi interrompere il collegamento qui. <a className="underline" href="/privacy">Informativa privacy</a>.</p>
     {phase==='loading'?<p role="status">Controllo collegamento…</p>:phase==='error'?<p role="alert">Stato non disponibile. <button type="button" className={btn} onClick={()=>setReload(x=>x+1)}>Riprova</button></p>:<>
       {!version?<button type="button" className="min-h-11 rounded-xl bg-emerald-800 px-4 py-2 font-semibold text-white" disabled={busy} onClick={()=>void change(true)}><Link2 className="mr-2 inline" size={16}/>Crea il mio link privato</button>:
       <><p className="font-semibold">Link attivo per {providers[provider][0]}</p>

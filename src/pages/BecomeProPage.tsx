@@ -306,7 +306,16 @@ export function BecomeProPage() {
                 <dt><strong>Centro</strong><span className="block text-sm">Fino a 3 operatori, referente incluso</span></dt>
                 <dd className="text-lg font-bold">35 € <span className="text-sm font-normal">/ mese</span></dd>
               </div>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 py-4">
+                <dt><strong>Centro Squadra</strong><span className="block text-sm">4–8 operatori, una sede</span></dt>
+                <dd className="text-lg font-bold">69 € <span className="text-sm font-normal">/ mese</span></dd>
+              </div>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 py-4">
+                <dt><strong>Centro Esteso</strong><span className="block text-sm">9–15 operatori, una sede</span></dt>
+                <dd className="text-lg font-bold">109 € <span className="text-sm font-normal">/ mese</span></dd>
+              </div>
             </dl>
+            <p className="mt-3 text-sm text-[#37493C]">Importi finali proposti per attività, referente incluso. Oltre 15 persone o più sedi: dimensionamento e preventivo dedicati. Nessuna commissione sulle lezioni.</p>
             <p className="mt-4 text-sm leading-relaxed text-[#37493C]">
               Oggi il gestionale è gratuito. I piani indicati non sono in vendita e non è partito alcun periodo di prova.
               Al lancio, al termine dei 90 giorni continuerà a pagamento solo chi lo sceglie.
