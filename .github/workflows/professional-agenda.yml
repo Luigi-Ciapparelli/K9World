@@ -1,0 +1,29 @@
+name: Professional agenda
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/professional-agenda.yml'
+      - 'src/pages/pro/**'
+      - 'src/components/ManualAppointmentDialog.tsx'
+      - 'src/lib/manualAppointments.ts'
+      - 'src/professional-workspace.css'
+      - 'supabase/migrations/*_professional_manual_appointments.sql'
+      - 'scripts/tests/*manual_appointments*'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Create the local migration with Supabase CLI
+        run: |
+          npx --yes supabase@2.118.0 migration new --help > /dev/null
+          npx --yes supabase@2.118.0 migration new professional_manual_appointments
