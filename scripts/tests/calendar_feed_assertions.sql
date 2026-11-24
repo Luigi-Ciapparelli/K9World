@@ -4,6 +4,7 @@ CREATE FUNCTION pg_temp.cid(n int,g int DEFAULT 0) RETURNS uuid LANGUAGE sql AS 
 CREATE FUNCTION pg_temp.chk(b boolean,descr text) RETURNS void LANGUAGE plpgsql AS $$
 BEGIN IF b IS DISTINCT FROM true THEN RAISE EXCEPTION 'Calendar check: %',descr; END IF; END $$;
 CREATE FUNCTION pg_temp.hash_token(t text) RETURNS text LANGUAGE sql AS $$ SELECT encode(sha256(convert_to(t,'UTF8')),'hex') $$;
+GRANT EXECUTE ON FUNCTION pg_temp.cid(int,int),pg_temp.chk(boolean,text),pg_temp.hash_token(text) TO authenticated,service_role;
 SELECT pg_temp.chk(NOT has_function_privilege('anon','public.my_calendar_version(text)','EXECUTE')
  AND NOT has_function_privilege('authenticated','public.read_personal_calendar_feed(text)','EXECUTE')
  AND NOT has_table_privilege('service_role','pc_private.calendar_connections','SELECT'),'privilege separation');
