@@ -13,7 +13,7 @@ STORAGE_MIGRATION = '20261029051635_limit_dog_photo_uploads.sql'
 def fixture(repo):
     migrations = sorted((repo / 'supabase/migrations').glob('*.sql'))
     following = [m for m in migrations if m.name > STORAGE_MIGRATION]
-    if len(following) != 1 or not following[0].name.endswith('_professional_manual_appointments.sql'):
+    if [m.name[15:] for m in following] != ['professional_manual_appointments.sql', 'personal_calendar_feeds.sql']:
         raise RuntimeError('New migration history: review this integration suite.')
     archive = repo / 'docs/legal/2026-10-21.1'
     manifest = json.loads((archive / 'manifest.json').read_text())
@@ -37,7 +37,7 @@ CREATE TEMP TABLE objects_before AS SELECT * FROM storage.objects;
 CREATE TEMP TABLE storage_policies_before AS SELECT * FROM pg_policies WHERE schemaname='storage';
 '''
     data['migration'] = (repo / 'supabase/migrations' / STORAGE_MIGRATION).read_text()
-    data['migration'] += '\n' + following[0].read_text() + '\n'
+    data['migration'] += '\n' + '\n'.join(m.read_text() for m in following) + '\n'
     data['tests'] = [
         ['Limiti foto, conservazione file e permessi; ricevute, rollback, ruoli e cancellazione',
          (repo / 'scripts/tests/signup_legal_receipts_assertions.sql').read_text()
@@ -46,6 +46,8 @@ CREATE TEMP TABLE storage_policies_before AS SELECT * FROM pg_policies WHERE sch
          'BEGIN;\n' + (repo / 'scripts/tests/trainer_admission_assertions.sql').read_text() + '\nROLLBACK;'],
         ['Agenda sul campo: permessi, durata, retry, conflitti in entrambe le direzioni, pensioni e istruttori',
          'BEGIN;\n' + (repo / 'scripts/tests/manual_appointments_assertions.sql').read_text() + '\nROLLBACK;'],
+        ['Calendari: persone, centro, collaboratore, revoca, rettifica e tempi',
+         'BEGIN;\n' + (repo / 'scripts/tests/calendar_feed_assertions.sql').read_text() + '\nROLLBACK;'],
         ['Controllo strutturale in sola lettura, senza dati personali',
          (repo / 'scripts/audit/real_use_privacy_status.sql').read_text()],
     ]

@@ -1,14 +1,43 @@
 name: Personal calendar connections
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/calendar-feed/**'
+      - 'supabase/migrations/*_personal_calendar_feeds.sql'
+      - 'src/components/CalendarConnections.tsx'
+      - 'src/pages/pro/ProCalendar.tsx'
+      - 'src/pages/owner/OwnerBookings.tsx'
+      - 'scripts/tests/*calendar_feed*'
+      - '.github/workflows/calendar-connections.yml'
 permissions:
   contents: read
 jobs:
-  calendar:
+  verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 6
+    timeout-minutes: 8
+    env:
+      VITE_SUPABASE_URL: 'https://pc-home-test.supabase.co'
+      VITE_SUPABASE_ANON_KEY: 'synthetic'
+      VITE_PROFESSIONAL_CONTINUITY: 'true'
+      PC_TEST_BASE_URL: 'http://127.0.0.1:5240'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - name: Generate new migration using Supabase CLI
-        run: npx --yes supabase@2.118.0 migration new personal_calendar_feeds
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: node scripts/tests/test_calendar_feed.mjs && npm run typecheck && npm run build
+      - run: npx --no-install playwright install --with-deps chromium
+      - name: Owner and professional subscriptions
+        run: |
+          set -euo pipefail
+          node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5240 --strictPort > "$RUNNER_TEMP/cal-vite.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail "$PC_TEST_BASE_URL" >/dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/tests/test_calendar_feed_ui.mjs
