@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import ts from 'typescript';
+const source=await readFile(new URL('../../supabase/functions/calendar-feed/calendar.ts',import.meta.url),'utf8');
+const js=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText;
+const {makeHandler,digest,fold}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
+const token='5'.repeat(64),hash=await digest(token),url='https://example.invalid/functions/v1/calendar-feed/'+token+'.ics';let reads=0,revoked=false,fail=false;
+const rows=[{uid:'1'.repeat(64),start:'2026-03-29T09:30:00+02:00',end:'2026-03-29T10:30:00+02:00',modified:'2026-01-20T10:00:00Z',kind:'trainer',dayFrom:null,dayTo:null},{uid:'2'.repeat(64),start:'2026-10-24T22:00:00Z',end:'2026-10-25T23:00:00Z',modified:'2026-01-20T10:00:00Z',kind:'unavailable',dayFrom:'2026-10-25',dayTo:'2026-10-26'}];
+const handle=makeHandler(async h=>{reads++;assert.equal(h,hash);if(fail)throw Error();return revoked?null:rows;});const get=(u=url,o)=>handle(new Request(u,o));
+assert.equal((await get(url.replace(token,'bad'))).status,404);assert.equal((await get(url,{method:'POST'})).status,405);assert.equal(reads,0);
+const reply=await get(),etag=reply.headers.get('etag'),ics=await reply.text();assert.equal(reply.status,200);assert.match(reply.headers.get('content-type'),/^text\/calendar/);assert.match(reply.headers.get('cache-control'),/no-store/);assert.match(ics,/DTSTART:20260329T073000Z/);assert.match(ics,/DTEND;VALUE=DATE:20261026/);assert.ok(!ics.includes(token));assert.ok(ics.endsWith('END:VCALENDAR\r\n'));
+for(const l of (ics+fold('A'.repeat(74)+'è🐕'.repeat(60))).split('\r\n'))assert.ok(Buffer.byteLength(l)<=75);
+assert.equal(await (await get(url,{method:'HEAD'})).text(),'');assert.equal((await get(url,{headers:{'If-None-Match':etag}})).status,304);
+rows[0].start='2026-03-29T09:45:00+02:00';assert.equal((await get(url,{headers:{'If-None-Match':etag}})).status,200);
+revoked=true;assert.equal((await get(url,{headers:{'If-None-Match':etag}})).status,404);fail=true;assert.equal((await get()).status,503);
+console.log('OK: private subscription, UTC/DST, all-day end, UTF-8 folding, validator, revoke and upstream failure.');

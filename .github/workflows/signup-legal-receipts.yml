@@ -9,6 +9,7 @@ on:
       - 'scripts/tests/*signup_legal_receipts*'
       - 'scripts/tests/dog_photo_limits_assertions.sql'
       - 'scripts/tests/manual_appointments_assertions.sql'
+      - 'scripts/tests/calendar_feed_assertions.sql'
       - 'scripts/tests/*trainer_admission*'
       - 'scripts/audit/real_use_privacy_status.sql'
       - '.github/workflows/signup-legal-receipts.yml'

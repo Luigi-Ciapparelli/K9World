@@ -1,3 +1,4 @@
+import { CalendarConnections } from '../../components/CalendarConnections';
 import { BookingDetails } from '../../components/BookingDetails';
 import { useBookingDetails } from '../../lib/useBookingDetails';
 import { bookingDateTime, bookingPrice } from '../../lib/bookingDetails';
@@ -79,6 +80,7 @@ function OwnerBookingsBody() {
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3"><h1 className="text-3xl font-bold text-stone-900">Prenotazioni e messaggi</h1><button type="button" disabled={loading || busyId !== null} onClick={() => setReload(value => value + 1)} className="text-sm font-semibold underline">Aggiorna</button></div>
         <p className="mb-5 text-sm text-stone-600">Orari italiani, come nel calendario del professionista.</p>
         {notice && <p role={notice.error ? 'alert' : 'status'} className="mb-4 rounded-xl border border-stone-200 bg-white p-4 text-sm">{notice.text}</p>}
+        <CalendarConnections/>
         <ServiceReviewPanel refresh={reload} />
         {instructors.error && <InstructorLoadError retry={instructors.reload} />}
         {loading ? <p role="status">Caricamento prenotazioni…</p> : loadError ? <div role="alert" className="rounded-xl border border-rose-200 bg-white p-5">Prenotazioni non caricate. <button type="button" onClick={() => void load()} className="font-semibold underline">Riprova</button></div> : bookings.length === 0 ? (

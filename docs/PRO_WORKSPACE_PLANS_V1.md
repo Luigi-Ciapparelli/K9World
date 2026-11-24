@@ -7,6 +7,10 @@ Decisione di prodotto, 24 novembre 2026. Si distingue l'accesso dei proprietari,
 | Proprietario | Impara e ricerca pubblica | Gratuito |
 | Professionista | Una persona che gestisce clienti, richieste, calendario e lezioni | 15 € |
 | Centro | Il referente e fino a due collaboratori con accessi individuali e permessi distinti | 35 € complessivi |
+| Centro Squadra | 4–8 operatori, una sede | 69 € complessivi |
+| Centro Esteso | 9–15 operatori, una sede | 109 € complessivi |
+
+Oltre 15 operatori o più sedi: preventivo solo dopo dimensionamento. [Piano di lancio](FOUNDER_LAUNCH_2026_11.md).
 
 Il listino è consultabile in [Diventa professionista → Vedi prova e prezzi](https://www.portalecinofilo.com/become-pro#listino). Le cifre sono obiettivi di prezzo finale, non importi esigibili oggi. Nessuna carta, nessun passaggio automatico a pagamento, nessun vantaggio nel ranking.
 

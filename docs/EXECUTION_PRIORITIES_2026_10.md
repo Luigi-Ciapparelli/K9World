@@ -7,6 +7,8 @@ non un'autorizzazione generale a spendere, pubblicare o contattare terzi.
 
 Gestione professionale: [navigazione, prova di 90 giorni e listino proposto](PRO_WORKSPACE_PLANS_V1.md). La proposta distingue professionisti singoli e centri; non avvia pagamenti né scadenze sugli account. Il 24 novembre il progetto Supabase è stato riattivato e Auth è tornato raggiungibile.
 
+Prossimo primo uso: [calendario sul telefono](CALENDAR_CONNECTIONS_V1.md) e [prove con i centri, costi e percorso alla fatturazione](FOUNDER_LAUNCH_2026_11.md).
+
 ## Chiusi sul repository, non da reimplementare
 
 NAV-01 / PRO-01 (`7f11610`), EXP-01 (`3ec87ad`) e REV-01 individuali/pensioni

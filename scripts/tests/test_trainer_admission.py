@@ -168,7 +168,10 @@ def run_suite(data):
         run(cmd, input=data['environment'] + data['migration'] + 'BEGIN;\n' + data['tests'][0][1] + '\nROLLBACK;')
         print('OK: nuova migrazione e ' + data['tests'][0][0], flush=True)
         for name, sql in data['tests'][1:]:
-            run(cmd, input=sql)
+            result = run(cmd, input=sql)
+            for line in result.stderr.splitlines():
+                if line.startswith('NOTICE:  PC_CALENDAR_SAMPLE:'):
+                    print(line, flush=True)
             print('OK:', name, flush=True)
         concurrency(cmd, env)
         print('TEST SUPERATI. Auth/Storage simulati; database online e servizi Supabase non modificati né verificati.')

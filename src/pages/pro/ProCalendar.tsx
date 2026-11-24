@@ -1,3 +1,4 @@
+import { CalendarConnections } from '../../components/CalendarConnections';
 import {shiftsForDay,type InstructorShifts} from '../../lib/instructorShifts';
 import {absenceTimeLabel,type InstructorAbsence} from '../../lib/instructorTimeOff';
 import { ManualAppointmentDialog } from '../../components/ManualAppointmentDialog';
@@ -244,6 +245,7 @@ function CalendarContent() {
       <div className="flex flex-wrap gap-2"><button type="button" className="pg-agenda-cta" onClick={openNew}><CalendarPlus size={19} /> Nuovo appuntamento</button><button type="button" disabled={busy || loading} onClick={refresh} className={button}><RefreshCw className="mr-2 inline h-4 w-4" />Aggiorna</button>
         <button type="button" onClick={() => navigate('/pro/settings')} className={button}>Servizi e colori</button></div>
     </header>
+    <CalendarConnections professional/>
     {notice && <p role={notice.error ? 'alert' : 'status'} className={`rounded-2xl border p-4 text-sm ${notice.error ? 'border-amber-300 bg-amber-50 text-amber-950' : 'border-emerald-200 bg-emerald-50 text-emerald-950'}`}>{notice.text}</p>}
     {loadError && <div role="alert" className="rounded-2xl border border-rose-200 bg-white p-5"><p>Calendario non caricato. Riprova tra poco.</p><button type="button" onClick={refresh} className={`${button} mt-3`}>Riprova</button></div>}
     {manual.error && <p role="alert" className="pg-agenda-warning">Appuntamenti manuali non caricati. Verifica prima di considerare libero un orario. <button onClick={refresh}>Riprova agenda privata</button></p>}

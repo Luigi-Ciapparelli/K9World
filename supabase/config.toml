@@ -1,0 +1,5 @@
+project_id = "K9World"
+
+# Calendar applications cannot attach a Supabase session. The function authenticates a revocable per-user token.
+[functions.calendar-feed]
+verify_jwt = false
