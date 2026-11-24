@@ -24,7 +24,8 @@ function Collaborations(){
  useEffect(()=>{alive.current=true;const requests=generation;return()=>{alive.current=false;requests.current++;};},[]);
  const loadAgenda=useCallback(async()=>{
   const request=++generation.current;setAgendaLoading(true);setAgendaError('');
-  try{const {data,error}=await supabase.rpc('get_my_centre_lessons',{p_from:month.toISOString(),p_until:new Date(month.getFullYear(),month.getMonth()+1,1).toISOString()});if(error)throw error;
+  try{const {data,error}=await supabase.rpc('get_my_centre_lessons',{p_from:month.toISOString(),p_until:new Date(month.getFullYear(),month.getMonth()+1,1).toISOString()});
+   if(error||!Array.isArray(data?.items))throw error||new Error('Incomplete agenda');
    if(alive.current&&generation.current===request)setAgenda(data);
   }catch{if(alive.current&&generation.current===request){setAgenda(null);setAgendaError('Agenda non caricata. Riprova.');}}
   finally{if(alive.current&&generation.current===request)setAgendaLoading(false);}

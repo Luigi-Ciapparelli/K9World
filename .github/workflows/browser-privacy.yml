@@ -20,6 +20,7 @@ on:
       - 'src/pages/AuthPages.tsx'
       - 'src/pages/BecomeProPage.tsx'
       - 'src/pages/pro/ProLayout.tsx'
+      - 'src/pages/pro/ProCalendar.tsx'
       - 'src/professional-workspace.css'
       - 'src/pages/CentreCollaborationsPage.tsx'
       - 'src/pages/CentreAgendaPage.tsx'

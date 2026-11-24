@@ -14,7 +14,7 @@ async function setup(width=1440, theme='light', approval='approved', listing='in
   localStorage.setItem('pawconnect-theme',theme);
   localStorage.setItem('sb-pc-home-test-auth-token',JSON.stringify({access_token:'synthetic-token',refresh_token:'synthetic-refresh',expires_at:Math.floor(Date.now()/1000)+3600,token_type:'bearer',user:{id:uid,email:'test@example.invalid',aud:'authenticated',role:'authenticated'}}));
  },{uid,theme});
- const writes=[];let fail=false;let failLoad=false;
+ const writes=[];let fail=false;let failLoad=false;let brokenSchedule=false;
  let profile={id:uid,full_name:'Elena Rossi',role:'professional',email:'test@example.invalid',email_verified:true,phone_verified:false,avatar_url:''};
  let pro={id:uid,professional_type:'trainer',listing_type:listing,bio:'',zone_text:'Rimini',latitude:44.0678,longitude:12.5695,coverage_radius_km:20,starting_price:25,approved:approval==='approved',approval_status:approval,team_size:1};
  let rules={min_lead_hours:4,cancellation_hours:24,min_duration_minutes:30,max_duration_minutes:480,buffer_minutes:15};
@@ -26,6 +26,9 @@ async function setup(width=1440, theme='light', approval='approved', listing='in
   if(name==='user') data={id:uid,email:'test@example.invalid',role:'authenticated'};
   if(name==='profiles') data=profile;
   if(name==='professionals') { if(failLoad && method==='GET') return route.fulfill({status:500,json:{message:'Injected load failure'}}); data=pro; }
+  if(name==='get_my_schedule') data=brokenSchedule ? {} : {paused:false,periods:[]};
+  if(name==='get_my_centre_team') data={enabled:listing==='center',members:[]};
+  if(name==='get_my_centre_lessons') data={items:[],truncated:false};
   if(name==='services') data=services;
   if(name==='booking_rules') data=rules;
   if(name==='professional_credentials') data=credentials;
@@ -46,12 +49,13 @@ async function setup(width=1440, theme='light', approval='approved', listing='in
   await route.fulfill({status:200,json:data,headers});
  });
  const page=await context.newPage();page.setDefaultTimeout(12000);page.on('pageerror',e=>errors.push(e.message));
- return {page,context,writes,fail:()=>fail=true,failLoad:()=>failLoad=true};
+ return {page,context,writes,breakSchedule:value=>{brokenSchedule=value;},fail:()=>fail=true,failLoad:()=>failLoad=true};
 }
 try {
  // Verify the real route menu for an individual and a centre, without connecting to production.
  for (const [width, listing] of [[1440,'individual'], [390,'center']]) {
-  const {page,context}=await setup(width,'light','approved',listing);
+  const {page,context,breakSchedule}=await setup(width,'light','approved',listing);
+  if(width===1440) breakSchedule(true);
   await page.goto(base+'#/pro/settings');
   const nav=page.getByRole('navigation',{name:'Navigazione professionista',includeHidden:true});
   const menu=page.getByRole('button',{name:'Apri menu professionista'});
@@ -80,6 +84,11 @@ try {
     await item.focus();assert.ok(await label.isVisible());
   } else assert.ok(await label.isVisible());
   await item.click();await page.waitForURL(/#\/pro\/calendar$/);
+  if(width===1440) {
+    const retry=page.getByRole('alert').filter({hasText:'Calendario non caricato'}).getByRole('button',{name:'Riprova',exact:true});
+    await retry.waitFor();breakSchedule(false);await retry.click();
+  }
+  await page.getByRole('heading',{name:'Ricezione richieste attiva'}).waitFor();
   if(width===390) await menu.click();
   await page.locator('.pg-rail-link[aria-current=page]').filter({hasText:'Calendario'}).waitFor();
   await nav.getByRole('link',{name:'Le mie collaborazioni'}).click();
