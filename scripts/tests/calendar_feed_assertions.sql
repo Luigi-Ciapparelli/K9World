@@ -15,7 +15,12 @@ SELECT public.admin_approve_trainer(pg_temp.cid(n),public.admin_get_trainer_admi
 RESET ROLE;
 INSERT INTO public.bookings(id,professional_id,owner_id,service_id,start_at,end_at,price,status,notes)
 SELECT pg_temp.cid(n,7),pg_temp.cid(2),pg_temp.cid(5),pg_temp.cid(2,1),now()+n*interval '1 day',now()+n*interval '1 day'+interval '45 min',35,
- CASE n WHEN 7 THEN 'pending' ELSE 'accepted' END,'PRIVATE-SENTINEL' FROM generate_series(6,7) n;
+ 'pending','PRIVATE-SENTINEL' FROM generate_series(6,7) n;
+-- Capture service context through the same state transition as a portal booking.
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub',pg_temp.cid(2)::text,true);
+SELECT public.change_booking_status(pg_temp.cid(6,7),'accepted');
+RESET ROLE;
 SET LOCAL ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub',pg_temp.cid(5)::text,true);
 SELECT pg_temp.chk(public.my_calendar_version('google') IS NULL,'opt in only');
@@ -62,5 +67,19 @@ UPDATE public.bookings SET start_at=start_at+interval '1 hour',end_at=end_at+int
 SELECT pg_temp.chk(EXISTS(SELECT 1 FROM jsonb_array_elements(public.read_personal_calendar_feed(pg_temp.hash_token(current_setting('test.pro_feed')))) x WHERE x->>'uid'=current_setting('test.event_uid') AND (x->>'start')::timestamptz=(SELECT start_at FROM public.bookings WHERE id=pg_temp.cid(6,7))),'reschedule keeps UID and changes time');
 UPDATE public.bookings SET status='cancelled' WHERE id=pg_temp.cid(6,7);
 SELECT pg_temp.chk(NOT EXISTS(SELECT 1 FROM jsonb_array_elements(public.read_personal_calendar_feed(pg_temp.hash_token(current_setting('test.pro_feed')))) x WHERE x->>'uid'=current_setting('test.event_uid')),'cancelled event removed');
+-- More than the REST default 1,000 rows; measure this SQL projection on the runner, not the hosted service.
+INSERT INTO pc_private.manual_appointments(professional_id,id,service_id,service_name,service_type,duration_minutes,calendar_color,start_at,end_at,dog_label)
+SELECT pg_temp.cid(2),pg_temp.cid(n,10),pg_temp.cid(2,1),'demo','trainer',30,'#147D70',
+ now()+interval '2 days'+n*interval '30 minutes',now()+interval '2 days'+(n+1)*interval '30 minutes','private marker' FROM generate_series(1,1200) n;
+DO $$ DECLARE t timestamptz; elapsed double precision[]:=ARRAY[]::float8[]; rows jsonb; h text:=pg_temp.hash_token(current_setting('test.pro_feed')); a float8; b float8;
+BEGIN
+ FOR i IN 1..12 LOOP
+   t:=clock_timestamp();rows:=public.read_personal_calendar_feed(h);
+   elapsed:=array_append(elapsed,extract(epoch FROM clock_timestamp()-t)*1000);
+   PERFORM pg_temp.chk(jsonb_array_length(rows)=1202,'complete 1200-event scale sample');
+ END LOOP;
+ SELECT percentile_cont(0.5) WITHIN GROUP(ORDER BY n),percentile_cont(0.95) WITHIN GROUP(ORDER BY n) INTO a,b FROM unnest(elapsed) n;
+ RAISE NOTICE 'PC_CALENDAR_SAMPLE: 1202 rows, 12 sequential SQL reads, median=% ms, p95=% ms',round(a::numeric,1),round(b::numeric,1);
+END $$;
 UPDATE public.professionals SET approved=false,approval_status='pending' WHERE id=pg_temp.cid(2);
 SELECT pg_temp.chk(public.read_personal_calendar_feed(pg_temp.hash_token(current_setting('test.pro_feed'))) IS NULL,'approval revocation invalidates refresh');
