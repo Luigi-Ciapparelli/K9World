@@ -1,3 +1,4 @@
+import { ProLayout } from './pro/ProLayout';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
@@ -6,11 +7,11 @@ import { agendaError, type AgendaLesson, type DelegatedAgenda } from '../lib/cen
 import { addDays, calendarTime, dayLabel, romeDay } from '../lib/professionalCalendar';
 
 export function CentreAgendaPage(){
- const {user}=useAuth(),{path,navigate}=useRouter();
+ const {user,profile}=useAuth(),{path,navigate}=useRouter();
  const membership=new URLSearchParams(path.split('?')[1]||'').get('membership')||'';
  if(!user)return null;
- if(!/^[0-9a-f-]{36}$/i.test(membership))return <main className="mx-auto max-w-3xl px-4 py-12"><h1 className="text-2xl font-semibold">Scegli il centro dalle tue collaborazioni</h1><button className="pc-btn pc-btn-primary mt-5" onClick={()=>navigate('/account/centres')}>Apri collaborazioni</button></main>;
- return <Agenda key={`${user.id}:${membership}`} membership={membership}/>;
+ const content = !/^[0-9a-f-]{36}$/i.test(membership) ? <section className="mx-auto max-w-3xl px-4 py-12"><h1 className="text-2xl font-semibold">Scegli il centro dalle tue collaborazioni</h1><button className="pc-btn pc-btn-primary mt-5" onClick={()=>navigate('/account/centres')}>Apri collaborazioni</button></section> : <Agenda key={`${user.id}:${membership}`} membership={membership}/>;
+ return profile?.role==='professional' ? <ProLayout active="collaborations">{content}</ProLayout> : <main>{content}</main>;
 }
 function Agenda({membership}:{membership:string}){
  const {navigate}=useRouter();
@@ -54,7 +55,7 @@ function Agenda({membership}:{membership:string}){
  }
  function changeDay(next:string){if(!next||busy)return;setDay(next);setPage(0);setData(null);setNotice('');}
  const current=data?.day===day&&data?.page===page?data:null;
- return <main className="mx-auto max-w-5xl px-4 py-8 sm:px-8 text-[var(--pc-ink-950)]">
+ return <section className="mx-auto max-w-5xl px-4 py-8 sm:px-8 text-[var(--pc-ink-950)]">
   <button className="text-sm underline" onClick={()=>navigate('/account/centres')}>← Collaborazioni con i centri</button>
   <header className="mt-6 rounded-3xl bg-[var(--pc-forest-900)] p-6 text-white sm:p-8">
    <p className="text-sm font-semibold text-emerald-200">Coordinamento agenda</p><h1 className="mt-2 text-3xl font-semibold">{current?.centre_name||'Agenda del centro'}</h1>
@@ -92,5 +93,5 @@ function Agenda({membership}:{membership:string}){
     <div className="mt-5 flex flex-wrap gap-3"><button className="pc-btn pc-btn-primary" disabled={busy||(overlap&&!allowOverlap)||Boolean(instructor&&!current.members.some(m=>m.id===instructor))} onClick={()=>void save()}>{busy?'Salvataggio…':'Salva assegnazione'}</button><button className="pc-btn pc-btn-secondary" disabled={busy} onClick={()=>setSelected(null)}>Annulla</button></div>
    </>}
   </dialog>
- </main>;
+ </section>;
 }

@@ -42,6 +42,13 @@ try {
     await t.page.getByRole('button', { name: 'Crea il tuo profilo', exact: true }).first().waitFor();
     assert.doesNotMatch(await t.page.locator('body').innerText(), /\b(beta|mvp)\b/i);
     await t.page.getByText('Iscrizione gratuita · nessuna carta', { exact: false }).waitFor();
+    const listino=t.page.getByRole('region',{name:'90 giorni per provarlo sul campo'});
+    await t.page.getByRole('link',{name:'Vedi prova e prezzi'}).click();
+    await listino.waitFor();assert.match(t.page.url(), /#listino$/);
+    assert.match(await listino.innerText(), /15 €/);
+    assert.match(await listino.innerText(), /35 €/);
+    assert.match(await listino.innerText(), /non sono in vendita/);
+    assert.equal(await listino.getByRole('button').count(),0);
     assert.ok(await t.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Professional landing overflow');
     if (process.env.PC_SCREENSHOTS) {
       await fs.mkdir(process.env.PC_SCREENSHOTS, { recursive: true });

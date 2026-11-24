@@ -1,3 +1,4 @@
+import { ProLayout } from './pro/ProLayout';
 import { InstructorShifts } from '../components/InstructorShifts';
 import { CentreLessonNotes, CentreNoteAuthorArchive } from '../components/CentreLessonNotes';
 import { messagesChanged } from '../lib/bookingMessages';
@@ -8,7 +9,12 @@ import {useAuth} from '../lib/AuthContext';
 import {useRouter} from '../lib/RouterContext';
 import {supabase} from '../lib/supabase';
 import {type CentreLesson,type CentreMembership,membershipError,membershipLabels,useCentreMemberships} from '../lib/centreMemberships';
-export function CentreCollaborationsPage(){const {user}=useAuth();return user?<Collaborations key={user.id}/>:null;}
+export function CentreCollaborationsPage(){
+ const {user,profile}=useAuth();
+ if(!user)return null;
+ const content=<Collaborations key={user.id}/>;
+ return profile?.role==='professional' ? <ProLayout active="collaborations">{content}</ProLayout> : <main>{content}</main>;
+}
 function Collaborations(){
  const {navigate}=useRouter();const {rows,loading,error,reload}=useCentreMemberships();
  const [code,setCode]=useState<{code:string;expires_at:string}|null>(null),[busy,setBusy]=useState(false),[notice,setNotice]=useState('');
@@ -46,7 +52,7 @@ function Collaborations(){
  const memberships=rows.filter(r=>!r.is_centre);
  const day=(value:string)=>new Date(value).toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
  const hour=(value:string)=>new Date(value).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
- return <main className="mx-auto max-w-4xl px-4 py-8 sm:px-8 text-[var(--pc-ink-950)]">
+ return <section className="mx-auto max-w-4xl px-4 py-8 sm:px-8 text-[var(--pc-ink-950)]">
   <button className="text-sm underline" onClick={()=>navigate('/account/contacts')}>Profilo e recapiti</button>
   <header className="mt-6"><p className="pc-kicker">Il tuo lavoro nei centri</p><h1 className="pc-display mt-2 text-3xl font-semibold">Collaborazioni con i centri</h1><p className="mt-3 text-[var(--pc-muted-600)]">Un account personale, le tue lezioni assegnate. Scegli tu quali collegamenti accettare e puoi interromperli in qualsiasi momento.</p></header>
   {notice&&<p role="status" className="pc-card mt-5 p-4">{notice}</p>}
@@ -67,5 +73,5 @@ function Collaborations(){
    {agendaLoading&&!agenda?<p role="status">Caricamento agenda…</p>:agendaError?<p role="alert">{agendaError} <button className="underline" onClick={()=>void loadAgenda()}>Riprova agenda</button></p>:agenda?.items.length?<div className="space-y-3">{agenda.items.map(lesson=><article key={lesson.id} className="pc-card p-5"><p className="text-sm font-semibold text-[var(--pc-forest-700)]">{day(lesson.start_at)} · {hour(lesson.start_at)}–{hour(lesson.end_at)}</p><h3 className="mt-2 text-lg font-semibold">{lesson.service_name}</h3><p className="mt-1 text-sm">{lesson.centre_name} · {lesson.status==='completed'?'Svolta':'Confermata'}</p><p className="mt-3">{lesson.client_name}{lesson.dog_names.length>0&&` · ${lesson.dog_names.join(', ')}`}</p>{lesson.completed_by&&<p className="mt-3 text-sm">Confermata come svolta da {lesson.completed_by}.</p>}{lesson.can_complete&&<button disabled={busy||agendaLoading} className="pc-btn pc-btn-primary mt-4" onClick={()=>void complete(lesson)}>Segna lezione svolta</button>}<div className="mt-4"><CentreLessonNotes lesson={lesson}/></div>{lesson.can_message&&lesson.membership_id&&lesson.membership_version&&lesson.assignment_version&&<div className="mt-4"><BookingConversation bookingId={lesson.id} assigned={{membershipId:lesson.membership_id,membershipVersion:lesson.membership_version,assignmentVersion:lesson.assignment_version}} summary={{booking_id:lesson.id,message_count:lesson.message_count||0,unread_count:lesson.unread_count||0}}/></div>}</article>)}{agenda.truncated&&<p role="status">Mostrate le prime 300 lezioni del mese. Chiedi al centro il quadro completo.</p>}</div>:<p className="pc-card p-5">Nessuna lezione assegnata visibile in questo mese.</p>}
   </section>
  <CentreNoteAuthorArchive/>
- </main>;
+ </section>;
 }

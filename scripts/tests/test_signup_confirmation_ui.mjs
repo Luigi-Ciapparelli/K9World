@@ -13,7 +13,7 @@ const makeSession = (address = email, confirmed = true) => ({
 });
 const grant = new URLSearchParams({ type: 'signup', access_token: makeSession().access_token, refresh_token: 'synthetic-refresh', token_type: 'bearer', expires_in: '3600' });
 const bad = '#error=access_denied&error_code=otp_expired&error_description=PrivateProviderDetail';
-async function setup({ stored = false, confirmed = true, rejectGrant = false } = {}) {
+async function setup({ stored = false, confirmed = true, rejectGrant = false, offline = false } = {}) {
   const ctx = await browser.newContext({ serviceWorkers: 'block' });
   if (stored) await ctx.addInitScript(session => {
     localStorage.setItem('sb-pc-home-test-auth-token', JSON.stringify(session));
@@ -28,7 +28,7 @@ async function setup({ stored = false, confirmed = true, rejectGrant = false } =
     const key = url.pathname.split('/').at(-1);
     if (req.method() === 'POST') writes.push({ key, body: req.postDataJSON(), redirect: url.searchParams.get('redirect_to') });
     if (key === 'user') return rejectGrant ? fail(route,'bad_jwt',401) : route.fulfill({ json: makeSession(req.headers().authorization === 'Bearer ' + makeSession(other).access_token ? other : email, confirmed).user });
-    if (key === 'token') return fail(route, 'email_not_confirmed');
+    if (key === 'token') return offline ? route.abort('connectionfailed') : fail(route, 'email_not_confirmed');
     if (key === 'verify') return req.postDataJSON().token === '123456' ? route.fulfill({ json: makeSession() }) : fail(route, 'otp_expired');
     if (key === 'resend') return route.fulfill({ json: {} });
     if (key === 'profiles') return route.fulfill({ json: { ...makeSession().user, full_name:'Prova', role:'professional', email_verified: confirmed } });
@@ -62,6 +62,15 @@ try {
     }
     await t.close();
   }
+  const outage = await setup({offline:true});
+  await outage.page.goto(base + '/signin');
+  await outage.page.getByLabel('Email',{exact:true}).fill(email);
+  await outage.page.getByLabel('Password',{exact:true}).fill('synthetic-only');
+  await outage.page.getByRole('button',{name:'Accedi',exact:true}).last().click();
+  await outage.page.getByRole('alert').filter({hasText:'servizio di accesso non è raggiungibile'}).waitFor();
+  assert.ok(await outage.page.getByRole('button',{name:'Accedi',exact:true}).last().isEnabled());
+  assert.ok(!outage.writes.some(x => x.key === 'resend' || x.key === 'recover'));
+  await outage.close();
   const normal = await setup(); await normal.page.goto(base + '/account/contacts');
   await normal.page.getByRole('heading',{name:'Bentornato'}).waitFor();
   await normal.page.getByText(/il link non ha restituito un esito/).waitFor();

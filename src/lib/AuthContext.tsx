@@ -67,9 +67,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (error) {
-      return { error: error.code === 'email_not_confirmed' || /^email not confirmed$/i.test(error.message)
-        ? 'Il tuo indirizzo email non è ancora confermato. Premi «Reinvia email di conferma» e apri solo il messaggio più recente.'
-        : error.message, role: null };
+      let message = 'Accesso non riuscito. Riprova tra poco.';
+      if (error.code === 'email_not_confirmed' || /^email not confirmed$/i.test(error.message)) {
+        message = 'Il tuo indirizzo email non è ancora confermato. Premi «Reinvia email di conferma» e apri solo il messaggio più recente.';
+      } else if (error.code === 'invalid_credentials' || /^invalid login credentials$/i.test(error.message)) {
+        message = 'Email o password non corrette. Controlla i dati e riprova.';
+      } else if (error.status === 429) {
+        message = 'Troppi tentativi ravvicinati. Attendi qualche minuto prima di riprovare.';
+      } else if (error.name === 'AuthRetryableFetchError' || (error.status ?? 0) >= 500 ||
+        /failed to fetch|networkerror|network request failed|load failed/i.test(error.message)) {
+        message = 'Il servizio di accesso non è raggiungibile. Riprova tra poco con la stessa email e password.';
+      }
+      return { error: message, role: null };
     }
 
     if (!data.user) {
