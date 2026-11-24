@@ -11,7 +11,7 @@ const browser=await chromium.launch({args:['--no-sandbox','--disable-dev-shm-usa
 const uid='d0000000-0000-0000-0000-000000000001',sid='d0000000-0000-0000-0000-000000000021';
 try {
   for (const width of [1440,390]) {
-    const ctx=await browser.newContext({viewport:{width,height:width===1440?900:844},timezoneId:'Europe/Rome',serviceWorkers:'block'});
+    const ctx=await browser.newContext({viewport:{width,height:width===1440?900:844},timezoneId:'Europe/Rome',locale:'it-IT',serviceWorkers:'block'});
     const centre=width===390,errors=[],writes=[];const records=new Map();
     const day=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Rome',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
     const service={id:sid,name:'Lezione individuale',duration_minutes:50,calendar_color:'#147D70'};
@@ -33,13 +33,14 @@ try {
       if(name==='save_my_manual_appointment'){
         writes.push(body);
         if(injectFailure){injectFailure=false;return route.fulfill({status:409,json:{code:'PCJ01',message:'Synthetic schedule conflict'}});}
-        const when=new Date(body.p_day+'T'+body.p_time+':00Z');
+        const offset=new Intl.DateTimeFormat('en',{timeZone:'Europe/Rome',timeZoneName:'longOffset'}).formatToParts(new Date(body.p_day+'T12:00:00Z')).find(p=>p.type==='timeZoneName').value.slice(3);
+        const when=new Date(body.p_day+'T'+body.p_time+':00'+offset);
         value=body.p_version+1;
         records.set(body.p_id,{id:body.p_id,version:value,service_id:sid,service_name:service.name,calendar_color:service.calendar_color,duration_minutes:50,
           start_at:when.toISOString(),end_at:new Date(+when+50*60000).toISOString(),dog_label:body.p_dog,instructor_name:body.p_instructor?'Istruttore demo':null,instructor_id:body.p_instructor});
       }
       if(name==='cancel_my_manual_appointment'){value=records.delete(body.p_id);}
-      if(name==='get_professional_bookings')return route.fulfill({json:[],headers:{'content-range':'*/0'}});
+      if(name==='get_professional_bookings')return route.fulfill({json:[],headers:{'content-range':'*/0','access-control-expose-headers':'Content-Range'}});
       return route.fulfill({json:value});
     });
     const page=await ctx.newPage();page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(10000);
@@ -65,7 +66,8 @@ try {
     const card=page.locator('.pg-manual-card').filter({hasText:'Kyros'});await card.waitFor();
     assert.equal(writes.length,2);assert.equal(writes[0].p_id,writes[1].p_id);assert.ok(!Object.keys(writes[1]).some(k=>k.includes('owner')||k.includes('phone')));
     await page.reload();await card.waitFor();assert.equal(await card.getByRole('button',{name:'Accetta'}).count(),0);
-    await page.goto(base+'/#/pro');await page.locator('.pg-desk-manual').filter({hasText:'Kyros'}).waitFor();
+    await page.goto(base+'/#/pro');await page.locator('.pg-desk-manual').filter({hasText:'Kyros'}).getByText('14:00').waitFor();
+    await page.getByText('Non ci sono richieste in attesa.').waitFor();
     if(out)await page.screenshot({path:out+'/studio-'+width+'.png'});
     await page.getByRole('button',{name:'Apri calendario',exact:true}).click();await card.getByRole('button',{name:'Modifica'}).click();
     const edit=page.getByRole('dialog',{name:'Modifica appuntamento'});await edit.getByLabel('Nome del cane').fill('Luna');await edit.getByRole('button',{name:'Salva appuntamento'}).click();

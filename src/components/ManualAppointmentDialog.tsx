@@ -21,6 +21,7 @@ export function ManualAppointmentDialog({ initial, initialDay, team, teamError, 
   const [instructor, setInstructor] = useState(initial?.instructor_id || '');
   const [choice, setChoice] = useState(initial?.service_id || '');
   const [services, setServices] = useState<AgendaService[] | null>(null);
+  const [approved, setApproved] = useState(true);
   const [serviceError, setServiceError] = useState(false); const [tick, setTick] = useState(0);
   const [error, setError] = useState(''); const [busy, setBusy] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -35,9 +36,13 @@ export function ManualAppointmentDialog({ initial, initialDay, team, teamError, 
     void (async () => {
       try {
         if (!uid) throw new Error();
-        const {data,error: failure} = await supabase.from('services').select('id,name,duration_minutes,calendar_color')
-          .eq('professional_id',uid).eq('active',true).order('name');
-        if (failure || !Array.isArray(data)) throw failure;
+        const [servicesResult, admission] = await Promise.all([
+          supabase.from('services').select('id,name,duration_minutes,calendar_color').eq('professional_id',uid).eq('active',true).order('name'),
+          supabase.from('professionals').select('approved,approval_status').eq('id',uid).maybeSingle(),
+        ]);
+        const data = servicesResult.data;
+        if (servicesResult.error || admission.error || !Array.isArray(data)) throw servicesResult.error || admission.error;
+        if (live) setApproved(admission.data?.approved === true && admission.data?.approval_status === 'approved');
         const rows: AgendaService[] = data.filter(s => s.id !== initial?.service_id);
         if (initial) rows.unshift({ id: initial.service_id, name: initial.service_name, calendar_color: initial.calendar_color, duration_minutes: initial.duration_minutes });
         if (live) { setServices(rows); setChoice(value => rows.some(s => s.id === value) ? value : rows[0]?.id || ''); }
@@ -63,7 +68,7 @@ export function ManualAppointmentDialog({ initial, initialDay, team, teamError, 
     <div className="pg-dialog-body"><h2 id="manual-title">{initial ? 'Modifica appuntamento' : 'Nuovo appuntamento'}</h2>
       <p>Segna un impegno preso al campo, al telefono o in chat. Nessun messaggio verrà inviato.</p>
       {serviceError ? <p role="alert">Servizi non caricati. <button className="underline" onClick={() => setTick(n => n + 1)}>Riprova</button></p>
-        : !services ? <p role="status">Caricamento servizi…</p> : !services.length ? <div className="pg-agenda-empty"><strong>Aggiungi il tuo primo servizio</strong><p>Il calendario userà la durata e il colore che scegli.</p><button className="pg-agenda-secondary" onClick={() => { onClose(); navigate('/pro/settings?step=services'); }}>Configura servizi</button></div>
+        : !services ? <p role="status">Caricamento servizi…</p> : !approved ? <div className="pg-agenda-empty"><strong>Il tuo profilo deve essere approvato</strong><p>Puoi segnare appuntamenti quando il tuo profilo professionale è approvato e la tua email è confermata.</p><button className="pg-agenda-secondary" onClick={() => { onClose(); navigate('/pro/settings'); }}>Apri il profilo guidato</button></div> : !services.length ? <div className="pg-agenda-empty"><strong>Aggiungi il tuo primo servizio</strong><p>Il calendario userà la durata e il colore che scegli.</p><button className="pg-agenda-secondary" onClick={() => { onClose(); navigate('/pro/settings?step=services'); }}>Configura servizi</button></div>
         : <form onSubmit={save}><fieldset disabled={busy || confirmDelete}>
           <label>Servizio<select required value={choice} onChange={e => setChoice(e.target.value)}>{services.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
           {selected && <span className="pg-duration"><i style={{backgroundColor:serviceColor(selected.calendar_color)}} /><Clock3 size={14} /> {selected.duration_minutes} min</span>}
@@ -74,7 +79,8 @@ export function ManualAppointmentDialog({ initial, initialDay, team, teamError, 
           {teamError && <p role="status">Elenco istruttori non disponibile. Puoi segnare l’orario e assegnare l’istruttore in seguito.</p>}
         </fieldset>
         {!confirmDelete && <div className="pg-dialog-actions"><button type="submit" className="pg-agenda-cta" disabled={busy}><CalendarPlus size={18} />{busy ? 'Salvataggio…' : 'Salva appuntamento'}</button>
-        {initial && <button type="button" className="pg-remove" disabled={busy} onClick={()=>{setConfirmDelete(true);setError('');}}>Rimuovi</button>}</div>}</form>}
+        </div>}</form>}
+      {initial && !confirmDelete && <button type="button" className="pg-remove" disabled={busy} onClick={()=>{setConfirmDelete(true);setError('');}}>Rimuovi</button>}
       {confirmDelete && <div className="pg-confirm-delete"><strong>Rimuovere questo impegno dall’agenda?</strong><div><button disabled={busy} className="pg-remove" onClick={()=>void submit(true)}>Sì, rimuovi</button><button disabled={busy} onClick={()=>setConfirmDelete(false)}>Mantieni</button></div></div>}
       {error && <p role="alert" className="pg-dialog-error">{error}</p>}
     </div></dialog>;

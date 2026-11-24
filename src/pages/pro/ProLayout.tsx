@@ -66,8 +66,11 @@ export function ProLayout({ children, active }: { children: ReactNode; active: s
       if (accountRef.current?.open) { accountRef.current.open = false; accountRef.current.querySelector('summary')?.focus(); }
       if (open) { setOpen(false); menuRef.current?.focus(); }
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    const closeAccount = (event: PointerEvent) => {
+      if (accountRef.current?.open && event.target instanceof Node && !accountRef.current.contains(event.target)) accountRef.current.open = false;
+    };
+    window.addEventListener('keydown', onKey); document.addEventListener('pointerdown', closeAccount);
+    return () => { window.removeEventListener('keydown', onKey); document.removeEventListener('pointerdown', closeAccount); };
   }, [open]);
 
   return <div className="pg-workspace">

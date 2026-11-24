@@ -233,3 +233,5 @@
 .pg-confirm-delete,.pg-agenda-empty {margin-top:.9rem;background:var(--pg-bg);padding:1rem;border-radius:.75rem;}
 @media(max-width:850px) {.pg-desk-panels{grid-template-columns:minmax(0,1fr);}}
 @media(max-width:550px) {.pg-daybreak{align-items:flex-start;flex-direction:column;gap:1rem;}.pg-day-actions{flex-direction:row;align-items:center;flex-wrap:wrap;}.pg-studio-identity strong{font-size:.95rem;}.pg-agenda-page .min-h-20{min-height:3.8rem;}}
+
+.pg-workspace-main .pc-display {font-family:var(--pc-font-ui),system-ui,sans-serif;letter-spacing:-.035em;line-height:1.16;}

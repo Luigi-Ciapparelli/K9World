@@ -99,7 +99,7 @@ per rifare una verifica email. Usare i documenti recapiti per il flusso effettiv
 | Aiuto e orientamento | [SITE_HELP_V1](SITE_HELP_V1.md), guida locale per ruolo e link reali |
 | Home e navigazione | [HOME_PORTAL_V1](HOME_PORTAL_V1.md), [EXHIBITIONS_RELEASE_V1](EXHIBITIONS_RELEASE_V1.md) |
 | Impara e scelta del cane | [REX_CLICKER_V1](REX_CLICKER_V1.md), [IMPARA_LESSON_ORDER_V1](IMPARA_LESSON_ORDER_V1.md), [IMPARA_RELEASE_V3](IMPARA_RELEASE_V3.md), [IMPARA_SHAPING_V1](IMPARA_SHAPING_V1.md), [LEARNING_CREDENTIAL_CORE](LEARNING_CREDENTIAL_CORE.md) |
-| Profilo e strumenti | [PROFESSIONAL_GUIDED_WORKSPACE_V1](PROFESSIONAL_GUIDED_WORKSPACE_V1.md), [PROFESSIONAL_OPERATIONS_NEXT](PROFESSIONAL_OPERATIONS_NEXT.md) |
+| Profilo e strumenti | [Agenda degli appuntamenti presi al campo](PROFESSIONAL_FIELD_AGENDA.md), [PROFESSIONAL_GUIDED_WORKSPACE_V1](PROFESSIONAL_GUIDED_WORKSPACE_V1.md), [PROFESSIONAL_OPERATIONS_NEXT](PROFESSIONAL_OPERATIONS_NEXT.md) |
 | Foto dei profili | [PROFILE_IMAGES_V1](PROFILE_IMAGES_V1.md): pubblico professionale, privato cliente; [PHOTO_UPLOAD_OPTIMIZATION_V1](PHOTO_UPLOAD_OPTIMIZATION_V1.md): foto cani, anteprime, cache e rilascio |
 | Istruttori dei centri | [CENTRE_INSTRUCTORS_V1](CENTRE_INSTRUCTORS_V1.md), [CENTRE_CALENDAR_V1](CENTRE_CALENDAR_V1.md): nomi storici, filtri e conferme; [account/agenda](CENTRE_MEMBERSHIPS_V1.md), [assenze](INSTRUCTOR_TIME_OFF_V1.md), [fasce orarie](INSTRUCTOR_HOURLY_TIME_OFF_V1.md) e [delega di completamento](CENTRE_LESSON_PERMISSIONS_V1.md); [messaggi delegati](CENTRE_INSTRUCTOR_MESSAGES_V1.md) |
 | Calendario / messaggi | [PROFESSIONAL_CALENDAR_V1](PROFESSIONAL_CALENDAR_V1.md), [BOOKING_MESSAGES_V1](BOOKING_MESSAGES_V1.md) |

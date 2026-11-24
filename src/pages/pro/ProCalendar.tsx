@@ -160,7 +160,7 @@ function CalendarContent() {
     && (instructor === 'all' || (instructor === 'unassigned' ? !a.instructor_id : a.instructor_id === instructor)));
   const selectedManual = visibleManual.filter(a => bookingOnDay(a, selected));
   const monthEvents = [...visible.map(b => ({ ...b, label: [b.client_name,b.service_name,instructors.rows[b.id]?.instructor_name].filter(Boolean).join(' · '), key: 'web-'+b.id })),
-    ...visibleManual.map(a => ({ ...a, label: [a.dog_label,a.service_name,a.instructor_name].filter(Boolean).join(' · '), key:'manual-'+a.id }))].sort((a,b)=>a.start_at.localeCompare(b.start_at));
+    ...visibleManual.map(a => ({ ...a, label: [a.dog_label,a.service_name,a.instructor_name].filter(Boolean).join(' · '), key:'manual-'+a.id }))].sort((a,b)=>Date.parse(a.start_at)-Date.parse(b.start_at));
   const selectedBookings = visible.filter((booking) => bookingOnDay(booking, selected));
   const portraits = useClientPortraits([], selectedBookings.map(booking => booking.id), reload);
   const selectedPeriods = schedule?.periods.filter((period) => period.start_date <= selected && period.end_date >= selected) || [];
@@ -298,13 +298,13 @@ function CalendarContent() {
         })}</div>
       </>}
     </section>
-    {<section aria-label="Impegni del giorno" className="space-y-3">
+    <section aria-label="Impegni del giorno" className="space-y-3">
       <div className="pg-agenda-day"><h2 className="text-xl font-bold capitalize">{dayLabel(selected, true)}</h2><button type="button" className="pg-agenda-secondary" onClick={openNew}><CalendarPlus size={17} /> Aggiungi in questo giorno</button></div>
       {weekly&&<div className="rounded-xl bg-stone-50 p-3 text-sm"><p className="font-semibold">Turni dell’istruttore · ora italiana</p><p className="mt-1">{weekly.enabled?(shiftsForDay(weekly.slots,selected).map(s=>`${s.start}–${s.end}`).join(' · ')||'Fuori turno per questo giorno'):'Nessun limite settimanale attivo'}</p><p className="mt-2">Le assenze restano valide. Le lezioni già fissate sono conservate.</p></div>}
       {absences.filter(p=>p.start_date<=selected&&p.end_date>=selected).length>0&&<div className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950"><p className="font-semibold">Indisponibilità dell’istruttore selezionato</p><ul className="mt-2 space-y-1">{absences.filter(p=>p.start_date<=selected&&p.end_date>=selected).map((p,index)=><li key={index}>{absenceTimeLabel(p)}</li>)}</ul><p className="mt-2">Le lezioni già fissate restano confermate. Le schede segnalano quelle che si sovrappongono.</p></div>}
       {selectedPeriods.length > 0 && <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950">Giorno segnato come indisponibile. Gli impegni già accettati restano confermati.</p>}
       {!loading && !loadError && instructorFilterReady && !manual.error && !manual.loading && !selectedManual.length && !selectedBookings.length && <p className="rounded-xl border border-stone-200 bg-white p-5 text-sm text-stone-600">Nessun impegno per questo giorno e questi filtri.</p>}
-      {[...selectedBookings.map(booking=>({kind:'online' as const, booking, start:booking.start_at})), ...selectedManual.map(appointment=>({kind:'manual' as const, appointment, start:appointment.start_at}))].sort((a,b)=>a.start.localeCompare(b.start)).map(entry => {
+      {[...selectedBookings.map(booking=>({kind:'online' as const, booking, start:booking.start_at})), ...selectedManual.map(appointment=>({kind:'manual' as const, appointment, start:appointment.start_at}))].sort((a,b)=>Date.parse(a.start)-Date.parse(b.start)).map(entry => {
         if (entry.kind==='manual') { const a=entry.appointment; return <article key={'manual-'+a.id} className="pg-manual-card" style={{borderLeftColor:serviceColor(a.calendar_color)}}>
           <div><small>Segnato in agenda</small><h3>{a.service_name}{a.dog_label ? ' · '+a.dog_label : ''}</h3><p>{calendarDateTime(a.start_at)} – {calendarDateTime(a.end_at)}{a.instructor_name ? ' · '+a.instructor_name : ''}</p></div>
           <button type="button" className="pg-agenda-secondary" onClick={()=>setEditing(a)}>Modifica</button></article>; }
@@ -316,7 +316,7 @@ function CalendarContent() {
         <div className="mt-4 flex flex-wrap gap-2"><BookingConversation bookingId={booking.id} professional requestNotes={booking.notes} />{booking.status === 'pending' && <><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'accepted')} className={primary}>Accetta</button><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'declined')} className={button}>Rifiuta</button></>}
           {booking.status === 'accepted' && <button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'completed')} className={primary}>Segna completata</button>}</div>
       </article>; })}
-    </section>}
+    </section>
     <section aria-label="Ricezione delle richieste" className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-stone-200 bg-white p-5">
       <div><h2 className="font-bold">{loading ? 'Caricamento disponibilità…' : schedule ? schedule.paused ? 'Nuove richieste sospese' : 'Ricezione richieste attiva' : 'Disponibilità non caricata'}</h2>
         <p className="mt-1 max-w-2xl text-sm text-stone-600">La sospensione dura fino alla riattivazione. Per un’assenza con termine automatico, aggiungi un periodo di indisponibilità. Gli appuntamenti accettati restano confermati.</p></div>

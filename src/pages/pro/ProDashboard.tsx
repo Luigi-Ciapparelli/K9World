@@ -170,14 +170,16 @@ export function ProDashboard() {
             <h2 id="pro-today-title" className="pc-display text-2xl font-semibold mt-1">I tuoi appuntamenti</h2>
             <p className="mt-2 text-sm text-[var(--pc-muted-600)]">Prenotazioni confermate e appuntamenti segnati da te, in ora italiana.</p>
             <div className="mt-5">
-              {loading ? <Loading /> : today.error ? <LoadError onRetry={retry} /> : today.rows.length === 0 ? <p className="text-sm text-[var(--pc-muted-600)]">Nessuna prenotazione online accettata con inizio oggi.</p> : (
-                <div className="divide-y divide-[var(--pc-line)]">{today.rows.map((booking) => <div key={booking.id} className="py-4 first:pt-0"><BookingSummary booking={booking} portrait={portraits[booking.id]} details={details.rows[booking.id]} loading={details.loading} onRetry={details.retry} /></div>)}</div>
-              )}
+              {loading && <Loading />}{today.error && <LoadError onRetry={retry} />}
+              {manual.loading && <p role="status" className="text-sm">Caricamento agenda privata…</p>}
+              {manual.error && <p className="pg-agenda-warning" role="alert">Appuntamenti manuali non caricati. <button onClick={retry}>Riprova</button></p>}
+              {!loading && !manual.loading && !today.error && !manual.error && !today.count && !manual.rows.length && <p className="text-sm text-[var(--pc-muted-600)]">Nessun appuntamento in agenda per oggi.</p>}
+              {[...today.rows.map(b=>({kind:'online' as const, b, start:b.start_at})),...manual.rows.map(a=>({kind:'manual' as const,a,start:a.start_at}))]
+                .sort((a,b)=>Date.parse(a.start)-Date.parse(b.start)).slice(0,5).map(item=>item.kind==='online'
+                  ? <div key={'online-'+item.b.id} className="py-4"><BookingSummary booking={item.b} portrait={portraits[item.b.id]} details={details.rows[item.b.id]} loading={details.loading} onRetry={details.retry} /></div>
+                  : <div className="pg-desk-manual" key={'manual-'+item.a.id}><time>{romeDay(item.start)<todayKey?'In corso':calendarTime(item.start)}</time><span><strong>{item.a.service_name}{item.a.dog_label ? ' · '+item.a.dog_label : ''}</strong><small>Segnato in agenda{item.a.instructor_name ? ' · '+item.a.instructor_name : ''}</small></span></div>)}
+              {!loading && !manual.loading && !today.error && !manual.error && today.count+manual.rows.length>5 && <p className="mt-3 text-sm">Altri {today.count+manual.rows.length-5} impegni in calendario.</p>}
             </div>
-            {!loading && !today.error && today.count > today.rows.length && <p className="mt-4 text-sm text-[var(--pc-muted-600)]">Mostrati {today.rows.length} appuntamenti su {today.count}.</p>}
-            {manual.loading ? <p role="status" className="mt-3 text-sm">Caricamento agenda privata…</p> : manual.error ? <p className="pg-agenda-warning" role="alert">Appuntamenti manuali non caricati. <button onClick={retry}>Riprova</button></p> :
-              manual.rows.slice(0,4).map(a=><div className="pg-desk-manual" key={a.id}><time>{calendarTime(a.start_at)}</time><span><strong>{a.service_name}{a.dog_label ? ' · '+a.dog_label : ''}</strong><small>Segnato in agenda{a.instructor_name ? ' · '+a.instructor_name : ''}</small></span></div>)}
-            {manual.rows.length>4 && <p className="text-sm">Altri {manual.rows.length-4} impegni in calendario.</p>}
             <SectionLink onClick={() => navigate('/pro/calendar')}>Apri l’agenda di oggi</SectionLink>
           </section>
         </div>
