@@ -78,7 +78,7 @@ function OwnerBookingsBody() {
     <div className="bg-stone-50 min-h-[calc(100vh-4rem)]">
       <div className="max-w-5xl mx-auto px-6 pt-10 pb-28">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3"><h1 className="text-3xl font-bold text-stone-900">Prenotazioni e messaggi</h1><button type="button" disabled={loading || busyId !== null} onClick={() => setReload(value => value + 1)} className="text-sm font-semibold underline">Aggiorna</button></div>
-        <p className="mb-5 text-sm text-stone-600">Orari italiani, come nel calendario del professionista.</p>
+        <p className="mb-5 text-sm text-stone-600">Se ti è stato assegnato un esercizio, riapri i <strong>Messaggi</strong> della lezione per ritrovare la scheda e segnare come va. Gli orari sono italiani.</p>
         {notice && <p role={notice.error ? 'alert' : 'status'} className="mb-4 rounded-xl border border-stone-200 bg-white p-4 text-sm">{notice.text}</p>}
         <CalendarConnections/>
         <ServiceReviewPanel refresh={reload} />

@@ -1,3 +1,4 @@
+import { RouteLink } from '../../components/RouteLink';
 import { BookingDetails } from '../../components/BookingDetails';
 import { useBookingDetails } from '../../lib/useBookingDetails';
 import { bookingDateTime, bookingPrice } from '../../lib/bookingDetails';
@@ -11,7 +12,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
 import { ProLayout } from './ProLayout';
 import { StatusBadge } from '../owner/OwnerDashboard';
-import { acceptanceError } from '../../lib/professionalCalendar';
+import { acceptanceError, romeDay } from '../../lib/professionalCalendar';
 import { BookingConversation } from '../../components/BookingConversation';
 import { useBookingMessageSummaries } from '../../lib/bookingMessages';
 
@@ -164,6 +165,7 @@ export function ProBookings() {
               {busyId === booking.id && <p role="status" className="text-sm mt-3">Aggiornamento…</p>}
               <div className="flex flex-wrap gap-2 mt-4">
                 <BookingConversation bookingId={booking.id} professional summary={messageSummaries[booking.id]} requestNotes={booking.notes} />
+                {booking.status === 'completed' && Number.isFinite(Date.parse(booking.start_at)) && <RouteLink className="rounded-xl border px-3 py-2 font-semibold" to={'/pro/calendar?giorno='+romeDay(booking.start_at)}>Apri la giornata in calendario</RouteLink>}
                 {booking.status === 'pending' && <>
                   <Action disabled={busyId !== null || !details.rows[booking.id]} onClick={() => void updateStatus(booking.id, 'accepted')}>Accetta</Action>
                   <Action disabled={busyId !== null || !details.rows[booking.id]} onClick={() => void updateStatus(booking.id, 'declined')}>Rifiuta</Action>

@@ -1,0 +1,182 @@
+[
+  {
+    "group": "Primi giorni",
+    "slug": "rispondere-al-nome",
+    "title": "Quando sente il suo nome",
+    "aim": "Il cane si gira verso di te, anche solo con un orecchio."
+  },
+  {
+    "group": "Primi giorni",
+    "slug": "parola-premio",
+    "title": "Una parola che annuncia il premio",
+    "aim": "La famiglia usa lo stesso breve segnale per indicare un istante preciso."
+  },
+  {
+    "group": "Primi giorni",
+    "slug": "bisogni-fuori",
+    "title": "Aiutare il cucciolo a sporcare fuori",
+    "aim": "Riconoscere le occasioni giuste per accompagnarlo nel suo posto."
+  },
+  {
+    "group": "Primi giorni",
+    "slug": "mordicchiare-nel-gioco",
+    "title": "Quando il cucciolo prende la manica",
+    "aim": "Proporre un oggetto adatto prima che il gioco diventi troppo acceso."
+  },
+  {
+    "group": "Primi giorni",
+    "slug": "esplorare-una-novita",
+    "title": "Esplorare una novità con scelta",
+    "aim": "Lasciare che il cane osservi qualcosa di nuovo e possa allontanarsi."
+  },
+  {
+    "group": "Vita in casa",
+    "slug": "riposo-sul-tappeto",
+    "title": "Riposare sul tappetino",
+    "aim": "Trovare un posto tranquillo mentre la famiglia fa altro."
+  },
+  {
+    "group": "Vita in casa",
+    "slug": "attesa-alla-porta",
+    "title": "Fare una pausa prima della porta",
+    "aim": "Aprire una porta e ripartire insieme con un segnale."
+  },
+  {
+    "group": "Vita in casa",
+    "slug": "salutare-con-quattro-zampe",
+    "title": "Salutare senza saltare addosso",
+    "aim": "Rendere possibile un breve saluto con le zampe a terra."
+  },
+  {
+    "group": "Vita in casa",
+    "slug": "a-tavola",
+    "title": "Mentre la famiglia è a tavola",
+    "aim": "Offrire un’attività tranquilla fuori dal passaggio durante uno spuntino."
+  },
+  {
+    "group": "Vita in casa",
+    "slug": "brevi-separazioni",
+    "title": "Un breve distacco in casa",
+    "aim": "Osservare se il cane resta sereno mentre ti sposti di poco."
+  },
+  {
+    "group": "Passeggiate",
+    "slug": "guinzaglio-morbido",
+    "title": "Due passi con il guinzaglio morbido",
+    "aim": "Camminare insieme per un breve tratto senza tensione."
+  },
+  {
+    "group": "Passeggiate",
+    "slug": "inversione-in-passeggiata",
+    "title": "Cambiare direzione insieme",
+    "aim": "Allontanarsi con una curva larga prima di restare bloccati in un passaggio."
+  },
+  {
+    "group": "Passeggiate",
+    "slug": "incroci-a-distanza",
+    "title": "Passare a distanza da persone e cani",
+    "aim": "Scegliere un percorso nel quale il cane può osservare e poi riprendere a camminare."
+  },
+  {
+    "group": "Passeggiate",
+    "slug": "richiamo-vicino",
+    "title": "Tornare quando lo chiami",
+    "aim": "Far arrivare il cane fino a te con un solo invito, senza porre fine al divertimento."
+  },
+  {
+    "group": "Passeggiate",
+    "slug": "annusare-e-ripartire",
+    "title": "Lasciarlo annusare e poi ripartire",
+    "aim": "Alternare esplorazione e movimento senza trascinare il cane."
+  },
+  {
+    "group": "Segnali e collaborazione",
+    "slug": "seduto",
+    "title": "Sedersi su un segnale",
+    "aim": "Associare una parola a una posizione che il cane assume comodamente."
+  },
+  {
+    "group": "Segnali e collaborazione",
+    "slug": "terra",
+    "title": "Sdraiarsi con calma",
+    "aim": "Riconoscere il movimento del terra e dargli un nome."
+  },
+  {
+    "group": "Segnali e collaborazione",
+    "slug": "resta-e-libero",
+    "title": "Aspettare il segnale di via",
+    "aim": "Distinguere una breve attesa dal permesso di muoversi."
+  },
+  {
+    "group": "Segnali e collaborazione",
+    "slug": "target-mano",
+    "title": "Toccare una mano con il naso",
+    "aim": "Seguire un’indicazione semplice potendo sempre rifiutare il contatto."
+  },
+  {
+    "group": "Segnali e collaborazione",
+    "slug": "scambiare-un-gioco",
+    "title": "Lasciare un gioco con uno scambio",
+    "aim": "Rinunciare volontariamente a un gioco senza temere di perderlo sempre."
+  },
+  {
+    "group": "Cura e gioco",
+    "slug": "pettorina-volontaria",
+    "title": "Prepararsi alla pettorina",
+    "aim": "Separare la disponibilità all’attrezzatura dalla fretta di uscire."
+  },
+  {
+    "group": "Cura e gioco",
+    "slug": "contatto-con-pausa",
+    "title": "Spazzola e contatto con una pausa",
+    "aim": "Accorgersi quando il cane sceglie di continuare una cura semplice."
+  },
+  {
+    "group": "Cura e gioco",
+    "slug": "fiuto-facile",
+    "title": "Cercare con il naso",
+    "aim": "Dare al cane un piccolo problema di ricerca che può risolvere da solo."
+  },
+  {
+    "group": "Cura e gioco",
+    "slug": "piattaforma-shaping",
+    "title": "Due zampe sulla piattaforma",
+    "aim": "Dividere una nuova azione in passi piccoli, come nel gioco sul timing."
+  },
+  {
+    "group": "Passeggiate",
+    "slug": "lasciare-a-terra",
+    "title": "Lasciare un oggetto a terra",
+    "aim": "Passare accanto a qualcosa di innocuo senza raccoglierlo."
+  },
+  {
+    "group": "Passeggiate",
+    "slug": "sosta-al-marciapiede",
+    "title": "Fermarsi prima del marciapiede",
+    "aim": "Fare insieme una pausa prima di cambiare superficie."
+  },
+  {
+    "group": "Cura e gioco",
+    "slug": "auto-ferma",
+    "title": "Avvicinarsi all’auto ferma",
+    "aim": "Scoprire quale passo verso l’auto è già tranquillo."
+  },
+  {
+    "group": "Cura e gioco",
+    "slug": "trasportino-aperto",
+    "title": "Esplorare il trasportino aperto",
+    "aim": "Familiarizzare con uno spazio di viaggio senza restarvi chiuso."
+  },
+  {
+    "group": "Cura e gioco",
+    "slug": "museruola-con-scelta",
+    "title": "Conoscere la museruola a cestello",
+    "aim": "Avvicinarsi allo strumento adatto senza doverlo indossare subito."
+  },
+  {
+    "group": "Segnali e collaborazione",
+    "slug": "riportare-un-gioco",
+    "title": "Riportare un gioco a pochi passi",
+    "aim": "Fare un piccolo tragitto insieme mantenendo il gioco piacevole."
+  }
+]

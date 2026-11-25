@@ -1,0 +1,47 @@
+name: Dal campo a casa
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/field-practice.yml'
+      - 'src/components/BookingConversation.tsx'
+      - 'src/components/LessonPractice.tsx'
+      - 'src/lib/fieldDiary.ts'
+      - 'src/lib/homeExercises.ts'
+      - 'src/lib/practice*'
+      - 'src/pages/FieldPracticePage.tsx'
+      - 'src/field-practice.css'
+      - 'scripts/tests/test_field_practice*'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      VITE_SUPABASE_URL: 'https://pc-home-test.supabase.co'
+      VITE_SUPABASE_ANON_KEY: 'synthetic-local'
+      VITE_PROFESSIONAL_CONTINUITY: 'true'
+      PC_TEST_BASE_URL: 'http://127.0.0.1:5281'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: npm ci
+      - run: node scripts/tests/test_field_practice.mjs && npm run typecheck && npm run build
+      - run: npx --no-install playwright install --with-deps chromium
+      - name: Family, professional and delegated instructor
+        run: |
+          set -euo pipefail
+          node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5281 --strictPort > "$RUNNER_TEMP/practice-vite.log" 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail "$PC_TEST_BASE_URL" > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/tests/test_field_practice_ui.mjs
+          node scripts/tests/test_centre_instructor_messages_ui.mjs

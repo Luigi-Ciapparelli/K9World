@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {createServer} from 'vite';
+const vite=await createServer({optimizeDeps:{noDiscovery:true,include:[]},server:{middlewareMode:true},appType:'custom'});
+try {
+  const {homeExercises}=await vite.ssrLoadModule('/src/lib/homeExercises.ts');
+  const {exerciseIndex}=await vite.ssrLoadModule('/src/lib/practiceCatalog.ts');
+  const {planText,entryText,readPlan,readEntry,collectDiary,romeDay,weekOf,diaryWeek}=await vite.ssrLoadModule('/src/lib/fieldDiary.ts');
+  assert.deepEqual(homeExercises.map(x=>x.slug).sort(),exerciseIndex.map(x=>x.slug).sort());
+  assert.equal(new Set(homeExercises.map(x=>x.slug)).size,homeExercises.length);
+  assert.ok(homeExercises.length>=30 && homeExercises.every(x=>x.steps.length>=3&&x.stop&&x.observe&&x.easier&&x.setup));
+  const make=(sequence,sender_kind,body,created_at='2026-10-25T00:40:00Z')=>({id:'aa000000-0000-4000-b000-'+String(sequence).padStart(12,'0'),sequence,sender_kind,body,created_at,is_automatic:false});
+  const ex=homeExercises[0],plan={slug:ex.slug,title:ex.title,goal:2,note:'Solo in cucina.'};
+  const assigned=make(5,'instructor',planText(plan));assert.deepEqual(readPlan(assigned),plan);
+  assert.equal(readPlan({...assigned,sender_kind:'owner'}),null);assert.equal(readPlan({...assigned,is_automatic:true}),null);
+  assert.equal(readPlan({...assigned,body:planText({...plan,slug:'altro'})}),null);
+  assert.equal(readPlan({...assigned,body:planText({...plan,title:'Titolo precedente'})}).title,'Titolo precedente');
+  const custom={slug:'personale',title:'Un passo insieme',goal:0,note:'Prima il cortile.\nFermatevi qui.'};
+  assert.deepEqual(readPlan({...assigned,body:planText(custom)}),custom);assert.equal(readPlan({...assigned,body:planText({...custom,note:''})}),null);
+  const blank={...plan,note:''}; assert.deepEqual(readPlan({...assigned,body:planText(blank)}),blank);
+  const reply=(seq,k,note='',time)=>make(seq,'owner',entryText(assigned.id,k,note),time);
+  const a=reply(6,'hard'),b=reply(7,'question','A che distanza?'),c=reply(8,'rest','','2026-10-25T23:15:00Z');
+  assert.equal(readEntry({...a,sender_kind:'professional'}),null);
+  const alien=make(9,'owner',entryText('bb000000-0000-4000-b000-000000000111','tried',''));
+  const [r]=collectDiary([c,alien,reply(4,'tried'),a,assigned,b,{...a,id:'ignored',is_automatic:true}]);
+  assert.equal(r.entries.length,3);assert.equal(collectDiary([a]).length,0);
+  assert.equal(romeDay('2026-10-25T23:15:00Z'),'2026-10-26');
+  assert.equal(weekOf('2026-11-01'),'2026-10-26');
+  assert.equal(diaryWeek(r,'2026-10-19').practised,1);
+  assert.equal(diaryWeek(r,'2026-10-26').practised,0);assert.equal(diaryWeek(r,'2026-10-26').days[0].events.length,1);
+  assert.equal(diaryWeek(r,'2026-10-26').days[1].events.length,0);
+  console.log('OK: catalogo, autori, riferimenti, schede personali, pausa/domanda, ora italiana e giorni distinti.');
+}finally{await vite.close();}

@@ -7,6 +7,8 @@ Stato effettivo in [CURRENT_STATE](CURRENT_STATE.md), ordine di lavoro in
 [EXECUTION_PRIORITIES](EXECUTION_PRIORITIES_2026_10.md). Una direttiva approvata
 rimane tale finché non viene modificata, implementata o esplicitamente scartata.
 
+**Direttiva 25 novembre 2026 — [Dal campo a casa](DAL_CAMPO_A_CASA_V1.md):** schede pratiche, ritmo settimanale facoltativo, riscontri volontari visibili ai partecipanti autorizzati della lezione. Preservare l’accesso gratuito al catalogo. App nativa iOS e Android in roadmap dopo la prova della web app, con gli stessi ruoli e contenuti.
+
 ## Missione e persone a cui serviamo
 
 Rendere la cultura cinofila seria comprensibile e accessibile gratuitamente;

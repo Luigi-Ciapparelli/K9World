@@ -9,6 +9,11 @@ Gestione professionale: [navigazione, prova di 90 giorni e listino proposto](PRO
 
 Prossimo primo uso: [calendario sul telefono](CALENDAR_CONNECTIONS_V1.md) e [prove con i centri, costi e percorso alla fatturazione](FOUNDER_LAUNCH_2026_11.md).
 
+## Campo e casa — direttiva del 25 novembre 2026
+
+HOME-01: [catalogo e diario del primo utilizzo](DAL_CAMPO_A_CASA_V1.md). Provare una consegna già dalla prima lezione e rivederla al rientro. Aggiungere schede per le lacune osservate sul campo; nessuna classifica di famiglie o cani.
+APP-01: futura app nativa Android/iOS per proprietari e professionisti. Prima validare per almeno due settimane chi ritrova, usa e discute la scheda sul telefono; valutare quali ostacoli richiedono davvero notifiche scelte dall’utente o lavoro offline. Nessun acquisto né lancio degli store autorizzato.
+
 ## Chiusi sul repository, non da reimplementare
 
 NAV-01 / PRO-01 (`7f11610`), EXP-01 (`3ec87ad`) e REV-01 individuali/pensioni

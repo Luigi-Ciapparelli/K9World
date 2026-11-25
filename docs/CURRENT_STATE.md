@@ -6,6 +6,10 @@ Questo registro è mantenuto manualmente; il generatore scrive in
 [TECHNICAL_SNAPSHOT](TECHNICAL_SNAPSHOT.md). I checkpoint precedenti sono nello
 [storico](PROJECT_HISTORY.md), non sono ulteriori istruzioni da eseguire.
 
+## 25 novembre 2026 · Da provare a casa
+
+Catalogo: 30 schede pubbliche oltre alle otto lezioni esistenti. Diario della singola prenotazione tramite i messaggi già autorizzati, senza nuove tabelle, telemetria o invii esterni. Percorsi, prove, limiti e app futura in [DAL_CAMPO_A_CASA_V1](DAL_CAMPO_A_CASA_V1.md). Prova con un binomio reale ancora da svolgere.
+
 ## Registrazione e richieste privacy — incremento corrente
 
 [PRIVACY_OPERATIONS_V1](PRIVACY_OPERATIONS_V1.md): informativa prima dei campi,
