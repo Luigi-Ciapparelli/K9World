@@ -24,7 +24,8 @@ async function visit(role,width,path) {
     if(name==='get_my_schedule')return ok({paused:false,periods:[]});
     if(name==='get_my_centre_team')return ok({enabled:false,members:[]});
     if(name==='get_my_booking_calendar')return ok([booking,{...booking,id:boarding,service_name:'Pensione',service_type:'boarding'}]);
-    if(name==='get_my_owner_bookings')return ok([booking]);
+    if(name==='get_my_owner_bookings')return route.fulfill({status:200,json:[booking],headers:{'content-range':'0-0/1','access-control-expose-headers':'content-range'}});
+    if(name==='get_booking_details')return ok([{booking_id:id,end_at:booking.end_at,service_name:booking.service_name,service_source:'recorded',dog_names:['Cane di prova'],dogs_unavailable:false}]);
     if(name==='get_my_service_reviews')return ok({items:[],count:0,pending_count:0});
     if(name==='get_booking_messages'){
       if(deny)return route.fulfill({status:403,json:{code:'42501',message:'Access changed'}});

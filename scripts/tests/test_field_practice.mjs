@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {createServer} from 'vite';
-const vite=await createServer({server:{middlewareMode:true},appType:'custom'});
+const vite=await createServer({optimizeDeps:{noDiscovery:true,include:[]},server:{middlewareMode:true},appType:'custom'});
 try {
   const {homeExercises}=await vite.ssrLoadModule('/src/lib/homeExercises.ts');
   const {exerciseIndex}=await vite.ssrLoadModule('/src/lib/practiceCatalog.ts');
