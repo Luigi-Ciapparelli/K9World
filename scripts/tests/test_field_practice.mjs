@@ -13,6 +13,7 @@ try {
   const assigned=make(5,'instructor',planText(plan));assert.deepEqual(readPlan(assigned),plan);
   assert.equal(readPlan({...assigned,sender_kind:'owner'}),null);assert.equal(readPlan({...assigned,is_automatic:true}),null);
   assert.equal(readPlan({...assigned,body:planText({...plan,slug:'altro'})}),null);
+  assert.equal(readPlan({...assigned,body:planText({...plan,title:'Titolo precedente'})}).title,'Titolo precedente');
   const custom={slug:'personale',title:'Un passo insieme',goal:0,note:'Prima il cortile.\nFermatevi qui.'};
   assert.deepEqual(readPlan({...assigned,body:planText(custom)}),custom);assert.equal(readPlan({...assigned,body:planText({...custom,note:''})}),null);
   const blank={...plan,note:''}; assert.deepEqual(readPlan({...assigned,body:planText(blank)}),blank);

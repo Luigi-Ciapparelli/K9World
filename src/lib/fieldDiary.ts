@@ -24,8 +24,9 @@ export function readPlan(m:BookingMessage):FieldPlan|null {
   const [prefix,slugLine,titleLine,goalLine,...noteLines] = m.body.split('\n');
   if(prefix!==planPrefix||!slugLine?.startsWith('Esercizio: ')||!titleLine?.startsWith('Titolo: ')||!/^Giorni concordati: [0-3]$/.test(goalLine)||!/^Indicazione:( |$)/.test(noteLines[0]||''))return null;
   const slug=slugLine.slice(11), title=titleLine.slice(8).trim(), goal=Number(goalLine.slice(-1)), note=noteLines.join('\n').slice(12).trim();
+  // Published titles are snapshots: copy edits must not erase old diaries.
   const ex=exerciseIndex.find(item=>item.slug===slug);
-  if ((!ex && slug!=='personale')||!title||title.length>100||note.length>500||(slug==='personale'&&!note)||(ex&&title!==ex.title)) return null;
+  if ((!ex && slug!=='personale')||!title||title.length>100||note.length>500||(slug==='personale'&&!note)) return null;
   return {slug,title,goal,note};
 }
 export function readEntry(m:BookingMessage):FieldEntry|null {

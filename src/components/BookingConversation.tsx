@@ -30,7 +30,8 @@ export function BookingConversationDialog({ bookingId, professional, requestNote
   const [accessChanged, setAccessChanged] = useState(false);
   const denied = useRef(false);
   const invalidate = useCallback(() => {
-    denied.current = true; rowsRef.current = []; setMessages([]); setHasOlder(false); setAccessChanged(true);
+    denied.current = true; rowsRef.current = []; attempt.current = null; setMessages([]); setHasOlder(false); setAccessChanged(true);
+    setBody(''); setUncertain(false); setTemplates([]); setSentNotice('');
     setLoadError('Accesso o assegnazione cambiati. Chiudi i messaggi e aggiorna l’agenda prima di riaprire.');
   }, []);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -211,7 +212,7 @@ export function BookingConversationDialog({ bookingId, professional, requestNote
       </ol>
       {!loading && !loadError && !messages.length && <p className="my-4 text-sm text-stone-600">Nessun messaggio. Puoi scrivere qui per concordare i dettagli.</p>}
       {assigned && <p className="mt-4 text-sm text-stone-600">Scrivi con il tuo nome, come istruttore del centro per questa lezione. Il cliente e il centro leggono le tue risposte.</p>}
-      {!accessChanged && <form onSubmit={(event) => void send(event)} className="mt-5 border-t border-stone-200 pt-4">
+      <form onSubmit={(event) => void send(event)} className="mt-5 border-t border-stone-200 pt-4">
         {professional && <div className="mb-3">
           <label className="text-sm font-semibold">Usa un modello<select value="" disabled={sending || uncertain || accessChanged || Boolean(loadError) || loading} onChange={(event) => {
             const template = templates.find((item) => item.id === event.target.value);
@@ -224,7 +225,7 @@ export function BookingConversationDialog({ bookingId, professional, requestNote
         <p className="mt-1 text-right text-xs text-stone-500">{body.length}/4000</p>
         {sendError && <p role="alert" className="mt-2 text-sm text-rose-700">{sendError}</p>}
         <button type="submit" formNoValidate={uncertain} disabled={accessChanged || Boolean(loadError) || loading || sending || (!uncertain && !body.trim())} className="mt-3 inline-flex items-center gap-2 rounded-xl bg-emerald-800 px-4 py-2 font-semibold text-white disabled:opacity-50"><Send className="h-4 w-4" />{sending ? 'Invio…' : uncertain ? 'Riprova lo stesso invio' : 'Invia messaggio'}</button>
-      </form>}
+      </form>
     </div>
   </dialog>;
 }
