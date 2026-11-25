@@ -66,7 +66,7 @@ function WeekCard({rec,isTeacher,disabled,send}:{rec:FieldRecord;isTeacher:boole
     </div>
     {!isTeacher&&<form onSubmit={submit} className="space-y-2"><fieldset disabled={disabled}><legend className="mb-2 font-semibold">Come va oggi?</legend><div className="flex flex-wrap gap-2">{(Object.entries(observations) as [Observation,string][]).map(([k,v])=><button type="button" key={k} aria-pressed={kind===k} className={kind===k?primary:button} onClick={()=>setKind(k)}>{v}</button>)}</div></fieldset>
       {kind&&<><label className="block text-sm">{kind==='question'?'Cosa vuoi chiedere?':'Una riga per la prossima lezione (facoltativa)'}<textarea className={input} disabled={disabled} rows={2} required={kind==='question'} maxLength={300} value={note} onChange={e=>setNote(e.target.value)}/></label>
-      <p className="text-xs">Premendo invia, condividi questo riscontro con chi può leggere i messaggi di questa lezione.</p><button type="submit" className={primary} disabled={disabled||todayExists||(kind==='question'&&!note.trim())}>{todayExists?'Già segnato oggi':'Invia il riscontro di oggi'}</button></>}
+      <p className="text-xs">Premendo invia, condividi il riscontro con il professionista o centro e con gli eventuali istruttori autorizzati ai messaggi di questa lezione. Non è una recensione.</p><button type="submit" className={primary} disabled={disabled||todayExists||(kind==='question'&&!note.trim())}>{todayExists?'Già segnato oggi':'Invia il riscontro di oggi'}</button></>}
     </form>}
   </div>;
 }
