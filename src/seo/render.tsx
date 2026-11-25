@@ -6,6 +6,7 @@ import { ThemeProvider } from '../lib/ThemeContext';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { HomePage } from '../pages/HomePage';
+import { FieldPracticePage } from '../pages/FieldPracticePage';
 import { ImparaHomePage } from '../pages/ImparaHomePage';
 import { ImparaLessonPage } from '../pages/ImparaLessonPage';
 import { BeforeDogPage } from '../pages/BeforeDogPage';
@@ -28,6 +29,8 @@ export function renderPublicPage(path: string) {
     '/privacy': <PrivacyPage />, '/terms': <TermsPage />, '/cookies': <CookiePage />, '/professional-terms': <ProfessionalTermsPage />,
   };
   let content = components[path];
+  if (path === '/impara/esercizi') content = <FieldPracticePage />;
+  if (path.startsWith('/impara/esercizi/')) content = <FieldPracticePage slug={path.slice('/impara/esercizi/'.length)} />;
   if (path.startsWith('/impara/stage-1/')) content = <ImparaLessonPage slug={path.slice('/impara/stage-1/'.length)} />;
   if (path.startsWith('/gruppi-fci/')) {
     const group = Number(path.split('/').slice(-1)[0]);

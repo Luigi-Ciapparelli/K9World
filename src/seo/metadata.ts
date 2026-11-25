@@ -1,3 +1,4 @@
+import { exerciseIndex, exercisePath, practicePath } from '../lib/practiceCatalog';
 import { STAGE_1_LESSONS } from '../lib/imparaContent';
 import { FCI_GROUP_NAMES, FCI_GROUP_CONTENT } from '../lib/fciGroups';
 import breeds from '../../public/data/fci-breeds.json';
@@ -11,6 +12,8 @@ export type PageMeta = { path: string; title: string; description: string; index
 const pages: PageMeta[] = [
   { path: '/', title: 'PortaleCinofilo | Educazione del cane e professionisti cinofili', description: 'Impara a conoscere i bisogni del cane, scegli con consapevolezza e trova educatori, addestratori e servizi. Cultura cinofila di base gratuita.', index: true },
   { path: '/impara', title: 'Educazione del cane: lezioni gratuite | PortaleCinofilo', description: 'Otto lezioni gratuite su bisogni, comportamento e apprendimento del cane. Letture, attività pratiche, shaping e autoverifiche per i proprietari.', index: true, type: 'CollectionPage' },
+  { path: practicePath, title: 'Dal campo a casa: esercizi pratici per il cane | PortaleCinofilo', description: 'Schede gratuite per riprovare a casa quello che avete imparato al campo: primi giorni, vita in casa, passeggiate, segnali e cure quotidiane.', index: true, type: 'CollectionPage', parent:'/impara' },
+  ...exerciseIndex.map(ex => ({path:exercisePath(ex.slug),title:ex.title+' | PortaleCinofilo',description:ex.aim,index:true,parent:practicePath})),
   { path: '/prima-del-cane', title: 'Scegliere un cane: parti dalla tua vita | PortaleCinofilo', description: 'Prima di prendere un cane, valuta tempo, abitudini, ambiente e impegno quotidiano. Un percorso orientativo per una scelta consapevole.', index: true },
   { path: '/scegliere-allevatore', title: 'Come scegliere un allevatore di cani | PortaleCinofilo', description: 'Domande, documenti e controlli utili per scegliere un allevatore. Consulta i riferimenti ENCI e valuta salute, selezione e gestione dei cuccioli.', index: true },
   { path: '/search', title: 'Trova addestratori e pensioni per cani | PortaleCinofilo', description: 'Cerca un addestratore o una pensione per il tuo cane. Confronta zona, profilo e competenze prima di contattare il professionista.', index: true, type: 'CollectionPage' },

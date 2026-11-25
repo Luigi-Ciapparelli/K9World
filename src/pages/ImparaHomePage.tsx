@@ -36,7 +36,7 @@ export function ImparaHomePage() {
           <p className="im-eyebrow"><Leaf size={15}/> IMPARA · PORTALECINOFILO</p>
           <h1>Vivere meglio insieme<br/>{' '}<em>si impara.</em></h1>
           <p className="im-lead">Comprendi i bisogni del cane, osserva quello che ti comunica e porta una cosa utile nella vostra giornata. Un passo alla volta.</p>
-          <div className="im-actions"><button className="im-button" onClick={()=>go(next.slug)}>{complete===STAGE_1_LESSONS.length ? 'Rileggi il percorso' : started ? 'Riprendi il percorso' : 'Inizia dalle basi'}<ArrowRight size={18}/></button><button className="im-link" onClick={()=>document.getElementById('im-programma')?.scrollIntoView({behavior:'smooth'})}>Esplora le lezioni ↓</button></div>
+          <div className="im-actions"><button className="im-button" onClick={()=>go(next.slug)}>{complete===STAGE_1_LESSONS.length ? 'Rileggi il percorso' : started ? 'Riprendi il percorso' : 'Inizia dalle basi'}<ArrowRight size={18}/></button><button className="im-link" onClick={()=>document.getElementById('im-programma')?.scrollIntoView({behavior:'smooth'})}>Esplora le lezioni ↓</button><RouteLink className="im-link" to="/impara/esercizi">Dal campo a casa: esercizi pratici <ArrowRight size={16}/></RouteLink></div>
           <p className="im-small im-benefits">Gratuito · Senza iscrizione · Anche prima di avere un cane</p>
         </div>
         <aside className="im-course-card" aria-label="Il tuo percorso">

@@ -54,6 +54,7 @@ const ImparaHomePage = lazy(() =>
     default: module.ImparaHomePage,
   }))
 );
+const FieldPracticePage = lazy(() => import('./pages/FieldPracticePage').then(m => ({default:m.FieldPracticePage})));
 const ImparaLessonPage = lazy(() =>
   import('./pages/ImparaLessonPage').then((module) => ({
     default: module.ImparaLessonPage,
@@ -229,6 +230,8 @@ function AppShell() {
   }
   else if (basePath === '/scegliere-allevatore') content = <BreederGuidePage />;
   else if (basePath === '/impara') content = <ImparaHomePage />;
+  else if (basePath === '/impara/esercizi') content = <FieldPracticePage />;
+  else if (basePath.startsWith('/impara/esercizi/')) content = <FieldPracticePage key={basePath} slug={basePath.slice('/impara/esercizi/'.length)} />;
   else if (basePath.startsWith('/impara/stage-1/')) {
     const slug = basePath.slice('/impara/stage-1/'.length);
     content = <ImparaLessonPage slug={slug} />;

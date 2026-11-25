@@ -27,6 +27,8 @@ Segreteria generale e altre azioni amministrative non sono incluse.
 [WORKING_DOG_IDENTITY_V1](WORKING_DOG_IDENTITY_V1.md) è su GitHub (`8a482aa`);
 il flag della verifica automatica resta spento fino alla prova sulla fonte reale.
 
+Consegna del 25 novembre: [30 esercizi, diario famiglia–istruttore, limiti e prova nei centri](DAL_CAMPO_A_CASA_V1.md).
+
 ## Identità e ambiente
 
 | Voce | Riferimento |

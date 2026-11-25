@@ -41,8 +41,11 @@ function CalendarContent() {
   const openNew = () => { setEditing(undefined); navigate('/pro/calendar?new=1'); };
   const closeDialog = () => { setEditing(undefined); if (creating) navigate('/pro/calendar'); };
   const today = romeDay();
-  const [month, setMonth] = useState(today.slice(0, 7));
-  const [selected, setSelected] = useState(today);
+  const requestedDay = new URLSearchParams(path.split('?')[1] || '').get('giorno') || '';
+  const validDay = /^20\d{2}-\d{2}-\d{2}$/.test(requestedDay) && Number.isFinite(Date.parse(requestedDay+'T12:00:00Z')) && addDays(requestedDay,0)===requestedDay;
+  const initialDay = validDay ? requestedDay : today;
+  const [month, setMonth] = useState(initialDay.slice(0, 7));
+  const [selected, setSelected] = useState(initialDay);
   const [bookings, setBookings] = useState<CalendarBooking[]>([]);
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [loading, setLoading] = useState(true);
@@ -309,13 +312,13 @@ function CalendarContent() {
       {[...selectedBookings.map(booking=>({kind:'online' as const, booking, start:booking.start_at})), ...selectedManual.map(appointment=>({kind:'manual' as const, appointment, start:appointment.start_at}))].sort((a,b)=>Date.parse(a.start)-Date.parse(b.start)).map(entry => {
         if (entry.kind==='manual') { const a=entry.appointment; return <article key={'manual-'+a.id} className="pg-manual-card" style={{borderLeftColor:serviceColor(a.calendar_color)}}>
           <div><small>Segnato in agenda</small><h3>{a.service_name}{a.dog_label ? ' · '+a.dog_label : ''}</h3><p>{calendarDateTime(a.start_at)} – {calendarDateTime(a.end_at)}{a.instructor_name ? ' · '+a.instructor_name : ''}</p></div>
-          <button type="button" className="pg-agenda-secondary" onClick={()=>setEditing(a)}>Modifica</button></article>; }
+          <div className="flex flex-wrap items-center gap-2"><a href="/impara/esercizi" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold underline">Apri gli esercizi pubblici</a><button type="button" className="pg-agenda-secondary" onClick={()=>setEditing(a)}>Modifica</button></div></article>; }
         const booking=entry.booking; return <article key={booking.id} className="rounded-2xl border border-stone-200 border-l-4 bg-white p-5" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
         <div className="flex flex-wrap items-start justify-between gap-3"><div><h3 className="font-bold flex items-center gap-3"><ClientPortrait src={portraits[booking.id]} name={booking.client_name} />{booking.client_name}</h3><p className="mt-1 text-sm">{booking.service_name}</p></div><StatusBadge status={booking.status} /></div>
         <p className="mt-3 text-sm text-stone-600">{calendarDateTime(booking.start_at)} – {calendarDateTime(booking.end_at)} · {Number(booking.price || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</p>
         <div className="mt-3 rounded-xl bg-stone-50 p-3"><p className="text-xs font-bold text-stone-600">Note del cliente</p><p className="mt-1 whitespace-pre-wrap break-words text-sm">{booking.notes?.trim() || 'Nessuna nota inserita.'}</p></div>
         <BookingInstructor row={instructors.rows[booking.id]} professional onSaved={instructors.reload} />
-        <div className="mt-4 flex flex-wrap gap-2"><BookingConversation bookingId={booking.id} professional requestNotes={booking.notes} />{booking.status === 'pending' && <><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'accepted')} className={primary}>Accetta</button><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'declined')} className={button}>Rifiuta</button></>}
+        <div className="mt-4 flex flex-wrap gap-2"><BookingConversation practiceLesson={booking.status === 'completed' && ['trainer','enci_course'].includes(booking.service_type)} bookingId={booking.id} professional requestNotes={booking.notes} />{booking.status === 'pending' && <><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'accepted')} className={primary}>Accetta</button><button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'declined')} className={button}>Rifiuta</button></>}
           {booking.status === 'accepted' && <button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'completed')} className={primary}>Segna completata</button>}</div>
       </article>; })}
     </section>

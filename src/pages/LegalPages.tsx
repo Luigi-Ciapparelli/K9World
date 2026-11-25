@@ -102,6 +102,10 @@ export function PrivacyPage() {
           con il proprio nome. La revoca interrompe l'accesso; le risposte già inviate restano
           nella conversazione del cliente e del centro con il nome dell'autore al momento dell'invio.
           Questo permesso non apre le note private dell'archivio o i recapiti del profilo.
+          Le schede «Da provare a casa» e i riscontri che scegli di inviare sono messaggi di quella
+          prenotazione. Il riepilogo conta i giorni con una prova dichiarata. Un giorno senza
+          messaggi non equivale a un esercizio non svolto. Leggere gli esercizi pubblici non invia
+          informazioni all’istruttore. Il diario non attribuisce voti e non modifica le recensioni.
         </p>
         <p className="mt-3">
           Le note del lavoro svolto, se abilitate dal centro e autorizzate dalla relazione con il cane, sono attribuite all’istruttore e conservate negli archivi del centro e dell’autore. Gli altri istruttori non accedono a questi appunti. La condivisione di una revisione richiede anche il consenso del suo autore; il ritiro interrompe le nuove letture, senza richiamare copie già scaricate.
