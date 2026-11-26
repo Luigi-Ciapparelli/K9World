@@ -410,7 +410,7 @@ osservati direttamente: **non segnalarli come falliti né come verificati**.
 
 | Area | Implementazione nel repository | Confine importante |
 | --- | --- | --- |
-| Home e ricerca | Home con immagine statica; percorso pre-cane facoltativo; aiuto diretto, Sport ed Esposizioni separati | Non ripristinare la porta animata o un selettore iniziale obbligatorio |
+| Home e ricerca | Landing del 26 novembre: comune facoltativo, accesso diretto ad addestratori/pensioni e gestionale mobile; immagini statiche, esercizi e percorso pre-cane separato | Non ripristinare la porta animata o un selettore iniziale obbligatorio |
 | Impara | Rex e il Clicker sostituisce il vecchio laboratorio su GitHub e nella pagina pubblica; otto lezioni, attività, quiz e quaderno; riordino su GitHub 1,3,4,5,6,7,8,2, rinumerato 1–8 | Slug e progressi preservati; nessun attestato ufficiale o sync account |
 | Cani | Identità/razza FCI, data di nascita, scheda e foto private | Nessun tracciamento GPS continuo introdotto |
 | Account | Registrazione, recupero password, email/telefono modificabili, verifiche e conferme previste dal flusso | Modalità lancio email-only; SMS disattivati per contenere costi |

@@ -25,8 +25,9 @@ ${canonical ? `<meta property="og:url" content="${SITE_URL}${escape(meta.path)}"
 <meta property="og:image" content="${SOCIAL_IMAGE}" /><meta property="og:image:alt" content="PortaleCinofilo" />
 <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="${escape(meta.title)}" /><meta name="twitter:description" content="${escape(meta.description)}" /><meta name="twitter:image" content="${SOCIAL_IMAGE}" />
 <script type="application/ld+json" id="pc-structured-data">${json}</script>`;
-    const extraCss = styles.filter(file => !template.includes(`/${file}`)).map(file => `<link rel="stylesheet" href="/${file}" />`).join('');
-    return template.replace('<html lang="it">', `<html lang="it"${canonical ? ` data-seo-path="${escape(meta.path)}"` : ''}>`).replace(/<!--pc-seo:start-->[\s\S]*?<!--pc-seo:end-->/, tags).replace('</head>', `${extraCss}</head>`).replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+    // Home, header and footer are in the entry bundle; avoid CSS for unrelated lazy pages on first visit.
+    const extraCss = (meta.path === '/' ? [] : styles).filter(file => !template.includes(`/${file}`)).map(file => `<link rel="stylesheet" href="/${file}" />`).join('');
+    return template.replace('<html lang="it">', `<html lang="it"${canonical ? ` data-seo-path="${escape(meta.path)}"` : ''}>`).replace(/<!--pc-seo:start-->[\s\S]*?<!--pc-seo:end-->/, tags).replace('</head>', `${extraCss}${meta.path === '/' ? '<noscript><style>@media (max-width:1023px){.pc-home-header{position:static}.pc-home-header .pc-primary-nav{display:grid;grid-template-columns:1fr 1fr;padding-block:8px}.pc-home-header .pc-icon-button,.pc-home-header .pc-mobile-extras{display:none}}</style></noscript>' : ''}</head>`).replace('<div id="root"></div>', `<div id="root">${body}</div>`);
   }
   for (const page of PUBLIC_PAGES) {
     const filename = page.path === '/' ? 'index.html' : `${page.path.slice(1)}.html`;

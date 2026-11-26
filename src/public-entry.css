@@ -173,3 +173,18 @@ html.dark .pc-nav-sport svg { color: #e7bc60; }
   .pc-shaping-preview-button strong { font-size: 14px; }
   .pc-shaping-preview-button small { font-size: 7px; }
 }
+
+/* Keep the centre entrance directly reachable without adding a second public menu. */
+.pc-login-icon { display: none; }
+.pc-mobile-studio { min-height: 44px; display: inline-flex; align-items: center; padding-inline: 7px; color: var(--entry-accent); font-size: .875rem; font-weight: 680; text-decoration: underline; text-underline-offset: .21rem; }
+@media (max-width: 520px) {
+  .pc-home-header .pc-header-top { gap: 5px; }
+  .pc-home-header .pc-mobile-controls { gap: 0; }
+  .pc-home-header .pc-mobile-account { min-width: 44px; justify-content: center; }
+}
+@media (max-width: 389px) {
+  .pc-home-header .pc-login-icon { display: block; } .pc-home-header .pc-login-word { display: none; }
+  .pc-home-header .pc-brand img { width: 25px; height: 25px; }
+  .pc-home-header .pc-brand > span { font-size: 17px; }
+  .pc-home-header .pc-header-top { width: calc(100% - 16px); }
+}

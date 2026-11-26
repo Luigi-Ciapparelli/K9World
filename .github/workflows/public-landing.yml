@@ -1,0 +1,43 @@
+name: Home pubblica
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/public-landing.yml'
+      - 'src/pages/HomePage.tsx'
+      - 'src/components/Navbar.tsx'
+      - 'src/portal-home.css'
+      - 'src/public-entry.css'
+      - 'src/App.tsx'
+      - 'src/seo/**'
+      - 'scripts/build_seo.mjs'
+      - 'scripts/tests/test_home_portal.mjs'
+      - 'public/media/home/**'
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      VITE_SUPABASE_URL: 'https://pc-home-test.supabase.co'
+      VITE_SUPABASE_ANON_KEY: 'synthetic-test-public-key'
+      VITE_PROFESSIONAL_CONTINUITY: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: npm ci
+      - run: npm run typecheck && npm run build && node scripts/tests/test_seo_build.mjs
+      - run: npx --no-install playwright install --with-deps chromium
+      - run: node scripts/tests/test_home_portal.mjs
+        env:
+          PC_SCREENSHOTS: ${{ runner.temp }}/home-pubblica
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: home-desktop-mobile
+          path: ${{ runner.temp }}/home-pubblica
+          retention-days: 7
