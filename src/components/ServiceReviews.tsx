@@ -28,11 +28,11 @@ function ReviewNoticeBody({ professional }: { professional: boolean }) {
   </aside>;
 }
 
-export function ServiceReviewPanel({ professional = false, refresh = 0 }: { professional?: boolean; refresh?: number }) {
+export function ServiceReviewPanel({ professional = false, refresh = 0, compactEmpty=false }: { professional?: boolean; refresh?: number; compactEmpty?:boolean }) {
   const { user } = useAuth();
-  return user ? <ReviewPanelBody key={`${user.id}:${professional}`} professional={professional} refresh={refresh} /> : null;
+  return user ? <ReviewPanelBody key={`${user.id}:${professional}`} professional={professional} refresh={refresh} compactEmpty={compactEmpty} /> : null;
 }
-function ReviewPanelBody({ professional, refresh }: { professional: boolean; refresh: number }) {
+function ReviewPanelBody({ professional, refresh, compactEmpty }: { professional: boolean; refresh: number; compactEmpty:boolean }) {
   const [data, setData] = useState<ServiceReviews | null>(null);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -71,6 +71,7 @@ function ReviewPanelBody({ professional, refresh }: { professional: boolean; ref
     } catch (failure) { if (alive.current) setError(reviewError(failure)); }
     finally { dismissLock.current = false; if (alive.current) setBusy(false); }
   };
+  if (compactEmpty && !busy && !error && !editing && !notice && !attempts.length && !data?.count && !data?.items.length && page===0) return null;
   return <section aria-labelledby="service-reviews-title" className="my-6 rounded-3xl border border-[var(--pc-line)] bg-[var(--pc-paper)] p-5 sm:p-6">
     <div className="flex flex-wrap items-center justify-between gap-3"><h2 id="service-reviews-title" className="text-xl font-bold">Le vostre esperienze</h2><button type="button" disabled={loading || busy} onClick={() => void load()} className="text-sm font-semibold underline disabled:opacity-50">Aggiorna valutazioni</button></div>
     <p className="mt-2 text-sm text-[var(--pc-muted-600)]">{professional ? 'Ogni recensione riguarda il servizio svolto in quella prenotazione. Il feedback sulla collaborazione durante la lezione resta tra te e il cliente.' : 'Valuta il servizio che hai ricevuto in quella prenotazione. Il giudizio non è un voto generale all’addestratore o al centro.'}</p>

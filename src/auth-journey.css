@@ -1,0 +1,46 @@
+/* Access and signup share one page frame, including keyboard controls and messages. */
+.pc-auth-frame {
+  --surface:#fffefa; --ink:#252e28; --quiet:#505d54; --line:#b6bfb4; --soft:#eef2e9; --link:#065f46;
+  --accent:#047857; --error:#9f1239; --error-fill:#fff1f2; --outline:#9a5816;
+  padding:clamp(1.25rem,4vw,3.5rem) 1rem 3.5rem; background:#f6f3ea; min-height:66vh; color:var(--ink);
+}
+html.dark .pc-auth-frame {
+  --surface:#1c1917; --ink:#fafaf9; --quiet:#d6d3d1; --line:#716d68; --soft:#29372f; --link:#6ee7b7;
+  --error:#fecdd3; --error-fill:#3a2028; --outline:#fbbf24; background:#121815;
+}
+.pc-auth-wrap { max-width:30rem; margin-inline:auto; }
+.pc-auth-heading { padding:0 .15rem; margin-bottom:1.2rem; }
+.pc-auth-kicker { color:var(--link); font-size:.86rem; font-weight:700; }
+.pc-auth-heading h1 { font-family:var(--pc-font-display); margin:.35rem 0; font-size:clamp(1.9rem,4vw,2.55rem); line-height:1.12; font-weight:600; letter-spacing:-.035em; color:var(--ink); }
+.pc-auth-heading > p:last-child { color:var(--quiet); line-height:1.5; }
+.pc-auth-card { background:var(--surface); border:1px solid var(--line); border-radius:1.1rem; padding:clamp(1rem,3vw,1.55rem); box-shadow:0 .35rem 1.6rem #17271c0a; }
+.pc-auth-frame .pc-auth-primary { display:inline-flex; justify-content:center; align-items:center; min-height:46px; padding:.65rem 1rem; border-radius:.72rem; background:var(--accent); color:#fff; font-weight:700; font-size:1rem; }
+.pc-auth-frame .pc-auth-primary:hover { background:#065f46; }
+.pc-auth-frame .pc-auth-primary:disabled { cursor:wait; background:#52665a; color:#fff; }
+.pc-auth-frame .pc-auth-link,.pc-auth-frame button.text-emerald-700,.pc-auth-frame a.text-emerald-800 { color:var(--link); font-weight:650; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.2em; }
+.pc-auth-frame button.pc-auth-link { min-height:36px; }
+.pc-auth-frame :where(button,a,input,select,textarea,summary):focus-visible { outline:3px solid var(--outline); outline-offset:3px; }
+.pc-auth-frame .pc-auth-error,.pc-auth-frame p[role="alert"] { color:var(--error); background:var(--error-fill); padding:.6rem .75rem; border-inline-start:3px solid var(--error); border-radius:.3rem; font-size:.94rem; }
+.pc-auth-frame input:not([type=checkbox]),.pc-auth-frame select,.pc-auth-frame textarea { font-size:1rem; min-width:0; }
+.pc-auth-frame button,.pc-auth-frame input,.pc-auth-frame select,.pc-auth-frame textarea { scroll-margin:6rem; }
+.pc-auth-frame .pc-signup-role legend { font-size:.94rem; font-weight:650; margin-bottom:.45rem; }
+.pc-signup-role > div { display:grid; grid-template-columns:1fr 1fr; gap:.45rem; }
+.pc-signup-role button { display:flex; justify-content:center; gap:.45rem; align-items:center; font-size:.92rem; background:var(--surface); color:var(--ink); border:1px solid var(--line); border-radius:.65rem; min-height:44px; padding:.35rem; }
+.pc-signup-role button[aria-pressed=true] { background:var(--soft); color:var(--link); border-color:currentColor; font-weight:700; }
+.pc-role-mark { width:16px; height:16px; display:grid; place-items:center; border:1px solid currentColor; border-radius:50%; flex:none; }
+.pc-auth-review,.pc-auth-confirm-other { border-block-start:1px solid var(--line); padding-top:.9rem; }
+.pc-auth-review dl { margin:.45rem 0; font-size:.95rem; }
+.pc-auth-review dl > div { display:flex; flex-wrap:wrap; gap:.15rem .7rem; }
+.pc-auth-review dt { color:var(--quiet); }
+.pc-auth-review dd,.pc-auth-confirm strong { overflow-wrap:anywhere; }
+.pc-auth-confirm { display:grid; justify-items:start; gap:.8rem; }
+.pc-auth-confirm-other { width:100%; }
+html.dark .pc-auth-card .bg-amber-50,html.dark .pc-auth-card .bg-emerald-50 { background:#2d392e; }
+html.dark .pc-auth-card .text-emerald-800 { color:#a7f3d0; }
+@media(max-width:480px){
+  .pc-auth-frame { padding:1rem .85rem 2.75rem; }
+  .pc-auth-heading { margin-bottom:.75rem; }
+  .pc-auth-heading h1 { font-size:1.85rem; }
+  .pc-auth-heading > p:last-child { font-size:.95rem; }
+  .pc-auth-card { padding:1rem; }
+}

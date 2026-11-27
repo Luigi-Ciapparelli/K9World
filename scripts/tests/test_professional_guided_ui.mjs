@@ -77,11 +77,9 @@ try {
   assert.equal(await item.getAttribute('href'),'/#/pro/calendar');
   const bounds=await item.boundingBox();assert.ok(bounds.width>=44 && bounds.height>=44);
   if (width===1440) {
-    assert.equal(await label.isVisible(),false);
-    await item.hover();assert.ok(await label.isVisible());
-    await page.keyboard.press('Escape');assert.equal(await label.isVisible(),false);
-    await page.mouse.move(600,120);await current.focus();await page.keyboard.press('Shift+Tab');
-    await item.focus();assert.ok(await label.isVisible());
+    assert.ok(await label.isVisible(),'desktop always names each tool');
+    await item.focus();assert.ok(await item.evaluate(el=>el===document.activeElement));
+    await page.keyboard.press('Escape');assert.ok(await label.isVisible(),'Escape does not remove navigation labels');
   } else assert.ok(await label.isVisible());
   await item.click();await page.waitForURL(/#\/pro\/calendar$/);
   if(width===1440) {
@@ -101,17 +99,17 @@ try {
  if(process.argv.includes('--navigation')) { assert.deepEqual(errors,[]); console.log('OK: icone, nomi accessibili, tastiera, mobile, navigazione e visibilità centro.'); }
  else {
  const t=await setup();const {page,context,writes}=t;
- await page.goto(base+'#/pro/settings');await page.getByRole('heading',{name:'Un passo alla volta. Il tuo lavoro prende forma.'}).waitFor();
+ await page.goto(base+'#/pro/settings');await page.getByRole('heading',{name:'Profilo guidato',exact:true}).waitFor();
  assert.equal(await page.locator('progress').getAttribute('value'),'2');
  assert.equal(await page.getByRole('link',{name:'Apri profilo pubblico'}).getAttribute('href'),`/p/${uid}`);
  assert.equal(await page.locator('main input,main textarea,main select').count(),0);
  if(OUT) await page.screenshot({path:OUT+'/PortaleCinofilo_percorso_professionista.png',fullPage:true,animations:'disabled'});
- await page.getByRole('button',{name:'Continua il profilo',exact:true}).click();
- await page.waitForURL(/step=story/);assert.equal(await page.locator('main textarea').count(),1);
+ await page.getByRole('button',{name:'Racconta come lavori',exact:true}).click();
+ await page.waitForURL(/step=story/);await page.getByText('Passaggio 3 di 4',{exact:true}).waitFor();assert.equal(await page.locator('main textarea').count(),1);
  await page.locator('main textarea').fill('Lavoro con il proprietario per costruire una gestione quotidiana serena.');
  t.fail();await page.getByRole('button',{name:'Salva e continua',exact:true}).click();
  await page.getByRole('alert').filter({hasText:'Errore di prova'}).waitFor();assert.match(page.url(),/step=story/);
- await page.getByRole('button',{name:'Salva e continua',exact:true}).click();await page.waitForURL(/step=services/);
+ await page.getByRole('button',{name:'Salva e continua',exact:true}).click();await page.waitForURL(/step=services/);await page.getByRole('status').filter({hasText:'Modifiche salvate: Presentazione.'}).waitFor();
  const savedStory=writes.filter(w=>w.name==='professionals').at(-1);assert.deepEqual(Object.keys(savedStory.body).sort(),['bio','updated_at']);assert.ok(!writes.some(w=>w.name==='booking_rules'));
  await page.getByRole('button',{name:'Aggiungi servizio',exact:true}).click();
  await page.getByLabel('Nome del servizio', {exact:true}).fill('Educazione individuale');
@@ -151,12 +149,24 @@ try {
  await page.getByRole('button',{name:'Aggiungi evidenza',exact:true}).click();await page.getByText('Voce aggiunta come dichiarazione non verificata.',{exact:true}).waitFor();
  assert.equal(writes.filter(w=>w.name==='professional_credentials').at(-1).body.verification_status,'self_declared');
  await context.close();
- for(const width of [320,390,768,1024,1440]) {
+ for(const width of [320,375,390,768,1024,1440]) {
   const {page,context}=await setup(width);await page.goto(base+'#/pro/settings');await page.locator('progress').waitFor();
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Overview overflow '+width);
   if(width===390)if(OUT) await page.screenshot({path:OUT+'/PortaleCinofilo_percorso_mobile.png',fullPage:true,animations:'disabled'});
-  await page.getByRole('button',{name:'Continua il profilo',exact:true}).click();await page.waitForURL(/step=story/);
+  await page.getByRole('button',{name:'Racconta come lavori',exact:true}).click();await page.waitForURL(/step=story/);
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Editor overflow '+width);
+  if(width===375){
+    const mobile=page.getByLabel('Vai a un passaggio');await mobile.focus();
+    assert.ok(await mobile.evaluate(el=>el===document.activeElement));
+    assert.equal(await mobile.locator('optgroup').count(),2);
+    assert.ok(await mobile.evaluate(el=>parseFloat(getComputedStyle(el).fontSize)>=16));
+    await mobile.selectOption('rules');
+    await page.getByRole('group',{name:'Preavviso e cancellazioni · ore'}).getByLabel('Anticipo minimo (ore)').waitFor();
+    await page.getByRole('group',{name:'Durata e intervalli · minuti'}).getByLabel('Pausa tra appuntamenti (minuti)').waitFor();
+    await mobile.selectOption('replies');await page.getByText('Canale: conversazione della prenotazione su PortaleCinofilo.',{exact:true}).waitFor();
+    await mobile.selectOption('credentials');await page.getByText('Nessun attestato o risultato ancora inserito.').waitFor();
+    if(OUT) await page.screenshot({path:OUT+'/Studio_profilo_mobile_attestati.png',animations:'disabled'});
+  }
   await context.close();
  }
  const dark=await setup(1440,'dark');await dark.page.goto(base+'#/pro/settings');await dark.page.locator('progress').waitFor();if(OUT) await dark.page.screenshot({path:OUT+'/PortaleCinofilo_percorso_scuro.png',fullPage:true,animations:'disabled'});await dark.context.close();

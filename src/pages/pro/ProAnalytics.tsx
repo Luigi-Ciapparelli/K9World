@@ -1,3 +1,4 @@
+import '../../studio-tools.css';
 import { FormEvent, ReactNode, useEffect, useState } from 'react';
 import { ArrowUpRight, CalendarDays, CheckCircle2, Euro, RefreshCw, Users } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
@@ -76,9 +77,10 @@ function ActivityReport({ userId }: { userId?: string }) {
       <button type="button" className="pg-secondary" onClick={() => navigate('/pro/calendar')}>Apri calendario <ArrowUpRight size={16} aria-hidden="true" /></button>
     </div>
     <section aria-label="Periodo delle statistiche" className="rounded-2xl border border-stone-200 bg-white p-4 sm:p-5 mb-6">
-      <div className="flex flex-wrap gap-2 mb-4">
+      <p className="pc-work-applied" role="status"><span>Intervallo applicato</span><strong>{date(range.from)} – {date(range.to)}</strong></p>
+      <div className="pc-work-periods flex flex-wrap gap-2 mb-4">
         {([['month', 'Questo mese'], ['90days', 'Ultimi 90 giorni'], ['year', 'Quest’anno']] as const).map(([preset, label]) =>
-          <button type="button" key={preset} onClick={() => apply(activityPreset(preset))}
+          <button type="button" key={preset} aria-pressed={activityPreset(preset).from === range.from && activityPreset(preset).to === range.to} onClick={() => apply(activityPreset(preset))}
             className="rounded-full border border-stone-300 px-4 py-2 text-sm font-semibold hover:bg-stone-50">{label}</button>)}
       </div>
       <form onSubmit={submit}>

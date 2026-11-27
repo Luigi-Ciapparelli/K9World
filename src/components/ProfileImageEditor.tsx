@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import { ProfessionalCover } from './ProfessionalCover';
 import { IMAGE_LIMITS, prepareProfileImage, removeProfileImage, saveProfileImage, type ImageKind } from '../lib/profileImages';
 
 export function ProfileImageEditor({ userId, kind, currentUrl, onSaved, onActivity }: {
@@ -56,9 +57,13 @@ export function ProfileImageEditor({ userId, kind, currentUrl, onSaved, onActivi
   return <section className="pc-card p-5 sm:p-6 mb-5" aria-labelledby={id} aria-busy={busy || preparing}>
     <h2 id={id} className="text-xl font-bold">{title}</h2>
     <p className="mt-2 text-sm leading-relaxed text-stone-600">{kind === 'client' ? 'Facoltativa. Ti rende riconoscibile ai professionisti con una richiesta in attesa, un servizio accettato o completato, oppure una relazione attiva. Non compare nella ricerca pubblica.' : kind === 'cover' ? 'Una foto orizzontale del tuo lavoro o del centro, visibile a chi apre il profilo. Disponibile per tutti i professionisti.' : 'Questa immagine è pubblica: comparirà nei risultati di ricerca e nel tuo profilo.'}</p>
-    <div className={`mt-4 overflow-hidden rounded-2xl bg-stone-100 border border-stone-200 ${kind === 'cover' ? 'aspect-[8/3] w-full' : 'w-36 h-36'}`}>
-      {src && failedPreview !== src ? <img src={src} alt={`Anteprima: ${title}`} onError={() => setFailedPreview(src)} className="h-full w-full object-cover" /> : <div className="h-full flex items-center justify-center text-center px-3 text-sm text-stone-500">{kind === 'cover' ? 'Il tuo banner' : 'Nessuna foto'}</div>}
-    </div>
+    {kind === 'cover' ? <div className="pc-cover-previews">{(['desktop', 'mobile'] as const).map(size =>
+      <figure key={size}><ProfessionalCover size={size} src={failedPreview === src ? undefined : src} alt={`Anteprima banner: ${size === 'desktop' ? 'computer' : 'telefono'}`} onError={() => setFailedPreview(src)} />
+        <figcaption className="pc-media-caption">{size === 'desktop' ? 'Ritaglio su computer' : 'Ritaglio su telefono'}</figcaption>
+      </figure>)}</div>
+      : <figure className="mt-4"><div className={`overflow-hidden rounded-2xl bg-stone-100 border border-stone-200 ${kind === 'avatar' ? 'h-24 w-24' : 'h-36 w-36'}`}>
+        {src && failedPreview !== src ? <img src={src} alt={`Anteprima: ${title}`} onError={() => setFailedPreview(src)} className="h-full w-full object-cover object-center" /> : <div className="h-full flex items-center justify-center text-center px-2 text-sm text-stone-600">Nessuna foto</div>}
+      </div>{kind === 'avatar' && <figcaption className="pc-media-caption">Ritaglio quadrato nel profilo e nella ricerca.</figcaption>}</figure>}
     <label className="mt-4 inline-block rounded-xl border border-emerald-700 px-4 py-2 font-semibold text-emerald-900 cursor-pointer">
       Scegli immagine
       <input aria-label={title} disabled={busy} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={e => { const next = e.target.files?.[0]; if (next) { setFile(next); setPosition(50); } e.currentTarget.value = ''; }} />

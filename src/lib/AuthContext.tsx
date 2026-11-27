@@ -8,7 +8,7 @@ import { setContinuityRecordingAccount } from './continuityRecording';
 import { setReviewAccount } from './reviewSubmission';
 
 interface AuthContextType {
-  user: { id: string; email: string } | null;
+  user: { id: string; email: string; emailConfirmed?: boolean } | null;
   profile: Profile | null;
   loading: boolean;
   profileError: boolean;
@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setContinuityRecordingAccount(session?.user?.id || null);
       setReviewAccount(session?.user?.id || null);
-      current.acceptUser(session?.user ? { id: session.user.id, email: session.user.email || '' } : null, event === 'USER_UPDATED');
+      current.acceptUser(session?.user ? { id: session.user.id, email: session.user.email || '', emailConfirmed: 'email_confirmed_at' in session.user ? Boolean(session.user.email_confirmed_at) : undefined } : null, event === 'USER_UPDATED');
     });
     return () => { subscription.unsubscribe(); current.dispose(); setContinuityRecordingAccount(null); setReviewAccount(null); if (state.current === current) state.current = null; };
   }, []);
@@ -146,8 +146,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
     });
 
-    if (error) return { error: error.message };
-    if (!data.user) return { error: 'Signup failed' };
+    if (error) {
+      // Some provider configurations explicitly reject duplicate signups. Give the same
+      // next step as an accepted unconfirmed signup; never echo the raw Auth response.
+      const code = error.code || '';
+      if (['user_already_exists', 'email_exists', 'identity_already_exists'].includes(code) || /already (registered|exists)/i.test(error.message)) return { error: null, needsEmailConfirmation: true };
+      if (code === 'weak_password') return { error: 'La password non soddisfa i requisiti. Scegli una password più lunga e meno prevedibile.' };
+      if (code === 'email_address_invalid') return { error: 'Controlla il formato dell’indirizzo email e riprova.' };
+      if (error.status === 429) return { error: 'Troppi tentativi. Attendi qualche minuto prima di riprovare.' };
+      return { error: 'Registrazione non completata. Controlla i dati e riprova. Se hai già ricevuto una conferma, puoi accedere.' };
+    }
+    if (!data.user) return { error: 'Registrazione non completata. Riprova tra poco.' };
 
     // Il trigger DB crea profile, eventuale professional pending e primo cane.
     // Se la conferma email è attiva non esiste ancora una sessione browser.

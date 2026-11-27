@@ -58,13 +58,15 @@ function PublicHomePage() {
         <p className="pc-landing-kicker">Educazione e vita con il cane</p>
         <h1 id="home-title">Conosci il tuo cane. <em>Trova chi ti aiuta.</em></h1>
         <p className="pc-landing-lead">Impara a leggere i suoi segnali e prova un esercizio a casa. Se vi serve una mano, cerca un educatore o un addestratore vicino a te.</p>
+        <h2 className="pc-audience-title">Hai già un cane?</h2>
         <NearbySearch />
       </div>
       <figure className="pc-landing-cover">
-        <RouteLink to="/impara/esercizi/piattaforma-shaping" aria-label="Leggi l’esercizio: Due zampe sulla piattaforma">
-          <img src="/media/home/training-768.webp" srcSet="/media/home/training-768.webp 768w, /media/home/training-1280.webp 1280w" sizes="(max-width: 760px) calc(100vw - 36px), (max-width: 1350px) 46vw, 580px" width={1280} height={853} alt="Scena illustrativa: un cane appoggia le zampe anteriori su una pedana accanto a una persona accovacciata." decoding="async" {...{ fetchpriority: 'high' }} />
-          <div className="pc-landing-cover-caption"><span><span className="pc-cover-label">Dal campo a casa</span><strong>Due zampe sulla piattaforma</strong><span className="pc-cover-read">Leggi l’esercizio</span></span><BookOpen aria-hidden="true" size={26} strokeWidth={1.6} /></div>
-        </RouteLink>
+        <img src="/media/home/portal-static-960.webp" srcSet="/media/home/portal-static-640.webp 640w, /media/home/portal-static-960.webp 960w, /media/home/portal-static-1440.webp 1440w" sizes="(max-width:760px) 100vw, (max-width:1350px) 46vw, 580px" width={1440} height={960} alt="Un cane attraversa un portone verde aperto su un giardino luminoso." decoding="async" {...{ fetchpriority: 'high' }} />
+        <figcaption className="pc-landing-cover-caption"><div><h2>Stai pensando a un cane?</h2>
+          <p>Parti dalle abitudini della tua famiglia.</p>
+          <div className="pc-threshold-links"><RouteLink to="/prima-del-cane">Fai il test di scelta</RouteLink><RouteLink to={beforeDogHelp}>Parlane con un addestratore</RouteLink></div>
+        </div></figcaption>
       </figure>
     </section>
     <div className="pc-landing-library pc-entry-container">
@@ -74,13 +76,11 @@ function PublicHomePage() {
         <ul>{readings.map(item => <li key={item.slug}><RouteLink to={'/impara/esercizi/' + item.slug}><small>{item.context}</small><span>{item.title}</span><BookOpen aria-hidden="true" size={18} strokeWidth={1.6} /></RouteLink></li>)}</ul>
         <RouteLink className="pc-text-link" to="/impara/esercizi">Tutti gli esercizi</RouteLink>
       </section>
-      <section className="pc-before-dog" aria-labelledby="before-title">
-        <img src="/media/home/portal-static-640.webp" width={640} height={427} loading="lazy" decoding="async" alt="" />
-        <div><p className="pc-landing-kicker">Prima del cane</p><h2 id="before-title">Stai pensando di prendere un cane?</h2>
-          <p>Parti dal tempo, dagli spazi e dalle abitudini della tua famiglia. Il test gratuito ti aiuta a capire cosa considerare prima della scelta.</p>
-          <RouteLink to="/prima-del-cane" className="pc-choice-link">Fai il test di scelta</RouteLink>
-          <RouteLink to={beforeDogHelp} className="pc-text-link">Parlane con un addestratore</RouteLink>
-        </div>
+      <section className="pc-field-feature" aria-labelledby="practice-title">
+        <RouteLink to="/impara/esercizi/piattaforma-shaping" aria-label="Leggi l’esercizio: Due zampe sulla piattaforma">
+          <img src="/media/home/training-768.webp" width={768} height={512} loading="lazy" decoding="async" alt="Una persona e il suo cane provano l’esercizio della pedana." />
+          <div><p className="pc-landing-kicker">Dal campo a casa</p><h2 id="practice-title">Due zampe sulla piattaforma</h2><span>Leggi l’esercizio</span><BookOpen size={20} aria-hidden="true"/></div>
+        </RouteLink>
       </section>
     </div>
   </main>;

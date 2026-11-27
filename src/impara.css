@@ -82,7 +82,7 @@
 .im-lesson-header h1 {font-size:clamp(2.3rem,4vw,3.5rem);margin-top:12px;}
 .im-meta {display:flex;gap:16px;flex-wrap:wrap;font-size:.77rem;color:var(--im-muted);}
 .im-meta span {display:flex;gap:6px;align-items:center;}
-.im-lesson-layout {display:grid;grid-template-columns:260px minmax(0,1fr);gap:60px;}
+.im-lesson-layout {display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:60px;}
 .im-outline {align-self:start;position:sticky;top:96px;border-top:1px solid var(--im-line);padding-top:24px;}
 .im-outline h2 {font-size:1.6rem;margin-top:15px;}
 .im-outline ul {margin:22px 0 28px;}
@@ -148,7 +148,7 @@
 .im-empty {padding:100px 0;}
 .im-empty .im-button {margin-top:30px;}
 @media(max-width:1000px) {
- .im-hero {gap:40px;}.im-lesson-layout {gap:28px;grid-template-columns:220px minmax(0,1fr);}.im-section-heading {display:block;}.im-search {max-width:350px;margin-top:24px;}
+ .im-hero {gap:40px;}.im-lesson-layout {gap:28px;grid-template-columns:minmax(0,1fr) 220px;}.im-section-heading {display:block;}.im-search {max-width:350px;margin-top:24px;}
 }
 @media(max-width:760px) {
  .im-wrap {width:calc(100% - 36px);}.im-hero {grid-template-columns:1fr;padding-top:40px;gap:30px;}.im-hero h1 {font-size:2.8rem;}.im-hero h1 br {display:none;}.im-course-card {padding:26px;box-shadow:6px 6px 0 var(--im-soft);}.im-course-card h2 {font-size:1.8rem;}.im-course-card h2 br {display:none;}.im-course-map {display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:20px 0;}.im-course-map>div {gap:8px;}.im-course-map strong {font-size:.76rem;}.im-course-map span {flex-shrink:0;}.im-feature-row {grid-template-columns:1fr;margin-bottom:45px;}.im-feature-row>button+button {border-left:0;border-top:1px solid var(--im-line);}.im-feature-row>button {padding:20px;gap:14px;}.im-section-heading h2 {font-size:1.9rem;}.im-lessons-grid {grid-template-columns:1fr;gap:14px;}.im-lesson-card {padding:23px;}.im-lesson-card h4 {font-size:1.32rem;}.im-module {margin-top:32px;}.im-number {width:34px;}.im-notebook {padding:24px;gap:14px;}.im-notebook>svg {display:none;}.im-notebook h2 {font-size:1.8rem;}.im-milestone {padding:24px;}.im-lesson-layout {display:flex;flex-direction:column;gap:24px;}.im-outline {position:static;border:0;background:var(--im-soft);border-radius:8px;padding:20px;}.im-outline h2 {display:none;}.im-outline ul {margin:10px 0;}.im-outline li {margin:8px 0;}.im-outline .im-aside-help {display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;padding-top:8px;margin-top:12px;}.im-outline .im-aside-help p {margin:0;}.im-lesson-header {padding:24px 0;}.im-lesson-header h1 {font-size:2.35rem;}.im-lesson-header .im-lead {font-size:1rem;margin:16px 0;}.im-meta {gap:8px;}.im-reading,.im-panel {padding:22px;}.im-reading h2 {font-size:1.65rem;}.im-tabs button {font-size:.75rem;gap:6px;}.im-tabs button>span {width:22px;height:22px;}.im-tabs {margin-bottom:20px;}.im-reading>p:not(.im-eyebrow) {font-size:.95rem;}.im-step-end .im-button {margin-left:0;}.im-lesson-navigation {gap:12px;}.im-lesson-navigation .im-link {font-size:.8rem;}.im-lab-options {gap:16px;}.im-lab .im-actions {gap:10px;}.im-lab .im-button {padding:11px;font-size:.8rem;}.im-timing-results {gap:8px;}.im-video-label {font-size:.55rem;top:10px;left:10px;right:10px;}
@@ -166,3 +166,13 @@
 .im-shaping-caption {min-height:3em;}
 .im-shaping .im-feedback .im-button {margin-top:15px;}
 @media(max-width:600px){.im-shaping-steps{grid-template-columns:repeat(2,minmax(0,1fr));}.im-shaping .im-marker{font-size:.88rem;min-height:48px;}.im-shaping .im-lab-options{display:block;}.im-shaping .im-lab-options label{margin-top:14px;align-items:start;}.im-shaping-stage{margin-left:-10px;margin-right:-10px;}.im-shaping .im-video-label{font-size:.5rem;}.im-shaping-caption{font-size:.85rem;}}
+
+@media(max-width:760px) {
+  .im-lesson .im-breadcrumb {padding-top:.65rem}
+  .im-lesson .im-lesson-header {padding:.8rem 0 1.15rem}
+  .im-lesson .im-lesson-header h1 {font-size:clamp(1.8rem,6vw,2.4rem);margin-top:.45rem}
+  .im-lesson .im-lesson-header .im-lead {margin:.6rem 0}
+  .im-lesson .im-tabs {margin-bottom:.75rem}
+  .im-lesson .im-tabs button {font-size:.875rem}
+  .im-lesson .im-outline {width:100%}
+}

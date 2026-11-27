@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowRight,
   BadgeCheck,
@@ -114,6 +114,8 @@ function initials(name: string): string {
 // ECOSYSTEM_PASS_V1
 export function SearchPage({ sport = false, exhibitions = false }: { sport?: boolean; exhibitions?: boolean }) {
   const { path } = useRouter();
+  const cityInput = useRef<HTMLInputElement>(null);
+  const changeZone = () => { const field=cityInput.current; if (field) {field.focus();field.select();field.scrollIntoView({block:'center'});} };
   const qs = new URLSearchParams(path.split('?')[1] || '');
   const bounded = (key: string, fallback: number, low: number, high: number) => {
     const raw = qs.get(key), value = Number(raw);
@@ -169,6 +171,7 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true); setLoadError('');
 
     const load = async () => {
       if (unsupportedCategory || invalidTrainingFocus) { setPros([]); setLoading(false); setLoadError(''); return; }
@@ -302,18 +305,12 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
       : filtered.length === 1 ? 'disponibile' : 'disponibili';
 
   return (
-    <div className="min-h-screen bg-[var(--pc-bone-50)]">
-      <div className="max-w-7xl mx-auto px-6 py-8 md:py-12">
-        {!sport && !exhibitions && <h1 className="sr-only">Trova aiuto per il cane</h1>}
-        {sport ? <header className="mb-8 max-w-3xl">
-          <p className="pc-kicker">Un percorso sportivo con il tuo cane</p>
-          <h1 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Sport cinofili</h1>
-          <p className="pc-lead mt-4">Cerca chi insegna la disciplina che vuoi praticare. Confronta esperienza e attività nel profilo, poi contatta il professionista.</p>
-        </header> : exhibitions ? <header className="mb-8 max-w-3xl">
-          <p className="pc-kicker">Cura del mantello e presentazione sul ring</p>
-          <h1 className="pc-display text-4xl md:text-5xl font-semibold mt-3">Esposizioni</h1>
-          <p className="pc-lead mt-4">Trova un toelettatore o un handler per preparare e presentare il tuo cane in esposizione. La toelettatura è disponibile anche per la cura quotidiana, senza partecipare a una gara.</p>
-        </header> : <JourneyContextNotice context={journey} className="mb-6" />}
+    <div className="pc-discovery min-h-screen bg-[var(--pc-bone-50)]">
+      <div className="max-w-7xl mx-auto px-4 py-5 md:px-6 md:py-9">
+        <header className="pc-discovery-heading">
+          <h1 className="pc-display">{sport ? 'Sport cinofili' : exhibitions ? 'Esposizioni' : 'Trova aiuto per il cane'}</h1>
+          <p>{sport ? 'Scegli una disciplina e cerca chi la insegna nella tua zona.' : exhibitions ? 'Trova un handler per il ring o un toelettatore, anche per la cura quotidiana.' : 'Trova un addestratore, un educatore o una pensione nella tua zona.'}</p>
+        </header>
         {exhibitions && qs.get('moved') === 'exhibitions' && <p role="status" className="pc-card p-4 mb-4">Toelettatura e handler sono ora in Esposizioni. Abbiamo mantenuto la zona della tua ricerca.</p>}
         {unsupportedCategory && <div role="status" className="pc-card p-5 mb-4">
           <h2 className="font-bold">Questa categoria non è disponibile in questa ricerca</h2>
@@ -321,9 +318,10 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
           <RouteLink to="/esposizioni" className="inline-block mt-3 underline">Cerchi toelettatura o un handler? Vai a Esposizioni</RouteLink>
         </div>}
         {invalidTrainingFocus && <p role="alert" className="pc-card p-4 mb-4">Attività non riconosciuta. Premi Cerca per tornare all’educazione quotidiana.</p>}
-        <SearchCard compact sport={sport} exhibitions={exhibitions} />
+        <SearchCard compact sport={sport} exhibitions={exhibitions} cityInputRef={cityInput} />
+        {!sport && !exhibitions && <JourneyContextNotice context={journey} className="mt-4" />}
 
-        <div className="grid lg:grid-cols-[280px_1fr] gap-6 mt-8">
+        <div className="grid lg:grid-cols-[260px_minmax(0,1fr)] gap-4 md:gap-6 mt-4 md:mt-6">
           <aside className="pc-card p-5 md:p-6 h-fit lg:sticky lg:top-24">
             <button type="button" className="lg:hidden w-full min-h-[44px] flex items-center justify-between gap-3 font-semibold" aria-expanded={mobileFiltersOpen} aria-controls="optional-search-filters" onClick={() => setMobileFiltersOpen(value => !value)}>
               <span><SlidersHorizontal className="w-4 h-4 inline mr-2" />Filtri facoltativi{activeFilterChips.length ? ` (${activeFilterChips.length})` : ''}</span><span aria-hidden="true">{mobileFiltersOpen ? '−' : '+'}</span>
@@ -347,13 +345,13 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
               Filtri fattuali per restringere il campo. La competenza si valuta entrando nel profilo.
             </p>
 
-            <details className="rounded-xl bg-[var(--pc-bone-50)] p-3 mt-4">
+            {!loading && !loadError && filtered.length > 1 && <details className="rounded-xl bg-[var(--pc-bone-50)] p-3 mt-4">
               <summary className="cursor-pointer text-sm font-semibold"><Info className="w-4 h-4 inline mr-2" />Come sono ordinati?</summary>
               <p className="mt-3 text-sm leading-6 text-[var(--pc-muted-600)]">
                 {sport ? 'Compaiono i professionisti che offrono la disciplina cercata, con un servizio di addestramento attivo e copertura nella zona scelta.' : 'Compaiono i professionisti che offrono il servizio cercato e coprono la zona scelta.'}
                 {' '}L’ordine iniziale segue la distanza, quando disponibile, poi il nome. Puoi scegliere un altro ordinamento. I risultati sportivi non danno precedenza generale.
               </p>
-            </details>
+            </details>}
 
             <div className="pc-rule my-5" />
 
@@ -370,7 +368,7 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
                     <button
                       key={value}
                       type="button"
-                      onClick={() => setSubjectFilter(value)}
+                      onClick={() => setSubjectFilter(value)} aria-pressed={selected}
                       className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-semibold text-left transition ${
                         selected
                           ? 'border-[var(--pc-forest-700)] bg-[var(--pc-forest-100)] text-[var(--pc-forest-900)]'
@@ -406,7 +404,7 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
                   {EXPERIENCE_STEPS.map((years, index) => {
                     const selected = experienceStep === index;
                     return (
-                      <button key={years} type="button" onClick={() => setExperienceStep(index)} className="group flex flex-col items-center gap-2">
+                      <button key={years} type="button" onClick={() => setExperienceStep(index)} aria-pressed={selected} className="group flex flex-col items-center gap-2">
                         <span className={`relative z-10 w-6 h-6 rounded-full border-2 transition ${selected ? 'border-[var(--pc-evidence-700)] bg-[var(--pc-evidence-700)] shadow-sm' : 'border-[var(--pc-line)] bg-white group-hover:border-[var(--pc-forest-700)]'}`}>
                           {selected && <span className="absolute inset-[5px] rounded-full bg-white" />}
                         </span>
@@ -448,17 +446,14 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
             <div className="mb-6">
               <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4">
                 <div>
-                  <p className="pc-kicker">Confronta dati, poi entra nel profilo</p>
+
                   <h2 className="pc-display text-3xl md:text-4xl font-semibold text-[var(--pc-ink-950)] mt-2">
-                    {loading ? 'Ricerca professionisti…' : `${resultsLabel} ${titleLocation}`}
+                    {loading || loadError || !filtered.length ? 'Risultati della ricerca' : `${resultsLabel} ${titleLocation}`}
                   </h2>
-                  <p className="text-[var(--pc-muted-600)] mt-2 leading-6 max-w-3xl">
-                    Servizio, zona, esperienza e budget servono a scremare. Per scegliere, guarda competenze,
-                    formazione, attività e contesto professionale.
-                  </p>
+
                 </div>
 
-                <label className="text-sm font-semibold text-[var(--pc-ink-800)]">
+                {!loading && !loadError && filtered.length > 1 && <label className="text-sm font-semibold text-[var(--pc-ink-800)]">
                   Ordina per
                   <select value={sortMode} onChange={(e) => setSortMode(e.target.value as SortMode)} className="block mt-2 min-w-52 rounded-xl border border-[var(--pc-line)] bg-white px-3 py-2.5 text-sm text-[var(--pc-ink-950)]">
                     <option value="relevance">Pertinenza</option>
@@ -466,7 +461,7 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
                     <option value="experience">Esperienza / attività</option>
                     <option value="price">Prezzo crescente</option>
                   </select>
-                </label>
+                </label>}
               </div>
 
               {activeFilterChips.length > 0 && (
@@ -476,25 +471,28 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
                       {chip.label}<span aria-hidden="true">×</span>
                     </button>
                   ))}
-                  <button type="button" onClick={resetFilters} className="inline-flex items-center gap-1 text-xs font-bold text-[var(--pc-forest-900)] hover:underline">
+                  {filtered.length > 0 && <button type="button" onClick={resetFilters} className="inline-flex items-center gap-1 text-xs font-bold text-[var(--pc-forest-900)] hover:underline">
                     <RotateCcw className="w-3.5 h-3.5" /> Azzera filtri
-                  </button>
+                  </button>}
                 </div>
               )}
             </div>
 
             {loading ? (
-              <div className="bg-white rounded-2xl border border-stone-200 p-8">
-                Caricamento professionisti...
+              <div role="status" className="pc-card p-6">
+                Caricamento dei risultati…
               </div>
             ) : loadError ? (
               <div role="alert" className="bg-rose-50 rounded-2xl border border-rose-200 p-8 text-rose-700">
                 <p>{loadError}</p><button type="button" className="mt-3 font-semibold underline" onClick={() => setReloadKey(key => key + 1)}>Riprova</button>
               </div>
             ) : filtered.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-stone-200 p-8">
-                Nessun risultato corrisponde ai filtri attivi. Riduci i vincoli oppure prova un'altra zona o servizio.
-              </div>
+              <section className="pc-card pc-no-results" aria-label="Nessun risultato">
+                <h3>{activeFilterChips.length ? 'Nessun risultato con questi filtri' : 'Nessun risultato per questa ricerca'}</h3>
+                <p>{activeFilterChips.length ? 'Allarga la ricerca mantenendo il servizio e la zona, oppure prova un altro comune.' : 'Prova un altro comune o scegli un altro servizio o disciplina.'}</p>
+                <div><button type="button" onClick={changeZone} className="pc-btn pc-btn-primary">Cambia zona</button>
+                {activeFilterChips.length > 0 && <button type="button" className="pc-btn pc-btn-secondary" onClick={resetFilters}>Azzera filtri</button>}</div>
+              </section>
             ) : (
               <div className="grid gap-4">
                 {filtered.map((pro) => {
@@ -546,7 +544,7 @@ export function SearchPage({ sport = false, exhibitions = false }: { sport?: boo
                                     ? 'Struttura / centro cinofilo'
                                     : serviceLabel}
                                 </span>
-                                {Boolean(pro.professional_verified) ? (
+                                {pro.professional_verified ? (
                                   <span className="inline-flex items-center gap-1.5 normal-case tracking-normal text-[var(--pc-evidence-700)]">
                                     <BadgeCheck className="w-3.5 h-3.5" />
                                     Professionista verificato

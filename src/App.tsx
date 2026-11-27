@@ -281,8 +281,8 @@ function AppShell() {
         {content}
       </Suspense>
       </PageErrorBoundary>
-      {showFooter ? <Footer /> : <AccountLegalLinks />}
       <Chatbot key={user?.id || 'visitor'} />
+      {showFooter ? <Footer /> : <AccountLegalLinks />}
     </>
   );
 }

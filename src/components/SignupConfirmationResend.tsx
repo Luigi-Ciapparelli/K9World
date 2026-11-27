@@ -17,10 +17,11 @@ export function SignupConfirmationResend({ email }: { email: string }) {
     locked.current = true; setBusy(true); setInfo('');
     try {
       const { error } = await supabase.auth.resend({ type: 'signup', email: email.trim(), options: { emailRedirectTo: signupEmailRedirect() } });
-      if (!error || error.status === 429) setCooldown(true);
+      const neutral = !error || ['user_not_found', 'email_not_confirmed', 'user_already_exists', 'email_exists', 'identity_already_exists'].includes(error.code || '');
+      if (neutral || error?.status === 429) setCooldown(true);
       else locked.current = false;
-      setInfo(!error ? 'Se l’indirizzo è in attesa di conferma, riceverai una nuova email. Apri solo l’ultima; controlla anche lo spam.'
-        : error.status === 429 ? 'È già stato richiesto un invio. Controlla la posta e attendi un minuto prima di riprovare.'
+      setInfo(neutral ? 'Se l’indirizzo è in attesa di conferma, riceverai una nuova email. Apri solo l’ultima; controlla anche lo spam.'
+        : error?.status === 429 ? 'È già stato richiesto un invio. Controlla la posta e attendi un minuto prima di riprovare.'
         : 'Invio non confermato. Riprova tra poco; se il problema continua, scrivi a info@portalecinofilo.com.');
     } catch {
       locked.current = false; setInfo('Invio non confermato. Controlla la connessione e riprova.');

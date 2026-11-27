@@ -1,5 +1,5 @@
 import { SignupPrivacyNotice, SignupTerms } from '../components/SignupLegalNotice';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PawPrint, Mail, Lock, User, Phone, Check } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/RouterContext';
@@ -8,6 +8,7 @@ import { loadFciBreeds, normalizeBreedSearch, type FciBreed } from '../lib/fciBr
 import { bookingAuthPath, bookingDestination } from '../lib/bookingEntry';
 import { SignupConfirmationResend } from '../components/SignupConfirmationResend';
 import { confirmationPage } from '../lib/signupConfirmation';
+import '../auth-journey.css';
 
 export function SignInPage() {
   const [email, setEmail] = useState('');
@@ -42,9 +43,9 @@ export function SignInPage() {
       <form onSubmit={submit} className="space-y-4">
         <Field icon={<Mail className="w-4 h-4" />} type="email" placeholder="Email" value={email} onChange={setEmail} autoComplete="username" required />
         <Field icon={<Lock className="w-4 h-4" />} type="password" placeholder="Password" value={password} onChange={setPassword} autoComplete="current-password" required />
-        <button type="button" onClick={() => navigate('/forgot-password')} className="text-sm font-semibold text-emerald-700 underline underline-offset-4">Password dimenticata?</button>
-        {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}
-        <button disabled={loading} className="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition disabled:opacity-50">
+        <button type="button" onClick={() => navigate('/forgot-password')} className="pc-auth-link">Password dimenticata?</button>
+        {error && <p role="alert" className="pc-auth-error">{error}</p>}
+        <button disabled={loading} className="pc-auth-primary w-full">
           {loading ? 'Accesso...' : 'Accedi'}
         </button>
         <p className="text-sm text-stone-600 text-center">
@@ -61,7 +62,10 @@ export function SignInPage() {
 }
 
 export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
-  const [step, setStep] = useState<1 | 2 | 3>(defaultRole ? 2 : 1);
+  const [step, setStep] = useState<2 | 3>(2);
+  const [submitted, setSubmitted] = useState(false);
+  const lock = useRef(false);
+  const focusEmail = useRef(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [role, setRole] = useState<Role>(defaultRole || 'owner');
   const [professionalType, setProfessionalType] = useState<ProfessionalType | ''>('');
@@ -86,10 +90,32 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
   const destination = bookingDestination(path);
 
   useEffect(() => {
+    if (submitted || step === 3) {
+      document.querySelector<HTMLElement>('#auth-title')?.focus({preventScroll: true});
+      window.scrollTo(0, 0);
+    } else if (focusEmail.current) {
+      focusEmail.current = false;
+      document.querySelector<HTMLInputElement>('input[autocomplete="email"]')?.focus();
+    }
+  }, [step, submitted]);
+
+  const changeRole = (value: 'owner' | 'professional') => {
+    if (value !== role) { setRole(value); setTermsAccepted(false); setError(''); }
+  };
+  const editContacts = () => {
+    setError(''); focusEmail.current = true;
+    if (step === 2 && !submitted) {
+      focusEmail.current = false;
+      document.querySelector<HTMLInputElement>('input[autocomplete="email"]')?.focus();
+    } else { setSubmitted(false); setStep(2); }
+  };
+
+  useEffect(() => {
+    if (step !== 3 || submitted) return;
     loadFciBreeds()
       .then(setBreeds)
       .catch((err) => console.error('FCI breeds load error:', err));
-  }, []);
+  }, [step, submitted]);
 
   const normalizedBreed = normalizeBreedSearch(dogBreed);
 
@@ -113,6 +139,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
     e.preventDefault();
     setError('');
 
+    if (lock.current) return;
     if (!email.trim() || !password || !fullName.trim() || !phone.trim()) {
       setError('Tutti i campi sono obbligatori');
       return;
@@ -147,7 +174,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
       return;
     }
 
-    setLoading(true);
+    lock.current = true; setLoading(true);
 
     try {
       const { error, needsEmailConfirmation } = await signUp({
@@ -175,8 +202,8 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
       }
 
       if (needsEmailConfirmation) {
-        alert('Account creato. Controlla la tua email per confermare l’indirizzo, poi accedi a PortaleCinofilo.');
-        navigate(bookingAuthPath('signin', role === 'owner' ? destination : null));
+        setPassword('');
+        setSubmitted(true);
         return;
       }
 
@@ -184,47 +211,51 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
     } catch {
       setError('Registrazione non confermata. Controlla la connessione e riprova. Se hai già ricevuto l’email di conferma, usa Accedi.');
     } finally {
-      setLoading(false);
+      lock.current = false; setLoading(false);
     }
   };
 
-  if (step === 1) {
-    return (
-      <AuthFrame title="Entra in PortaleCinofilo" subtitle="Come vuoi usare la piattaforma?">
-        <div className="space-y-3">
-          <RoleCard active={role === 'owner'} onClick={() => { setRole('owner'); setTermsAccepted(false); }} title="Sono proprietario di un cane" subtitle="Voglio trovare servizi affidabili per il mio cane" />
-          <RoleCard active={role === 'professional'} onClick={() => { setRole('professional'); setTermsAccepted(false); }} title="Sono un professionista" subtitle="Voglio offrire servizi e ricevere richieste" />
-          <button onClick={() => setStep(2)} className="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition mt-4">
-            Continua
-          </button>
-          <p className="text-sm text-stone-600 text-center">
-            Hai già un account? <button type="button" onClick={() => navigate(bookingAuthPath('signin', destination))} className="text-emerald-700 font-semibold">Accedi</button>
-          </p>
-        </div>
-      </AuthFrame>
-    );
-  }
+  if (submitted) return <AuthFrame eyebrow="Registrazione · Verifica email" title="Controlla la tua email" subtitle="Apri il messaggio più recente e segui le istruzioni.">
+    <div className="pc-auth-confirm">
+      <p>Indirizzo inserito: <strong>{email.trim()}</strong></p>
+      <p>Se è in attesa di conferma, riceverai un messaggio a questo indirizzo. Controlla anche la cartella spam.</p>
+      <SignupConfirmationResend email={email} />
+      <button type="button" className="pc-auth-link" onClick={() => navigate(confirmationPage, { email: email.trim(), mode: 'code' })}>Ho un codice nell’email</button>
+      <div className="pc-auth-confirm-other"><p>Hai scritto male l’indirizzo?</p>
+        <button type="button" className="pc-auth-link" onClick={() => { setTermsAccepted(false); editContacts(); }}>Ripeti la registrazione con il recapito corretto</button>
+      </div>
+      <button type="button" className="pc-auth-primary w-full" onClick={() => navigate(bookingAuthPath('signin', role === 'owner' ? destination : null))}>Vai ad Accedi</button>
+    </div>
+  </AuthFrame>;
+
+  const contactsReview = <div className="pc-auth-review">
+    <strong>Controlla i tuoi recapiti</strong>
+    <dl><div><dt>Email di conferma</dt><dd>{email.trim() || 'Da inserire'}</dd></div>
+      <div><dt>Telefono</dt><dd>{phone.trim() || 'Da inserire'}</dd></div></dl>
+    <button type="button" onClick={editContacts} className="pc-auth-link">Modifica i recapiti</button>
+  </div>;
 
   if (step === 3 && role === 'owner') {
     return (
       <AuthFrame
+        eyebrow="Proprietario · Passo 2 di 2"
         title="Presentaci il tuo cane"
         subtitle="Un ultimo passo per personalizzare PortaleCinofilo"
       >
         <form onSubmit={submit} className="space-y-4">
-          <SignupPrivacyNotice dog />
           <Field
             icon={<PawPrint className="w-4 h-4" />}
-            placeholder="Nome del cane"
+            placeholder="Nome del cane" required
             value={dogName}
             onChange={setDogName}
           />
 
           <div className="relative">
+            <label htmlFor="signup-dog-breed" className="mb-2 block text-sm font-semibold">Razza del cane</label>
             <div className="flex items-center border border-stone-300 rounded-xl px-3 focus-within:ring-2 focus-within:ring-emerald-500">
               <PawPrint className="w-4 h-4 text-stone-400 shrink-0" />
               <input
-                type="text"
+                id="signup-dog-breed" type="text" required
                 value={dogBreed}
                 onFocus={() => {
                   if (dogBreed.trim().length >= 2) setBreedMenuOpen(true);
@@ -293,13 +324,14 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
             )}
           </div>
 
+          <SignupPrivacyNotice dog />
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-semibold text-stone-700 mb-2">
+              <label htmlFor="signup-dog-date" className="block text-sm font-semibold text-stone-700 mb-2">
                 Data di nascita
               </label>
               <input
-                type="date"
+                id="signup-dog-date" type="date"
                 value={dogBirthDate}
                 max={new Date().toISOString().split('T')[0]}
                 onChange={(e) => setDogBirthDate(e.target.value)}
@@ -353,10 +385,10 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-stone-700 mb-2">
+            <label htmlFor="signup-dog-notes" className="block text-sm font-semibold text-stone-700 mb-2">
               Cosa dovremmo sapere di lui?
             </label>
-            <textarea
+            <textarea id="signup-dog-notes"
               value={dogNotes}
               onChange={(e) => setDogNotes(e.target.value)}
               rows={4}
@@ -365,8 +397,9 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
             />
           </div>
 
+          {contactsReview}
           <SignupTerms professional={false} checked={termsAccepted} onChange={setTermsAccepted} />
-          {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}
+          {error && <p role="alert" className="pc-auth-error">{error}</p>}
 
           <div className="flex gap-3">
             <button
@@ -379,7 +412,7 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
 
             <button
               disabled={loading}
-              className="flex-1 bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition disabled:opacity-50"
+              className="pc-auth-primary flex-1"
             >
               {loading ? 'Creazione...' : 'Crea account'}
             </button>
@@ -390,9 +423,13 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
   }
 
   return (
-    <AuthFrame title={role === 'professional' ? 'Inizia il tuo profilo professionale' : 'Crea il tuo account'} subtitle={role === 'professional' ? 'Per addestratori, pensioni, toelettatori e handler per esposizioni.' : 'Il primo passo per trovare aiuto per il tuo cane.'}>
+    <AuthFrame eyebrow={role === 'professional' ? 'Professionista · Dati del referente' : 'Proprietario · Passo 1 di 2'} title={role === 'professional' ? 'Inizia il tuo profilo professionale' : 'Crea il tuo account'} subtitle={role === 'professional' ? 'Inserisci i recapiti e l’attività; poi conferma l’email.' : 'Inserisci i tuoi dati. Nel prossimo passo aggiungerai il cane.'}>
       <form onSubmit={submit} className="space-y-4">
-        <SignupPrivacyNotice />
+        <fieldset className="pc-signup-role"><legend>Tipo di account</legend><div>
+          <RoleCard active={role === 'owner'} onClick={() => changeRole('owner')} title="Proprietario" />
+          <RoleCard active={role === 'professional'} onClick={() => changeRole('professional')} title="Professionista" />
+        </div></fieldset>
+        <Field icon={<User className="w-4 h-4" />} placeholder={role === 'professional' ? 'Nome e cognome del referente' : 'Nome e cognome'} value={fullName} onChange={setFullName} autoComplete="name" required />
         {role === 'professional' && <div>
           <label htmlFor="signup-activity" className="block text-sm font-semibold text-stone-700 mb-2">Attività principale</label>
           <select id="signup-activity" value={professionalType} onChange={event => setProfessionalType(event.target.value as ProfessionalType | '')} required aria-describedby="signup-activity-help" className="w-full min-w-0 border border-stone-300 rounded-xl px-3 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
@@ -404,38 +441,38 @@ export function SignUpPage({ defaultRole }: { defaultRole?: Role }) {
           </select>
           <p id="signup-activity-help" className="mt-2 text-xs text-stone-600">Scegli l’attività prevalente. Nel profilo guidato potrai indicare il nome del centro o della struttura e aggiungere i servizi offerti.</p>
         </div>}
-        <Field icon={<User className="w-4 h-4" />} placeholder={role === 'professional' ? 'Nome e cognome del referente' : 'Nome e cognome'} value={fullName} onChange={setFullName} autoComplete="name" required />
         <Field icon={<Mail className="w-4 h-4" />} type="email" placeholder="Email" value={email} onChange={setEmail} autoComplete="email" required />
         <Field icon={<Phone className="w-4 h-4" />} type="tel" placeholder="Telefono" value={phone} onChange={setPhone} autoComplete="tel" required />
         <Field icon={<Lock className="w-4 h-4" />} type="password" placeholder="Password" value={password} onChange={setPassword} autoComplete="new-password" required />
-        <div className="flex items-center gap-2 text-xs text-stone-600 bg-amber-50 p-3 rounded-lg border border-amber-100">
-          <Check className="w-4 h-4 text-amber-600 shrink-0" /> Usa un’email che puoi consultare: servirà per confermare l’account.
-        </div>
+        <SignupPrivacyNotice />
+        {role === 'owner' && <p className="text-sm">Puoi leggere già ora i <a href="/terms" target="_blank" rel="noopener noreferrer" className="pc-auth-link">Termini di utilizzo (nuova scheda)</a>. Li accetterai dopo aver inserito i dati del cane.</p>}
+        {role === 'professional' && contactsReview}
         {role === 'professional' && <SignupTerms professional checked={termsAccepted} onChange={setTermsAccepted} />}
-        {error && <p role="alert" className="text-sm text-rose-600">{error}</p>}
+        {error && <p role="alert" className="pc-auth-error">{error}</p>}
         <div className="flex gap-3">
-          <button type="button" onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl border border-stone-300 font-semibold">Indietro</button>
-          <button disabled={loading} className="flex-1 bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition disabled:opacity-50">
+
+          <button disabled={loading} className="pc-auth-primary flex-1">
             {loading ? 'Creazione...' : role === 'owner' ? 'Continua: il tuo cane' : 'Crea account'}
           </button>
         </div>
+        <p className="text-sm">Hai già un account? <button type="button" onClick={() => navigate(bookingAuthPath('signin', destination))} className="pc-auth-link">Accedi</button></p>
       </form>
     </AuthFrame>
   );
 }
 
-export function AuthFrame({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
+export function AuthFrame({ title, subtitle, eyebrow = 'Il tuo account', children }: { title: string; subtitle: string; eyebrow?: string; children: React.ReactNode }) {
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-6 py-12 bg-stone-50">
-      <div className="max-w-md w-full">
-        <div className="flex flex-col items-center mb-6">
-          <PawPrint className="w-10 h-10 text-emerald-600 mb-2" />
-          <h1 className="text-2xl font-bold text-stone-900">{title}</h1>
-          <p className="text-stone-600 text-sm mt-1">{subtitle}</p>
-        </div>
-        <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">{children}</div>
+    <main className="pc-auth-frame">
+      <div className="pc-auth-wrap">
+        <header className="pc-auth-heading">
+          <p className="pc-auth-kicker">{eyebrow}</p>
+          <h1 id="auth-title" tabIndex={-1}>{title}</h1>
+          <p>{subtitle}</p>
+        </header>
+        <div className="pc-auth-card">{children}</div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -459,11 +496,8 @@ function Field({ icon, type = 'text', placeholder, value, onChange, autoComplete
   );
 }
 
-function RoleCard({ active, onClick, title, subtitle }: { active: boolean; onClick: () => void; title: string; subtitle: string }) {
-  return (
-    <button onClick={onClick} className={`w-full text-left p-4 rounded-xl border-2 transition ${active ? 'border-emerald-600 bg-emerald-50' : 'border-stone-200 hover:border-stone-300'}`}>
-      <div className="font-semibold text-stone-900">{title}</div>
-      <div className="text-sm text-stone-600 mt-0.5">{subtitle}</div>
-    </button>
-  );
+function RoleCard({ active, onClick, title }: { active: boolean; onClick: () => void; title: string }) {
+  return <button type="button" aria-pressed={active} onClick={onClick}>
+    <span className="pc-role-mark" aria-hidden="true">{active && <Check size={12} strokeWidth={3} />}</span>{title}
+  </button>;
 }

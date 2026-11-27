@@ -1,0 +1,54 @@
+/* The professional guide uses the Studio palette. Progress is an operational readout. */
+.pg-settings { --guide-rule: var(--pg-line); }
+.pg-settings .pg-guide-summary { display:grid; grid-template-columns: minmax(0,1fr) minmax(14rem,21rem); align-items:center; gap:1rem 2.25rem; padding:0 0 1.5rem; border-bottom:1px solid var(--guide-rule); }
+.pg-guide-summary h1 { font-size:clamp(1.75rem,3.2vw,2.4rem); font-weight:760; line-height:1.12; margin:.4rem 0 .55rem; letter-spacing:-.035em; }
+.pg-guide-summary p { max-width:48ch; color:var(--pg-muted); line-height:1.55; }
+.pg-guide-progress { display:grid; justify-items:start; gap:.7rem; color:var(--pg-ink); }
+.pg-guide-progress progress { width:100%; height:.5rem; accent-color:var(--pg-green); }
+.pg-settings .pg-primary,.pg-settings .pg-secondary,.pg-settings .pg-text-link,.pg-settings .pg-back,.pg-settings .pg-tabs button,
+.pg-settings .pg-tabs button span,.pg-settings .pg-counter,.pg-settings .pg-task-copy > span,.pg-settings .pg-task-status,.pg-settings .pg-tool-tag,
+.pg-settings .pg-extra-grid span,.pg-settings .pg-tool-grid p,.pg-settings .pg-tool-grid strong,.pg-settings .pg-editor-footer > span,
+.pg-settings .pg-provider summary span,.pg-settings .pg-mini-steps span,.pg-settings .pg-fields .text-xs,
+.pg-settings .pg-success,.pg-settings .pg-error,.pg-settings .pg-footnote,.pg-settings .pg-eyebrow,.pg-settings .pg-section-heading p,
+.pg-settings .pg-editor-heading p,.pg-settings .pg-editor-heading small { font-size:.875rem; line-height:1.5; }
+.pg-settings .pg-task-copy strong,.pg-settings .pg-extra-grid strong,.pg-settings .pg-provider summary { font-size:1rem; }
+.pg-settings .pg-task-status { white-space:normal; }
+.pg-settings .pg-tabs button,.pg-settings .pg-text-link,.pg-settings .pg-back,.pg-settings .pg-primary,.pg-settings .pg-secondary {min-height:44px;}
+.pg-settings .pg-back { margin-bottom:.8rem; }
+.pg-settings .pg-editor-heading small { display:block; margin:.55rem 0 0; color:var(--pg-muted); }
+.pg-settings .pg-step-groups { display:grid; gap:1.3rem; }
+.pg-settings .pg-step-groups p { font-size:.875rem; font-weight:700; color:var(--pg-ink); margin:.25rem 0 .3rem; }
+.pg-settings .pg-step-groups button { width:100%; min-height:44px; font-size:.9rem; line-height:1.35; border-inline-start:3px solid transparent; align-items:center; }
+.pg-settings .pg-step-groups button span { display:inline-flex; align-items:center; justify-content:center; flex:0 0 1.15rem; font-size:.875rem; }
+.pg-settings .pg-step-groups button[aria-current=step] { border-inline-start-color:currentColor; }
+.pg-settings .pg-step-select { display:none; }
+.pg-settings .pg-saved-step { display:flex; align-items:center; gap:.5rem; margin:0 0 1rem; padding:.7rem 1rem; color:var(--pg-ink); background:var(--pg-paper); border:1px solid var(--pg-line); border-inline-start:3px solid var(--pg-green); border-radius:.65rem; }
+.pg-settings .pg-rule-fields { min-width:0; margin:0; }
+.pg-settings .pg-rule-fields + .pg-rule-fields { margin-top:1.25rem; border-top:1px solid var(--guide-rule); }
+.pg-settings .pg-rule-fields legend { font-size:1rem; font-weight:700; padding-block:.5rem; }
+.pg-settings .pg-verification { display:inline-flex; align-items:center; gap:.38rem; padding:.25rem .65rem; border:1px solid var(--pg-line); border-radius:2rem; color:var(--pg-ink); background:var(--pg-paper); font-size:.875rem; font-weight:650; }
+.pg-settings .pg-verification[data-state=verified] { color:#205538; background:#e5f0e2; border-color:#92ad94; }
+.pg-settings .pg-verification[data-state=pending] { color:#6d420d; background:#fff2d8; border-color:#c9ad7e; }
+.pg-settings .pg-verification:is([data-state=rejected],[data-state=revoked]) { color:#822b26; background:#fff0ea; border-color:#ccaba2; }
+html.dark .pg-settings .pg-verification[data-state=verified] { background:#1c3d2b; color:#cae8cf; border-color:#658971; }
+html.dark .pg-settings .pg-verification[data-state=pending] { background:#3b3020; color:#f6dfac; border-color:#99805c; }
+html.dark .pg-settings .pg-verification:is([data-state=rejected],[data-state=revoked]) { background:#3c2624; color:#ffd3c4; border-color:#99726c; }
+.pg-settings .pg-rule-fields input,.pg-settings .pg-step-select select { font-size:1rem; }
+@media(max-width: 900px) {
+  .pg-settings .pg-guide-summary,.pg-settings .pg-editor-layout {grid-template-columns:minmax(0,1fr);}
+  .pg-settings .pg-guide-progress {max-width:28rem; width:100%;}
+  .pg-settings .pg-step-nav {display:block; overflow:visible; padding:0; margin:0;}
+  .pg-settings .pg-step-groups {display:none;}
+  .pg-settings .pg-step-select {display:grid; gap:.35rem; width:100%; font-size:.875rem; font-weight:650;}
+  .pg-settings .pg-step-select select {display:block;width:100%; min-height:44px; padding:.45rem .6rem; border:1px solid var(--pg-line); border-radius:.5rem; color:var(--pg-ink); background:var(--pg-paper);}
+  .pg-settings .pg-editor-layout {gap:1rem;}
+}
+@media(max-width:480px) {
+  .pg-settings.pg-shell {padding:1rem clamp(.875rem,4vw,1.25rem) 2rem;}
+  .pg-settings .pg-task {display:grid;grid-template-columns:2.1rem minmax(0,1fr);gap:.25rem .6rem; padding:1rem .7rem;}
+  .pg-settings .pg-task-icon {grid-column:1;grid-row:1/3;width:2rem;height:2rem;}
+  .pg-settings .pg-task-copy,.pg-settings .pg-task-status {grid-column:2;min-width:0;margin-left:0;}
+  .pg-settings .pg-task-status {display:block;justify-self:start;}
+  .pg-settings .pg-task > svg {display:none;}
+  .pg-settings .pg-editor-footer {gap:.6rem;}
+}

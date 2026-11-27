@@ -47,34 +47,40 @@ function OwnerDogSharing({ dogId, verified, refreshKey, onPendingChange }: { dog
   const publications = useSharingRows<SharedContinuityNote>('list_owner_continuity_publications', { p_dog_id: dogId, p_limit: 20, p_offset: page * 20 }, refreshKey);
   const recipients = useSharingRows<ContinuityRecipient>('list_owner_continuity_recipients', { p_dog_id: dogId }, refreshKey);
   const chosen = Object.values(selected);
+  const selectStart=useRef<HTMLDivElement>(null);
+  const grantStart=useRef<HTMLDivElement>(null);
+  const eligible=verified && !publications.loading && !publications.error && !recipients.loading && !recipients.error && recipients.rows.length>0 && (publications.rows.length>0 || chosen.length>0);
+  const beginShare=()=>{ const target=chosen.length?grantStart.current?.querySelector('select'):selectStart.current?.querySelector('input[type=checkbox]'); if(target instanceof HTMLElement)target.focus(); };
   const clearSelection = () => { setSelected({}); setFormKey((value) => value + 1); setFrozen(false); };
   const reload = () => {
     if (chosen.length && !window.confirm('Aggiornare i contributi e svuotare la selezione non ancora autorizzata?')) return;
     clearSelection(); publications.reload(); recipients.reload();
   };
   return <div className="space-y-5">
-    <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950">Lo storico può essere incompleto: l’assenza di contributi condivisi non significa che il cane non sia stato seguito da altri professionisti.</p>
-    <button type="button" disabled={frozen || publications.loading || recipients.loading} onClick={reload} className={sharingSecondary}>Aggiorna contributi e destinatari</button>
+    <div className="flex flex-wrap items-center gap-3">{eligible && <button type="button" className={sharingButton} disabled={frozen} onClick={beginShare}>Condividi</button>}<button type="button" disabled={frozen || publications.loading || recipients.loading} onClick={reload} className={sharingSecondary}>Aggiorna contributi e destinatari</button></div>
+    {eligible && <p className="text-sm">Scegli i contributi da condividere, poi indica a chi e per quanto tempo.</p>}
+    {!verified && <p className="text-sm">Verifica la tua email per condividere nuovi contributi.</p>}
+    {recipients.error && <p role="alert" className="text-sm text-rose-700">{recipients.error}</p>}
+    {!recipients.loading&&!recipients.error&&!recipients.rows.length&&publications.rows.length>0&&<p className="text-sm">Per condividere serve un professionista che abbia accettato l’invito per questo cane.</p>}
     {notice && <p role="status" className="text-sm text-emerald-800">{notice}</p>}
     {publications.error && <p role="alert" className="text-sm text-rose-700">{publications.error}</p>}
     {publications.loading ? <p role="status">Caricamento contributi…</p> : !publications.error && !publications.rows.length ? <p className="text-sm">Nessun contributo condivisibile in questa pagina. Gli autori possono prepararli dalla loro area “Relazioni e archivio”.</p> : null}
-    {publications.rows.map((note) => <article key={note.publication_id} className="space-y-3 rounded-xl border border-stone-200 p-4">
-      <label className="flex items-start gap-3 text-sm font-semibold"><input type="checkbox" className="mt-1" checked={Boolean(selected[note.publication_id])} disabled={frozen || (!selected[note.publication_id] && chosen.length >= 100)} onChange={(event) => {
+    <div ref={selectStart} className="space-y-3">{publications.rows.map((note) => <article key={note.publication_id} className="space-y-3 rounded-xl border border-stone-200 p-4">
+      <label className="flex items-start gap-3 text-sm font-semibold"><input type="checkbox" className="mt-1" checked={Boolean(selected[note.publication_id])} disabled={!eligible || frozen || (!selected[note.publication_id] && chosen.length >= 100)} onChange={(event) => {
         setSelected((current) => { const next = { ...current }; if (event.target.checked) next[note.publication_id] = note; else delete next[note.publication_id]; return next; });
       }} /><span>Seleziona · {note.activity} · {note.author_name} · revisione {note.revision_number}</span></label>
       <details><summary className="cursor-pointer text-sm font-semibold underline">Leggi il contributo da autorizzare</summary><div className="mt-3"><SharedNoteText note={note} /></div></details>
-    </article>)}
+    </article>)}</div>
     <SharingPager page={page} total={Number(publications.rows[0]?.total_count || 0)} count={publications.rows.length} busy={frozen || publications.loading} onPage={setPage} />
-    <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
+    {(eligible || frozen || chosen.length>0) && <div ref={grantStart} className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
       <h3 className="font-bold">Autorizza la lettura dei contributi selezionati</h3>
       <p className="mt-2 text-sm">{chosen.length}/100 contributi selezionati. Ogni concessione comprende solo queste revisioni e vale finché la relazione resta attiva, entro la scadenza scelta.</p>
       {!!chosen.length && <details className="my-3"><summary className="cursor-pointer text-sm font-semibold underline">Riepilogo della selezione</summary><ul className="mt-2 space-y-2">{chosen.map((note) => <li key={note.publication_id} className="flex items-start justify-between gap-3 text-sm"><span>{note.author_name} · {note.activity} · revisione {note.revision_number}</span><button type="button" disabled={frozen} className="underline disabled:opacity-50" onClick={() => setSelected((current) => { const next = { ...current }; delete next[note.publication_id]; return next; })}>Rimuovi</button></li>)}</ul></details>}
-      {recipients.error && <p role="alert" className="my-3 text-sm text-rose-700">{recipients.error}</p>}
-      {!recipients.loading && !recipients.error && !recipients.rows.length && <p className="my-3 text-sm">Occorre un professionista approvato che abbia già accettato l’invito a seguire questo cane.</p>}
       <GrantForm key={formKey} selected={chosen} recipients={recipients.rows} verified={verified} disabled={recipients.loading || Boolean(recipients.error) || Boolean(publications.error)} onFrozen={setFrozen}
         onSaved={() => { clearSelection(); setNotice('Autorizzazione registrata. Il professionista trova la selezione nello “Storico ricevuto”.'); notifySharingChanged(); }}
         onAbandon={() => { clearSelection(); publications.reload(); recipients.reload(); }} />
-    </div>
+    </div>}
+    <p className="text-sm text-stone-600">Lo storico comprende solo i contributi resi disponibili, non tutte le attività svolte.</p>
     <DogHistoryExport scope="owner" subjectId={dogId} label="Scarica lo storico del cane" />
     <OwnerGrantHistory dogId={dogId} refreshKey={refreshKey} />
   </div>;

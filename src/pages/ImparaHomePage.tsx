@@ -16,9 +16,9 @@ export function ImparaHomePage() {
   const [reset,setReset] = useState(false);
   const upload = useRef<HTMLInputElement>(null);
   const complete = STAGE_1_LESSONS.filter(l=>lessonStatus(l,progress).complete).length;
-  const started = STAGE_1_LESSONS.some(l=>lessonStatus(l,progress).started);
+  const started = Boolean(progress.resume) || STAGE_1_LESSONS.some(l=>lessonStatus(l,progress).started);
   const resumed = STAGE_1_LESSONS.find(l=>l.slug===progress.resume && !lessonStatus(l,progress).complete);
-  const next = resumed || STAGE_1_LESSONS.find(l=>!lessonStatus(l,progress).complete) || STAGE_1_LESSONS[0];
+  const next = resumed || STAGE_1_LESSONS.find(l=>lessonStatus(l,progress).started && !lessonStatus(l,progress).complete) || STAGE_1_LESSONS.find(l=>!lessonStatus(l,progress).complete) || STAGE_1_LESSONS[0];
   const go = (slug: string) => navigate(`/impara/stage-1/${slug}`);
   const query = search.trim().toLocaleLowerCase('it');
   const matches = STAGE_1_LESSONS.filter(l=>[l.title,l.summary,l.moduleTitle,...l.objectives,...l.sublessons.map(s=>s.title)].join(' ').toLocaleLowerCase('it').includes(query));
@@ -37,7 +37,7 @@ export function ImparaHomePage() {
           <h1>Vivere meglio insieme<br/>{' '}<em>si impara.</em></h1>
           <p className="im-lead">Comprendi i bisogni del cane, osserva quello che ti comunica e porta una cosa utile nella vostra giornata. Un passo alla volta.</p>
           <div className="im-actions"><button className="im-button" onClick={()=>go(next.slug)}>{complete===STAGE_1_LESSONS.length ? 'Rileggi il percorso' : started ? 'Riprendi il percorso' : 'Inizia dalle basi'}<ArrowRight size={18}/></button><button className="im-link" onClick={()=>document.getElementById('im-programma')?.scrollIntoView({behavior:'smooth'})}>Esplora le lezioni ↓</button><RouteLink className="im-link" to="/impara/esercizi">Dal campo a casa: esercizi pratici <ArrowRight size={16}/></RouteLink></div>
-          <p className="im-small im-benefits">Gratuito · Senza iscrizione · Anche prima di avere un cane</p>
+          <p className="im-small im-benefits">{started && complete < STAGE_1_LESSONS.length && <>Da riprendere: <strong>{next.title}</strong><br/></>}Gratuito · Senza iscrizione · Anche prima di avere un cane</p>
         </div>
         <aside className="im-course-card" aria-label="Il tuo percorso">
           <div className="im-card-top"><span className="im-eyebrow">IL TUO PERCORSO</span><BookOpen size={24}/></div>

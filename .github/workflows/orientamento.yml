@@ -1,0 +1,75 @@
+name: Orientamento – percorsi e schermate
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'scripts/tests/*visual*.mjs'
+      - 'scripts/tests/*orientation*.mjs'
+      - '.github/workflows/orientamento.yml'
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [prima, dopo, test_discovery_orientation_ui, test_account_visual_journey, test_studio_tools_visual]
+    env:
+      VITE_SUPABASE_URL: 'https://pc-home-test.supabase.co'
+      VITE_SUPABASE_ANON_KEY: 'synthetic-test-public-key'
+      VITE_PROFESSIONAL_CONTINUITY: 'true'
+      PC_TEST_BASE_URL: 'http://127.0.0.1:5251'
+      SUITE: ${{ matrix.suite }}
+      OLD_SHA: ${{ github.event.pull_request.base.sha }}
+      NEW_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        if: matrix.suite == 'prima'
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: baseline
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: npm ci
+      - run: npx --no-install playwright install --with-deps chromium
+      - name: Prova con dati dimostrativi
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PC_VISUAL_OUTPUT="$RUNNER_TEMP/evidence" PC_SCREENSHOTS="$RUNNER_TEMP/evidence/percorsi"
+          mkdir -p "$PC_SCREENSHOTS"
+          root="$PWD"
+          target="$root"
+          if [[ "$SUITE" == prima ]]; then
+            target="$root/baseline"
+            cp -al "$root/node_modules" "$target/node_modules"
+          fi
+          (cd "$target" && exec node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5251 --strictPort) >"$RUNNER_TEMP/vite-orientamento.log" 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          for attempt in {1..40}; do
+            if curl --silent --fail "$PC_TEST_BASE_URL" >/dev/null; then break; fi
+            sleep 0.5
+          done
+          if [[ "$SUITE" == prima || "$SUITE" == dopo ]]; then
+            export PC_VISUAL_STAGE="$SUITE" PC_VISUAL_SHA="$NEW_SHA"
+            if [[ "$SUITE" == prima ]]; then export PC_VISUAL_SHA="$OLD_SHA"; fi
+            node scripts/tests/visual_orientation_evidence.mjs
+          else
+            node "scripts/tests/$SUITE.mjs"
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: orientamento-${{ matrix.suite }}
+          path: ${{ runner.temp }}/evidence
+          if-no-files-found: ignore
+          retention-days: 21

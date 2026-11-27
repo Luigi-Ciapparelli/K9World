@@ -1,3 +1,4 @@
+import { ProfessionalCover } from '../components/ProfessionalCover';
 import { PublicServiceReviews } from '../components/PublicServiceReviews';
 import { ProfessionalCredentialsPublic } from '../components/ProfessionalCredentialsPublic';
 import { TrainingActivitiesPublic } from '../components/TrainingActivitiesPublic';
@@ -8,7 +9,6 @@ import {
   BadgeCheck,
   Calendar,
   Mail,
-  MapPin,
   ShieldAlert,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -203,55 +203,12 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-stone-50">
-      <section className="relative overflow-hidden bg-[#15110b] text-white">
-        <img
-          src={coverUrl}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-70"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#15110b]/70 via-[#15110b]/45 to-[#15110b]/15" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.24),transparent_35%)]" />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-28">
-          <button
-            type="button"
-            onClick={() => navigate(returnToSearch)}
-            className="inline-flex items-center gap-2 text-sm text-stone-200 hover:text-white mb-10"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Torna alla ricerca
-          </button>
-
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 px-4 py-2 text-sm font-semibold text-white mb-5">
-              <BadgeCheck className="w-4 h-4" />
-              Profilo approvato PortaleCinofilo
-            </div>
-
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-              {displayName}
-            </h1>
-
-            <div className="flex flex-wrap items-center gap-4 text-sm text-stone-200 mt-5">
-              <span className="capitalize rounded-full bg-white/10 border border-white/20 px-3 py-1 font-semibold text-white">
-                {professionalLabels[pro.professional_type] || 'Professionista cinofilo'}
-              </span>
-
-              <span className="flex items-center gap-1">
-                <MapPin className="w-4 h-4" />
-                {pro.zone_text || 'Zona locale'}
-              </span>
-            </div>
-
-            <p className="text-stone-200 text-lg mt-6 max-w-2xl leading-relaxed">
-              {pro.bio ||
-                'Professionista cinofilo approvato su PortaleCinofilo. Servizi e zona sono consultabili nella scheda. Le date richieste devono essere accettate dal professionista.'}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 -mt-20 relative z-10 pb-14">
+      <header className="pc-public-identity">
+        <ProfessionalCover src={coverUrl}>
+          <button type="button" onClick={() => navigate(returnToSearch)} className="pc-cover-back"><ArrowLeft aria-hidden="true" size={16} /> Torna alla ricerca</button>
+        </ProfessionalCover>
+      </header>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 sm:pt-6 pb-14">
         <JourneyContextNotice context={journey} className="mb-6 shadow-sm" />
         <div className="grid lg:grid-cols-[1fr_380px] gap-6 items-start">
           <div className="space-y-6">
@@ -271,15 +228,16 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="text-2xl md:text-3xl font-bold text-stone-900">
+                    <h1 className="text-2xl md:text-4xl font-bold text-stone-900 [overflow-wrap:anywhere]">
                       {displayName}
-                    </h2>
+                    </h1>
                     <span className="text-xs bg-amber-50 text-[var(--pc-forest-900)] px-2 py-1 rounded-full font-semibold flex items-center gap-1">
                       <BadgeCheck className="w-3 h-3" />
                       Approvato
                     </span>
                   </div>
 
+                  <p className="mt-2 font-semibold text-stone-700">{professionalLabels[pro.professional_type] || 'Professionista cinofilo'}</p>
                   <p className="text-stone-700 mt-4 leading-relaxed">
                     {pro.bio ||
                       'Profilo approvato da PortaleCinofilo. Informazioni e servizi disponibili nella scheda.'}

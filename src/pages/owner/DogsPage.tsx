@@ -1,33 +1,37 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/AuthContext';
-import { useRouter } from '../../lib/RouterContext';
 import type { Dog } from '../../lib/types';
 import { loadFciBreeds, normalizeBreedSearch, type FciBreed } from '../../lib/fciBreeds';
+import { dogAgeLabel, dogWeightLabel } from '../../lib/ownerDogFacts';
+import { RouteLink } from '../../components/RouteLink';
+import '../../owner-workspace.css';
 import { DogPhoto } from '../../components/DogPhoto';
 import { deleteDogPhoto, uploadDogPhoto, prepareDogPhoto } from '../../lib/dogPhotos';
 
 export function DogsPage() {
   const { user } = useAuth();
-  const { navigate } = useRouter();
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [editing, setEditing] = useState<Partial<Dog> | null>(null);
 
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const read = useRef(0);
   const load = async () => {
+    const id=++read.current;
+    setLoadError(false); setLoading(true);
     if (!user) return;
     const { data, error } = await supabase.from('dogs').select('*').eq('owner_id', user.id).order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Dogs load error:', error);
-      alert(error.message);
-      return;
-    }
+    if (id !== read.current) return;
+    setLoading(false);
+    if (error) { setLoadError(true); setDogs([]); return; }
 
     setDogs((data as Dog[]) || []);
   };
 
-  useEffect(() => { load(); }, [user]);
+  useEffect(() => { setDogs([]); void load(); return () => { read.current++; }; }, [user?.id]);
 
   const save = async (photoFile: File | null, removePhoto: boolean) => {
     if (!editing || !user) return;
@@ -95,7 +99,7 @@ export function DogsPage() {
 
       if (error) {
         console.error('Dog save error:', error);
-        alert(error.message);
+        alert('Operazione non riuscita. Riprova.');
         return;
       }
     } else {
@@ -107,7 +111,7 @@ export function DogsPage() {
 
       if (error || !data) {
         console.error('Dog create error:', error);
-        alert(error?.message || 'Impossibile creare il profilo del cane');
+        alert('Impossibile creare il profilo del cane. Riprova.');
         return;
       }
 
@@ -182,7 +186,7 @@ export function DogsPage() {
   };
 
   const remove = async (dog: Dog) => {
-    if (!confirm('Remove this dog?')) return;
+    if (!confirm(`Eliminare la scheda di ${dog.name}? Questa azione non può essere annullata.`)) return;
 
     const { error } = await supabase
       .from('dogs')
@@ -192,7 +196,7 @@ export function DogsPage() {
 
     if (error) {
       console.error('Dog remove error:', error);
-      alert(error.message);
+      alert('Operazione non riuscita. Riprova.');
       return;
     }
 
@@ -205,116 +209,27 @@ export function DogsPage() {
     load();
   };
 
-  return (
-    <div className="bg-stone-50 min-h-[calc(100vh-4rem)]">
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-stone-900">Your dogs</h1>
-            <p className="text-stone-600">Keep your dogs' info up to date so pros can take better care.</p>
+  return <main className="pc-owner">
+    <div className="pc-owner-wrap">
+      <RouteLink className="pc-owner-back" to="/owner">Area cliente</RouteLink>
+      <header className="pc-owner-heading">
+        <div><h1>I miei cani</h1><p>Apri una scheda per vedere i dati e lo storico del tuo cane.</p></div>
+        <button type="button" className="pc-owner-primary" onClick={() => setEditing({})}><Plus size={18} aria-hidden="true"/> Aggiungi cane</button>
+      </header>
+      {loading ? <p role="status">Caricamento dei cani…</p> : loadError ? <p role="alert">Non siamo riusciti a caricare i tuoi cani. <button className="pc-owner-link" onClick={() => void load()}>Riprova</button></p>
+        : !dogs.length ? <p className="pc-owner-surface">Non hai ancora aggiunto un cane. Puoi iniziare con il suo nome e la razza.</p>
+        : <div className="pc-dogs-list">{dogs.map(d => <article className="pc-dog-card" key={d.id}>
+          <div className="pc-dog-thumb"><DogPhoto photoPath={d.photo_url} silhouette alt={d.name} className="pc-dog-img"/></div>
+          <div className="pc-dog-summary"><h2><RouteLink to={`/owner/dogs/${d.id}`}>{d.name}</RouteLink></h2><p>{d.breed || 'Razza non indicata'}</p>
+            <div className="pc-dog-facts"><span>{dogAgeLabel(d.birth_date,d.age)}</span><span aria-hidden="true">·</span><span>{dogWeightLabel(d.weight)}</span></div>
+            {d.fci_group && <RouteLink className="pc-owner-link" to={`/gruppi-fci/${d.fci_group}`}>Gruppo FCI {d.fci_group}</RouteLink>}
+            {(d.vaccinated || d.aggressive) && <div className="pc-dog-flags">{d.vaccinated && <span>Vaccinato</span>}{d.aggressive && <span>Reattivo con altri cani</span>}</div>}
           </div>
-          <button onClick={() => setEditing({})} className="px-5 py-2.5 bg-emerald-600 text-white rounded-full text-sm font-semibold hover:bg-emerald-700 flex items-center gap-2">
-            <Plus className="w-4 h-4" /> Add dog
-          </button>
-        </div>
-
-        {dogs.length === 0 ? (
-          <div className="bg-white border border-stone-200 rounded-2xl p-10 text-center text-stone-600">
-            No dogs yet. Add your first dog to start booking.
-          </div>
-        ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {dogs.map((d) => (
-              <div
-                key={d.id}
-                onClick={() => navigate(`/owner/dogs/${d.id}`)}
-                className="bg-white rounded-2xl border border-stone-200 overflow-hidden cursor-pointer hover:shadow-md transition"
-              >
-                <DogPhoto
-                  photoPath={d.photo_url}
-                  className="w-full h-40 object-cover"
-                  alt={d.name}
-                />
-                <div className="p-5">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-bold text-stone-900">{d.name}</h3>
-                      <p className="text-sm text-stone-500">{d.breed}</p>
-
-                      {d.fci_group && (
-                        <span className="inline-flex mt-2 text-xs font-semibold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full">
-                          Gruppo FCI {d.fci_group}
-                        </span>
-                      )}
-
-                      {d.fci_group && (
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/gruppi-fci/${d.fci_group}`)}
-                          className="mt-2 text-xs text-emerald-700 font-semibold hover:text-emerald-800"
-                        >
-                          Scopri il Gruppo FCI {d.fci_group} →
-                        </button>
-                      )}
-                    </div>
-                    <div className="flex gap-1">
-                      <button aria-label={`Modifica ${d.name}`} onClick={(e) => { e.stopPropagation(); setEditing(d); }} className="p-1.5 text-stone-500 hover:text-emerald-700"><Pencil className="w-4 h-4" /></button>
-                      <button aria-label={`Elimina ${d.name}`} onClick={(e) => { e.stopPropagation(); remove(d); }} className="p-1.5 text-stone-500 hover:text-rose-600"><Trash2 className="w-4 h-4" /></button>
-                    </div>
-                  </div>
-                  <div className="flex gap-3 mt-3 text-sm text-stone-700">
-                    <span>{formatDogAge(d.birth_date, d.age)}</span>
-                    <span className="text-stone-300">\u2022</span>
-                    <span>{d.weight} kg</span>
-                  </div>
-                  <div className="flex gap-2 mt-3 flex-wrap">
-                    {d.vaccinated && <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full">Vaccinated</span>}
-                    {d.aggressive && <span className="text-xs bg-rose-50 text-rose-700 px-2 py-1 rounded-full">Reactive</span>}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {editing && <DogModal dog={editing} onChange={setEditing} onSave={save} onClose={() => setEditing(null)} />}
+          <div className="pc-dog-actions"><button aria-label={`Modifica ${d.name}`} onClick={() => setEditing(d)}><Pencil size={17} aria-hidden="true"/>Modifica</button><button aria-label={`Elimina ${d.name}`} onClick={() => void remove(d)}><Trash2 size={17} aria-hidden="true"/>Elimina</button></div>
+        </article>)}</div>}
     </div>
-  );
-}
-
-
-function formatDogAge(birthDate: string | null | undefined, fallbackAge: number) {
-  if (!birthDate) {
-    return fallbackAge > 0
-      ? `${fallbackAge} ${fallbackAge === 1 ? 'anno' : 'anni'}`
-      : 'Età non indicata';
-  }
-
-  const [year, month, day] = birthDate.split('-').map(Number);
-  const today = new Date();
-
-  let totalMonths =
-    (today.getFullYear() - year) * 12 +
-    (today.getMonth() + 1 - month);
-
-  if (today.getDate() < day) totalMonths -= 1;
-  if (totalMonths < 0) return 'Data non valida';
-
-  const years = Math.floor(totalMonths / 12);
-  const months = totalMonths % 12;
-
-  if (years === 0) {
-    return `${months} ${months === 1 ? 'mese' : 'mesi'}`;
-  }
-
-  if (months === 0) {
-    return `${years} ${years === 1 ? 'anno' : 'anni'}`;
-  }
-
-  return `${years} ${years === 1 ? 'anno' : 'anni'} e ${months} ${
-    months === 1 ? 'mese' : 'mesi'
-  }`;
+    {editing && <DogModal dog={editing} onChange={setEditing} onSave={save} onClose={() => setEditing(null)} />}
+  </main>;
 }
 
 function DogModal({
@@ -328,6 +243,10 @@ function DogModal({
   onSave: (photoFile: File | null, removePhoto: boolean) => Promise<void>;
   onClose: () => void;
 }) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => { const element=dialog.current, previous=document.activeElement as HTMLElement | null;
+    element?.showModal(); return () => { element?.close(); if (previous?.isConnected) previous.focus(); };
+  }, []);
   const [breeds, setBreeds] = useState<FciBreed[]>([]);
   const [breedMenuOpen, setBreedMenuOpen] = useState(false);
   const [breedsLoading, setBreedsLoading] = useState(true);
@@ -461,18 +380,18 @@ function DogModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-stone-900/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl max-w-lg w-full p-6">
+    <dialog ref={dialog} aria-labelledby="dog-editor-title" className="pc-dog-dialog" onCancel={e => { e.preventDefault(); if (!saving) onClose(); }}>
+      <form onSubmit={e => { e.preventDefault(); void handleSave(); }} className="p-4 sm:p-6">
         <div className="flex justify-between items-center mb-5">
-          <h2 className="text-xl font-bold text-stone-900">{dog.id ? 'Edit dog' : 'Add a dog'}</h2>
-          <button aria-label="Chiudi modifica cane" disabled={saving} onClick={onClose} className="text-stone-500 hover:text-stone-900"><X className="w-5 h-5" /></button>
+          <h2 id="dog-editor-title" className="text-xl font-bold text-stone-900">{dog.id ? 'Modifica cane' : 'Aggiungi cane'}</h2>
+          <button type="button" aria-label="Chiudi modifica cane" disabled={saving} onClick={onClose} className="text-stone-500 hover:text-stone-900"><X className="w-5 h-5" /></button>
         </div>
         <div className="space-y-3">
-          <Input label="Name" value={dog.name || ''} onChange={(v) => onChange({ ...dog, name: v })} />
+          <Input label="Nome del cane" required value={dog.name || ''} onChange={(v) => onChange({ ...dog, name: v })} />
           <div className="relative">
-            <label className="text-sm font-semibold text-stone-700">Razza</label>
+            <label htmlFor="dog-breed" className="text-sm font-semibold text-stone-700">Razza</label>
             <input
-              type="text"
+              id="dog-breed" required type="text"
               value={dog.breed || ''}
               onFocus={() => setBreedMenuOpen(true)}
               onBlur={() => {
@@ -590,7 +509,7 @@ function DogModal({
               value={dog.birth_date || ''}
               onChange={(v) => onChange({ ...dog, birth_date: v || null })}
             />
-            <Input label="Weight (kg)" type="number" value={String(dog.weight ?? '')} onChange={(v) => onChange({ ...dog, weight: Number(v) })} />
+            <Input label="Peso (kg)" type="number" value={dog.weight ? String(dog.weight) : ''} onChange={(v) => onChange({ ...dog, weight: v === '' ? undefined : Number(v) })} />
           </div>
           <div>
             <label className="text-sm font-semibold text-stone-700">Foto</label>
@@ -604,7 +523,7 @@ function DogModal({
                   />
                 ) : !removePhoto && dog.photo_url ? (
                   <DogPhoto
-                    photoPath={dog.photo_url}
+                    silhouette photoPath={dog.photo_url}
                     alt={dog.name || 'Cane'}
                     className="w-full h-full object-cover"
                   />
@@ -617,14 +536,14 @@ function DogModal({
 
               <div className="flex-1">
                 <div className="flex gap-2 flex-wrap">
-                  <label className="inline-flex cursor-pointer px-3 py-2 bg-stone-900 text-white rounded-lg text-sm font-semibold hover:bg-stone-800">
+                  <label className="inline-flex cursor-pointer px-3 py-2 border border-stone-300 rounded-lg text-sm font-semibold focus-within:ring-2 focus-within:ring-emerald-600">
                     {previewUrl || (!removePhoto && dog.photo_url) ? 'Cambia foto' : 'Scegli foto'}
                     <input
                       type="file"
                       accept="image/jpeg,image/png,image/webp"
                       aria-label="Foto del cane"
                       disabled={saving}
-                      className="hidden"
+                      className="sr-only"
                       onChange={(e) => {
                         const file = e.currentTarget.files?.[0] || null;
                         e.currentTarget.value = '';
@@ -661,14 +580,14 @@ function DogModal({
             </div>
           </div>
           <label className="flex items-center gap-2 text-sm text-stone-700">
-            <input type="checkbox" checked={dog.vaccinated || false} onChange={(e) => onChange({ ...dog, vaccinated: e.target.checked })} /> Vaccinated
+            <input type="checkbox" checked={dog.vaccinated || false} onChange={(e) => onChange({ ...dog, vaccinated: e.target.checked })} /> Vaccinato
           </label>
           <label className="flex items-center gap-2 text-sm text-stone-700">
-            <input type="checkbox" checked={dog.aggressive || false} onChange={(e) => onChange({ ...dog, aggressive: e.target.checked })} /> Can be reactive with other dogs
+            <input type="checkbox" checked={dog.aggressive || false} onChange={(e) => onChange({ ...dog, aggressive: e.target.checked })} /> Può essere reattivo con altri cani
           </label>
           <div>
-            <label className="text-sm font-semibold text-stone-700">Medical notes</label>
-            <textarea
+            <label htmlFor="dog-medical-notes" className="text-sm font-semibold text-stone-700">Note sulla salute</label>
+            <textarea id="dog-medical-notes"
               value={dog.medical_notes || ''}
               onChange={(e) => onChange({ ...dog, medical_notes: e.target.value })}
               rows={3}
@@ -677,26 +596,27 @@ function DogModal({
           </div>
         </div>
         <div className="flex gap-3 mt-6">
-          <button disabled={saving} onClick={onClose} className="flex-1 py-2.5 border border-stone-300 rounded-lg font-semibold">Cancel</button>
+          <button type="button" disabled={saving} onClick={onClose} className="flex-1 py-2.5 border border-stone-300 rounded-lg font-semibold">Annulla</button>
           <button
-            onClick={handleSave}
+            type="submit"
             disabled={saving || photoPreparing}
-            className="flex-1 py-2.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex-1 py-2.5 bg-emerald-800 text-white rounded-lg font-semibold hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {saving ? 'Salvataggio...' : 'Save'}
+            {saving ? 'Salvataggio…' : 'Salva'}
           </button>
         </div>
-      </div>
-    </div>
+      </form>
+    </dialog>
   );
 }
 
-function Input({ label, value, onChange, type = 'text' }: { label: string; value: string; onChange: (v: string) => void; type?: string }) {
+function Input({ label, value, onChange, type = 'text', required = false }: { required?: boolean; label: string; value: string; onChange: (v: string) => void; type?: string }) {
+  const id=useId();
   return (
     <div>
-      <label className="text-sm font-semibold text-stone-700">{label}</label>
+      <label htmlFor={id} className="text-sm font-semibold text-stone-700">{label}</label>
       <input
-        type={type}
+        id={id} type={type} required={required} min={type === 'number' ? 0 : undefined} step={type === 'number' ? 'any' : undefined}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm focus:border-emerald-500 focus:outline-none"

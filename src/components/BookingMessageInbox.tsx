@@ -7,12 +7,12 @@ import { BookingConversationDialog } from './BookingConversation';
 
 type InboxRow = { booking_id: string; peer_name: string; notes: string | null; start_at: string; unread_count: number; total_count: number };
 
-export function BookingMessageInbox({ professional = false }: { professional?: boolean }) {
+export function BookingMessageInbox({ professional = false, compactEmpty = false }: { professional?: boolean; compactEmpty?: boolean }) {
   const { user } = useAuth();
-  return user ? <InboxContent key={user.id} professional={professional} /> : null;
+  return user ? <InboxContent key={user.id} professional={professional} compactEmpty={compactEmpty} /> : null;
 }
 
-function InboxContent({ professional }: { professional: boolean }) {
+function InboxContent({ professional, compactEmpty }: { professional: boolean; compactEmpty: boolean }) {
   const [rows, setRows] = useState<InboxRow[]>([]);
   const [open, setOpen] = useState<InboxRow | null>(null);
   const [error, setError] = useState(false);
@@ -40,6 +40,7 @@ function InboxContent({ professional }: { professional: boolean }) {
     window.addEventListener('focus', load); window.addEventListener(messagesChanged, load); document.addEventListener('visibilitychange', load);
     return () => { active = false; window.clearInterval(timer); window.removeEventListener('focus', load); window.removeEventListener(messagesChanged, load); document.removeEventListener('visibilitychange', load); };
   }, [page, revision]);
+  if(compactEmpty && !rows.length && !error && !open)return null;
   return <section aria-label="Messaggi da leggere" className="mb-6 rounded-2xl border border-emerald-200 bg-white p-5 text-stone-900">
     <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="font-bold"><MessageCircle className="mr-2 inline h-5 w-5" />Messaggi da leggere</h2><button type="button" disabled={loading} onClick={() => setRevision((value) => value + 1)} className="text-sm font-semibold underline">Aggiorna</button></div>
     {loading ? <p role="status" className="mt-3 text-sm text-stone-500">Caricamento…</p> : error ? <p role="alert" className="mt-3 text-sm text-rose-700">Non è stato possibile aggiornare i messaggi.</p>

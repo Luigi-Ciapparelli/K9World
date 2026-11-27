@@ -146,7 +146,7 @@ try {
   const terms=signup.page.getByRole('checkbox',{name:'Accetto i Termini di utilizzo.',exact:true});
   assert.equal(await terms.isChecked(),false,'Terms must not be preselected');
   await terms.check();
-  signup.page.once('dialog',d=>d.accept());await signup.page.getByRole('button',{name:'Crea account',exact:true}).click();await signup.page.getByRole('heading',{name:'Bentornato'}).waitFor();
+  await signup.page.getByRole('button',{name:'Crea account',exact:true}).click();await signup.page.getByRole('heading',{name:'Controlla la tua email'}).waitFor();await signup.page.getByRole('button',{name:'Vai ad Accedi',exact:true}).click();await signup.page.getByRole('heading',{name:'Bentornato'}).waitFor();
   assert.equal(requests.at(-1).body.data.role,'owner');assert.equal(new URLSearchParams(signup.page.url().split('?')[1]).get('next'),profilePath+'?booking=1');
   assert.equal(requests.at(-1).body.data.legal_declaration.terms_accepted,true);
   await login(signup.page);await signup.page.getByRole('dialog',{name:'Richiedi prenotazione'}).waitFor();assert.equal(rows.length,1,'Registration must not create another request');await signup.context.close();

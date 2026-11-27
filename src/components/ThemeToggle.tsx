@@ -1,39 +1,15 @@
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { useRef, useEffect } from 'react';
+import { Monitor, Moon, Sun, ChevronDown } from 'lucide-react';
 import { useTheme } from '../lib/ThemeContext';
-
-const options = [
-  { value: 'light', label: 'Chiaro', icon: Sun },
-  { value: 'dark', label: 'Scuro', icon: Moon },
-  { value: 'system', label: 'Auto', icon: Monitor },
-] as const;
-
-export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-
-  return (
-    <div className="inline-flex items-center rounded-full border border-stone-200 bg-white p-1 shadow-sm dark:border-stone-700 dark:bg-stone-900">
-      {options.map((option) => {
-        const Icon = option.icon;
-        const active = theme === option.value;
-
-        return (
-          <button
-            key={option.value}
-            type="button"
-            onClick={() => setTheme(option.value)}
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition ${
-              active
-                ? 'bg-[#0f5f46] text-white'
-                : 'text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800'
-            }`}
-            aria-pressed={active}
-            aria-label={`Tema ${option.label.toLowerCase()}`}
-          >
-            <Icon className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">{option.label}</span>
-          </button>
-        );
-      })}
-    </div>
-  );
+const options = [{value:'light',label:'Chiaro',icon:Sun},{value:'dark',label:'Scuro',icon:Moon},{value:'system',label:'Auto',icon:Monitor}] as const;
+export function ThemeToggle(){
+ const {theme,setTheme}=useTheme(), ref=useRef<HTMLDetailsElement>(null);
+ const Icon=options.find(o=>o.value===theme)?.icon??Monitor;
+ useEffect(()=>{const close=(e:PointerEvent)=>{if(ref.current?.open && e.target instanceof Node && !ref.current.contains(e.target))ref.current.open=false;};
+ document.addEventListener('pointerdown',close);return()=>document.removeEventListener('pointerdown',close);},[]);
+ const done=()=>{if(ref.current){ref.current.open=false;ref.current.querySelector('summary')?.focus();}};
+ return <details ref={ref} className="pc-appearance" onKeyDown={e=>{if(e.key==='Escape'&&ref.current?.open){e.preventDefault();e.stopPropagation();done();}}}>
+  <summary aria-label="Aspetto"><Icon size={16} aria-hidden="true"/>Aspetto<ChevronDown size={14} aria-hidden="true"/></summary>
+  <div className="pc-appearance-options" role="group" aria-label="Tema del sito">{options.map(({value,label,icon:Option})=><button type="button" key={value} aria-label={'Tema '+label.toLowerCase()} aria-pressed={theme===value} onClick={()=>{setTheme(value);done();}}><Option size={16} aria-hidden="true"/>{label}{theme===value && <span aria-hidden="true">✓</span>}</button>)}</div>
+ </details>;
 }

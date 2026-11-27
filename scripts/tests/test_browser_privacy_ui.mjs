@@ -23,11 +23,12 @@ async function setup(width, blocked = false) {
   return { page, context };
 }
 async function darkTheme(page) {
-  const toggle = page.getByRole('button', { name: 'Tema scuro', exact: true }).first();
-  const mobile = !await toggle.isVisible();
-  if (mobile) await page.getByRole('button', { name: 'Apri menu', exact: true }).click();
-  await toggle.click();
-  if (mobile) await page.getByRole('button', { name: 'Chiudi menu', exact: true }).click();
+  const menu=page.getByRole('button',{name:'Apri menu',exact:true});
+  const mobile=await menu.isVisible();
+  if(mobile)await menu.click();
+  await page.locator('details.pc-appearance:visible > summary').click();
+  await page.getByRole('button',{name:'Tema scuro',exact:true}).click();
+  if(mobile)await page.getByRole('button',{name:'Chiudi menu',exact:true}).click();
 }
 async function clear(page, action) {
   await page.getByRole('button', { name: action, exact: true }).click();

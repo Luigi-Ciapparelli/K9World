@@ -20,23 +20,24 @@ try {
   const headed=async()=>{await page.getByRole('heading',{level:1,name:'Conosci il tuo cane. Trova chi ti aiuta.'}).waitFor();};
   const go=async()=>{await page.goto(base);await headed();};
   await go();await page.locator('.pc-landing-cover img').evaluate(image=>image.decode());
-  assert.equal(await page.locator('main h1').count(),1);
+  assert.equal(await page.locator('main h1').count(),1);await page.getByRole('heading',{name:'Stai pensando a un cane?'}).waitFor();await page.getByRole('heading',{name:'Hai già un cane?'}).waitFor();
   assert.equal(calls.length,0,'home must render without searching the public directory');
   assert.ok(!requests.some(url=>url.endsWith('italian-cities.json')),'no municipal directory on initial load');
   assert.equal(await page.locator('main video, main canvas, main iframe').count(),0);
   if(shots) await fs.mkdir(shots,{recursive:true});
-  for(const [width,height] of [[1440,900],[1024,768],[820,1024],[768,1024],[390,844],[320,568]]){
+  for(const [width,height] of [[1440,900],[1024,768],[820,1024],[768,1024],[390,844],[375,812],[320,568]]){
     await page.setViewportSize({width,height});
-    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`horizontal overflow at ${width}`);
+    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth?[]:[...document.querySelectorAll('body *')].filter(el=>{const r=el.getBoundingClientRect();return r.width&&r.right>innerWidth+1;}).slice(0,8).map(el=>el.tagName+'.'+el.className));
+    assert.deepEqual(overflow,[],`horizontal overflow at ${width}: ${overflow.join(' | ')}`);
     const box=await page.getByRole('button',{name:'Cerca un addestratore'}).boundingBox();
     assert.ok(box && box.y>=0 && box.y+box.height<=height && box.height>=44,`search requires scrolling at ${width}`);
-    const prof=page.getByRole('link',{name:/Gestionale per professionisti/});assert.equal(await prof.count(),1);
+    const prof=page.locator('header').getByRole('link',{name:/Gestionale per professionisti/});assert.equal(await prof.count(),1);
     const pb=await prof.boundingBox();assert.ok(pb&&pb.y+pb.height<=height&&pb.x+pb.width<=width);
-    const overlap=await page.locator('.pc-landing-cover-caption').evaluate(el=>{const r=el.getBoundingClientRect(), img=el.closest('a').getBoundingClientRect();return r.left<img.left||r.right>img.right||r.bottom>img.bottom;});assert.equal(overlap,false);
+    const overlap=await page.locator('.pc-landing-cover-caption').evaluate(el=>{const r=el.getBoundingClientRect(), img=el.closest('figure').getBoundingClientRect();return r.left<img.left||r.right>img.right||r.bottom>img.bottom;});assert.equal(overlap,false);
     if(shots && [1440,390].includes(width)) await page.screenshot({path:path.join(shots,`home-${width}.png`),fullPage:true});
   }
   await page.setViewportSize({width:390,height:844});
-  await page.getByRole('link',{name:'Gestionale per professionisti e centri'}).click();await page.waitForURL(base+'/become-pro');
+  await page.getByRole('link',{name:'Gestionale per professionisti e centri',exact:true}).click();await page.waitForURL(base+'/become-pro');
   await go();await page.getByRole('button',{name:'Apri menu'}).click();await page.getByRole('navigation',{name:'Navigazione principale'}).getByRole('link',{name:'Sport cinofili'}).click();await page.waitForURL(base+'/sport');
   await go();await page.getByRole('button',{name:'Cerca un addestratore'}).click();await page.waitForURL(base+'/search?type=trainer');
   async function waitSearch(){return page.waitForResponse(r=> r.url().includes('/rpc/search_public_professionals'));}
@@ -56,7 +57,7 @@ try {
     await go();const link=page.getByRole('main').getByRole('link',{name:label,exact:true});await link.focus();await link.press('Enter');await page.waitForURL(base+to);
     if(to.includes('source=home'))await page.getByText('Scegli il cane insieme a un professionista.',{exact:true}).waitFor();
   }
-  await go();await page.setViewportSize({width:1440,height:900});await page.getByRole('button',{name:'Tema scuro'}).click();
+  await go();await page.setViewportSize({width:1440,height:900});await page.locator('details.pc-appearance:visible summary').click();await page.getByRole('button',{name:'Tema scuro'}).click();
   await page.waitForFunction(()=>document.documentElement.classList.contains('dark'));
   if(shots) await page.screenshot({path:path.join(shots,'home-scura.png'),fullPage:true});
   assert.deepEqual(errors,[]);await ctx.close();
@@ -76,5 +77,5 @@ try {
     await account.route('**/*.supabase.co/**',r=>{const u=new URL(r.request().url());assert.equal(u.hostname,'pc-home-test.supabase.co');const n=u.pathname.split('/').at(-1);return r.fulfill({json:n==='profiles'?(role==='missing'?null:{id:uid,role,full_name:'Persona demo',email_verified:true}):n==='user'?{id:uid,role:'authenticated'}:[]});});
     const p=await account.newPage();await p.goto(base);if(role==='missing')await p.getByRole('button',{name:'Riprova caricamento'}).waitFor();else await p.waitForURL(base+'/#/'+(role==='professional'?'pro':role));await account.close();
   }
-  console.log('OK home: sei schermi, ricerca con/senza comune, pensione in zona, servizio e tastiera, aperture dirette, tema scuro, senza JS, accesso dei tre ruoli e recupero profilo.');
+  console.log('OK home: sette schermi, ricerca con/senza comune, pensione in zona, servizio e tastiera, aperture dirette, tema scuro, senza JS, accesso dei tre ruoli e recupero profilo.');
 }finally{await browser?.close();await new Promise(r=>server.httpServer.close(r));}

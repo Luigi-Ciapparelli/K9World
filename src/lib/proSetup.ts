@@ -14,6 +14,8 @@ export const setupSteps = [
   { id: 'verification', label: 'Controlla le verifiche', short: 'Verifiche', description: 'Contatti e stato di approvazione del profilo.', group: 'more' },
 ] as const;
 export type SetupStep = typeof setupSteps[number]['id'];
+export const baseSetupSteps = setupSteps.filter(step => step.group === 'base');
+export const extraSetupSteps = setupSteps.filter(step => step.group === 'more');
 export function parseSetupStep(path: string): SetupStep | null {
   const value = new URLSearchParams(path.split('?')[1] || '').get('step');
   return setupSteps.find(step => step.id === value)?.id ?? null;
@@ -29,8 +31,12 @@ export function completedProfileSteps(name: string, pro: Record<string, unknown>
   const filled = (value: unknown) => typeof value === 'string' && value.trim().length > 0;
   return {
     identity: filled(name) && filled(pro?.professional_type) && (pro?.listing_type === 'individual' || !pro?.listing_type || filled(pro?.business_name)),
-    area: filled(pro?.zone_text), story: filled(pro?.bio), services: services.some(service => service.active && (!service.service_type || isBookableService(service.service_type))),
+    area: filled(pro?.zone_text) && typeof pro?.latitude === 'number' && Number.isFinite(pro.latitude) && typeof pro.longitude === 'number' && Number.isFinite(pro.longitude), story: filled(pro?.bio), services: services.some(service => service.active && (!service.service_type || isBookableService(service.service_type))),
   };
+}
+export function profileSetupStatus(name: string, pro: Record<string, unknown> | null, services: Array<{ active: boolean; service_type?: string }>) {
+  const completed = completedProfileSteps(name, pro, services);
+  return { completed, count: baseSetupSteps.filter(step => completed[step.id]).length, next: baseSetupSteps.find(step => !completed[step.id]) };
 }
 export const toolTours = [
   { id: 'calendar', title: 'Organizza il calendario', icon: 'calendar', path: '/pro/calendar', description: 'Appuntamenti, colori e periodi di indisponibilità.', steps: [
