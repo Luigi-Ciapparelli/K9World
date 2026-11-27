@@ -90,7 +90,7 @@ async function login(page, email='owner@example.invalid') {
 }
 try {
   const pro=await setup(proId,1440);await pro.page.goto(base+'/#/pro/bookings');
-  await pro.page.getByText('Nessuna prenotazione corrisponde ai filtri selezionati.').waitFor();
+  await pro.page.getByText(/Nessuna richiesta ricevuta/).waitFor();
   const owner=await setup();await owner.page.goto(base+profilePath);
   await owner.page.getByRole('button',{name:'Richiedi prenotazione',exact:true}).click();
   await owner.page.getByRole('heading',{name:'Bentornato'}).waitFor();

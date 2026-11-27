@@ -119,7 +119,7 @@ const scenes=[
   {id:'studio-attesa',title:'Studio · profilo completo in verifica',person:'studio-pending',route:'/#/pro',ready:readyH1},
   {id:'studio-zona',title:'Studio · zona da completare',person:'studio-zona',route:'/#/pro',ready:readyH1},
   {id:'studio-abilitato',title:'Studio · professionista approvato',person:'studio-ok',route:'/#/pro',ready:p=>p.getByText(/Puppy class.*Nocciola/).first().waitFor()},
-  {id:'agenda',title:'Agenda con lezione online e appuntamento manuale',person:'studio-ok',route:'/#/pro/calendar',ready:async p=>{await has(p,'Arianna Demo');await p.getByText(/Nocciola/).first().waitFor();}},
+  {id:'agenda',title:'Agenda con lezione online e appuntamento manuale',person:'studio-ok',route:'/#/pro/calendar',ready:async p=>{await p.getByRole('heading',{name:'Arianna Demo',exact:true}).waitFor();await p.getByText(/Nocciola/).first().waitFor();}},
   {id:'rubrica',title:'Rubrica · due clienti e i loro cani',person:'studio-ok',route:'/#/pro/crm',ready:async p=>{await has(p,'Arianna Demo');await has(p,'Andrea Demo');}},
 ];
 const views=[{width:1440,height:900,dark:false},{width:1440,height:900,dark:true},{width:375,height:812,dark:false},{width:375,height:812,dark:true}];
@@ -140,6 +140,29 @@ try{
       await p.evaluate(()=>scrollTo(0,0));
       await p.screenshot({path:path.join(dir,img),animations:'disabled',caret:'hide',fullPage:false});
       const meta={scene:scene.id,title:scene.title,file:img,viewport:[view.width,view.height],tema:view.dark?'scuro':'chiaro',titleInPage:h1,bounds};
+      if(group==='dopo' && ['studio-attesa','studio-zona','studio-abilitato'].includes(scene.id)){
+        const actions=p.locator('.pg-day-actions');
+        const label={'studio-attesa':'Dettagli della verifica','studio-zona':'Imposta la zona','studio-abilitato':'Nuovo appuntamento'}[scene.id];
+        const link=actions.getByRole('link',{name:label,exact:true});await link.waitFor();
+        if(scene.id!=='studio-abilitato'){
+          assert.equal(await p.getByRole('link',{name:'Nuovo appuntamento',exact:true}).count(),0);
+          assert.ok((await link.getAttribute('href')).includes(scene.id==='studio-zona'?'step=area':'step=verification'));
+          meta.interazione='La giornata e il menu non offrono un appuntamento che non si può creare.';
+        }else{
+          await link.focus();await p.keyboard.press('Enter');
+          const dialog=p.getByRole('dialog',{name:'Nuovo appuntamento'});await dialog.waitFor();
+          const when=dialog.getByLabel('Data',{exact:true}),save=dialog.getByRole('button',{name:'Salva appuntamento'});
+          for(const el of [when,save]){await el.scrollIntoViewIfNeeded();assert.ok(await el.evaluate(n=>{const b=n.getBoundingClientRect();const top=document.elementFromPoint(b.left+b.width/2,b.top+b.height/2);return n===top||n.contains(top);}), 'Azione agenda coperta');}
+          await when.focus();assert.ok(await when.evaluate(n=>n===document.activeElement));await p.keyboard.press('Escape');await dialog.waitFor({state:'hidden'});
+          meta.interazione='Invio apre un modulo utilizzabile; data e salvataggio restano scoperti. Escape lo chiude.';
+        }
+      }
+      if(group==='dopo' && scene.id==='cani'){
+        await has(p,'Peso non indicato');await has(p,'24,5 kg');
+        const fits=await p.getByText(longName,{exact:true}).first().evaluate(el=>el.scrollWidth<=el.clientWidth+1 && el.getBoundingClientRect().right<=innerWidth+1);
+        assert.ok(fits,'Il nome lungo deve rimanere leggibile');meta.interazione='Foto verticale, nome lungo e peso non indicato.';
+      }
+      if(group==='dopo' && scene.id==='cane-senza-peso'){await has(p,'Peso non indicato');}
       if(scene.id==='rubrica'){
         await p.getByRole('button',{name:'Apri scheda di Arianna Demo'}).click();
         const dialog=p.getByRole('dialog');await dialog.waitFor();

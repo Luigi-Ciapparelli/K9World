@@ -57,7 +57,7 @@ function PublicHomePage() {
       <div className="pc-landing-intro">
         <p className="pc-landing-kicker">Educazione e vita con il cane</p>
         <h1 id="home-title">Conosci il tuo cane. <em>Trova chi ti aiuta.</em></h1>
-        <p className="pc-landing-lead">Impara a leggere i suoi segnali e prova un esercizio a casa. Se vi serve una mano, cerca un educatore o un addestratore vicino a te.</p>
+        <p className="pc-landing-lead">Leggi i suoi segnali, prova un esercizio a casa o trova un addestratore vicino a te.</p>
         <h2 className="pc-audience-title">Hai già un cane?</h2>
         <NearbySearch />
       </div>

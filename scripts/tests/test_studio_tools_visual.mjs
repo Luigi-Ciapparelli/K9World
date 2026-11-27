@@ -50,7 +50,7 @@ try {
   const visit=pathname=>p.goto(base+'/#'+pathname,{waitUntil:'domcontentloaded'});
   const shot=async(label)=>{if(!folder)return;await p.evaluate(()=>window.scrollTo(0,0));await p.screenshot({path:path.join(folder,`${baseline?'prima':'dopo'}-${label}-${width}-${theme}.png`),animations:'disabled'});};
   await visit('/pro/calendar');
-  const day=p.getByRole('region',{name:'Impegni del giorno'});await day.getByText(client.full_name,{exact:true}).waitFor();await day.getByText(/Puppy class · Gruppo cuccioli/).waitFor();
+  const day=p.getByRole('region',{name:'Impegni del giorno'});await day.getByRole('heading',{name:client.full_name,exact:true}).waitFor();await day.getByText(/Puppy class · Gruppo cuccioli/).waitFor();
   await shot('agenda');
   if(!baseline){
     const month=p.getByRole('region',{name:'Calendario mensile'}),d=await day.boundingBox(),m=await month.boundingBox();assert.ok(d&&m);
@@ -58,7 +58,7 @@ try {
     else assert.ok(d.x+d.width<=m.x+2 && Math.abs(d.y-m.y)<5,'day and month share one row');
     assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
     await p.getByRole('button',{name:'Giorno successivo'}).click();await day.getByText('Nessun impegno per questo giorno e questi filtri.').waitFor();
-    await p.getByRole('button',{name:'Oggi',exact:true}).click();await day.getByText(client.full_name,{exact:true}).waitFor();
+    await p.getByRole('button',{name:'Oggi',exact:true}).click();await day.getByRole('heading',{name:client.full_name,exact:true}).waitFor();
     const shortcuts=p.getByRole('navigation',{name:'Strumenti del calendario'});const absence=shortcuts.getByRole('button',{name:'Indisponibilità'});await absence.focus();await p.keyboard.press('Enter');assert.equal(await p.locator(':focus').getAttribute('id'),'pc-calendar-absence');
     await p.getByLabel('Primo giorno').focus();assert.ok(await p.getByLabel('Primo giorno').evaluate(el=>el===document.activeElement));
   }
