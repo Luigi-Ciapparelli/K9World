@@ -15,6 +15,7 @@ export function Navbar() {
   const header = useRef<HTMLElement>(null);
   const mobileButton = useRef<HTMLButtonElement>(null);
   const basePath = path.split('?')[0];
+  const onPublicHome = basePath === '/' && !user;
   const dashboard = profile?.role === 'admin' ? '/admin' : profile?.role === 'professional' ? '/pro' : '/owner';
   const close = () => setMobileOpen(false);
 
@@ -53,7 +54,7 @@ export function Navbar() {
   ];
 
   return (
-    <header ref={header} className={`pc-site-header${mobileOpen ? ' is-open' : ''}`}>
+    <header ref={header} className={`pc-site-header${onPublicHome ? ' pc-home-header' : ''}${mobileOpen ? ' is-open' : ''}`}>
       <div className="pc-header-top pc-entry-container">
         <RouteLink to="/" className="pc-brand" aria-label="PortaleCinofilo, pagina iniziale" onClick={close}>
           <img src="/brand/portalecinofilo-mark.png" alt="" width="40" height="40" />
@@ -61,8 +62,8 @@ export function Navbar() {
         </RouteLink>
         <div className="pc-header-utilities">
           <ThemeToggle />
-          <RouteLink to="/become-a-pro" className="pc-pro-link" aria-current={basePath === '/become-a-pro' ? 'page' : undefined}>
-            <GraduationCap size={17} aria-hidden="true" /> Per i professionisti
+          <RouteLink to="/become-pro" className="pc-pro-link" aria-current={basePath === '/become-pro' ? 'page' : undefined}>
+            <GraduationCap size={17} aria-hidden="true" /> Gestionale per professionisti
           </RouteLink>
           {user ? <>
             <RouteLink to={dashboard} className="pc-account-link"><User size={17} aria-hidden="true" /><span>{profile?.full_name || 'La tua area'}</span></RouteLink>
@@ -74,8 +75,9 @@ export function Navbar() {
           </>}
         </div>
         <div className="pc-mobile-controls">
+          {onPublicHome && <RouteLink to="/become-pro" onClick={close} className="pc-mobile-studio" aria-label="Gestionale per professionisti e centri">Gestionale</RouteLink>}
           <RouteLink to={user ? dashboard : '/signin'} className="pc-mobile-account" aria-label={user ? 'Apri la tua area' : 'Accedi'}>
-            {user ? <User size={20} /> : 'Accedi'}
+            {user ? <User size={20} /> : <><span className="pc-login-word">Accedi</span><User className="pc-login-icon" size={19} aria-hidden="true" /></>}
           </RouteLink>
           <button ref={mobileButton} type="button" className="pc-icon-button" onClick={() => setMobileOpen(!mobileOpen)} aria-label={mobileOpen ? 'Chiudi menu' : 'Apri menu'} aria-expanded={mobileOpen} aria-controls="pc-primary-navigation">
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -86,17 +88,18 @@ export function Navbar() {
       <nav id="pc-primary-navigation" aria-label="Navigazione principale" className="pc-primary-nav pc-entry-container">
         {links.map(({ to, label, icon: Icon, active, kind }) => (
           <RouteLink key={to} to={to} onClick={close} className={`pc-nav-tile pc-nav-${kind}${active ? ' is-current' : ''}`} aria-current={active ? 'page' : undefined}>
-            <Icon size={19} aria-hidden="true" /><span>{label}</span>
+            <Icon size={19} aria-hidden="true" /><span>{label}</span>{active && <span aria-hidden="true" className="pc-current-page">Qui</span>}
           </RouteLink>
         ))}
         <div className="pc-mobile-extras">
-          <RouteLink to="/become-a-pro" onClick={close} className="pc-pro-link"><GraduationCap size={18} aria-hidden="true" /> Per i professionisti</RouteLink>
+          <RouteLink to="/become-pro" onClick={close} className="pc-pro-link"><GraduationCap size={18} aria-hidden="true" /> Gestionale per professionisti</RouteLink>
           {user ? <>
             <RouteLink to={dashboard} onClick={close} className="pc-account-link"><User size={18} aria-hidden="true" /> {profile?.full_name || 'La tua area'}</RouteLink>
             <RouteLink to="/account/contacts" onClick={close} className="pc-pro-link">Profilo e recapiti</RouteLink>
             <button type="button" disabled={leaving} onClick={leave} className="pc-pro-link"><LogOut size={18} aria-hidden="true" /> Esci</button>
           </> : <RouteLink to="/signup" onClick={close} className="pc-register-link">Crea il tuo account</RouteLink>}
-          <div className="pc-mobile-theme"><span>Aspetto</span><ThemeToggle /></div>
+          <div className="pc-mobile-theme"><ThemeToggle /></div>
+          <button type="button" className="pc-pro-link" onClick={()=>{close();window.dispatchEvent(new CustomEvent('pc:help',{detail:mobileButton.current}));}}>Aiuto</button>
         </div>
       </nav>
       {user && profile && !profile.email_verified && <RouteLink to="/account/contacts" className="pc-verification-notice">

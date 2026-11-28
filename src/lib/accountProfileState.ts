@@ -1,6 +1,6 @@
 import type { Profile } from './types';
 
-export type AccountUser = { id: string; email: string };
+export type AccountUser = { id: string; email: string; emailConfirmed?: boolean };
 export type AccountSnapshot = {
   user: AccountUser | null; profile: Profile | null; loading: boolean; profileError: boolean;
 };

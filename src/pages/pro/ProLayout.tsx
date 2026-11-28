@@ -9,8 +9,9 @@ import { RouteLink } from '../../components/RouteLink';
 import { useAuth } from '../../lib/AuthContext';
 import { continuityEnabled } from '../../lib/continuity';
 import { useRouter } from '../../lib/RouterContext';
-import { supabase } from '../../lib/supabase';
+import { StudioAgendaProvider, useStudioAgenda } from '../../components/StudioAgendaContext';
 import '../../professional-workspace.css';
+import '../../studio-orientation.css';
 
 type Tool = { id: string; label: string; path: string; icon: LucideIcon; available?: 'centre' | 'continuity' };
 const groups: { label: string; tools: Tool[] }[] = [
@@ -22,47 +23,37 @@ const groups: { label: string; tools: Tool[] }[] = [
     { id: 'team', label: 'Istruttori del centro', icon: Building2, path: '/pro/team', available: 'centre' },
     { id: 'collaborations', label: 'Le mie collaborazioni', icon: Handshake, path: '/account/centres' },
   ] },
-  { label: 'Percorsi dei clienti', tools: [
+  { label: 'Clienti e lezioni', tools: [
     { id: 'crm', label: 'Clienti', icon: Contact, path: '/pro/crm' },
     { id: 'archive', label: 'Relazioni e archivio', icon: Archive, path: '/pro/archive', available: 'continuity' },
     { id: 'passes', label: 'Pacchetti', icon: Ticket, path: '/pro/passes' },
     { id: 'subscriptions', label: 'Abbonamenti alle lezioni', icon: Repeat2, path: '/pro/subscriptions' },
   ] },
-  { label: 'Attività professionale', tools: [
+  { label: 'Configurazione', tools: [
     { id: 'settings', label: 'Profilo guidato', icon: SlidersHorizontal, path: '/pro/settings' },
     { id: 'analytics', label: 'Statistiche', icon: BarChart3, path: '/pro/analytics' },
   ] },
 ];
 
 export function ProLayout({ children, active }: { children: ReactNode; active: string }) {
-  const { user, profile, signOut } = useAuth();
-  const userId = user?.id;
-  const [centreUser, setCentreUser] = useState<string | null>(null);
-  useEffect(() => {
-    let current = true;
-    setCentreUser(null);
-    if (!userId) return;
-    void supabase.from('professionals').select('listing_type').eq('id', userId).maybeSingle().then(({ data, error }) => {
-      if (current && !error && data?.listing_type === 'center') setCentreUser(userId);
-    });
-    return () => { current = false; };
-  }, [userId]);
-
+  return <StudioAgendaProvider><StudioFrame active={active}>{children}</StudioFrame></StudioAgendaProvider>;
+}
+function StudioFrame({children,active}:{children:ReactNode;active:string}) {
+  const { profile, signOut } = useAuth();
+  const agenda=useStudioAgenda();
   const { path, navigate } = useRouter();
   const [leaving, setLeaving] = useState(false);
   const [logoutError, setLogoutError] = useState(false);
   const accountRef = useRef<HTMLDetailsElement>(null);
   const leave = async () => { if (leaving) return; setLeaving(true); setLogoutError(false); try { await signOut(); navigate('/'); } catch { setLogoutError(true); } finally { setLeaving(false); } };
   const [open, setOpen] = useState(false);
-  const [dismissedHint, setDismissedHint] = useState(false);
   const menuRef = useRef<HTMLButtonElement>(null);
   const currentLabel = groups.flatMap(g => g.tools).find(t => t.id === active)?.label || 'Area professionista';
 
-  useEffect(() => { setOpen(false); setDismissedHint(false); }, [path]);
+  useEffect(() => { setOpen(false); }, [path]);
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
-      setDismissedHint(true);
       if (accountRef.current?.open) { accountRef.current.open = false; accountRef.current.querySelector('summary')?.focus(); }
       if (open) { setOpen(false); menuRef.current?.focus(); }
     };
@@ -81,7 +72,7 @@ export function ProLayout({ children, active }: { children: ReactNode; active: s
         <RouteLink to="/search?type=trainer" className="pg-studio-public"><ExternalLink size={16} /> Visita il portale</RouteLink>
         <details className="pg-studio-account" ref={accountRef}><summary aria-label="Menu account"><UserRound size={18} /><span>{profile?.full_name?.trim().split(/\s+/)[0] || 'Account'}</span><ChevronDown size={14} /></summary>
           <div className="pg-account-panel"><strong>{profile?.full_name || 'Il tuo account'}</strong><RouteLink to="/account/contacts">Recapiti account</RouteLink><RouteLink to="/search?type=trainer">Visita il portale</RouteLink>
-            <div><small>Aspetto</small><ThemeToggle /></div><button type="button" onClick={leave} disabled={leaving}><LogOut size={16} /> {leaving ? 'Uscita…' : 'Esci'}</button>
+            <div><ThemeToggle /></div><button type="button" onClick={event=>{if(accountRef.current)accountRef.current.open=false;window.dispatchEvent(new CustomEvent('pc:help',{detail:accountRef.current?.querySelector('summary')??event.currentTarget}));}}>Aiuto</button><button type="button" onClick={leave} disabled={leaving}><LogOut size={16} /> {leaving ? 'Uscita…' : 'Esci'}</button>
             {logoutError && <span role="alert">Uscita non riuscita. Riprova.</span>}</div></details>
         <button type="button" className="pg-studio-menu" ref={menuRef} aria-label={open ? 'Chiudi menu professionista' : 'Apri menu professionista'}
           aria-expanded={open} aria-controls="professional-navigation" onClick={() => setOpen(value => !value)}>
@@ -91,12 +82,11 @@ export function ProLayout({ children, active }: { children: ReactNode; active: s
     <aside className="pg-rail" id="professional-navigation" data-open={open}>
       <div className="pg-rail-inner">
         <RouteLink to="/pro" className="pg-rail-id" aria-label="Studio professionista, inizio"><PawPrint size={23} aria-hidden="true" /></RouteLink>
-        <nav aria-label="Navigazione professionista" data-hints-off={dismissedHint}>
-          {groups.map(group => <ul key={group.label} aria-label={group.label} className="pg-rail-group">
-            {group.tools.filter(tool => tool.available === 'centre' ? !!userId && centreUser === userId : tool.available !== 'continuity' || continuityEnabled)
+        <nav aria-label="Navigazione professionista" >
+          {groups.map(group => <div className="pg-tool-group" key={group.label}><p className="pg-group-name" aria-hidden="true">{group.label}</p><ul aria-label={group.label} className="pg-rail-group">
+            {group.tools.filter(tool => (tool.id !== 'new-appointment' || agenda.step?.kind === 'ready') && (tool.available === 'centre' ? agenda.centre : tool.available !== 'continuity' || continuityEnabled))
               .map(({ id, label, path: to, icon: Icon }) => <li key={id}>
                 <RouteLink to={to} aria-label={label} aria-current={id === active ? 'page' : undefined} data-action={id === 'new-appointment' || undefined} className="pg-rail-link"
-                  onPointerEnter={() => setDismissedHint(false)} onFocus={() => setDismissedHint(false)}
                   onClick={event => {
                     if (open && path === to && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
                       setOpen(false); menuRef.current?.focus();
@@ -106,7 +96,7 @@ export function ProLayout({ children, active }: { children: ReactNode; active: s
                   <span className="pg-rail-label" aria-hidden="true">{label}</span>
                 </RouteLink>
               </li>)}
-          </ul>)}
+          </ul></div>)}
         </nav>
       </div>
     </aside>

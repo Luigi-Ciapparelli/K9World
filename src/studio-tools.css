@@ -1,0 +1,42 @@
+/* Operational surfaces: narrow spacing for data, visible current states, readable controls. */
+.pc-work-secondary { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--pc-line); }
+.pc-work-action,.pc-work-tabs a,.pc-work-link,.pc-work-shortcuts button { display: inline-flex; align-items:center; justify-content:center; gap:.45rem; min-height:44px; font-weight:650; font-size:.9375rem; }
+.pc-work-action { padding:.55rem 1rem; border-radius:.65rem; background:#23503b; color:#fff; }
+.pc-work-action:hover { background:#153d2a; }
+.pc-work-link,.pc-work-shortcuts button { text-underline-offset:.22em; text-decoration:underline; }
+.pc-work-shortcuts { display:flex; flex-wrap:wrap; gap:0 1.1rem; border-block:1px solid var(--pc-line); }
+.pc-work-shortcuts button { color:var(--pc-ink-950); }
+.pc-work-calendar { display:grid; gap:1.3rem; align-items:start; }
+.pc-work-calendar > *, .pc-work-month-column { min-width:0; }
+.pc-work-day-heading { display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex-wrap:wrap; }
+.pc-work-day-heading .pc-kicker { font-size:.875rem; }
+.pc-work-day-controls { display:inline-flex; gap:.25rem; }
+.pc-work-day-controls button { min-height:44px; min-width:44px; display:inline-flex; align-items:center; justify-content:center; }
+.pc-work-calendar section { scroll-margin-top:6rem; }
+.pc-work-month-cell { min-height:3.1rem; }
+.pg-agenda-page [id^="pc-calendar-"] { scroll-margin-top:6rem; }
+.pc-work-tabs { display:flex; width:fit-content; margin-bottom:1.1rem; border-bottom:1px solid var(--pc-line); gap:.35rem; }
+.pc-work-tabs a { padding:.45rem .8rem; border-bottom:3px solid transparent; color:var(--pc-ink-950); }
+.pc-work-tabs a[aria-current="page"] { border-bottom-color:currentColor; color:var(--pc-forest-900); }
+.pc-work-steps { border:1px solid var(--pc-line); border-radius:1rem; padding:1rem 1.2rem; background:var(--pc-paper); margin-bottom:1.1rem; }
+.pc-work-steps ol { display:flex; flex-wrap:wrap; gap:.45rem 1rem; padding:0; list-style:none; }
+.pc-work-steps li { display:flex; align-items:center; gap:.4rem; font-size:.9rem; }
+.pc-work-steps li > span { border:1px solid currentColor; display:inline-flex; width:1.5rem;height:1.5rem; align-items:center; justify-content:center; border-radius:50%; }
+.pc-work-steps li[aria-current="step"] { font-weight:750; text-decoration:underline; text-underline-offset:.22em; }
+.pc-work-steps p { margin:.65rem 0; }
+.pc-work-steps > div { display:flex; flex-wrap:wrap; align-items:center; gap:.2rem 1rem; }
+.pc-work-subtabs button[aria-pressed="true"],.pc-work-periods button[aria-pressed="true"] { border-color:currentColor; box-shadow:inset 0 -3px currentColor; font-weight:750; }
+.pc-work-balance,.pc-work-applied { display:flex; flex-direction:column; align-items:flex-start; gap:.25rem; border-left:3px solid var(--pc-forest-700); background:var(--pc-bone-50); padding:.65rem .85rem; margin:.75rem 0; }
+.pc-work-balance strong { font-size:1.3rem; }
+.pc-work-balance p { margin:0; }
+.pc-work-balance span,.pc-work-applied span { font-size:.92rem; }
+.pc-work-applied { margin:0 0 .85rem; }
+.pc-work-private,.pc-work-shared { padding:clamp(1rem,2.5vw,1.5rem); background:var(--pc-paper); border:1px solid var(--pc-line); border-radius:1rem; }
+.pc-work-private { border-left:4px solid #aa803f; }.pc-work-shared { border-left:4px solid var(--pc-forest-700); }
+.pc-work-privacy { display:flex; align-items:center; gap:.45rem; font-weight:650; font-size:.9rem; margin-bottom:.45rem; }
+.pc-work-action:focus-visible,.pc-work-tabs a:focus-visible,.pc-work-link:focus-visible,.pc-work-shortcuts button:focus-visible,.pg-agenda-page [tabindex="-1"]:focus-visible { outline:3px solid #a2621f; outline-offset:3px; }
+html.dark .pc-work-action { background:#bedac5;color:#142d21; }
+html.dark .pc-work-tabs a[aria-current="page"] { color:#a9e4bf; }
+html.dark :is(.pc-work-action,.pc-work-tabs a,.pc-work-link,.pc-work-shortcuts button):focus-visible { outline-color:#edc17a; }
+@media(min-width:1000px) { .pc-work-calendar { grid-template-columns:minmax(0, .95fr) minmax(0,1.45fr); } .pc-work-month-cell{min-height:4.5rem;} }
+@media(max-width:530px) { .pc-work-steps{padding:.8rem;}.pc-work-steps ol{gap:.25rem .6rem;}.pc-work-steps li{font-size:.875rem;}.pc-work-shortcuts{gap:0 .85rem;}.pg-agenda-page .pg-manual-card {flex-wrap:wrap;} }

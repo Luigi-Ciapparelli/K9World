@@ -1,3 +1,4 @@
+import '../../studio-tools.css';
 import { RouteLink } from '../../components/RouteLink';
 import { BookingDetails } from '../../components/BookingDetails';
 import { useBookingDetails } from '../../lib/useBookingDetails';
@@ -116,12 +117,11 @@ export function ProBookings() {
       <div className="px-4 sm:px-6 py-8 max-w-6xl mx-auto text-[var(--pc-ink-950)]">
         <p className="pc-kicker">La tua attività</p>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="pc-display text-3xl sm:text-4xl font-semibold mt-2">Richieste e prenotazioni</h1>
+          <h1 className="pc-display text-3xl sm:text-4xl font-semibold mt-2">Richieste e messaggi</h1>
           <button type="button" disabled={loading || busyId !== null} onClick={reload} className="text-sm font-semibold underline disabled:opacity-50">Aggiorna richieste</button>
         </div>
         <p className="text-[var(--pc-muted-600)] mt-3 mb-6">Prima le richieste in attesa, poi gli appuntamenti accettati e lo storico. In ogni gruppo, le date più vicine all’inizio dell’elenco. Orari italiani, come nel calendario.</p>
 
-        <ServiceReviewPanel professional refresh={reloadKey} />
         <div aria-label="Filtra per stato" className="flex flex-wrap gap-2 mb-4">
           {statuses.map(([value, label]) => (
             <button type="button" key={value} aria-pressed={filter === value}
@@ -146,7 +146,7 @@ export function ProBookings() {
         <section aria-label="Elenco prenotazioni" aria-busy={loading} className="space-y-4">
           {loading ? <p role="status" className="pc-card p-6">Caricamento…</p> : loadError ? (
             <div role="alert" className="pc-card p-6"><p>Non è stato possibile caricare le prenotazioni.</p><button type="button" onClick={reload} className="mt-3 font-bold underline">Riprova</button></div>
-          ) : bookings.length === 0 ? <p className="pc-card p-6 text-[var(--pc-muted-600)]">Nessuna prenotazione corrisponde ai filtri selezionati.</p> : bookings.map((booking) => (
+          ) : bookings.length === 0 ? <p className="pc-card p-6 text-[var(--pc-muted-600)]">{filter !== 'all' || search ? 'Nessuna prenotazione corrisponde ai filtri selezionati.' : 'Nessuna richiesta ricevuta. Le prenotazioni e le conversazioni appariranno qui.'}</p> : bookings.map((booking) => (
             <article key={booking.id} className="pc-card p-5">
               <div className="flex flex-wrap justify-between gap-3">
                 <div>
@@ -180,6 +180,7 @@ export function ProBookings() {
           <span>Pagina {page + 1} di {Math.ceil(count / pageSize)} · {count} risultati</span>
           <button type="button" disabled={(page + 1) * pageSize >= count} onClick={() => setPage((value) => value + 1)} className="underline disabled:opacity-40">Successiva</button>
         </nav>}
+        <div className="pc-work-secondary"><ServiceReviewPanel professional refresh={reloadKey} /></div>
       </div>
     </ProLayout>
   );

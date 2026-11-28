@@ -34,7 +34,7 @@ async function setup(width,professional=false){
  const page=await context.newPage();page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base+(professional?'/pro/bookings':'/owner/bookings'),{waitUntil:'domcontentloaded',timeout:30000});
  await page.getByRole('heading',{name:'Le vostre esperienze'}).waitFor();
- await page.getByText(professional?'Nessuna prenotazione corrisponde':'Non hai ancora prenotazioni.').waitFor();
+ await page.getByText(professional?'Nessuna richiesta ricevuta':'Non hai ancora prenotazioni.').waitFor();
  return {context,page,state};
 }
 try{

@@ -1,16 +1,14 @@
 import {
-  ArrowRight,
   BadgeCheck,
-  Briefcase,
   CalendarCheck,
   CheckCircle2,
   MapPin,
   Medal,
   MessageCircle,
   ShieldCheck,
-  Users,
 } from 'lucide-react';
 import { useRouter } from '../lib/RouterContext';
+import '../professional-public-page.css';
 
 const valuePoints = [
   {
@@ -99,21 +97,19 @@ export function BecomeProPage() {
   const { navigate } = useRouter();
 
   return (
-    <main className="min-h-screen bg-[#F5F1E7] text-[#18211C]">
-      <section className="border-b border-[#D8D5CC] bg-[#FFFEFA]">
-        <div className="max-w-7xl mx-auto px-6 py-16 lg:py-20 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
+    <main className="pc-pro-public">
+      <section className="pc-pro-paper border-b border-[#D8D5CC]">
+        <div className="max-w-7xl mx-auto px-5 py-8 lg:py-14 grid lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-12 items-center">
           <div>
             <div className="pc-kicker mb-5">PortaleCinofilo · Per addestratori e strutture</div>
 
             <h1 className="pc-display text-4xl md:text-6xl leading-[1.02] max-w-4xl">
-              Fai conoscere il tuo lavoro.
-              <span className="block text-[#235B40]">Organizza il primo contatto.</span>
+              La tua giornata al centro.
+              <span className="block pc-pro-accent">Dal campo all’agenda.</span>
             </h1>
 
             <p className="text-lg md:text-xl text-[#536058] mt-6 max-w-2xl leading-relaxed">
-              Per addestratori, centri cinofili e strutture: un profilo pubblico,
-              richieste con informazioni sul cane, messaggi e calendario.
-              Qui trovi gli strumenti per il tuo lavoro e il listino previsto per il lancio.
+              Guarda chi viene ad allenarsi, rispondi alle richieste e organizza lezioni individuali e di gruppo. Le famiglie ritrovano gli appuntamenti nella propria area.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mt-8">
@@ -123,7 +119,6 @@ export function BecomeProPage() {
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[#163D2A] px-6 py-3.5 font-semibold text-white hover:bg-[#235B40] transition"
               >
                 Crea il tuo profilo
-                <ArrowRight className="w-4 h-4" />
               </button>
 
               <a
@@ -150,29 +145,16 @@ export function BecomeProPage() {
             </div>
           </div>
 
-          <div className="relative">
-            <div className="absolute -inset-6 rounded-[2.5rem] bg-[#E4EEE7]" aria-hidden="true" />
-            <div className="relative overflow-hidden rounded-[2rem] border border-[#C9D5CC] bg-[#FFFEFA] p-6 md:p-8 shadow-sm">
-              <img
-                src="/brand/portalecinofilo-lockup.png"
-                alt="PortaleCinofilo, binomio persona-cane al lavoro"
-                className="w-full max-h-[430px] object-contain"
-              />
-
-              <div className="mt-6 border-t border-[#E3DFD6] pt-5 grid sm:grid-cols-2 gap-4">
-                <MicroProof
-                  icon={<Users />}
-                  title="Primo gruppo locale"
-                  text="Una rete in costruzione, con supporto diretto nei primi passi."
-                />
-                <MicroProof
-                  icon={<Briefcase />}
-                  title="Profilo professionale"
-                  text="Esperienza, servizi e merito restano leggibili."
-                />
-              </div>
-            </div>
-          </div>
+          <section className="pc-pro-demo" aria-labelledby="demo-agenda-title">
+            <div className="pc-pro-demo-label"><CalendarCheck aria-hidden="true" size={18} /> Esempio · Dati dimostrativi</div>
+            <h2 id="demo-agenda-title">Un giovedì al centro</h2>
+            <p>Tre attività, con orari e stati che puoi distinguere a colpo d’occhio.</p>
+            <ol>
+              <li><time dateTime="09:00">09:00</time><div><b>Lezione individuale</b><small>Educazione di base</small></div><span>Confermata</span></li>
+              <li><time dateTime="10:30">10:30</time><div><b>Puppy class</b><small>Lezione di gruppo</small></div><span>4 iscritti</span></li>
+              <li><time dateTime="18:00">18:00</time><div><b>Allenamento IGP</b><small>Gruppo sportivo</small></div><span>6 iscritti</span></li>
+            </ol>
+          </section>
         </div>
       </section>
 
@@ -202,7 +184,7 @@ export function BecomeProPage() {
         </div>
       </section>
 
-      <section className="bg-[#18211C] text-white">
+      <section className="pc-pro-ink-band bg-[#18211C] text-white">
         <div className="max-w-7xl mx-auto px-6 py-16 grid lg:grid-cols-[0.9fr_1.1fr] gap-12 items-start">
           <div>
             <div className="pc-kicker text-[#D5A33A]">Una scelta precisa</div>
@@ -221,7 +203,6 @@ export function BecomeProPage() {
               className="mt-7 inline-flex items-center gap-2 text-[#E4EEE7] font-semibold underline underline-offset-4 hover:text-white"
             >
               Leggi i criteri di ranking
-              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
@@ -272,7 +253,7 @@ export function BecomeProPage() {
         </div>
       </section>
 
-      <section className="border-y border-[#D8D5CC] bg-[#FFFEFA]">
+      <section className="pc-pro-paper border-y border-[#D8D5CC]">
         <div className="max-w-7xl mx-auto px-6 py-16 grid lg:grid-cols-2 gap-8">
           <div className="pc-card p-6 md:p-8">
             <div className="flex items-center gap-3">
@@ -290,8 +271,10 @@ export function BecomeProPage() {
             </div>
           </div>
 
-          <section id="listino" aria-labelledby="listino-title" tabIndex={-1} className="scroll-mt-28 rounded-3xl border border-[#C8D7CC] bg-[#E4EEE7] p-6 md:p-8">
-            <p className="text-sm font-semibold text-[#31553F]">Listino di lancio proposto</p>
+          <section id="listino" aria-labelledby="listino-title" tabIndex={-1} className="pc-pro-prices scroll-mt-28 rounded-3xl border p-6 md:p-8">
+            <div className="pc-pro-current"><strong>Condizioni attive oggi</strong>
+              <p>Oggi il gestionale è gratuito. Non servono una carta o un abbonamento e non è in corso una prova a scadenza.</p></div>
+            <p className="pc-pro-price-kicker">Proposta futura · non in vendita</p>
             <h2 id="listino-title" className="mt-2 text-3xl font-bold tracking-tight text-[#163D2A]">90 giorni per provarlo sul campo</h2>
             <p className="mt-3 leading-relaxed text-[#37493C]">
               Nella formula prevista la prova inizia quando attivi il gestionale dopo l’approvazione.
@@ -317,8 +300,7 @@ export function BecomeProPage() {
             </dl>
             <p className="mt-3 text-sm text-[#37493C]">Importi finali proposti per attività, referente incluso. Oltre 15 persone o più sedi: dimensionamento e preventivo dedicati. Nessuna commissione sulle lezioni.</p>
             <p className="mt-4 text-sm leading-relaxed text-[#37493C]">
-              Oggi il gestionale è gratuito. I piani indicati non sono in vendita e non è partito alcun periodo di prova.
-              Al lancio, al termine dei 90 giorni continuerà a pagamento solo chi lo sceglie.
+              Questi piani non sono in vendita. Quando sarà attivata la nuova formula, continuerà a pagamento solo chi lo sceglie al termine dei 90 giorni.
               Impara e la ricerca per i proprietari restano gratuiti.
             </p>
           </section>
@@ -364,31 +346,10 @@ export function BecomeProPage() {
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FFFEFA] text-[#163D2A] px-6 py-3.5 font-bold hover:bg-[#F5F1E7] transition shrink-0"
           >
             Crea il tuo profilo
-            <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </section>
     </main>
-  );
-}
-
-function MicroProof({
-  icon,
-  title,
-  text,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="flex items-start gap-3">
-      <div className="text-[#163D2A] [&>svg]:w-5 [&>svg]:h-5 mt-0.5">{icon}</div>
-      <div>
-        <div className="font-semibold text-sm">{title}</div>
-        <p className="text-xs text-[#657168] mt-1">{text}</p>
-      </div>
-    </div>
   );
 }
 

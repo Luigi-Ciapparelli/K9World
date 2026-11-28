@@ -1,5 +1,22 @@
 # Home — un portone statico e un percorso aperto
 
+## Landing pubblica dal 26 novembre 2026
+
+La richiesta più recente sostituisce la composizione di ottobre descritta sotto.
+La ricerca di un addestratore è la prima azione anche senza comune; la pensione usa la stessa zona.
+Niente disciplina, geolocalizzazione, accesso obbligatorio o selettore del tipo di visitatore all’ingresso.
+Il campo carica i suggerimenti dei comuni solo dopo due caratteri e accetta comunque testo libero.
+Una scena illustrativa riporta alla scheda effettiva «Due zampe sulla piattaforma»; il quaderno offre
+letture libere per passeggiata, cucciolo e casa. Il portone statico identifica il percorso per chi deve
+ancora scegliere, con test e consulenza separati. La testata mantiene le quattro destinazioni e rende
+il gestionale raggiungibile anche a menu mobile chiuso. Nessuna foto/testimonianza di clienti.
+
+La home è nell’HTML iniziale: un ospite può leggere e inviare i parametri della ricerca anche senza
+JavaScript (la directory carica i risultati nell’app). Il sito non interroga la directory dalla home.
+Una sessione valida va ancora alla propria area; se manca il profilo, si può riprovare.
+Il controllo `scripts/tests/test_home_portal.mjs` usa il build di produzione e dati sintetici.
+Le prove di navigazione non misurano richieste, iscrizioni o conversioni reali.
+
 ## Distinzione dalla campagna video — 8 ottobre 2026
 
 Il nuovo concept di cani e proprietari che attraversano un portale riguarda

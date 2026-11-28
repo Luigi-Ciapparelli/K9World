@@ -25,7 +25,7 @@ async function setup(width = 1440) {
   const page = await context.newPage();
   page.setDefaultTimeout(12000);
   page.on('pageerror', error => errors.push(error.message));
-  page.on('dialog', async dialog => { assert.equal(dialog.type(), 'alert'); assert.match(dialog.message(), /Controlla la tua email/); await dialog.accept(); });
+  page.on('dialog', dialog => { errors.push('La registrazione non deve aprire un alert: '+dialog.type()); return dialog.dismiss(); });
   return { page, context, writes, fail: () => { fail = true; } };
 }
 async function details(page, professional = true) {
@@ -75,7 +75,7 @@ try {
     await terms.check();
     t.fail();
     await t.page.getByRole('button', { name: 'Crea account', exact: true }).click();
-    await t.page.getByRole('alert').filter({ hasText: 'Errore di prova' }).waitFor();
+    await t.page.getByRole('alert').filter({ hasText: 'Registrazione non completata' }).waitFor();
     assert.equal(await select.inputValue(), activity, 'Retry must retain the chosen activity');
     assert.equal(await terms.isChecked(), true, 'Failed signup preserves acceptance and form data');
     assert.ok(await t.page.getByRole('button', { name: 'Crea account', exact: true }).isEnabled());
@@ -85,7 +85,7 @@ try {
       await t.page.screenshot({ path: `${process.env.PC_SCREENSHOTS}/iscrizione-${activity}.png`, fullPage: true });
     }
     await t.page.getByRole('button', { name: 'Crea account', exact: true }).click();
-    await t.page.getByRole('heading', { name: 'Bentornato' }).waitFor();
+    await t.page.getByRole('heading', { name: 'Controlla la tua email' }).waitFor();
     assert.equal(t.writes.length, 2);
     for (const request of t.writes) {
       assert.equal(request.data.role, 'professional');
@@ -101,13 +101,10 @@ try {
   }
   const t = await setup(390);
   await t.page.goto(base + '/#/signup');
-  await t.page.getByRole('button', { name: /Sono un professionista/ }).click();
-  await t.page.getByRole('button', { name: 'Continua', exact: true }).click();
+  await t.page.getByRole('button', { name: 'Professionista', exact:true }).click();
   assert.equal(await t.page.getByLabel('Attività principale', { exact: true }).inputValue(), '');
   await t.page.getByRole('checkbox').check();
-  await t.page.getByRole('button', { name: 'Indietro', exact: true }).click();
-  await t.page.getByRole('button', { name: /Sono proprietario di un cane/ }).click();
-  await t.page.getByRole('button', { name: 'Continua', exact: true }).click();
+  await t.page.getByRole('button', { name: 'Proprietario', exact:true }).click();
   assert.equal(await t.page.getByLabel('Attività principale', { exact: true }).count(), 0);
   await details(t.page, false);
   await t.page.getByRole('button', { name: 'Continua: il tuo cane', exact: true }).click();
@@ -123,7 +120,7 @@ try {
   assert.equal(t.writes.length, 0, 'Owner acceptance is required too');
   await ownerTerms.check();
   await t.page.getByRole('button', { name: 'Crea account', exact: true }).click();
-  await t.page.getByRole('heading', { name: 'Bentornato' }).waitFor();
+  await t.page.getByRole('heading', { name: 'Controlla la tua email' }).waitFor();
   assert.equal(t.writes.length, 1);
   assert.equal(t.writes[0].data.role, 'owner');
   assert.equal(t.writes[0].data.legal_declaration.professional_terms_version, null);

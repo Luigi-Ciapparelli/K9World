@@ -1,3 +1,6 @@
+import '../../studio-tools.css';
+import { useStudioAgenda } from '../../components/StudioAgendaContext';
+import { RouteLink } from '../../components/RouteLink';
 import { CalendarConnections } from '../../components/CalendarConnections';
 import {shiftsForDay,type InstructorShifts} from '../../lib/instructorShifts';
 import {absenceTimeLabel,type InstructorAbsence} from '../../lib/instructorTimeOff';
@@ -35,6 +38,8 @@ export function ProCalendar() {
 
 function CalendarContent() {
   const { path, navigate } = useRouter();
+  const eligibility = useStudioAgenda();
+  const mayCreate = eligibility.status === 'done' && eligibility.step?.kind === 'ready';
   const { user } = useAuth();
   const creating = new URLSearchParams(path.split('?')[1]).get('new') === '1';
   const [editing, setEditing] = useState<ManualAppointment | undefined>();
@@ -234,6 +239,12 @@ function CalendarContent() {
       return result.data ? 'Indisponibilità rimossa.' : 'Il periodo non è più presente. Calendario aggiornato.';
     });
   };
+  const jump = (id: string) => {
+    const target = document.getElementById(id);
+    target?.focus({ preventScroll: true });
+    target?.scrollIntoView({ block: 'start' });
+  };
+  const moveDay = (day: string) => { setMonth(day.slice(0, 7)); setSelected(day); };
   const moveMonth = (amount: number) => {
     const next = shiftMonth(month, amount);
     setMonth(next); setSelected(`${next}-01`); setService('all');
@@ -245,66 +256,28 @@ function CalendarContent() {
     <header className="flex flex-wrap items-start justify-between gap-4">
       <div><p className="pc-kicker">La tua attività</p><h1 className="mt-2 text-3xl font-semibold">Calendario e disponibilità</h1>
         <p className="mt-2 text-sm text-stone-600">Impegni per servizio, richieste e periodi di assenza. Date e orari seguono l’ora italiana.</p></div>
-      <div className="flex flex-wrap gap-2"><button type="button" className="pg-agenda-cta" onClick={openNew}><CalendarPlus size={19} /> Nuovo appuntamento</button><button type="button" disabled={busy || loading} onClick={refresh} className={button}><RefreshCw className="mr-2 inline h-4 w-4" />Aggiorna</button>
-        <button type="button" onClick={() => navigate('/pro/settings')} className={button}>Servizi e colori</button></div>
+      <div className="flex flex-wrap gap-2">{mayCreate ? <button type="button" className="pg-agenda-cta" onClick={openNew}><CalendarPlus size={19} /> Nuovo appuntamento</button> : eligibility.status === 'error' ? <button type="button" className={button} onClick={eligibility.retry}>Ricontrolla il profilo</button> : eligibility.step ? <RouteLink className={button} to={eligibility.step.to}>{eligibility.step.label}</RouteLink> : null}<button type="button" disabled={busy || loading} onClick={refresh} className={button}><RefreshCw className="mr-2 inline h-4 w-4" />Aggiorna</button>
+        </div>
     </header>
-    <CalendarConnections professional/>
+    {eligibility.step && !mayCreate && <p className="text-sm" role="status">{eligibility.step.note}</p>}
+    <nav className="pc-work-shortcuts" aria-label="Strumenti del calendario">
+      <button type="button" onClick={() => jump('pc-calendar-filters')}>Filtri</button>
+      <button type="button" onClick={() => jump('pc-calendar-month')}>Mese</button>
+      <button type="button" onClick={() => navigate('/pro/settings?step=services')}>Servizi e colori</button>
+      <button type="button" onClick={() => jump('pc-calendar-connections')}>Sincronizzazione</button>
+      <button type="button" onClick={() => jump('pc-calendar-absence')}>Indisponibilità</button>
+    </nav>
     {notice && <p role={notice.error ? 'alert' : 'status'} className={`rounded-2xl border p-4 text-sm ${notice.error ? 'border-amber-300 bg-amber-50 text-amber-950' : 'border-emerald-200 bg-emerald-50 text-emerald-950'}`}>{notice.text}</p>}
     {loadError && <div role="alert" className="rounded-2xl border border-rose-200 bg-white p-5"><p>Calendario non caricato. Riprova tra poco.</p><button type="button" onClick={refresh} className={`${button} mt-3`}>Riprova</button></div>}
     {manual.error && <p role="alert" className="pg-agenda-warning">Appuntamenti manuali non caricati. Verifica prima di considerare libero un orario. <button onClick={refresh}>Riprova agenda privata</button></p>}
     {manual.loading && <p role="status" className="text-sm">Caricamento appuntamenti manuali…</p>}
-    <section aria-label="Calendario mensile" className="overflow-hidden rounded-2xl border border-stone-200 bg-white">
-      <div className="flex flex-wrap items-center justify-between gap-3 p-4">
-        <h2 className="text-xl font-bold capitalize">{new Intl.DateTimeFormat('it-IT', { timeZone: 'UTC', month: 'long', year: 'numeric' }).format(new Date(`${month}-01T12:00:00Z`))}</h2>
-        <div className="flex gap-2"><button type="button" disabled={busy} aria-label="Mese precedente" onClick={() => moveMonth(-1)} className={button}><ChevronLeft className="h-5 w-5" /></button>
-          <button type="button" disabled={busy} onClick={() => { setMonth(today.slice(0, 7)); setSelected(today); setService('all'); }} className={button}>Oggi</button>
-          <button type="button" disabled={busy} aria-label="Mese successivo" onClick={() => moveMonth(1)} className={button}><ChevronRight className="h-5 w-5" /></button></div>
-      </div>
-      <div className="flex flex-wrap items-end gap-4 border-t border-stone-100 px-4 py-3">
-        <label className="text-sm font-semibold">Servizio<select value={service} onChange={(e) => setService(e.target.value)} className={input}><option value="all">Tutti i servizi</option>{legend.map(([id, booking]) => <option key={id} value={id}>{booking.service_name}</option>)}</select></label>
-        {team?.enabled && <div className="min-w-0 max-w-full"><label htmlFor="calendar-instructor" className="text-sm font-semibold">Istruttore</label><select id="calendar-instructor" value={instructor} onChange={e => setInstructor(e.target.value)} disabled={loading || instructors.loading || instructors.error} className={`${input} max-w-full`}>
-          <option value="all">Tutti gli impegni del centro</option><option value="unassigned">Lezioni accettate da assegnare</option>
-          {team.members.map(member => <option key={member.id} value={member.id}>{member.display_name}{member.active ? '' : ' (inattivo)'}</option>)}
-        </select></div>}
-        <label className="flex items-center gap-2 pb-2 text-sm"><input type="checkbox" checked={showClosed} onChange={(e) => setShowClosed(e.target.checked)} />Mostra anche annullate e rifiutate</label>
-      </div>
-      {team?.enabled && <p className="px-4 pb-3 text-xs text-stone-600">Il filtro istruttore riguarda le lezioni assegnate. Colori per servizio e indisponibilità dell’intero centro restano visibili.</p>}
-      {team?.enabled && <p className="px-4 pb-3 text-sm"><button className="underline" onClick={()=>navigate('/pro/team')}>Gestisci indisponibilità degli istruttori</button></p>}
-      {weeklyLoading&&<p role="status" className="px-4 pb-3 text-sm">Caricamento turni…</p>}
-      {weeklyError&&<p role="alert" className="px-4 pb-3 text-sm">Turni non caricati: non considerare libere le fasce senza lezioni. <button className="underline" onClick={refresh}>Riprova turni</button></p>}
-      {absenceLoading && <p role="status" className="px-4 pb-3 text-sm">Caricamento assenze dell’istruttore…</p>}
-      {absenceError && <p role="alert" className="px-4 pb-3 text-sm">Assenze dell’istruttore non caricate: non considerare libere le fasce senza lezioni. <button className="underline" onClick={refresh}>Riprova</button></p>}
-      {teamError && <p role="alert" className="px-4 pb-3 text-sm">Elenco istruttori non caricato: sono mostrati tutti gli impegni. <button className="underline" onClick={refresh}>Riprova</button></p>}
-      {instructors.error && <div className="px-4"><InstructorLoadError retry={instructors.reload} />{instructor !== 'all' && <button className="mb-3 underline text-sm" onClick={() => setInstructor('all')}>Mostra tutti gli impegni</button>}</div>}
-      <div className="flex flex-wrap gap-x-4 gap-y-2 px-4 pb-4 text-xs">{legend.map(([id, booking]) => <span key={id} className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full border border-stone-300" aria-hidden="true" style={{ backgroundColor: serviceColor(booking.calendar_color) }} />{booking.service_name}</span>)}</div>
-      {(loading || !instructorFilterReady) && !visibleManual.length ? <p role="status" className="p-6 text-stone-600">{instructors.error ? 'Ripristina il caricamento degli istruttori o mostra tutti gli impegni.' : 'Caricamento impegni…'}</p> : <>
-        <div className="grid grid-cols-7 border-t border-stone-200 bg-stone-50 text-center text-xs font-bold">{['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'].map((day) => <div key={day} className="py-2">{day}</div>)}</div>
-        <div className="grid grid-cols-7">{days.map((day) => {
-          const events = monthEvents.filter((booking) => bookingOnDay(booking, day));
-          const dayAbsences = absences.filter(p=>p.start_date<=day&&p.end_date>=day);
-          const instructorAbsent = dayAbsences.some(p=>!p.start_time);
-          const instructorPartial = !instructorAbsent && dayAbsences.length>0;
-            const blocked = schedule?.periods.some((period) => period.start_date <= day && period.end_date >= day);
-          const selectedDay = day === selected;
-          return <button type="button" key={day} onClick={() => setSelected(day)} aria-pressed={selectedDay}
-            aria-label={`${dayLabel(day, true)}: ${events.length} impegni${blocked ? ', indisponibile' : ''}${instructorAbsent ? ', istruttore assente' : ''}${instructorPartial ? ', fasce orarie non disponibili' : ''}`}
-            className={`min-w-0 border-t border-r border-stone-200 p-1 text-left align-top sm:p-2 ${selectedDay ? 'bg-emerald-50 ring-2 ring-inset ring-emerald-800' : blocked ? 'bg-amber-50' : 'bg-white'} ${day.slice(0, 7) !== month ? 'text-stone-400' : 'text-stone-900'}`}>
-            <div className="min-h-20 sm:min-h-28"><span className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold ${day === today ? 'bg-emerald-900 text-white' : ''}`}>{Number(day.slice(-2))}</span>
-              {blocked && <span className="block truncate text-[10px] font-bold text-amber-900" title="Indisponibile">Indisponibile</span>}
-              {weekly?.enabled&&!shiftsForDay(weekly.slots,day).length&&<span className="block break-words rounded bg-stone-100 px-1 text-[10px] text-stone-700">Fuori turno</span>}
-              {instructorAbsent && <span className="block break-words rounded bg-amber-100 px-1 text-[10px] text-amber-950">Istruttore assente</span>}
-              {instructorPartial && <span className="block break-words rounded bg-amber-100 px-1 text-[10px] text-amber-950">Orari bloccati</span>}
-              {events.slice(0, 3).map((booking) => <span key={booking.key} className="mt-1 block truncate border-l-4 pl-1 text-[10px] text-stone-800 sm:text-xs" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
-                {romeDay(booking.start_at) === day ? calendarTime(booking.start_at) : '↳'} <span className="hidden sm:inline">{booking.label}</span><span className="sm:hidden">{booking.service_name}</span>
-              </span>)}
-              {events.length > 3 && <span className="mt-1 block text-xs font-semibold text-stone-700">+{events.length - 3}</span>}
-            </div>
-          </button>;
-        })}</div>
-      </>}
-    </section>
+    <div className="pc-work-calendar">
     <section aria-label="Impegni del giorno" className="space-y-3">
-      <div className="pg-agenda-day"><h2 className="text-xl font-bold capitalize">{dayLabel(selected, true)}</h2><button type="button" className="pg-agenda-secondary" onClick={openNew}><CalendarPlus size={17} /> Aggiungi in questo giorno</button></div>
+      <div className="pc-work-day-heading"><p className="pc-kicker">Agenda del giorno</p>
+        <div className="pc-work-day-controls"><button type="button" aria-label="Giorno precedente" className={button} onClick={() => moveDay(addDays(selected,-1))}><ChevronLeft size={17} /></button><button type="button" className={button} onClick={() => moveDay(today)}>Oggi</button><button type="button" aria-label="Giorno successivo" className={button} onClick={() => moveDay(addDays(selected,1))}><ChevronRight size={17} /></button></div>
+      </div>
+      <div className="pg-agenda-day"><h2 className="text-xl font-bold capitalize">{dayLabel(selected, true)}</h2>{mayCreate && <button type="button" className="pg-agenda-secondary" onClick={openNew}><CalendarPlus size={17} /> Aggiungi in questo giorno</button>}</div>
+      {(loading || !instructorFilterReady) && <p role="status" className="text-sm">Caricamento delle prenotazioni del giorno…</p>}
       {weekly&&<div className="rounded-xl bg-stone-50 p-3 text-sm"><p className="font-semibold">Turni dell’istruttore · ora italiana</p><p className="mt-1">{weekly.enabled?(shiftsForDay(weekly.slots,selected).map(s=>`${s.start}–${s.end}`).join(' · ')||'Fuori turno per questo giorno'):'Nessun limite settimanale attivo'}</p><p className="mt-2">Le assenze restano valide. Le lezioni già fissate sono conservate.</p></div>}
       {absences.filter(p=>p.start_date<=selected&&p.end_date>=selected).length>0&&<div className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950"><p className="font-semibold">Indisponibilità dell’istruttore selezionato</p><ul className="mt-2 space-y-1">{absences.filter(p=>p.start_date<=selected&&p.end_date>=selected).map((p,index)=><li key={index}>{absenceTimeLabel(p)}</li>)}</ul><p className="mt-2">Le lezioni già fissate restano confermate. Le schede segnalano quelle che si sovrappongono.</p></div>}
       {selectedPeriods.length > 0 && <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950">Giorno segnato come indisponibile. Gli impegni già accettati restano confermati.</p>}
@@ -322,7 +295,63 @@ function CalendarContent() {
           {booking.status === 'accepted' && <button type="button" disabled={busy} onClick={() => changeStatus(booking.id, 'completed')} className={primary}>Segna completata</button>}</div>
       </article>; })}
     </section>
-    <section aria-label="Ricezione delle richieste" className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-stone-200 bg-white p-5">
+    <div className="pc-work-month-column">
+    <section id="pc-calendar-month" tabIndex={-1} aria-label="Calendario mensile" className="overflow-hidden rounded-2xl border border-stone-200 bg-white">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+        <h2 className="text-xl font-bold capitalize">{new Intl.DateTimeFormat('it-IT', { timeZone: 'UTC', month: 'long', year: 'numeric' }).format(new Date(`${month}-01T12:00:00Z`))}</h2>
+        <div className="flex gap-2"><button type="button" disabled={busy} aria-label="Mese precedente" onClick={() => moveMonth(-1)} className={button}><ChevronLeft className="h-5 w-5" /></button>
+          <button type="button" disabled={busy} aria-label="Mese successivo" onClick={() => moveMonth(1)} className={button}><ChevronRight className="h-5 w-5" /></button></div>
+      </div>
+      {(loading || !instructorFilterReady) && !visibleManual.length ? <p role="status" className="p-6 text-stone-600">{instructors.error ? 'Ripristina il caricamento degli istruttori o mostra tutti gli impegni.' : 'Caricamento impegni…'}</p> : <>
+        <div className="grid grid-cols-7 border-t border-stone-200 bg-stone-50 text-center text-xs font-bold">{['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'].map((day) => <div key={day} className="py-2">{day}</div>)}</div>
+        <div className="grid grid-cols-7">{days.map((day) => {
+          const events = monthEvents.filter((booking) => bookingOnDay(booking, day));
+          const dayAbsences = absences.filter(p=>p.start_date<=day&&p.end_date>=day);
+          const instructorAbsent = dayAbsences.some(p=>!p.start_time);
+          const instructorPartial = !instructorAbsent && dayAbsences.length>0;
+            const blocked = schedule?.periods.some((period) => period.start_date <= day && period.end_date >= day);
+          const selectedDay = day === selected;
+          return <button type="button" key={day} onClick={() => moveDay(day)} aria-pressed={selectedDay}
+            aria-label={`${dayLabel(day, true)}: ${events.length} impegni${blocked ? ', indisponibile' : ''}${instructorAbsent ? ', istruttore assente' : ''}${instructorPartial ? ', fasce orarie non disponibili' : ''}`}
+            className={`min-w-0 border-t border-r border-stone-200 p-1 text-left align-top sm:p-2 ${selectedDay ? 'bg-emerald-50 ring-2 ring-inset ring-emerald-800' : blocked ? 'bg-amber-50' : 'bg-white'} ${day.slice(0, 7) !== month ? 'text-stone-400' : 'text-stone-900'}`}>
+            <div className="pc-work-month-cell"><span className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold ${day === today ? 'bg-emerald-900 text-white' : ''}`}>{Number(day.slice(-2))}</span>
+              {blocked && <span className="block truncate text-[10px] font-bold text-amber-900" title="Indisponibile">Indisponibile</span>}
+              {weekly?.enabled&&!shiftsForDay(weekly.slots,day).length&&<span className="block break-words rounded bg-stone-100 px-1 text-[10px] text-stone-700">Fuori turno</span>}
+              {instructorAbsent && <span className="block break-words rounded bg-amber-100 px-1 text-[10px] text-amber-950">Istruttore assente</span>}
+              {instructorPartial && <span className="block break-words rounded bg-amber-100 px-1 text-[10px] text-amber-950">Orari bloccati</span>}
+              {events.slice(0, 3).map((booking) => <span key={booking.key} className="mt-1 block truncate border-l-4 pl-1 text-[10px] text-stone-800 sm:text-xs" style={{ borderLeftColor: serviceColor(booking.calendar_color) }}>
+                {romeDay(booking.start_at) === day ? calendarTime(booking.start_at) : '↳'} <span className="hidden sm:inline">{booking.label}</span><span className="sm:hidden">{booking.service_name}</span>
+              </span>)}
+              {events.length > 3 && <span className="mt-1 block text-xs font-semibold text-stone-700">+{events.length - 3}</span>}
+            </div>
+          </button>;
+        })}</div>
+      </>}
+    </section>
+    </div>
+    </div>
+    <section aria-label="Filtri del calendario" id="pc-calendar-filters" tabIndex={-1} className="pc-card">
+      <h2 className="px-4 pt-4 text-lg font-bold">Filtri del calendario</h2>
+      <div className="flex flex-wrap items-end gap-4 border-t border-stone-100 px-4 py-3">
+        <label className="text-sm font-semibold">Servizio<select value={service} onChange={(e) => setService(e.target.value)} className={input}><option value="all">Tutti i servizi</option>{legend.map(([id, booking]) => <option key={id} value={id}>{booking.service_name}</option>)}</select></label>
+        {team?.enabled && <div className="min-w-0 max-w-full"><label htmlFor="calendar-instructor" className="text-sm font-semibold">Istruttore</label><select id="calendar-instructor" value={instructor} onChange={e => setInstructor(e.target.value)} disabled={loading || instructors.loading || instructors.error} className={`${input} max-w-full`}>
+          <option value="all">Tutti gli impegni del centro</option><option value="unassigned">Lezioni accettate da assegnare</option>
+          {team.members.map(member => <option key={member.id} value={member.id}>{member.display_name}{member.active ? '' : ' (inattivo)'}</option>)}
+        </select></div>}
+        <label className="flex items-center gap-2 pb-2 text-sm"><input type="checkbox" checked={showClosed} onChange={(e) => setShowClosed(e.target.checked)} />Mostra anche annullate e rifiutate</label>
+      </div>
+      {team?.enabled && <p className="px-4 pb-3 text-xs text-stone-600">Il filtro istruttore riguarda le lezioni assegnate. Colori per servizio e indisponibilità dell’intero centro restano visibili.</p>}
+      {team?.enabled && <p className="px-4 pb-3 text-sm"><button className="underline" onClick={()=>navigate('/pro/team')}>Gestisci indisponibilità degli istruttori</button></p>}
+      {weeklyLoading&&<p role="status" className="px-4 pb-3 text-sm">Caricamento turni…</p>}
+      {weeklyError&&<p role="alert" className="px-4 pb-3 text-sm">Turni non caricati: non considerare libere le fasce senza lezioni. <button className="underline" onClick={refresh}>Riprova turni</button></p>}
+      {absenceLoading && <p role="status" className="px-4 pb-3 text-sm">Caricamento assenze dell’istruttore…</p>}
+      {absenceError && <p role="alert" className="px-4 pb-3 text-sm">Assenze dell’istruttore non caricate: non considerare libere le fasce senza lezioni. <button className="underline" onClick={refresh}>Riprova</button></p>}
+      {teamError && <p role="alert" className="px-4 pb-3 text-sm">Elenco istruttori non caricato: sono mostrati tutti gli impegni. <button className="underline" onClick={refresh}>Riprova</button></p>}
+      {instructors.error && <div className="px-4"><InstructorLoadError retry={instructors.reload} />{instructor !== 'all' && <button className="mb-3 underline text-sm" onClick={() => setInstructor('all')}>Mostra tutti gli impegni</button>}</div>}
+      <div className="flex flex-wrap gap-x-4 gap-y-2 px-4 pb-4 text-xs">{legend.map(([id, booking]) => <span key={id} className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded-full border border-stone-300" aria-hidden="true" style={{ backgroundColor: serviceColor(booking.calendar_color) }} />{booking.service_name}</span>)}</div>
+    </section>
+    <div id="pc-calendar-connections" tabIndex={-1}><CalendarConnections professional /></div>
+    <section id="pc-calendar-absence" tabIndex={-1} aria-label="Ricezione delle richieste" className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-stone-200 bg-white p-5">
       <div><h2 className="font-bold">{loading ? 'Caricamento disponibilità…' : schedule ? schedule.paused ? 'Nuove richieste sospese' : 'Ricezione richieste attiva' : 'Disponibilità non caricata'}</h2>
         <p className="mt-1 max-w-2xl text-sm text-stone-600">La sospensione dura fino alla riattivazione. Per un’assenza con termine automatico, aggiungi un periodo di indisponibilità. Gli appuntamenti accettati restano confermati.</p></div>
       <button type="button" disabled={busy || loading || !schedule} onClick={togglePause} className={primary}>{schedule?.paused ? 'Riattiva nuove richieste' : 'Sospendi nuove richieste'}</button>

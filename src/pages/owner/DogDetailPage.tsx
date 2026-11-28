@@ -5,6 +5,8 @@ import { DogHistoryExport } from '../../components/DogHistoryExport';
 import { DogPhoto } from '../../components/DogPhoto';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
+import { dogAgeLabel, dogWeightLabel } from '../../lib/ownerDogFacts';
+import '../../owner-workspace.css';
 import type { Dog } from '../../lib/types';
 
 export function DogDetailPage({ id }: { id: string }) {
@@ -49,7 +51,7 @@ export function DogDetailPage({ id }: { id: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <main className="pc-owner min-h-screen">
       <div className="max-w-5xl mx-auto px-5 md:px-6 py-10">
         <button
           onClick={() => navigate('/owner/dogs')}
@@ -60,17 +62,14 @@ export function DogDetailPage({ id }: { id: string }) {
         </button>
 
         <div className="bg-white border border-stone-200 rounded-3xl overflow-hidden">
-          <div className="h-64 md:h-80 bg-stone-100">
+          <div className="pc-dog-detail-head"><div className="pc-dog-detail-photo">
             <DogPhoto
               photoPath={dog.photo_url}
-              fallbackUrl="/brand/portalecinofilo-mark.png"
-              className="w-full h-full object-cover"
+              silhouette
+              className="pc-dog-img"
               alt={dog.name}
             />
-          </div>
-
-          <div className="p-6 md:p-9">
-            <div>
+          </div><div className="pc-dog-detail-title">
               <p className="text-sm font-semibold text-emerald-700">Il tuo cane</p>
               <h1 className="text-3xl md:text-4xl font-bold text-stone-900 mt-1">
                 {dog.name}
@@ -89,17 +88,18 @@ export function DogDetailPage({ id }: { id: string }) {
               )}
             </div>
 
-            <div className="grid sm:grid-cols-3 gap-4 mt-8">
+            </div><div className="p-4 sm:p-6">
+            <div className="grid sm:grid-cols-3 gap-4">
               <Info
                 icon={<CalendarDays className="w-5 h-5" />}
                 label="Età"
-                value={formatDogAge(dog.birth_date, dog.age)}
+                value={dogAgeLabel(dog.birth_date, dog.age)}
               />
 
               <Info
                 icon={<Scale className="w-5 h-5" />}
                 label="Peso"
-                value={dog.weight ? `${dog.weight} kg` : 'Non indicato'}
+                value={dogWeightLabel(dog.weight)}
               />
 
               <Info
@@ -174,7 +174,7 @@ export function DogDetailPage({ id }: { id: string }) {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -203,32 +203,4 @@ function formatBirthDate(value: string) {
     month: 'long',
     year: 'numeric',
   }).format(new Date(year, month - 1, day));
-}
-
-function formatDogAge(birthDate: string | null | undefined, fallbackAge: number) {
-  if (!birthDate) {
-    return fallbackAge > 0
-      ? `${fallbackAge} ${fallbackAge === 1 ? 'anno' : 'anni'}`
-      : 'Non indicata';
-  }
-
-  const [year, month, day] = birthDate.split('-').map(Number);
-  const today = new Date();
-
-  let totalMonths =
-    (today.getFullYear() - year) * 12 +
-    (today.getMonth() + 1 - month);
-
-  if (today.getDate() < day) totalMonths -= 1;
-  if (totalMonths < 0) return 'Data non valida';
-
-  const years = Math.floor(totalMonths / 12);
-  const months = totalMonths % 12;
-
-  if (years === 0) return `${months} ${months === 1 ? 'mese' : 'mesi'}`;
-  if (months === 0) return `${years} ${years === 1 ? 'anno' : 'anni'}`;
-
-  return `${years} ${years === 1 ? 'anno' : 'anni'} e ${months} ${
-    months === 1 ? 'mese' : 'mesi'
-  }`;
 }

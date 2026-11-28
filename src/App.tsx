@@ -9,6 +9,7 @@ import { continuityEnabled } from './lib/continuity';
 import { ThemeProvider } from './lib/ThemeContext';
 import { PageMetadata } from './components/PageMetadata';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { HomePage } from './pages/HomePage';
 import { confirmationPage } from './lib/signupConfirmation';
 import { usePasswordRecovery } from './lib/passwordRecovery';
 import { ConnectionNotice, PageErrorBoundary, PageLoading } from './components/PageRecovery';
@@ -21,9 +22,6 @@ const ConfirmEmailPage = lazy(() => import('./pages/ConfirmEmailPage').then(modu
 const ForgotPasswordPage = lazy(() => import('./pages/PasswordRecoveryPages').then(module => ({ default: module.ForgotPasswordPage })));
 const ResetPasswordPage = lazy(() => import('./pages/PasswordRecoveryPages').then(module => ({ default: module.ResetPasswordPage })));
 
-const HomePage = lazy(() =>
-  import('./pages/HomePage').then((module) => ({ default: module.HomePage }))
-);
 const SignInPage = lazy(() =>
   import('./pages/AuthPages').then((module) => ({ default: module.SignInPage }))
 );
@@ -185,7 +183,7 @@ function AppShell() {
     return <PageErrorBoundary key={basePath}><Suspense fallback={<PageLoading />}><ConfirmEmailPage /></Suspense></PageErrorBoundary>;
   }
 
-  if (loading) {
+  if (loading && basePath !== '/' && basePath !== '') {
     return <PageLoading />;
   }
 
@@ -283,8 +281,8 @@ function AppShell() {
         {content}
       </Suspense>
       </PageErrorBoundary>
-      {showFooter ? <Footer /> : <AccountLegalLinks />}
       <Chatbot key={user?.id || 'visitor'} />
+      {showFooter ? <Footer /> : <AccountLegalLinks />}
     </>
   );
 }

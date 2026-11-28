@@ -45,6 +45,7 @@ export function ProfessionalReplyTemplates() {
     finally { lock.current = false; if (active.current) setBusy(false); }
   };
   return <div className="space-y-4 text-stone-900">
+    <p className="text-sm font-semibold">Canale: conversazione della prenotazione su PortaleCinofilo.</p>
     <p className="text-sm text-stone-600">Salva testi da usare nelle conversazioni. Puoi inviarli a mano, modificandoli prima dell’invio, oppure attivare una risposta automatica per le nuove richieste.</p>
     {notice && <p role="status" className="text-sm text-emerald-800">{notice}</p>}
     {error && <p role="alert" className="text-sm text-rose-700">{error} <button type="button" onClick={() => void load()} className="underline">Aggiorna elenco</button></p>}
@@ -56,7 +57,7 @@ export function ProfessionalReplyTemplates() {
         <p className="mt-2 whitespace-pre-wrap break-words text-sm text-stone-700">{template.body}</p>
         <div className="mt-3 flex gap-2"><button type="button" disabled={busy} onClick={() => setDraft(template)} className={button}>Modifica</button><button type="button" disabled={busy} onClick={() => void remove(template)} className={button}>Elimina</button></div>
       </article>)}
-      {!loading && !templates.length && !error && <p className="text-sm text-stone-600">Nessun modello salvato.</p>}
+      {!loading && !templates.length && !error && <p className="text-sm text-stone-600">Nessun modello salvato. Prepara il primo testo da usare nelle conversazioni delle prenotazioni.</p>}
       <button type="button" disabled={busy || loading || loadFailed || templates.length >= 50} onClick={() => create()} className={button}>Nuovo modello</button>
       <div className="rounded-xl bg-stone-50 p-4"><label className="text-sm font-semibold">Numero WhatsApp con prefisso<input type="tel" maxLength={40} value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+39 …" className={field} /></label>
         <button type="button" disabled={busy || loading || loadFailed || templates.length >= 50} onClick={() => create(true)} className={`${button} mt-3`}>Prepara modello WhatsApp</button>

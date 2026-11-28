@@ -1,3 +1,4 @@
+import { LockKeyhole } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
@@ -77,9 +78,9 @@ function ContinuityWorkspace({ professional, userId, verified }: { professional:
         : 'Invita un professionista dal suo profilo. La relazione inizia quando accetta e puoi revocarla in qualsiasi momento.'}</p>
       {!professional && <p className="text-sm text-stone-600">L’invito autorizza la registrazione di sessioni sul cane. Gli appunti privati del professionista restano riservati; non vengono condivisi con altri addestratori.</p>}
     </header>
-    {professional ? <ProfessionalContinuitySharing refreshKey={archiveKey} /> : <OwnerContinuitySharing userId={userId} verified={verified} refreshKey={archiveKey} />}
+    {professional && <ProfessionalContinuitySharing refreshKey={archiveKey} />}
     {!professional && target && <InviteForm key={target} professionalId={target} userId={userId} verified={verified} onSaved={() => { setMessage('Invito registrato. Controlla lo stato nell’elenco.'); void reload(); }} />}
-    {!professional && !target && <button className={button} onClick={() => navigate('/search')}>Trova un professionista</button>}
+
     <div className="flex items-center justify-between gap-4"><h2 className="text-xl font-bold">Relazioni</h2><button className={secondary} disabled={loading || busy || selected !== null} onClick={() => void reload()}>Aggiorna</button></div>
     {message && <p role="status" className="text-emerald-800">{message}</p>}
     {error && <p role="alert" className="text-rose-700">{error}</p>}
@@ -96,6 +97,8 @@ function ContinuityWorkspace({ professional, userId, verified }: { professional:
       </div>
       {selected?.id === r.id && <SessionForm key={r.id} userId={userId} relationship={selected} onCheckArchive={() => setArchiveKey(k => k + 1)} onClose={() => setSelected(null)} onSaved={() => { setSelected(null); setArchiveKey(k => k + 1); setMessage('Sessione e nota privata registrate.'); }} />}
     </article>)}
+    {!professional && !target && <button className={!relations.length?button:secondary} onClick={() => navigate('/search?type=trainer')}>Cerca un professionista</button>}
+    {!professional && <OwnerContinuitySharing userId={userId} verified={verified} refreshKey={archiveKey} />}
     {professional && <Archive refreshKey={archiveKey} onLoaded={reconcileArchive} />}
   </div>;
   return professional ? <ProLayout active="archive">{content}</ProLayout> : <main className="bg-stone-50 min-h-screen">{content}</main>;
@@ -198,7 +201,8 @@ function Archive({ refreshKey, onLoaded }: { refreshKey: number; onLoaded: (rows
       .finally(() => { window.clearTimeout(timer); if (active) setLoading(false); });
     return () => { active = false; window.clearTimeout(timer); controller.abort(); };
   }, [page, reload, refreshKey, onLoaded]);
-  return <section className="space-y-4">
+  return <section aria-label="Note private" className="pc-work-private space-y-4">
+    <p className="pc-work-privacy"><LockKeyhole aria-hidden="true" size={17} /> Solo per te</p>
     <div className="flex flex-wrap justify-between gap-3"><h2 className="text-2xl font-bold">Il tuo archivio privato</h2><button className={secondary} disabled={loading} onClick={() => { setPage(0); setReload(k => k + 1); }}>Aggiorna archivio</button></div>
     <p className="text-sm text-stone-600">Sessioni e revisioni del tuo lavoro, anche dopo la fine della relazione. I nomi sono quelli conservati nello storico. Gli orari sono italiani.</p>
     {editing && <RevisionForm key={`${editing.note_id}:${editing.revision_number}`} revision={editing} onClose={() => setEditing(null)} onSaved={() => { setEditing(null); setPage(0); setReload(k => k + 1); notifySharingChanged(); }} />}

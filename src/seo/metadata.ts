@@ -10,7 +10,7 @@ export const SITE_NAME = 'PortaleCinofilo';
 export const SOCIAL_IMAGE = `${SITE_URL}/brand/portalecinofilo-lockup.png`;
 export type PageMeta = { path: string; title: string; description: string; index: boolean; type?: string; parent?: string };
 const pages: PageMeta[] = [
-  { path: '/', title: 'PortaleCinofilo | Educazione del cane e professionisti cinofili', description: 'Impara a conoscere i bisogni del cane, scegli con consapevolezza e trova educatori, addestratori e servizi. Cultura cinofila di base gratuita.', index: true },
+  { path: '/', title: 'PortaleCinofilo | Educazione del cane e professionisti cinofili', description: 'Trova addestratori e pensioni nella tua zona, leggi lezioni gratuite e prova esercizi con il tuo cane. Scopri anche il gestionale per professionisti e centri cinofili.', index: true },
   { path: '/impara', title: 'Educazione del cane: lezioni gratuite | PortaleCinofilo', description: 'Otto lezioni gratuite su bisogni, comportamento e apprendimento del cane. Letture, attività pratiche, shaping e autoverifiche per i proprietari.', index: true, type: 'CollectionPage' },
   { path: practicePath, title: 'Dal campo a casa: esercizi pratici per il cane | PortaleCinofilo', description: 'Schede gratuite per riprovare a casa quello che avete imparato al campo: primi giorni, vita in casa, passeggiate, segnali e cure quotidiane.', index: true, type: 'CollectionPage', parent:'/impara' },
   ...exerciseIndex.map(ex => ({path:exercisePath(ex.slug),title:ex.title+' | PortaleCinofilo',description:ex.aim,index:true,parent:practicePath})),

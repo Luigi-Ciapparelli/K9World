@@ -39,7 +39,7 @@ function Lesson({lesson}:{lesson:ImparaLesson}) {
       <header className="im-lesson-header"><p className="im-eyebrow">LEZIONE {String(lesson.order).padStart(2,'0')} / 08 · FONDAMENTA</p><h1>{lesson.title}</h1><p className="im-lead">{lesson.summary}</p><div className="im-meta"><span><Clock3 size={16}/>{lesson.durationMinutes} minuti di lettura e verifica</span><span><NotebookPen size={16}/>Pratica: {lesson.practiceMinutes}</span></div></header>
       {!saved && <p className="im-notice" role="alert">Salvataggio nel browser non disponibile. Scarica il quaderno o esporta un backup dalla pagina del percorso prima di chiudere.</p>}
       <div className="im-lesson-layout">
-        <aside className="im-outline"><p className="im-eyebrow">IN QUESTA LEZIONE</p><h2>Una cosa utile,<br/>da portare con te.</h2><ul>{lesson.objectives.map(o=><li key={o}><Check size={15}/>{o}</li>)}</ul><progress value={done} max={total} aria-label="Avanzamento della lezione"/><p className="im-small">{done} di {total} passaggi completati</p><div className="im-aside-help"><p>Vuoi lavorarci con qualcuno?</p><button className="im-link" onClick={()=>navigate(`/search?type=trainer&from=impara&topic=${encodeURIComponent(lesson.slug)}`)}>Trova un addestratore<ArrowRight size={16}/></button></div></aside>
+
         <div className="im-lesson-main" ref={body} tabIndex={-1}>
           <nav className="im-tabs" aria-label="Passaggi della lezione">{tabs.map((item,i)=><button key={item.id} aria-current={tab===item.id?'step':undefined} className={tab===item.id?'active':''} onClick={()=>switchTab(item.id)}><span>{item.done?<Check size={15}/>:i+1}</span>{item.label}</button>)}</nav>
           {tab==='read' && <section aria-label="Lettura">
@@ -67,6 +67,7 @@ function Lesson({lesson}:{lesson:ImparaLesson}) {
           </section>}
           <div className="im-lesson-navigation"><button className="im-link" onClick={()=>lesson.order>1?navigate(`/impara/stage-1/${STAGE_1_LESSONS[lesson.order-2].slug}`):navigate('/impara')}><ArrowLeft size={16}/>{lesson.order>1?'Lezione precedente':'Il percorso'}</button>{next?<RouteLink className="im-link" to={`/impara/stage-1/${next.slug}`}>Lezione successiva<ArrowRight size={16}/></RouteLink>:<button className="im-link" onClick={()=>navigate('/impara')}>Riepilogo percorso<BookOpen size={16}/></button>}</div>
         </div>
+        <aside className="im-outline"><p className="im-eyebrow">IN QUESTA LEZIONE</p><h2>Una cosa utile,<br/>da portare con te.</h2><ul>{lesson.objectives.map(o=><li key={o}><Check size={15}/>{o}</li>)}</ul><progress value={done} max={total} aria-label="Avanzamento della lezione"/><p className="im-small">{done} di {total} passaggi completati</p><div className="im-aside-help"><p>Vuoi lavorarci con qualcuno?</p><button className="im-link" onClick={()=>navigate(`/search?type=trainer&from=impara&topic=${encodeURIComponent(lesson.slug)}`)}>Trova un addestratore<ArrowRight size={16}/></button></div></aside>
       </div>
     </div>
   </main>;

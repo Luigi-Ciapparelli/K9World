@@ -1,3 +1,4 @@
+import '../../profile-guide.css';
 import { ProfileImageEditor } from '../../components/ProfileImageEditor';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import {
@@ -25,7 +26,7 @@ import { useAuth } from '../../lib/AuthContext';
 import { VerificationModal } from '../../components/VerificationModal';
 import { useRouter, useUnsavedChanges } from '../../lib/RouterContext';
 import { ProSetupOverview } from '../../components/ProSetupOverview';
-import { setupSteps, setupPath, parseSetupStep, profileStepFields } from '../../lib/proSetup';
+import { setupSteps, baseSetupSteps, extraSetupSteps, profileSetupStatus, setupPath, parseSetupStep, profileStepFields, type SetupStep } from '../../lib/proSetup';
 import { ProLayout } from './ProLayout';
 import { CalendarServices } from '../../components/CalendarServices';
 import { ProfessionalSearchSettings } from '../../components/ProfessionalSearchSettings';
@@ -191,6 +192,7 @@ export function ProSettings() {
   const [loadError, setLoadError] = useState('');
   const [saveMessage, setSaveMessage] = useState('');
   const [saveError, setSaveError] = useState('');
+  const [confirmedStep, setConfirmedStep] = useState<SetupStep | null>(null);
   const [credentialFormOpen, setCredentialFormOpen] = useState(false);
   const [credentialStage, setCredentialStage] = useState(0);
   const saveLock = useRef(false);
@@ -209,6 +211,8 @@ export function ProSettings() {
   const brandingBusy = avatarActive || coverActive;
   const [credentials, setCredentials] = useState<ProfessionalCredential[]>([]);
   const [credentialsLoading, setCredentialsLoading] = useState(false);
+  const [evidenceReadError, setEvidenceReadError] = useState(false);
+  const [identityReadError, setIdentityReadError] = useState(false);
   const [credentialBusy, setCredentialBusy] = useState(false);
   const [credentialNotice, setCredentialNotice] = useState('');
   const [credentialDraft, setCredentialDraft] = useState(EMPTY_CREDENTIAL);
@@ -317,6 +321,8 @@ export function ProSettings() {
         .maybeSingle(),
     ]);
 
+    setEvidenceReadError(Boolean(credentialsRes.error));
+    setIdentityReadError(Boolean(identityRes.error));
     if (credentialsRes.error) {
       console.warn('Professional credentials load error:', credentialsRes.error);
       setCredentials([]);
@@ -639,15 +645,17 @@ export function ProSettings() {
     return () => { active = false; };
   }, [step, cityAttempt]);
 
-  const goNext = () => {
-    const base = setupSteps.filter(item => item.group === 'base');
-    const index = base.findIndex(item => item.id === step);
-    navigate(index >= 0 && index < base.length - 1 ? setupPath(base[index + 1].id) : setupPath());
+  const openStep = (target?: SetupStep) => { setConfirmedStep(null); navigate(setupPath(target)); };
+  const goNext = (savedPro: ProfessionalSettings, savedName: string) => {
+    const next = profileSetupStatus(savedName, savedPro, services).next;
+    navigate(currentStep?.group === 'base' && next ? setupPath(next.id) : setupPath());
   };
 
   const saveProfile = async (continueAfter = false) => {
     if (!user || !pro || !rules || !step || !savedState || saveLock.current) return;
-    saveLock.current = true; setSaving(true); setSaveError(''); setSaveMessage('');
+    saveLock.current = true; setSaving(true); setSaveError(''); setSaveMessage(''); setConfirmedStep(null);
+    let committedPro = savedState.pro;
+    let committedName = savedState.name;
     try {
       if (step === 'rules') {
         const values = ['min_lead_hours', 'cancellation_hours', 'min_duration_minutes', 'max_duration_minutes', 'buffer_minutes'];
@@ -696,11 +704,15 @@ export function ProSettings() {
           if (error) throw error;
         }
         setPro(current => current && ({ ...current, ...payload }));
-        setSavedState(current => current && ({ ...current, pro: { ...current.pro, ...payload }, name: step === 'identity' ? name.trim() : current.name }));
+        committedPro = { ...savedState.pro, ...payload };
+        committedName = step === 'identity' ? name.trim() : savedState.name;
+        setSavedState(current => current && ({ ...current, pro: committedPro, name: committedName }));
         if (step === 'identity') { setName(name.trim()); await refreshProfile(); }
       }
-      setSaveMessage('Modifiche salvate. Puoi riprendere da qui anche in un secondo momento.');
-      if (continueAfter) goNext();
+      if (continueAfter) {
+        setConfirmedStep(step);
+        goNext(committedPro, committedName);
+      } else setSaveMessage('Modifiche salvate.');
     } catch (error) {
       setSaveError(error && typeof error === 'object' && 'message' in error ? String(error.message) : 'Salvataggio non confermato. Riprova: i dati inseriti sono ancora qui.');
     } finally { saveLock.current = false; setSaving(false); }
@@ -713,21 +725,44 @@ export function ProSettings() {
   if (loadError) return <ProLayout active="settings"><div className="pg-shell"><p role="alert">{loadError}</p><button className="pg-primary" onClick={() => void load()}>Riprova</button></div></ProLayout>;
   if (loadingData || !pro || !rules || !savedState) return <ProLayout active="settings"><div className="pg-shell" role="status">Carico il tuo percorso…</div></ProLayout>;
 
-  return <ProLayout active="settings"><div className="pg-shell">
-    {!step ? <ProSetupOverview name={savedState.name} pro={profileExists ? savedState.pro : null} services={services} onOpen={id => navigate(setupPath(id))} /> : <>
-      <button className="pg-back" disabled={saving || brandingBusy || credentialBusy || workingDogBusy} onClick={() => navigate(setupPath())}><ArrowLeft size={16} /> Il tuo percorso</button>
+  const guide = profileSetupStatus(savedState.name, profileExists ? savedState.pro : null, services);
+  const navigationLocked = saving || brandingBusy || credentialBusy || workingDogBusy;
+  const draftInStep = step === 'rules' ? JSON.stringify(rules) !== JSON.stringify(savedState.rules) : Boolean(step && (
+    (step === 'identity' && name !== savedState.name) || profileStepFields[step]?.some(key => pro[key] !== savedState.pro[key])));
+  const confirmedLabel = setupSteps.find(item => item.id === confirmedStep)?.short;
+  return <ProLayout active="settings"><div className="pg-shell pg-settings">
+    {confirmedLabel && <p role="status" className="pg-saved-step"><Check size={18} aria-hidden="true" /> Modifiche salvate: {confirmedLabel}.</p>}
+    {!step ? <ProSetupOverview name={savedState.name} pro={profileExists ? savedState.pro : null} services={services} onOpen={openStep} /> : <>
+      <button className="pg-back" disabled={navigationLocked} onClick={() => openStep()}><ArrowLeft size={16} /> Il tuo percorso</button>
       <div className="pg-editor-layout">
-        <nav className="pg-step-nav" aria-label="Passaggi del profilo">{setupSteps.map((item, i) => <button key={item.id} disabled={saving || brandingBusy || credentialBusy || workingDogBusy} aria-current={step === item.id ? 'step' : undefined} onClick={() => navigate(setupPath(item.id))}><span>{String(i + 1).padStart(2, '0')}</span>{item.short}</button>)}</nav>
+        <nav className="pg-step-nav" aria-label="Passaggi del profilo">
+          <label className="pg-step-select">Vai a un passaggio
+            <select value={step} disabled={navigationLocked} onChange={event => {
+              const target = setupSteps.find(item => item.id === event.target.value); if (target) openStep(target.id);
+            }}>
+              <optgroup label="Quattro passaggi di base">{baseSetupSteps.map((item, i) => <option key={item.id} value={item.id}>{i+1}. {item.short}{guide.completed[item.id] ? ' · completato' : ''}</option>)}</optgroup>
+              <optgroup label="Approfondimenti">{extraSetupSteps.map(item => <option key={item.id} value={item.id}>{item.short}</option>)}</optgroup>
+            </select>
+          </label>
+          <div className="pg-step-groups">{(['base', 'more'] as const).map(group => <div key={group}>
+            <p>{group === 'base' ? 'Passaggi di base' : 'Approfondimenti'}</p>
+            {setupSteps.filter(item => item.group === group).map((item, i) => <button key={item.id} type="button" disabled={navigationLocked} aria-current={step === item.id ? 'step' : undefined} onClick={() => openStep(item.id)}>
+              {item.group === 'base' && <span>{guide.completed[item.id] ? <Check size={15} aria-label="Completato" /> : i+1}</span>}{item.short}
+            </button>)}
+          </div>)}</div>
+        </nav>
         <section className="pg-editor-content">
-          <header className="pg-editor-heading"><span className="pg-eyebrow">{currentStep?.group === 'base' ? 'LE BASI DEL PROFILO' : 'CURA IL TUO PROFILO'}</span><h1 ref={headingRef} tabIndex={-1}>{currentStep?.label}</h1><p>{currentStep?.description}</p></header>
+          <header className="pg-editor-heading"><span className="pg-eyebrow">{currentStep?.group === 'base' ? `Passaggio ${baseSetupSteps.findIndex(i => i.id === step)+1} di 4` : 'Approfondimento'}</span><h1 ref={headingRef} tabIndex={-1}>{currentStep?.label}</h1><p>{currentStep?.description}</p>
+            <small>{guide.count} di 4 passaggi di base completati{currentStep?.group === 'base' && guide.completed[currentStep.id] ? ' · Questo passaggio è completo' : ''}.</small>
+          </header>
           <div key={step} className="pg-panel-enter">
             <fieldset disabled={saving} className="pg-fields">
               {step === 'identity' && <>
 <Section title="Come vuoi presentarti">          <Field label="Nome e cognome" value={name} onChange={setName} />
 
           <div>
-            <label className="text-sm font-semibold text-stone-700">Tipo profilo</label>
-            <select
+            <label htmlFor="pg-listing-type" className="text-sm font-semibold text-stone-700">Tipo profilo</label>
+            <select id="pg-listing-type"
               value={pro.listing_type || 'individual'}
               onChange={(e) => setPro({ ...pro, listing_type: e.target.value })}
               className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
@@ -774,8 +809,8 @@ export function ProSettings() {
           />
 
           <div>
-            <label className="text-sm font-semibold text-stone-700">Attività principale</label>
-            <select
+            <label htmlFor="pg-pro-type" className="text-sm font-semibold text-stone-700">Attività principale</label>
+            <select id="pg-pro-type"
               value={pro.professional_type || 'trainer'}
               onChange={(e) => setPro({ ...pro, professional_type: e.target.value })}
               className="w-full mt-1 px-3 py-2 border border-stone-300 rounded-lg text-sm"
@@ -814,8 +849,8 @@ export function ProSettings() {
 </Section>              </>}
               {step === 'story' && <>
 <Section title="Cosa troveranno i clienti">          <div>
-            <label className="text-sm font-semibold text-stone-700">Bio</label>
-            <textarea
+            <label htmlFor="pg-bio" className="text-sm font-semibold text-stone-700">Bio</label>
+            <textarea id="pg-bio"
               value={pro.bio || ''}
               onChange={(e) => setPro({ ...pro, bio: e.target.value })}
               rows={4}
@@ -857,23 +892,17 @@ export function ProSettings() {
               </h2>
               <p className="text-[var(--pc-muted-600)] leading-7 mt-3 max-w-2xl">
                 PortaleCinofilo calcola gli anni di esperienza da questo anno.
-                Non inseriamo più un numero di anni statico che diventa obsoleto col tempo.
+                Usa l’anno in cui hai iniziato a lavorare come professionista.
               </p>
 
-              <div className="flex flex-wrap gap-2 mt-4 text-xs font-bold">
-                <span className="rounded-full bg-[var(--pc-bone-50)] px-3 py-1.5 text-[var(--pc-ink-800)]">
-                  Dato dichiarato dal professionista
-                </span>
-                {pro.experience_verification_status === 'verified' ? (
-                  <span className="rounded-full bg-[var(--pc-evidence-100)] px-3 py-1.5 text-[var(--pc-evidence-700)]">
-                    Esperienza verificata
-                  </span>
-                ) : (
-                  <span className="rounded-full border border-[var(--pc-line)] px-3 py-1.5 text-[var(--pc-muted-600)]">
-                    Verifica documentale non completata
-                  </span>
-                )}
-              </div>
+              <p className="mt-4"><span className="pg-verification" data-state={pro.experience_verification_status ?? 'not_requested'}>
+                {pro.experience_verification_status === 'verified' ? 'Esperienza verificata'
+                  : pro.experience_verification_status === 'pending' ? 'Esperienza in verifica'
+                  : pro.experience_verification_status === 'needs_more_info' ? 'Integrazione richiesta'
+                  : pro.experience_verification_status === 'rejected' ? 'Esperienza non verificata'
+                  : pro.experience_verification_status === 'revoked' ? 'Verifica revocata'
+                  : savedState.pro.experience_start_year ? 'Esperienza dichiarata' : 'Esperienza non indicata'}
+              </span></p>
             </div>
 
             <div>
@@ -914,10 +943,10 @@ export function ProSettings() {
         </section>
 
 <Section title="Formazione e documenti">          <div>
-            <label className="text-sm font-semibold text-stone-700">
+            <label htmlFor="pg-qualification-summary" className="text-sm font-semibold text-stone-700">
               Sintesi formazione / qualifiche
             </label>
-            <textarea
+            <textarea id="pg-qualification-summary"
               value={pro.qualification_summary || ''}
               onChange={(e) =>
                 setPro({ ...pro, qualification_summary: e.target.value })
@@ -929,10 +958,10 @@ export function ProSettings() {
           </div>
 
           <div>
-            <label className="text-sm font-semibold text-stone-700">
+            <label htmlFor="pg-insurance-summary" className="text-sm font-semibold text-stone-700">
               Assicurazione / documenti professionali
             </label>
-            <textarea
+            <textarea id="pg-insurance-summary"
               value={pro.insurance_summary || ''}
               onChange={(e) =>
                 setPro({ ...pro, insurance_summary: e.target.value })
@@ -961,16 +990,11 @@ export function ProSettings() {
               </div>
 
               <div className="shrink-0">
-                {workingDogIdentity?.verification_status === 'verified' ? (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-extrabold text-[var(--pc-evidence-700)] ring-1 ring-[var(--pc-line)]">
-                    <BadgeCheck className="w-4 h-4" />
-                    Working-Dog verificato
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-bold text-[var(--pc-muted-600)] ring-1 ring-[var(--pc-line)]">
-                    Collegamento da verificare
-                  </span>
-                )}
+                {identityReadError ? <p role="alert">Stato del collegamento non disponibile. <button type="button" onClick={() => void loadCredentials()} className="underline">Riprova</button></p>
+                  : <span className="pg-verification" data-state={workingDogIdentity?.verification_status ?? 'unlinked'}>
+                    {workingDogIdentity?.verification_status === 'verified' && <BadgeCheck size={16} aria-hidden="true" />}
+                    {workingDogIdentity ? ('Working-Dog ' + credentialStatusLabel(workingDogIdentity.verification_status).toLocaleLowerCase('it')) : 'Nessun collegamento'}
+                  </span>}
               </div>
             </div>
 
@@ -978,6 +1002,7 @@ export function ProSettings() {
               <input
                 type="url"
                 value={workingDogProfileUrl}
+                aria-label="Indirizzo del tuo profilo Working-Dog"
                 onChange={(event) => setWorkingDogProfileUrl(event.target.value)}
                 placeholder="https://www.working-dog.com/..."
                 className="flex-1 rounded-xl border border-[var(--pc-line)] bg-white px-4 py-3 text-sm text-[var(--pc-ink-950)]"
@@ -1017,9 +1042,7 @@ export function ProSettings() {
                   Attestati, brevetti e risultati
                 </h3>
                 <p className="text-sm text-[var(--pc-muted-600)] leading-6 mt-2 max-w-3xl">
-                  I risultati sportivi vengono salvati come fatti: disciplina, livello,
-                  cane, prova, piazzamento, punteggio e fonte. Questo consente di distinguere
-                  un singolo risultato da una carriera replicata su cani diversi.
+                  Un attestato è dichiarato quando lo inserisci, in verifica mentre viene controllato e verificato solo dopo la conferma. Il collegamento a un profilo sportivo non verifica da solo i risultati.
                 </p>
               </div>
               <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-bold text-[var(--pc-ink-800)] ring-1 ring-[var(--pc-line)]">
@@ -1338,6 +1361,8 @@ export function ProSettings() {
 
               {credentialsLoading ? (
                 <p className="text-sm text-[var(--pc-muted-600)] mt-3">Caricamento…</p>
+              ) : evidenceReadError ? (
+                <p role="alert" className="pg-error">Impossibile leggere gli attestati. <button type="button" className="underline" onClick={() => void loadCredentials()}>Riprova</button></p>
               ) : credentials.length === 0 ? (
                 <p className="text-sm text-[var(--pc-muted-600)] mt-3">
                   Nessun attestato o risultato ancora inserito.
@@ -1363,11 +1388,11 @@ export function ProSettings() {
                               {credential.title}
                             </h5>
 
-                            <span className="rounded-full bg-[var(--pc-bone-50)] px-2.5 py-1 text-xs font-bold text-[var(--pc-muted-600)]">
-                              {credentialStatusLabel(credential.verification_status)}
+                            <span className="pg-verification" data-state={credential.verification_status}>
+                              {credential.verification_status === 'verified' && <BadgeCheck size={16} aria-hidden="true" />}{credentialStatusLabel(credential.verification_status)}
                             </span>
 
-                            {credential.verification_method === 'working_dog_auto' && (
+                            {credential.verification_status === 'verified' && credential.verification_method === 'working_dog_auto' && (
                               <span className="rounded-full bg-[var(--pc-evidence-100)] px-2.5 py-1 text-xs font-extrabold text-[var(--pc-evidence-700)]">
                                 Working-Dog automatico
                               </span>
@@ -1414,7 +1439,7 @@ export function ProSettings() {
                             )}
 
                             <span className="text-[var(--pc-muted-600)]">
-                              {credential.is_public ? 'Visibile pubblicamente' : 'Privata'}
+                              {credential.is_public ? 'Destinata al profilo pubblico' : 'Privata'}
                             </span>
                           </div>
                         </div>
@@ -1443,8 +1468,8 @@ export function ProSettings() {
               {step === 'replies' && <>
 <ProfessionalReplyTemplates key={user?.id} />              </>}
               {step === 'rules' && <>
-        <Section title="Tempi delle prenotazioni">
-          <div className="grid md:grid-cols-2 gap-3">
+        <Section title="Regole di prenotazione">
+          <fieldset className="pg-rule-fields"><legend>Preavviso e cancellazioni · ore</legend><div className="grid md:grid-cols-2 gap-3">
             <Field
               label="Anticipo minimo (ore)"
               type="number"
@@ -1457,6 +1482,8 @@ export function ProSettings() {
               value={String(rules.cancellation_hours)}
               onChange={(v) => setRules({ ...rules, cancellation_hours: Number(v) })}
             />
+          </div></fieldset>
+          <fieldset className="pg-rule-fields"><legend>Durata e intervalli · minuti</legend><div className="grid md:grid-cols-2 gap-3">
             <Field
               label="Durata minima (minuti)"
               type="number"
@@ -1475,7 +1502,7 @@ export function ProSettings() {
               value={String(rules.buffer_minutes)}
               onChange={(v) => setRules({ ...rules, buffer_minutes: Number(v) })}
             />
-          </div>
+          </div></fieldset>
         </Section>
 
               </>}
@@ -1502,9 +1529,9 @@ export function ProSettings() {
             </fieldset>
           </div>
           {saveError && <p role="alert" className="pg-error">{saveError}</p>}
-          {saveMessage && <p role="status" className="pg-success"><Check size={18} /> {saveMessage}</p>}
+          {saveMessage && !draftInStep && <p role="status" className="pg-success"><Check size={18} aria-hidden="true" /> {saveMessage}</p>}
           <footer className="pg-editor-footer">
-            {profileStepFields[step] || step === 'rules' ? <><button className="pg-primary" disabled={saving} onClick={() => void saveProfile(true)}>{saving ? 'Salvataggio…' : currentStep?.group === 'base' ? 'Salva e continua' : 'Salva e torna al percorso'}<ArrowRight size={16} /></button><button className="pg-secondary" disabled={saving} onClick={() => void saveProfile()}><Save size={16} /> Salva</button><span>Salva questo passaggio prima di uscire.</span></> : <button className="pg-secondary" onClick={goNext}>Torna al percorso <ArrowRight size={16} /></button>}
+            {profileStepFields[step] || step === 'rules' ? <><button className="pg-primary" disabled={saving} onClick={() => void saveProfile(true)}>{saving ? 'Salvataggio…' : currentStep?.group === 'base' ? 'Salva e continua' : 'Salva e torna al percorso'}<ArrowRight size={16} /></button><button className="pg-secondary" disabled={saving} onClick={() => void saveProfile()}><Save size={16} /> Salva</button><span>{draftInStep ? 'Modifiche non ancora salvate.' : 'Nessuna modifica da salvare in questo passaggio.'}</span></> : <button className="pg-secondary" onClick={() => openStep()}>Torna al percorso <ArrowRight size={16} /></button>}
           </footer>
         </section>
       </div>

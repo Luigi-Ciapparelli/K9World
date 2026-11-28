@@ -5,7 +5,7 @@ import { ClientPortrait, useClientPortraits } from '../../components/ClientPortr
 import { ServiceReviewNotice } from '../../components/ServiceReviews';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import { ArrowRight, Bell, Calendar, CalendarPlus, Check, Settings, Users, X } from 'lucide-react';
+import { ArrowRight, Bell, Calendar, CalendarPlus, Clock3, Check, Settings, Users, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useManualAppointments } from '../../lib/manualAppointments';
 import { addDays, calendarTime, dayLabel, romeDay, acceptanceError } from '../../lib/professionalCalendar';
@@ -13,6 +13,8 @@ import { BookingConversation } from '../../components/BookingConversation';
 import { BookingMessageInbox } from '../../components/BookingMessageInbox';
 import { useAuth } from '../../lib/AuthContext';
 import { useRouter } from '../../lib/RouterContext';
+import { useStudioAgenda } from '../../components/StudioAgendaContext';
+import { RouteLink } from '../../components/RouteLink';
 import { ProLayout } from './ProLayout';
 
 type DashboardBooking = {
@@ -24,6 +26,18 @@ type DashboardBooking = {
 };
 type BookingList = { rows: DashboardBooking[]; count: number; error: boolean };
 const emptyList = (): BookingList => ({ rows: [], count: 0, error: false });
+
+function DayAction() {
+  const {status,step,retry}=useStudioAgenda();
+  return <div className="pg-day-actions">
+    {status==='error'?<><p role="alert">Non riesco a leggere lo stato del profilo.</p><button type="button" className="pg-agenda-cta" onClick={retry}>Riprova</button></>:
+      !step?<p role="status">Controllo disponibilità dell’agenda…</p>:<>
+       {step.kind!=='ready' && <p role="status" className="pg-next-note">{step.kind==='waiting'&&<Clock3 size={16} aria-hidden="true" />}{step.note}</p>}
+       <RouteLink className={step.kind==='waiting'?'pg-verification-link':'pg-agenda-cta'} to={step.to}>{step.kind==='ready'&&<CalendarPlus size={18} aria-hidden="true" />}{step.label}</RouteLink>
+      </>}
+    <RouteLink className="pg-day-link" to="/pro/calendar">Apri calendario</RouteLink>
+  </div>;
+}
 
 export function ProDashboard() {
   const { user, profile } = useAuth();
@@ -134,10 +148,9 @@ export function ProDashboard() {
   return (
     <ProLayout active="dashboard">
       <div className="pg-desk max-w-7xl mx-auto px-4 sm:px-6 py-6 text-[var(--pc-ink-950)]">
-        <header className="pg-daybreak"><div><p className="pg-day-stamp"><Calendar size={15} /> {dayLabel(todayKey,true)}</p>
+        <header className="pg-daybreak"><div><p className="pg-day-stamp"><Calendar size={16} aria-hidden="true" /> La tua giornata · {dayLabel(todayKey,true)}</p>
           <h1>{firstName ? `Ciao, ${firstName}.` : 'La tua giornata'}</h1><p>Gli appuntamenti di oggi e le richieste da gestire.</p></div>
-          <div className="pg-day-actions"><button className="pg-agenda-cta" onClick={()=>navigate('/pro/calendar?new=1')}><CalendarPlus size={19} /> Nuovo appuntamento</button>
-          <button className="pg-day-link" onClick={()=>navigate('/pro/calendar')}>Apri calendario</button></div></header>
+          <DayAction /></header>
         {notice && <p role={notice.error ? 'alert' : 'status'} className="pc-card p-4 mb-5 text-sm">{notice.text}</p>}
 
 

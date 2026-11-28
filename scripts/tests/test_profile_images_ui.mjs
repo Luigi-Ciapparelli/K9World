@@ -121,6 +121,17 @@ try {
  if(process.env.PC_SCREENSHOTS){await fs.mkdir(process.env.PC_SCREENSHOTS,{recursive:true});await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:process.env.PC_SCREENSHOTS+'/professional-desktop.png',fullPage:true});}
  await page.goto(base+'/search?type=trainer');await page.getByRole('img',{name:'Centro di prova · foto o logo'}).waitFor();
  await page.goto(base+'/p/'+proId);await page.locator(`img[src="${cover}"]`).waitFor();await page.locator(`img[src="${avatar}"]`).waitFor();
+ for(const [width,ratio] of [[1440,4],[375,2]]) {
+  await page.setViewportSize({width,height:850});
+  const actual=await page.locator('.pc-public-identity .pc-professional-cover').boundingBox();
+  assert.ok(actual&&Math.abs(actual.width/actual.height-ratio)<.02,'public crop '+width);
+  await page.goto(base+'/pro/settings?step=appearance');
+  const preview=page.locator(`.pc-cover-previews [data-size="${width===375?'mobile':'desktop'}"]`);
+  await preview.waitFor();const rect=await preview.boundingBox();
+  assert.ok(rect&&Math.abs(rect.width/rect.height-ratio)<.02,'editor matches public crop '+width);
+  assert.equal(await preview.locator('img').evaluate(image=>getComputedStyle(image).objectFit),'cover');
+  await page.goto(base+'/p/'+proId);await page.locator(`img[src="${cover}"]`).waitFor();
+ }
  await ctx.close();
  const owner=await context('owner',390);await owner.page.goto(base+'/account/contacts');
  const personal=owner.page.getByRole('region',{name:'La tua foto personale'});await personal.waitFor();
@@ -140,7 +151,7 @@ try {
  const preview=owner.page.getByRole('img',{name:'Anteprima Rex di prova',exact:true});
  const preparedBytes=await preview.evaluate(async img=>Array.from(new Uint8Array(await (await fetch(img.src)).arrayBuffer())));
  const decodes=await owner.page.evaluate(()=>window.pcImageJobs.started);
- await owner.page.getByRole('button',{name:'Save',exact:true}).click();
+ await owner.page.getByRole('button',{name:'Salva',exact:true}).click();
  await owner.page.getByRole('button',{name:'Chiudi modifica cane',exact:true}).waitFor({state:'detached'});
  assert.equal(await owner.page.evaluate(()=>window.pcImageJobs.started),decodes,'prepared dog image is not compressed a second time');
  assert.deepEqual(files.get('dog-photos/'+dog.photo_url),Buffer.from(preparedBytes),'the actual preview bytes are uploaded');
@@ -149,7 +160,7 @@ try {
  await cardPhoto.evaluate(img=>img.decode());assert.ok(await cardPhoto.evaluate(img=>img.naturalWidth<=512&&img.naturalHeight<=512));
  await owner.page.getByRole('button',{name:'Modifica Rex di prova',exact:true}).click();
  await owner.page.getByRole('button',{name:'Rimuovi foto',exact:true}).click();
- await owner.page.getByRole('button',{name:'Save',exact:true}).click();
+ await owner.page.getByRole('button',{name:'Salva',exact:true}).click();
  await owner.page.getByRole('button',{name:'Chiudi modifica cane',exact:true}).waitFor({state:'detached'});
  assert.equal(dog.photo_url,'');assert.equal([...files.keys()].filter(k=>k.startsWith('dog-photos/')).length,0);
  await owner.page.goto(base+'/account/contacts');await personal.waitFor();

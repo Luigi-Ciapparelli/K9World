@@ -5,13 +5,14 @@ import { useRouter } from '../lib/RouterContext';
 import { type CentreTeam } from '../lib/centreTeam';
 import { type AgendaService, type ManualAppointment, manualError } from '../lib/manualAppointments';
 import { addDays, calendarTime, romeDay, serviceColor } from '../lib/professionalCalendar';
+import { approvedForAgenda, agendaIsConfirmed, hasDuration } from '../lib/agendaReadiness';
 import { supabase } from '../lib/supabase';
 
 export function ManualAppointmentDialog({ initial, initialDay, team, teamError, onClose, onSaved }: {
   initial?: ManualAppointment; initialDay: string; team: CentreTeam | null; teamError: boolean;
   onClose: () => void; onSaved: (date: string, removed: boolean) => void;
 }) {
-  const { user } = useAuth(); const { navigate } = useRouter();
+  const { user, profile } = useAuth(); const confirmed = agendaIsConfirmed(user,profile); const { navigate } = useRouter();
   const dialog = useRef<HTMLDialogElement>(null);
   const alive = useRef(true); const lock = useRef(false);
   const [id] = useState(() => initial?.id || crypto.randomUUID());
@@ -42,13 +43,13 @@ export function ManualAppointmentDialog({ initial, initialDay, team, teamError, 
         ]);
         const data = servicesResult.data;
         if (servicesResult.error || admission.error || !Array.isArray(data)) throw servicesResult.error || admission.error;
-        if (live) setApproved(admission.data?.approved === true && admission.data?.approval_status === 'approved');
-        const rows: AgendaService[] = data.filter(s => s.id !== initial?.service_id);
+        if (live) setApproved(approvedForAgenda(admission.data) && confirmed);
+        const rows: AgendaService[] = data.filter(s => s.id !== initial?.service_id && hasDuration(s));
         if (initial) rows.unshift({ id: initial.service_id, name: initial.service_name, calendar_color: initial.calendar_color, duration_minutes: initial.duration_minutes });
         if (live) { setServices(rows); setChoice(value => rows.some(s => s.id === value) ? value : rows[0]?.id || ''); }
       } catch { if (live) setServiceError(true); }
     })(); return () => { live = false; };
-  }, [uid, initial, tick]);
+  }, [uid, initial, tick, confirmed]);
   const selected = services?.find(s => s.id === choice);
   const submit = async (remove: boolean) => {
     if (lock.current || (!remove && (!selected || !time || !day))) return;

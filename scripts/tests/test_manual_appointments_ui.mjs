@@ -51,7 +51,7 @@ try {
     const menu=page.getByRole('button',{name:'Apri menu professionista'});
     if(width===1440){
       const rail=await page.locator('.pg-rail-inner').boundingBox(),last=await nav.getByRole('link',{name:'Statistiche'}).boundingBox();
-      assert.ok(rail.y<3 && rail.height>=895 && last.y+last.height>820);
+      assert.ok(rail.y<3 && last.y>=rail.y && last.y+last.height<=900);
     }else{assert.equal(await nav.isVisible(),false);await menu.click();}
     await nav.getByRole('link',{name:'Nuovo appuntamento'}).click();
     const d=page.getByRole('dialog',{name:'Nuovo appuntamento'});await d.waitFor();
@@ -69,7 +69,7 @@ try {
     await page.goto(base+'/#/pro');await page.locator('.pg-desk-manual').filter({hasText:'Kyros'}).getByText('14:00').waitFor();
     await page.getByText('Non ci sono richieste in attesa.').waitFor();
     if(out)await page.screenshot({path:out+'/studio-'+width+'.png'});
-    await page.getByRole('button',{name:'Apri calendario',exact:true}).click();await card.getByRole('button',{name:'Modifica'}).click();
+    await page.getByRole('link',{name:'Apri calendario',exact:true}).click();await card.getByRole('button',{name:'Modifica'}).click();
     const edit=page.getByRole('dialog',{name:'Modifica appuntamento'});await edit.getByLabel('Nome del cane').fill('Luna');await edit.getByRole('button',{name:'Salva appuntamento'}).click();
     const edited=page.locator('.pg-manual-card').filter({hasText:'Luna'});await edited.waitFor();assert.equal(writes.at(-1).p_version,1);
     await edited.getByRole('button',{name:'Modifica'}).click();await edit.getByRole('button',{name:'Rimuovi',exact:true}).click();

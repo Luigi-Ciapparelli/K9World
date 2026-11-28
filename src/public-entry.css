@@ -173,3 +173,30 @@ html.dark .pc-nav-sport svg { color: #e7bc60; }
   .pc-shaping-preview-button strong { font-size: 14px; }
   .pc-shaping-preview-button small { font-size: 7px; }
 }
+
+/* Keep the centre entrance directly reachable without adding a second public menu. */
+.pc-login-icon { display: none; }
+.pc-mobile-studio { min-height: 44px; display: inline-flex; align-items: center; padding-inline: 7px; color: var(--entry-accent); font-size: .875rem; font-weight: 680; text-decoration: underline; text-underline-offset: .21rem; }
+@media (max-width: 520px) {
+  .pc-home-header .pc-header-top { gap: 5px; }
+  .pc-home-header .pc-mobile-controls { gap: 0; }
+  .pc-home-header .pc-mobile-account { min-width: 44px; justify-content: center; }
+}
+@media (max-width: 389px) {
+  .pc-home-header .pc-login-icon { display: block; } .pc-home-header .pc-login-word { display: none; }
+  .pc-home-header .pc-brand img { width: 25px; height: 25px; }
+  .pc-home-header .pc-brand > span { font-size: 17px; }
+  .pc-home-header .pc-header-top { width: calc(100% - 16px); }
+}
+.pc-appearance{position:relative;color:var(--pc-ink-950,#192e23);font-size:.91rem;}
+.pc-appearance>summary{cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;list-style:none;min-height:44px;font-weight:650;padding:.4rem .55rem;border-radius:.6rem;}
+.pc-appearance>summary::-webkit-details-marker{display:none;}
+.pc-appearance-options{position:absolute;top:100%;right:0;z-index:45;min-width:9.2rem;padding:.28rem;border:1px solid var(--pc-line,#c6cec0);border-radius:.65rem;background:var(--pc-surface,#fffefa);color:var(--pc-ink-950,#192e23);box-shadow:0 6px 18px #172b2024;}
+.pc-appearance-options button{display:flex;align-items:center;gap:.6rem;min-height:44px;width:100%;padding:.45rem .6rem;text-align:left;border-radius:.45rem;}
+.pc-appearance-options button[aria-pressed=true]{font-weight:750;text-decoration:underline;text-underline-offset:.2em;}
+.dark .pc-appearance-options{background:#24352a;color:#eef6eb;}.pc-mobile-theme .pc-appearance-options,.pg-account-panel .pc-appearance-options{position:static;box-shadow:none;}.pc-appearance :focus-visible,.pc-site-header :focus-visible{outline:3px solid #9c702b;outline-offset:2px;}
+.pc-help-dock{display:flex;justify-content:flex-end;padding:.6rem max(1.15rem,4vw);border-top:1px solid var(--pc-line);background:var(--pc-bone-50);}
+.pc-help-dock button{box-shadow:none;padding:.35rem .9rem;min-height:44px;font-size:.94rem;}
+.pc-current-page{font-size:.77rem;border:1px solid currentColor;padding:.13em .45em;line-height:1.4;border-radius:1rem;}
+@media(max-width:450px){.pc-site-header .pc-header-top{width:calc(100% - 22px);gap:4px;}.pc-brand{min-width:0;flex-shrink:1;gap:5px;}.pc-home-header .pc-brand{flex-shrink:1;}
+.pc-brand>span{font-size:clamp(.96rem,4.55vw,1.18rem);}.pc-brand img{width:26px;height:26px;}.pc-mobile-controls{gap:0;flex-shrink:0;}.pc-home-header .pc-login-icon{display:block;}.pc-home-header .pc-login-word{display:none;}}

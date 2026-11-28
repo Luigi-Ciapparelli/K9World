@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Activity,
   ArrowLeft,
@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from '../lib/RouterContext';
 import { FCI_GROUP_CONTENT, FCI_GROUP_NAMES } from '../lib/fciGroups';
+import '../before-dog-questions.css';
 import { BEFORE_DOG_KEY, BEFORE_DOG_LEGACY_DRAFT_KEY } from '../lib/browserData';
 
 type Answers = {
@@ -350,7 +351,22 @@ function loadStoredAnswers(): Answers {
 export function BeforeDogPage() {
   const { navigate } = useRouter();
   const [answers, setAnswers] = useState<Answers>(() => loadStoredAnswers());
-  const [stepIndex, setStepIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState(() => {
+    const next = steps.findIndex(item => !answers[item.key].length);
+    return next < 0 ? steps.length - 1 : next;
+  });
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const focusNextQuestion = useRef(false);
+  const answered = steps.filter(item => answers[item.key].length > 0).length;
+  const changeQuestion = (direction: number) => {
+    focusNextQuestion.current = true;
+    setStepIndex(i => Math.max(0, Math.min(steps.length - 1, i + direction)));
+  };
+  useEffect(() => {
+    if (!focusNextQuestion.current) return;
+    focusNextQuestion.current = false;
+    headingRef.current?.focus();
+  }, [stepIndex]);
   const [showResult, setShowResult] = useState(false);
   const [storageError, setStorageError] = useState(false);
 
@@ -921,57 +937,22 @@ export function BeforeDogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <div className="max-w-5xl mx-auto px-6 py-10 md:py-14">
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-stone-600 hover:text-stone-900 mb-7"
-        >
-          <ArrowLeft className="w-4 h-4" /> Home
-        </button>
-
-        <div className="grid lg:grid-cols-[0.75fr_1.25fr] gap-8 items-start">
-          <aside className="lg:sticky lg:top-24">
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-700 mb-3">
-              Prima del cane
-            </p>
-            <h1 className="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">
-              Una scelta consapevole parte dalla tua vita reale.
-            </h1>
-            <p className="text-stone-600 mt-4 leading-relaxed">
-              Otto passaggi brevi. Nessun test magico e nessuna razza assegnata automaticamente.
-            </p>
-
-            <p className="mt-4 text-sm text-stone-600">Le risposte vengono salvate in questo browser per riprendere il test. Chi usa lo stesso dispositivo può leggerle. <a href="/cookies#gestisci-dati-locali" className="underline">Gestisci i dati locali</a>.</p>
-            {storageError && <p role="status" className="mt-3 text-sm text-amber-900">Il browser non consente il salvataggio. Puoi continuare il test, ma le risposte potrebbero non restare dopo la chiusura o il ricaricamento.</p>}
-
-
-            <div className="mt-7">
-              <div className="flex justify-between text-xs font-semibold text-stone-500 mb-2">
-                <span>Passaggio {stepIndex + 1} di {steps.length}</span>
-                <span>{Math.round(((stepIndex + 1) / steps.length) * 100)}%</span>
-              </div>
-              <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-emerald-600 rounded-full transition-all"
-                  style={{ width: `${((stepIndex + 1) / steps.length) * 100}%` }}
-                />
-              </div>
-            </div>
-          </aside>
-
-          <section className="rounded-[2rem] bg-white border border-stone-200 p-6 md:p-9 shadow-sm">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center mb-5">
-              <Icon className="w-6 h-6 text-emerald-700" />
-            </div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700 mb-2">
-              {step.eyebrow}
-            </p>
-            <h2 className="text-2xl md:text-3xl font-bold text-stone-900">{step.title}</h2>
-            <p className="text-stone-600 mt-3 leading-relaxed">{step.description}</p>
-
-            <div className="mt-7 grid gap-3">
+    <main className="pc-choice-test min-h-screen bg-stone-50">
+      <div className="pc-question-wrap">
+        <button type="button" onClick={() => navigate('/')} className="pc-question-home"><ArrowLeft size={16} aria-hidden="true"/> Home</button>
+        <header className="pc-question-header">
+          <p className="pc-kicker">Prima del cane</p><h1>Il test di scelta del cane</h1>
+          <p>Otto domande sulla tua giornata, per capire che cosa considerare prima della scelta.</p>
+        </header>
+        <div className="pc-question-layout">
+          <section className="pc-question-panel" aria-labelledby="choice-question-title">
+            <div className="pc-question-counter"><span>Domanda {stepIndex + 1} di {steps.length}</span>
+              <small aria-live="polite">{answered} di {steps.length} risposte date</small></div>
+            <progress max={steps.length} value={answered} aria-label="Risposte date" />
+            <p className="pc-question-topic"><Icon size={18} aria-hidden="true"/>{step.eyebrow}</p>
+            <h2 id="choice-question-title" ref={headingRef} tabIndex={-1}>{step.title}</h2>
+            <p className="pc-question-explanation">{step.description}</p>
+            <div className="pc-question-answers">
               {step.options.map((option) => {
                 const selected = Array.isArray(currentValue)
                   ? currentValue.includes(option.value)
@@ -981,6 +962,7 @@ export function BeforeDogPage() {
                   <button
                     key={option.value}
                     type="button"
+                    aria-pressed={selected}
                     onClick={() => toggleOption(option.value)}
                     className={`text-left rounded-2xl border p-4 transition ${
                       selected
@@ -1008,7 +990,7 @@ export function BeforeDogPage() {
               <button
                 type="button"
                 disabled={stepIndex === 0}
-                onClick={() => setStepIndex((value) => Math.max(0, value - 1))}
+                onClick={() => changeQuestion(-1)}
                 className="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-stone-300 text-stone-700 font-semibold disabled:opacity-30"
               >
                 <ArrowLeft className="w-4 h-4" /> Indietro
@@ -1018,7 +1000,7 @@ export function BeforeDogPage() {
                 <button
                   type="button"
                   disabled={!isComplete}
-                  onClick={() => setStepIndex((value) => Math.min(steps.length - 1, value + 1))}
+                  onClick={() => changeQuestion(1)}
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 disabled:opacity-40"
                 >
                   Continua <ArrowRight className="w-4 h-4" />
@@ -1035,8 +1017,13 @@ export function BeforeDogPage() {
               )}
             </div>
           </section>
+          <aside className="pc-question-notes" aria-label="Come funziona">
+            <h2>Come funziona</h2><p>Il test considera le abitudini della tua famiglia. Il risultato propone aspetti da valutare insieme: non assegna automaticamente una razza.</p>
+            <p>Le risposte vengono salvate in questo browser per riprendere il test. Chi usa lo stesso dispositivo può leggerle. <a href="/cookies#gestisci-dati-locali">Gestisci i dati locali</a>.</p>
+            {storageError && <p role="status">Il browser non consente il salvataggio. Puoi continuare il test, ma le risposte potrebbero non restare dopo la chiusura o il ricaricamento.</p>}
+          </aside>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type Ref } from 'react';
+import '../discovery.css';
 import {
   Home,
+  Check,
   Award,
   MapPin,
   Search,
@@ -24,7 +26,7 @@ const exhibitionServices: typeof dailyServices = [
 ];
 
 // ECOSYSTEM_PASS_V1
-export function SearchCard({ compact = false, sport = false, exhibitions = false }: { compact?: boolean; sport?: boolean; exhibitions?: boolean }) {
+export function SearchCard({ compact = false, sport = false, exhibitions = false, cityInputRef }: { compact?: boolean; sport?: boolean; exhibitions?: boolean; cityInputRef?: Ref<HTMLInputElement> }) {
   const services = exhibitions ? exhibitionServices : dailyServices;
   const catalog = useSportDisciplines(sport);
   const [discipline, setDiscipline] = useState('');
@@ -32,6 +34,8 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
   const { path, navigate } = useRouter();
   const [service, setServizio] = useState<ServiceCategoryType>(exhibitions ? 'groomer' : 'trainer');
   const [address, setAddress] = useState('');
+  const geoRequest = useRef<symbol | null>(null);
+  const [locationMessage, setLocationMessage] = useState('');
   const [locationLoading, setLocationLoading] = useState(false);
   const [locationAccuracy, setLocationAccuracy] = useState<number | null>(null);
   const [cities, setCities] = useState<ItalianCity[]>([]);
@@ -60,6 +64,8 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
     setSelectedCity(null);
     setGpsCoords(hasCoords ? { lat, lng } : null);
     setLocationAccuracy(null);
+    setLocationMessage(''); setLocationLoading(false);
+    return () => { geoRequest.current = null; };
   }, [path, sport, exhibitions]);
 
   useEffect(() => {
@@ -146,101 +152,27 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
   };
 
   const handleUseLocation = () => {
+    const sequence = Symbol(); geoRequest.current = sequence;
     if (!navigator.geolocation) {
-      alert('La geolocalizzazione non è supportata da questo browser.');
-      return;
+      setLocationMessage('La posizione non è disponibile. Puoi scrivere il comune.'); return;
     }
-
-    setLocationLoading(true);
-    setLocationAccuracy(null);
-
-    let bestPosition: GeolocationPosition | null = null;
-    let watchId: number | null = null;
-
-    const applyPosition = (pos: GeolocationPosition) => {
-      const nearestCity = cities.length
-        ? cities.reduce((nearest, city) => {
-            const nearestDistance =
-              (nearest.lat - pos.coords.latitude) ** 2 +
-              (nearest.lng - pos.coords.longitude) ** 2;
-
-            const cityDistance =
-              (city.lat - pos.coords.latitude) ** 2 +
-              (city.lng - pos.coords.longitude) ** 2;
-
-            return cityDistance < nearestDistance ? city : nearest;
-          })
-        : null;
-
-      setGpsCoords({
-        lat: pos.coords.latitude,
-        lng: pos.coords.longitude,
-      });
-
-      setLocationAccuracy(pos.coords.accuracy);
-      setSelectedCity(null);
-      setAddress(
-        nearestCity ? cityLabel(nearestCity) : 'Posizione attuale'
-      );
-      setLocationLoading(false);
-
-      if (watchId !== null) {
-        navigator.geolocation.clearWatch(watchId);
-      }
-    };
-
-    const timeoutId = window.setTimeout(() => {
-      if (bestPosition) {
-        applyPosition(bestPosition);
-      } else {
-        setLocationLoading(false);
-        if (watchId !== null) {
-          navigator.geolocation.clearWatch(watchId);
-        }
-        alert('Impossibile rilevare la posizione. Inserisci la città manualmente.');
-      }
-    }, 6000);
-
-    watchId = navigator.geolocation.watchPosition(
-      (pos) => {
-        if (
-          !bestPosition ||
-          pos.coords.accuracy < bestPosition.coords.accuracy
-        ) {
-          bestPosition = pos;
-        }
-
-        if (pos.coords.accuracy <= 100) {
-          window.clearTimeout(timeoutId);
-          applyPosition(pos);
-        }
-      },
-      () => {
-        if (!bestPosition) {
-          window.clearTimeout(timeoutId);
-          setLocationLoading(false);
-
-          if (watchId !== null) {
-            navigator.geolocation.clearWatch(watchId);
-          }
-
-          alert('Impossibile rilevare la posizione. Inserisci la città manualmente.');
-        }
-      },
-      {
-        enableHighAccuracy: true,
-        maximumAge: 0,
-        timeout: 10000,
-      }
-    );
+    setLocationLoading(true); setLocationMessage(''); setLocationAccuracy(null);
+    navigator.geolocation.getCurrentPosition(pos => {
+      if (sequence !== geoRequest.current) return;
+      const squaredDistance = (c: ItalianCity) => (c.lat - pos.coords.latitude) ** 2 + (c.lng - pos.coords.longitude) ** 2;
+      const nearest = cities.length ? cities.reduce((best, c) => squaredDistance(c) < squaredDistance(best) ? c : best) : null;
+      setGpsCoords({lat: pos.coords.latitude, lng: pos.coords.longitude});
+      setSelectedCity(null); setAddress(nearest ? cityLabel(nearest) : 'Posizione attuale');
+      setLocationLoading(false); setLocationAccuracy(pos.coords.accuracy);
+    }, () => {
+      if (sequence !== geoRequest.current) return;
+      setLocationLoading(false); setLocationMessage('Posizione non disponibile. Inserisci il comune e premi Cerca.');
+    }, {enableHighAccuracy: true, maximumAge: 0, timeout: 10000});
   };
 
   return (
-    <div
-      className={`pc-card shadow-sm ${
-        compact ? 'p-4' : 'p-6'
-      }`}
-    >
+    <form role="search" aria-label={sport ? 'Ricerca per disciplina' : exhibitions ? 'Ricerca per esposizioni' : 'Ricerca di aiuto per il cane'}
+      onSubmit={e => {e.preventDefault(); handleCerca();}} className={`pc-card pc-discovery-search ${compact ? 'p-4 md:p-5' : 'p-5 md:p-6'}`}>
       {sport ? <div className="mb-4">
         <label htmlFor="sport-discipline" className="block text-sm font-bold mb-2">Disciplina sportiva</label>
         {catalog.error ? <div role="alert"><p>{catalog.error}</p><button type="button" className="underline mt-2" onClick={catalog.retry}>Riprova</button></div>
@@ -252,8 +184,8 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
             </select>}
         {catalog.disciplines.find(d => d.id === discipline)?.description && <p className="mt-2 text-sm text-[var(--pc-muted-600)]">{catalog.disciplines.find(d => d.id === discipline)?.description}</p>}
       </div> : <>
-      <p className="text-xs font-bold tracking-wider text-stone-500 mb-3">
-        SCEGLI UN SERVIZIO
+      <p className="text-sm font-bold text-[var(--pc-ink-950)] mb-2">
+        Servizio
       </p>
 
       <div className="grid grid-cols-2 gap-2 mb-4">
@@ -273,8 +205,8 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
                   : 'border-[var(--pc-line)] hover:border-[var(--pc-forest-700)] text-[var(--pc-ink-800)]'
               }`}
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-xs font-semibold">{s.label}</span>
+              <Icon className="w-5 h-5" aria-hidden="true" />
+              <span className="inline-flex items-center gap-1 text-sm font-semibold">{active && <Check size={15} aria-hidden="true"/>}{s.label}</span>
             </button>
           );
         })}
@@ -286,71 +218,26 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
         <p className="font-semibold">{TRAINING_ACTIVITIES.find(item => item.id === trainingFocus)?.label}</p>
         <button type="button" onClick={() => handleCerca('companion')} className="text-sm underline min-h-[44px] text-[var(--pc-forest-700)]">Torna all’educazione quotidiana</button>
       </div>}
-      <div className="flex flex-col md:flex-row gap-3">
-        <div className="relative flex-1">
-          <MapPin className="absolute left-3 top-6 -translate-y-1/2 w-4 h-4 text-stone-400" />
-          <label htmlFor="search-address" className="sr-only">Città o zona</label>
-          <input
-            id="search-address"
-            name="address"
-            type="text"
-            placeholder="Inserisci città, es. Polignano a Mare"
-            value={address}
-            onChange={(e) => {
-              setAddress(e.target.value);
-              setSelectedCity(null);
-              setGpsCoords(null);
-              setLocationAccuracy(null);
-            }}
-            className="w-full pl-10 pr-28 py-3 border border-[var(--pc-line)] bg-[var(--pc-paper)] rounded-xl text-sm text-[var(--pc-ink-950)] focus:border-[var(--pc-forest-700)] focus:outline-none focus:ring-2 focus:ring-[var(--pc-forest-100)]"
-          />
-
-          {suggestions.length > 0 && (
-            <div className="relative mt-1 bg-[var(--pc-paper)] text-[var(--pc-ink-950)] border border-[var(--pc-line)] rounded-xl shadow-xl max-h-60 overflow-y-auto">
-              {suggestions.map((city) => (
-                <button
-                  key={city.code}
-                  type="button"
-                  onClick={() => {
-                    setAddress(cityLabel(city));
-                    setSelectedCity(city);
-                    setGpsCoords(null);
-                  }}
-                  className="w-full text-left px-4 py-2.5 text-sm hover:bg-stone-50 border-b border-stone-100 last:border-b-0"
-                >
-                  <span className="font-semibold">{city.name}</span>
-                  <span className="text-stone-500">
-                    {' '}({city.province}) · {city.region}
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
-
-          <button
-            type="button"
-            onClick={handleUseLocation}
-            className="absolute right-2 top-6 -translate-y-1/2 text-xs text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1"
-          >
-            <Navigation className="w-3 h-3" />
-            {locationLoading
-              ? 'Ricerca GPS...'
-              : locationAccuracy !== null
-                ? locationAccuracy < 1000
-                  ? `±${Math.round(locationAccuracy)} m`
-                  : `±${(locationAccuracy / 1000).toFixed(1)} km`
-                : 'Usa posizione'}
-          </button>
+      <label htmlFor="search-address" className="pc-search-city-label">Città o zona <span>(facoltativa)</span></label>
+      <div className="pc-search-fields">
+        <div className="pc-search-city-group">
+          <div className="pc-search-city-field"><MapPin aria-hidden="true" size={18}/>
+            <input id="search-address" ref={cityInputRef} name="address" type="text" autoComplete="off"
+              placeholder="Es. Polignano a Mare" value={address} maxLength={120}
+              onChange={e => {geoRequest.current = null;setAddress(e.target.value);setSelectedCity(null);setGpsCoords(null);setLocationLoading(false);setLocationAccuracy(null);setLocationMessage('');}} />
+          </div>
+          {suggestions.length > 0 && <div className="pc-city-options" aria-label="Comuni suggeriti">
+            {suggestions.map(city => <button key={city.code} type="button"
+              onClick={() => {setAddress(cityLabel(city));setSelectedCity(city);setGpsCoords(null);}}>
+              <strong>{city.name}</strong> <span>({city.province}) · {city.region}</span>
+            </button>)}
+          </div>}
         </div>
-
-        <button
-          type="button"
-          onClick={() => handleCerca()}
-          className="pc-btn pc-btn-primary px-6 md:self-start"
-        >
-          <Search className="w-4 h-4" />
-          {sport ? 'Trova addestratore per disciplina' : 'Cerca'}
-        </button>
+        <button type="submit" className="pc-btn pc-btn-primary pc-search-submit"><Search size={18} aria-hidden="true" />{sport ? 'Trova addestratore per disciplina' : 'Cerca'}</button>
+      </div>
+      <div className="pc-search-position">
+        <button type="button" onClick={handleUseLocation} disabled={locationLoading}><Navigation size={15} aria-hidden="true"/>Usa la mia posizione</button>
+        <span aria-live="polite">{locationLoading ? 'Rilevamento in corso…' : locationAccuracy !== null ? `Posizione rilevata (±${Math.round(locationAccuracy)} m).` : locationMessage}</span>
       </div>
       {!sport && !exhibitions && service === 'trainer' && <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[var(--pc-muted-600)]" aria-label="Attività specifiche">
         <span>Cerchi un’attività specifica?</span>
@@ -358,6 +245,6 @@ export function SearchCard({ compact = false, sport = false, exhibitions = false
           aria-pressed={trainingFocus === item.id} onClick={() => handleCerca(item.id)}
           className="min-h-[44px] underline underline-offset-4 hover:text-[var(--pc-forest-700)]">{item.label}</button>)}
       </div>}
-    </div>
+    </form>
   );
 }

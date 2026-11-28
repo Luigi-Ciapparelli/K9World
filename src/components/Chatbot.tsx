@@ -77,12 +77,14 @@ export function Chatbot() {
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   const audience: HelpAudience = user && profile ? profile.role : 'visitor';
-  const close = useCallback(() => { setOpen(false); requestAnimationFrame(() => trigger.current?.focus()); }, []);
+  const opener=useRef<HTMLElement | null>(null);
+  useEffect(()=>{const show=(event:Event)=>{const previous=(event as CustomEvent).detail;opener.current=previous instanceof HTMLElement?previous:trigger.current;setOpen(true);}; window.addEventListener('pc:help',show);return()=>window.removeEventListener('pc:help',show);},[]);
+  const close = useCallback(() => { setOpen(false); requestAnimationFrame(() => (opener.current?.isConnected ? opener.current : trigger.current)?.focus()); }, []);
   return <>
-    <button ref={trigger} type="button" onClick={() => setOpen(true)} aria-label="Apri la guida rapida" aria-haspopup="dialog" aria-expanded={open}
-      className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 inline-flex min-h-12 items-center gap-2 rounded-full bg-emerald-800 px-4 py-3 font-semibold text-white shadow-lg transition hover:bg-emerald-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-700 motion-reduce:transition-none">
+    <div className="pc-help-dock"><button ref={trigger} type="button" onClick={() => {opener.current=trigger.current;setOpen(true);}} aria-label="Apri la guida rapida" aria-haspopup="dialog" aria-expanded={open}
+      className="inline-flex min-h-12 items-center gap-2 rounded-full bg-emerald-800 px-4 py-3 font-semibold text-white shadow-lg transition hover:bg-emerald-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-700 motion-reduce:transition-none">
       <HelpCircle aria-hidden="true" className="h-5 w-5" />Aiuto
-    </button>
+    </button></div>
     {open && <QuickHelp key={`${user?.id || 'visitor'}:${audience}`} audience={audience} onClose={close} />}
   </>;
 }

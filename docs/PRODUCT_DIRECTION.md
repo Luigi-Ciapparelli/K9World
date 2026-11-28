@@ -41,7 +41,7 @@ passeggiate o le categorie escluse. Le pensioni sono supporto temporaneo.
 La scelta commerciale non diventa un messaggio pubblico contro altri servizi.
 Conservare account, prenotazioni e storico delle categorie ritirate.
 
-La Home usa l'immagine **statica** del portale/cane. La precedente animazione
+La Home dà precedenza alla ricerca locale anche senza comune e alle lezioni gratuite. Il gestionale è visibile da telefono; la scena del campo porta a un esercizio reale. Il percorso precedente alla scelta mantiene l’immagine **statica** del portale/cane. La precedente animazione
 della porta e la sostituzione definitiva della home con la ricerca sono superate.
 Percorso suggerito, mai forzato: scelta del cane → Impara → consulenza per scegliere
 insieme → professionista nella propria zona. Chi ha già un cane va subito alla ricerca.

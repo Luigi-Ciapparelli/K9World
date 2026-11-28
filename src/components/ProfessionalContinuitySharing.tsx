@@ -1,3 +1,5 @@
+import '../studio-tools.css';
+import { Users } from 'lucide-react';
 import { useRef, useState, type FormEvent } from 'react';
 import { continuityRpc, displayDate } from '../lib/continuity';
 import { grantStatus, notifySharingChanged, sharingButton, sharingSecondary, sharingError, useSharingRows, type ContinuityGrant, type OwnContinuityNote } from '../lib/continuitySharing';
@@ -6,7 +8,8 @@ import { ReceivedContinuityDialog, SharingPager } from './ContinuitySharingCommo
 
 export function ProfessionalContinuitySharing({ refreshKey }: { refreshKey: number }) {
   const [tab, setTab] = useState<'received' | 'own'>('received');
-  return <section aria-labelledby="professional-sharing-title" className="rounded-2xl border border-emerald-200 bg-white p-4 sm:p-6">
+  return <section aria-labelledby="professional-sharing-title" className="pc-work-shared">
+    <p className="pc-work-privacy"><Users aria-hidden="true" size={17} /> Con accesso autorizzato</p>
     <h2 id="professional-sharing-title" className="text-2xl font-bold">Storico condiviso del cane</h2>
     <p className="mt-2 text-sm text-stone-600">Consulta i contributi autorizzati e scegli quali revisioni del tuo lavoro rendere condivisibili.</p>
     <div className="my-4 flex flex-wrap gap-3" role="group" aria-label="Sezioni dello storico">

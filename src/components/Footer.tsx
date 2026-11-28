@@ -56,9 +56,7 @@ export function Footer() {
               <RouteLink to="/impara" className="block hover:text-white">Impara</RouteLink>
               <RouteLink to="/sport" className="block hover:text-white">Sport cinofili</RouteLink>
               <RouteLink to="/esposizioni" className="block hover:text-white">Esposizioni</RouteLink>
-              <button type="button" onClick={() => navigate('/become-a-pro')} className="block hover:text-white">
-                Diventa professionista
-              </button>
+              <RouteLink to="/become-pro" className="block hover:text-white">Gestionale per professionisti</RouteLink>
               <button type="button" onClick={() => navigate('/ranking')} className="block hover:text-white">
                 Come funziona il ranking
               </button>

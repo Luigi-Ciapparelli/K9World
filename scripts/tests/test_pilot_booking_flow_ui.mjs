@@ -70,9 +70,9 @@ async function setup(id = null, width = 390) {
     if (name === 'send_booking_message') {
       assert.equal(body.p_booking_id,bookingId); assert.equal(actor,proId); attempts.push(body);
       let m=messages.find(m=>m.request===body.p_request_id);
-      if (!m) { m={id:'message-1',request:body.p_request_id,sequence:messages.length+1,body:body.p_body,sender_kind:'professional',sender_name:'Professionista di prova',is_automatic:false,created_at:new Date().toISOString(),sender_id:actor}; messages.push(m); }
+      if (!m) { m={id:body.p_request_id,request:body.p_request_id,sequence:messages.length+1,body:body.p_body,sender_kind:'professional',sender_name:'Professionista di prova',is_automatic:false,created_at:new Date().toISOString(),sender_id:actor}; messages.push(m); }
       if (uncertainMessage) { uncertainMessage=false; return fail('08006',503); }
-      return ok([m]);
+      return ok([{ id:m.id, sequence:m.sequence, created_at:m.created_at }]);
     }
     if (name === 'get_booking_messages') return ok(messages.filter(m=>(!body.p_after_sequence || m.sequence>body.p_after_sequence)&&(!body.p_before_sequence||m.sequence<body.p_before_sequence)).map(m=>({...m,from_me:m.sender_id===actor})));
     if (name === 'mark_booking_messages_read') { read.set(actor,body.p_through_sequence); return ok(null); }
@@ -90,7 +90,7 @@ async function login(page, email='owner@example.invalid') {
 }
 try {
   const pro=await setup(proId,1440);await pro.page.goto(base+'/#/pro/bookings');
-  await pro.page.getByText('Nessuna prenotazione corrisponde ai filtri selezionati.').waitFor();
+  await pro.page.getByText(/Nessuna richiesta ricevuta/).waitFor();
   const owner=await setup();await owner.page.goto(base+profilePath);
   await owner.page.getByRole('button',{name:'Richiedi prenotazione',exact:true}).click();
   await owner.page.getByRole('heading',{name:'Bentornato'}).waitFor();
@@ -109,11 +109,11 @@ try {
   assert.equal(await modal.getByLabel('Note',{exact:true}).inputValue(),notes);
   await modal.getByRole('button',{name:'Invia richiesta',exact:true}).click();
   await owner.page.waitForURL(base+'/#/owner/bookings');await owner.page.getByText(notes,{exact:true}).waitFor();assert.equal(rows.length,1);
-  await owner.page.getByText('In attesa',{exact:true}).waitFor();
+  await owner.page.getByRole('article').getByText('In attesa',{exact:true}).waitFor();
   assert.equal(new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit'}).format(new Date(rows[0].start_at)),'14:00');
   await pro.page.getByRole('button',{name:'Aggiorna richieste'}).click();
   await pro.page.getByRole('heading',{name:'Proprietario di prova',exact:true}).waitFor();await pro.page.getByText(notes,{exact:true}).waitFor();
-  await pro.page.getByRole('button',{name:'Messaggi',exact:true}).click();
+  await pro.page.getByRole('article').getByRole('button',{name:'Messaggi',exact:true}).click();
   const chat=pro.page.getByRole('dialog',{name:'Messaggi della prenotazione'});await chat.getByText(notes,{exact:true}).waitFor();
   await chat.getByLabel('Usa un modello').selectOption('template-1');uncertainMessage=true;
   await chat.getByRole('button',{name:'Invia messaggio',exact:true}).click();
@@ -122,13 +122,13 @@ try {
   assert.equal(messages.length,1);assert.equal(attempts.length,2);assert.equal(attempts[0].p_request_id,attempts[1].p_request_id);
   await chat.getByRole('button',{name:'Chiudi messaggi'}).click();
   await pro.page.getByRole('button',{name:'Accetta',exact:true}).click();await pro.page.getByText('Richiesta accettata.',{exact:true}).waitFor();
-  await owner.page.getByRole('button',{name:'Aggiorna',exact:true}).click();await owner.page.getByText('Accettata',{exact:true}).waitFor();
-  await owner.page.getByRole('button',{name:/^Messaggi/}).click();
+  await owner.page.getByRole('button',{name:'Aggiorna',exact:true}).click();await owner.page.getByRole('article').getByText('Accettata',{exact:true}).waitFor();
+  await owner.page.getByRole('article').getByRole('button',{name:/^Messaggi/}).click();
   await owner.page.getByRole('dialog').getByRole('list',{name:'Conversazione'}).getByText(messages[0].body,{exact:true}).waitFor();
   await owner.page.getByRole('button',{name:'Chiudi messaggi'}).click();
   ownerLoadError=true;await owner.page.getByRole('button',{name:'Aggiorna',exact:true}).click();
   await owner.page.getByRole('alert').filter({hasText:'Prenotazioni non caricate'}).waitFor();
-  await owner.page.getByRole('alert').filter({hasText:'Prenotazioni non caricate'}).getByRole('button',{name:'Riprova',exact:true}).click();await owner.page.getByText('Accettata',{exact:true}).waitFor();
+  await owner.page.getByRole('alert').filter({hasText:'Prenotazioni non caricate'}).getByRole('button',{name:'Riprova',exact:true}).click();await owner.page.getByRole('article').getByText('Accettata',{exact:true}).waitFor();
   await pro.page.goto(base+'/#/pro/calendar');await pro.page.getByRole('heading',{name:'Calendario e disponibilità',exact:true}).waitFor();
   const currentMonth=new Date().toISOString().slice(0,7);if(tomorrow.slice(0,7)!==currentMonth)await pro.page.getByRole('button',{name:'Mese successivo'}).click();
   const dayLabel=new Intl.DateTimeFormat('it-IT',{timeZone:'UTC',weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(tomorrow+'T12:00:00Z'));
@@ -146,7 +146,7 @@ try {
   const terms=signup.page.getByRole('checkbox',{name:'Accetto i Termini di utilizzo.',exact:true});
   assert.equal(await terms.isChecked(),false,'Terms must not be preselected');
   await terms.check();
-  signup.page.once('dialog',d=>d.accept());await signup.page.getByRole('button',{name:'Crea account',exact:true}).click();await signup.page.getByRole('heading',{name:'Bentornato'}).waitFor();
+  await signup.page.getByRole('button',{name:'Crea account',exact:true}).click();await signup.page.getByRole('heading',{name:'Controlla la tua email'}).waitFor();await signup.page.getByRole('button',{name:'Vai ad Accedi',exact:true}).click();await signup.page.getByRole('heading',{name:'Bentornato'}).waitFor();
   assert.equal(requests.at(-1).body.data.role,'owner');assert.equal(new URLSearchParams(signup.page.url().split('?')[1]).get('next'),profilePath+'?booking=1');
   assert.equal(requests.at(-1).body.data.legal_declaration.terms_accepted,true);
   await login(signup.page);await signup.page.getByRole('dialog',{name:'Richiedi prenotazione'}).waitFor();assert.equal(rows.length,1,'Registration must not create another request');await signup.context.close();
