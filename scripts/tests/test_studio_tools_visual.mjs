@@ -20,7 +20,7 @@ try {
  for(const [width,theme] of [[1440,'light'],[375,'light'],[375,'dark']]){
   const ctx=await browser.newContext({viewport:{width,height:width===375?812:900},colorScheme:theme,locale:'it-IT',timezoneId:'Europe/Rome',serviceWorkers:'block'});
   const errors=[];let role='professional',empty=false,withService=true,model=true,approved=true;
-  await ctx.addInitScript(arg=>localStorage.setItem('sb-pc-home-test-auth-token',JSON.stringify({access_token:'demo-local',refresh_token:'demo-refresh',expires_at:Math.floor(Date.now()/1000)+3600,token_type:'bearer',user:{id:arg,email:'studio@example.invalid',role:'authenticated',aud:'authenticated',email_confirmed_at:'2025-01-01T12:00:00Z'}})),id(1));
+  await ctx.addInitScript(arg=>{if(location.protocol!=='http:')return;localStorage.setItem('sb-pc-home-test-auth-token',JSON.stringify({access_token:'demo-local',refresh_token:'demo-refresh',expires_at:Math.floor(Date.now()/1000)+3600,token_type:'bearer',user:{id:arg,email:'studio@example.invalid',role:'authenticated',aud:'authenticated',email_confirmed_at:'2025-01-01T12:00:00Z'}}));},id(1));
   await ctx.route('https://**/*',async route=>{
    const req=route.request(),url=new URL(req.url());if(url.hostname!=='pc-home-test.supabase.co')return route.abort();
    const name=url.pathname.split('/').at(-1),body=req.method()==='POST'?req.postDataJSON():{};let data=[];

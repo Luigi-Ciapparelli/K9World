@@ -112,6 +112,7 @@ const scenes=[
   {id:'home',title:'Prima visita',route:'/',ready:readyH1},
   {id:'accesso',title:'Accesso',route:'/signin',ready:p=>p.getByRole('button',{name:'Accedi',exact:true}).waitFor()},
   {id:'iscrizione',title:'Iscrizione',route:'/signup',ready:p=>group==='prima'?p.getByRole('button',{name:'Continua',exact:true}).waitFor():p.locator('form input').first().waitFor()},
+  {id:'cliente-nuovo',title:'Prima visita del cliente',person:'owner-new',route:'/#/owner',ready:readyH1},
   {id:'cliente',title:'Area cliente con appuntamenti',person:'owner',route:'/#/owner',ready:readyH1},
   {id:'cani',title:'I miei cani · con e senza foto',person:'owner',route:'/#/owner/dogs',ready:async p=>{await has(p,longName);await has(p,shortName);await p.waitForFunction(()=>[...document.images].some(i=>i.src.includes('demo-portrait')&&i.complete&&i.naturalWidth===240));}},
   {id:'cane-senza-peso',title:'Cane senza foto e senza peso',person:'owner',route:'/#/owner/dogs/'+dog2,ready:p=>has(p,shortName)},
@@ -156,6 +157,17 @@ try{
           await when.focus();assert.ok(await when.evaluate(n=>n===document.activeElement));await p.keyboard.press('Escape');await dialog.waitFor({state:'hidden'});
           meta.interazione='Invio apre un modulo utilizzabile; data e salvataggio restano scoperti. Escape lo chiude.';
         }
+      }
+      if(group==='dopo' && scene.id==='cliente-nuovo'){
+        const start=p.locator('.pc-owner-fresh').getByRole('link',{name:'Trova aiuto per il cane'});
+        await start.waitFor();assert.ok((await start.getAttribute('href')).startsWith('/search'));
+        assert.ok((await start.boundingBox()).y<view.height);
+        meta.interazione='La ricerca è subito disponibile per il primo accesso.';
+      }
+      if(group==='dopo' && scene.id==='agenda'){
+        const help=p.locator('.pc-help-dock button');await help.focus();await p.keyboard.press('Enter');
+        const dlg=p.getByRole('dialog');await dlg.waitFor();await p.keyboard.press('Escape');await dlg.waitFor({state:'hidden'});
+        await p.waitForFunction(()=>document.activeElement===document.querySelector('.pc-help-dock button'));
       }
       if(group==='dopo' && scene.id==='cani'){
         await has(p,'Peso non indicato');await has(p,'24,5 kg');
