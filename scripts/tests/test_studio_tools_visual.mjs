@@ -69,7 +69,7 @@ try {
     await visit('/pro/analytics');await p.getByRole('button',{name:'Ultimi 90 giorni'}).click();assert.equal(await p.getByRole('button',{name:'Ultimi 90 giorni'}).getAttribute('aria-pressed'),'true');await p.getByText('Intervallo applicato').waitFor();
     withService=false;model=false;await visit('/pro/passes');await p.getByRole('link',{name:'Configura un servizio'}).waitFor();withService=true;await p.reload();await p.getByRole('button',{name:'Crea il primo modello'}).waitFor();model=true;await p.reload();await p.getByRole('button',{name:'Scegli un cliente'}).waitFor();
     const tabs=p.getByRole('navigation',{name:'Lezioni'});await tabs.getByRole('link',{name:'Abbonamenti'}).click();await p.getByRole('group',{name:'Sezioni abbonamenti'}).waitFor();
-    role='owner';await visit('/owner/passes');await p.getByRole('heading',{name:'Primi passi'}).waitFor();await p.getByText(/Scadenza:/).waitFor();await tabs.getByRole('link',{name:'Abbonamenti'}).click();await p.getByText('2 lezioni disponibili').scrollIntoViewIfNeeded();await p.getByText('2 lezioni disponibili').waitFor();await p.getByText(/Periodo utilizzabile/).waitFor();
+    role='owner';await p.goto('about:blank');await visit('/owner/passes');await p.getByRole('heading',{name:'Primi passi'}).waitFor();await p.getByText(/Scadenza:/).waitFor();await tabs.getByRole('link',{name:'Abbonamenti'}).click();await p.getByText('2 lezioni disponibili').scrollIntoViewIfNeeded();await p.getByText('2 lezioni disponibili').waitFor();await p.getByText(/Periodo utilizzabile/).waitFor();
   }
   assert.deepEqual(errors,[]);await ctx.close();
  }

@@ -111,7 +111,7 @@ const readyH1=async p=>{await p.locator('h1').first().waitFor();};
 const scenes=[
   {id:'home',title:'Prima visita',route:'/',ready:readyH1},
   {id:'accesso',title:'Accesso',route:'/signin',ready:p=>p.getByRole('button',{name:'Accedi',exact:true}).waitFor()},
-  {id:'iscrizione',title:'Iscrizione',route:'/signup',ready:p=>p.locator('form input').first().waitFor()},
+  {id:'iscrizione',title:'Iscrizione',route:'/signup',ready:p=>group==='prima'?p.getByRole('button',{name:'Continua',exact:true}).waitFor():p.locator('form input').first().waitFor()},
   {id:'cliente',title:'Area cliente con appuntamenti',person:'owner',route:'/#/owner',ready:readyH1},
   {id:'cani',title:'I miei cani · con e senza foto',person:'owner',route:'/#/owner/dogs',ready:async p=>{await has(p,longName);await has(p,shortName);await p.waitForFunction(()=>[...document.images].some(i=>i.src.includes('demo-portrait')&&i.complete&&i.naturalWidth===240));}},
   {id:'cane-senza-peso',title:'Cane senza foto e senza peso',person:'owner',route:'/#/owner/dogs/'+dog2,ready:p=>has(p,shortName)},
@@ -119,7 +119,7 @@ const scenes=[
   {id:'studio-attesa',title:'Studio · profilo completo in verifica',person:'studio-pending',route:'/#/pro',ready:readyH1},
   {id:'studio-zona',title:'Studio · zona da completare',person:'studio-zona',route:'/#/pro',ready:readyH1},
   {id:'studio-abilitato',title:'Studio · professionista approvato',person:'studio-ok',route:'/#/pro',ready:p=>p.getByText(/Puppy class.*Nocciola/).first().waitFor()},
-  {id:'agenda',title:'Agenda con lezione online e appuntamento manuale',person:'studio-ok',route:'/#/pro/calendar',ready:async p=>{await p.getByRole('heading',{name:'Arianna Demo',exact:true}).waitFor();await p.getByText(/Nocciola/).first().waitFor();}},
+  {id:'agenda',title:'Agenda con lezione online e appuntamento manuale',person:'studio-ok',route:'/#/pro/calendar',ready:async p=>{await p.getByRole('heading',{name:'Arianna Demo',exact:true}).waitFor();await p.getByRole('heading',{name:'Puppy class · Nocciola',exact:true}).waitFor();}},
   {id:'rubrica',title:'Rubrica · due clienti e i loro cani',person:'studio-ok',route:'/#/pro/crm',ready:async p=>{await has(p,'Arianna Demo');await has(p,'Andrea Demo');}},
 ];
 const views=[{width:1440,height:900,dark:false},{width:1440,height:900,dark:true},{width:375,height:812,dark:false},{width:375,height:812,dark:true}];
@@ -173,7 +173,7 @@ try{
         meta.interazione='Apertura scheda, cane, Escape e ricerca per cane verificati.';
       }
       if(scene.id==='agenda'){
-        const dayRead=p.getByText(/Nocciola/).last();await dayRead.scrollIntoViewIfNeeded();
+        const dayRead=p.getByRole('heading',{name:'Puppy class · Nocciola',exact:true});await dayRead.scrollIntoViewIfNeeded();
         const extra=key+'-giorno.png';await p.screenshot({path:path.join(dir,extra),animations:'disabled'});meta.dettaglio=extra;
         meta.interazione='Lezione online e impegno manuale presenti il 27 novembre.';
       }

@@ -42,7 +42,7 @@ function ClientWorkspace({ userId }: { userId: string }) {
   const portraits = useClientPortraits(data?.rows.map(row => row.id) || []);
   function submit(event: FormEvent) { event.preventDefault(); setSearch({ query: input.trim(), page: 0, revision: search.revision + 1 }); }
   function refresh() { setSearch(old => ({ ...old, revision: old.revision + 1 })); }
-  return <div className="mx-auto max-w-6xl p-4 sm:p-8">
+  return <div className="pc-studio-clients mx-auto max-w-6xl p-4 sm:p-8">
     <div className="mb-7 flex flex-wrap items-start justify-between gap-4">
       <div><p className="mb-2 text-xs font-bold uppercase tracking-widest text-emerald-700">La tua attività</p>
         <h1 ref={heading} tabIndex={-1} className="text-3xl font-bold text-stone-900">Clienti e cani</h1>
@@ -67,7 +67,7 @@ function ClientWorkspace({ userId }: { userId: string }) {
       </div> : <div className="grid gap-4 md:grid-cols-2">
         {data.rows.map(client => <button key={client.id} type="button" aria-label={`Apri scheda di ${client.full_name}`} onClick={event => { opener.current = event.currentTarget; setSelected(client); }} className="group min-w-0 rounded-2xl border border-stone-200 bg-white p-5 text-left transition hover:border-emerald-600 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-700">
           <span className="flex items-center gap-3"><ClientPortrait src={portraits[client.id]} name={client.full_name} /><span className="min-w-0 flex-1"><span className="block break-words text-lg font-bold text-stone-900">{client.full_name}</span><span className="block break-words text-sm text-stone-600">{client.dogs.map(dog => dog.name).join(', ') || 'Nessun cane attualmente collegato'}</span></span><ArrowRight aria-hidden="true" className="h-5 w-5 shrink-0 text-emerald-700" /></span>
-          <span className="mt-4 grid gap-2 border-t border-stone-100 pt-4 text-sm leading-relaxed text-stone-500"><span>Ultimo servizio svolto <strong className="block text-sm font-medium text-stone-800">{client.last_visit ? clientDate(client.last_visit) : 'Nessun servizio segnato come svolto'}</strong></span>{client.next_booking && <span>Prossimo appuntamento <strong className="block text-sm font-medium text-emerald-800">{clientDate(client.next_booking)}</strong></span>}</span>
+          <span className="mt-4 grid gap-2 border-t border-stone-100 pt-4 text-sm leading-relaxed text-stone-500"><span>Ultimo servizio svolto <strong className="block text-sm font-medium text-stone-800">{client.last_visit ? clientDate(client.last_visit) : 'Nessun servizio segnato come svolto'}</strong></span>{client.next_booking && <span>Prossimo appuntamento <strong className="pc-crm-next-date block text-sm font-medium text-emerald-800">{clientDate(client.next_booking)}</strong></span>}</span>
           {!!client.tags.length && <span className="mt-4 flex flex-wrap gap-1.5">{client.tags.slice(0, 3).map(tag => <span key={tag} className="max-w-full break-words rounded-lg bg-emerald-50 px-2 py-1 text-xs text-emerald-900">{tag}</span>)}{client.tags.length > 3 && <span className="p-1 text-xs text-stone-500">+{client.tags.length - 3}</span>}</span>}
         </button>)}
       </div>}
