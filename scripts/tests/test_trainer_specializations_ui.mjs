@@ -56,12 +56,12 @@ try {
    await page.getByRole('button',{name:'Filtri facoltativi',exact:false}).click();
   }
   await shot(page,'daily-search-'+width);
-  await page.getByLabel('Città o zona',{exact:true}).fill('Rimini');
+  await page.getByRole('textbox',{name:/^Città o zona/}).fill('Rimini');
   await page.getByRole('button',{name:'Lavoro con il bestiame',exact:true}).click();await page.waitForURL(/training=livestock/);
   await page.getByText('Specialista bestiame',{exact:true}).waitFor();
   let query=calls.filter(c=>c.name==='search_training_professionals').at(-1).body;
   assert.equal(query.p_focus,'livestock');assert.ok(query.p_lat || query.p_zone_text==='Rimini');
-  assert.equal(await page.getByLabel('Città o zona',{exact:true}).inputValue(),'Rimini');
+  assert.equal(await page.getByRole('textbox',{name:/^Città o zona/}).inputValue(),'Rimini');
   await shot(page,'specialist-search-'+width);
   await page.getByRole('button',{name:'Addestramento per la caccia',exact:true}).click();await page.getByText('Specialista caccia',{exact:true}).waitFor();
   await page.goBack();await page.getByText('Specialista bestiame',{exact:true}).waitFor();

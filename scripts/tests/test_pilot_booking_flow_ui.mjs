@@ -70,9 +70,9 @@ async function setup(id = null, width = 390) {
     if (name === 'send_booking_message') {
       assert.equal(body.p_booking_id,bookingId); assert.equal(actor,proId); attempts.push(body);
       let m=messages.find(m=>m.request===body.p_request_id);
-      if (!m) { m={id:'message-1',request:body.p_request_id,sequence:messages.length+1,body:body.p_body,sender_kind:'professional',sender_name:'Professionista di prova',is_automatic:false,created_at:new Date().toISOString(),sender_id:actor}; messages.push(m); }
+      if (!m) { m={id:body.p_request_id,request:body.p_request_id,sequence:messages.length+1,body:body.p_body,sender_kind:'professional',sender_name:'Professionista di prova',is_automatic:false,created_at:new Date().toISOString(),sender_id:actor}; messages.push(m); }
       if (uncertainMessage) { uncertainMessage=false; return fail('08006',503); }
-      return ok([m]);
+      return ok([{ id:m.id, sequence:m.sequence, created_at:m.created_at }]);
     }
     if (name === 'get_booking_messages') return ok(messages.filter(m=>(!body.p_after_sequence || m.sequence>body.p_after_sequence)&&(!body.p_before_sequence||m.sequence<body.p_before_sequence)).map(m=>({...m,from_me:m.sender_id===actor})));
     if (name === 'mark_booking_messages_read') { read.set(actor,body.p_through_sequence); return ok(null); }
@@ -123,7 +123,7 @@ try {
   await chat.getByRole('button',{name:'Chiudi messaggi'}).click();
   await pro.page.getByRole('button',{name:'Accetta',exact:true}).click();await pro.page.getByText('Richiesta accettata.',{exact:true}).waitFor();
   await owner.page.getByRole('button',{name:'Aggiorna',exact:true}).click();await owner.page.getByRole('article').getByText('Accettata',{exact:true}).waitFor();
-  await owner.page.getByRole('button',{name:/^Messaggi/}).click();
+  await owner.page.getByRole('article').getByRole('button',{name:/^Messaggi/}).click();
   await owner.page.getByRole('dialog').getByRole('list',{name:'Conversazione'}).getByText(messages[0].body,{exact:true}).waitFor();
   await owner.page.getByRole('button',{name:'Chiudi messaggi'}).click();
   ownerLoadError=true;await owner.page.getByRole('button',{name:'Aggiorna',exact:true}).click();
